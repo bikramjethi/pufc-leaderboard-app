@@ -1,0 +1,22 @@
+[
+  {
+    "name": "John Smith",
+    "position": "FWD",
+    "wins": 10,
+    "losses": 5,
+    "draws": 5,
+    "cleanSheets": 3,
+    "goals": 18,
+    "hatTricks": 2
+  },
+  {
+    "name": "Jane Doe",
+    "position": "GK",
+    "wins": 14,
+    "losses": 4,
+    "draws": 4,
+    "cleanSheets": 10,
+    "goals": 2,
+    "hatTricks": 0
+  }
+]
