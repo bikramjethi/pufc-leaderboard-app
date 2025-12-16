@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "Marcus Chen",
+    "position": "FWD",
+    "wins": 8,
+    "losses": 2,
+    "draws": 2,
+    "cleanSheets": 0,
+    "goals": 12,
+    "hatTricks": 2
+  },
+  {
+    "id": 2,
+    "name": "David Okonkwo",
+    "position": "GK",
+    "wins": 7,
+    "losses": 3,
+    "draws": 2,
+    "cleanSheets": 6,
+    "goals": 0,
+    "hatTricks": 0
+  },
+  {
+    "id": 3,
+    "name": "James Wilson",
+    "position": "MID",
+    "wins": 6,
+    "losses": 4,
+    "draws": 2,
+    "cleanSheets": 0,
+    "goals": 5,
+    "hatTricks": 0
+  },
+  {
+    "id": 4,
+    "name": "Ryan Peters",
+    "position": "DEF",
+    "wins": 7,
+    "losses": 3,
+    "draws": 2,
+    "cleanSheets": 5,
+    "goals": 1,
+    "hatTricks": 0
+  },
+  {
+    "id": 5,
+    "name": "Tommy Nguyen",
+    "position": "MID",
+    "wins": 5,
+    "losses": 4,
+    "draws": 3,
+    "cleanSheets": 0,
+    "goals": 4,
+    "hatTricks": 0
+  },
+  {
+    "id": 6,
+    "name": "Alex Martinez",
+    "position": "FWD",
+    "wins": 6,
+    "losses": 3,
+    "draws": 3,
+    "cleanSheets": 0,
+    "goals": 9,
+    "hatTricks": 1
+  },
+  {
+    "id": 7,
+    "name": "Chris O'Brien",
+    "position": "DEF",
+    "wins": 5,
+    "losses": 5,
+    "draws": 2,
+    "cleanSheets": 4,
+    "goals": 0,
+    "hatTricks": 0
+  },
+  {
+    "id": 8,
+    "name": "Sam Taylor",
+    "position": "MID",
+    "wins": 4,
+    "losses": 4,
+    "draws": 4,
+    "cleanSheets": 0,
+    "goals": 3,
+    "hatTricks": 0
+  },
+  {
+    "id": 9,
+    "name": "Jake Robinson",
+    "position": "FWD",
+    "wins": 3,
+    "losses": 2,
+    "draws": 1,
+    "cleanSheets": 0,
+    "goals": 5,
+    "hatTricks": 0
+  }
+]
+
