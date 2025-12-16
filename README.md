@@ -69,8 +69,6 @@ npm run preview  # Preview the build locally
 
 ## Future Enhancements
 
-- [ ] Points system (3 for win, 1 for draw, bonus for goals/clean sheets)
 - [ ] Player profile cards (click to expand details)
-- [ ] Add/edit player form
 - [ ] Export to CSV
 - [ ] All-time stats view (aggregate across seasons)
