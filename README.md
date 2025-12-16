@@ -71,7 +71,5 @@ npm run preview  # Preview the build locally
 ---
 
 ## Future Enhancements
-
-- [x] All-Time stats view (aggregate across seasons)
 - [ ] Export to CSV
 - [ ] Favorites / Watchlist
