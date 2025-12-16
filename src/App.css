@@ -521,10 +521,18 @@ body::before {
 .compare-players {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  flex-wrap: wrap;
   padding: 1.5rem;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
+  gap: 0.5rem;
+}
+
+.compare-player-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .compare-player {
@@ -532,7 +540,7 @@ body::before {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  flex: 1;
+  min-width: 100px;
 }
 
 .compare-player-name {
@@ -544,9 +552,9 @@ body::before {
 
 .compare-vs {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  padding: 0 1rem;
+  padding: 0 0.5rem;
 }
 
 .compare-stats {
@@ -554,45 +562,55 @@ body::before {
 }
 
 .compare-stat-row {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: center;
   padding: 0.75rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
+  gap: 1rem;
 }
 
 .compare-stat-row:last-child {
   border-bottom: none;
 }
 
+.compare-stat-header {
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--accent-primary);
+}
+
+.compare-player-header {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.compare-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.compare-values {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+  gap: 0.5rem;
+}
+
 .compare-value {
+  flex: 1;
+  text-align: center;
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
 }
 
-.compare-value:first-child {
-  text-align: right;
-  padding-right: 1rem;
-}
-
-.compare-value:last-child {
-  text-align: left;
-  padding-left: 1rem;
-}
-
 .compare-winner {
   color: var(--accent-primary);
-}
-
-.compare-label {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-align: center;
-  min-width: 100px;
 }
 
 /* Legend */

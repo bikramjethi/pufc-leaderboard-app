@@ -12,7 +12,7 @@ const statRows = [
   { key: "hatTricks", label: "Hat Tricks" },
 ];
 
-export const ComparePanel = ({ player1, player2, onClose }) => {
+export const ComparePanel = ({ players = [], onClose }) => {
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (e) => {
@@ -23,21 +23,23 @@ export const ComparePanel = ({ player1, player2, onClose }) => {
   }, [onClose]);
 
   // Guard against missing players (after hooks)
-  if (!player1 || !player2) return null;
+  if (!players || players.length < 2) return null;
 
   const getSafeValue = (player, key) => player?.[key] ?? 0;
 
-  const getWinner = (key) => {
-    const val1 = getSafeValue(player1, key);
-    const val2 = getSafeValue(player2, key);
-    
-    // For loss % and losses, lower is better
+  // Find the winner(s) for a given stat key
+  const getWinnerIndices = (key) => {
+    const values = players.map((p) => getSafeValue(p, key));
     const lowerIsBetter = key === "losses" || key === "lossPct";
-    if (val1 === val2) return "tie";
-    if (lowerIsBetter) {
-      return val1 < val2 ? "p1" : "p2";
-    }
-    return val1 > val2 ? "p1" : "p2";
+    
+    const bestValue = lowerIsBetter 
+      ? Math.min(...values) 
+      : Math.max(...values);
+    
+    // Return indices of all players with the best value
+    return values
+      .map((val, idx) => (val === bestValue ? idx : -1))
+      .filter((idx) => idx !== -1);
   };
 
   const handleOverlayClick = (e) => {
@@ -49,44 +51,61 @@ export const ComparePanel = ({ player1, player2, onClose }) => {
 
   return (
     <div className="compare-overlay" onClick={handleOverlayClick}>
-      <div className="compare-panel">
+      <div className="compare-panel" style={{ maxWidth: `${Math.min(600, 200 + players.length * 120)}px` }}>
         <div className="compare-header">
           <h3>Player Comparison</h3>
           <button className="compare-close" onClick={onClose}>✕</button>
         </div>
 
         <div className="compare-players">
-          <div className="compare-player">
-            <span className={`position-badge position-${(player1.position ?? "N/A").toLowerCase()}`}>
-              {player1.position ?? "N/A"}
-            </span>
-            <span className="compare-player-name">{player1.name ?? "Unknown"}</span>
-          </div>
-          <div className="compare-vs">VS</div>
-          <div className="compare-player">
-            <span className={`position-badge position-${(player2.position ?? "N/A").toLowerCase()}`}>
-              {player2.position ?? "N/A"}
-            </span>
-            <span className="compare-player-name">{player2.name ?? "Unknown"}</span>
-          </div>
+          {players.map((player, idx) => (
+            <div key={player.id} className="compare-player-wrapper">
+              {idx > 0 && <div className="compare-vs">VS</div>}
+              <div className="compare-player">
+                <span className={`position-badge position-${(player.position ?? "N/A").toLowerCase()}`}>
+                  {player.position ?? "N/A"}
+                </span>
+                <span className="compare-player-name">{player.name ?? "Unknown"}</span>
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="compare-stats">
+          {/* Header row with player names */}
+          <div className="compare-stat-row compare-stat-header">
+            <div className="compare-label">Stat</div>
+            <div className="compare-values">
+              {players.map((player) => (
+                <div key={player.id} className="compare-value compare-player-header">
+                  {player.name?.split(" ")[0] ?? "Player"}
+                </div>
+              ))}
+            </div>
+          </div>
+
           {statRows.map(({ key, label, format }) => {
-            const winner = getWinner(key);
-            const rawVal1 = getSafeValue(player1, key);
-            const rawVal2 = getSafeValue(player2, key);
-            const val1 = format ? format(rawVal1) : rawVal1;
-            const val2 = format ? format(rawVal2) : rawVal2;
+            const winnerIndices = getWinnerIndices(key);
+            const allTied = winnerIndices.length === players.length;
 
             return (
               <div key={key} className="compare-stat-row">
-                <div className={`compare-value ${winner === "p1" ? "compare-winner" : ""}`}>
-                  {val1}
-                </div>
                 <div className="compare-label">{label}</div>
-                <div className={`compare-value ${winner === "p2" ? "compare-winner" : ""}`}>
-                  {val2}
+                <div className="compare-values">
+                  {players.map((player, idx) => {
+                    const rawVal = getSafeValue(player, key);
+                    const displayVal = format ? format(rawVal) : rawVal;
+                    const isWinner = !allTied && winnerIndices.includes(idx);
+
+                    return (
+                      <div 
+                        key={player.id} 
+                        className={`compare-value ${isWinner ? "compare-winner" : ""}`}
+                      >
+                        {displayVal}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );

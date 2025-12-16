@@ -189,8 +189,7 @@ export const Leaderboard = ({ players }) => {
 
       {config.ENABLE_COMPARISON && selectedPlayers.length === config.MAX_COMPARE_PLAYERS && (
         <ComparePanel
-          player1={selectedPlayers[0]}
-          player2={selectedPlayers[1]}
+          players={selectedPlayers}
           onClose={clearComparison}
         />
       )}

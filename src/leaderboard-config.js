@@ -7,7 +7,7 @@
 
 export const config = {
   // Feature Toggles
-  ENABLE_COMPARISON: true,       // Show checkboxes and allow player comparison
+  ENABLE_COMPARISON: false,       // Show checkboxes and allow player comparison
   ENABLE_SEARCH: true,           // Show search input for filtering players
   ENABLE_MAX_HIGHLIGHT: true,    // Highlight max values in gold
 
@@ -16,6 +16,6 @@ export const config = {
   DEFAULT_SORT_DIR: "desc",      // Default sort direction ("asc" or "desc")
 
   // Comparison Settings
-  MAX_COMPARE_PLAYERS: 2,        // Maximum players that can be compared
+  MAX_COMPARE_PLAYERS: 3,        // Maximum players that can be compared
 };
 
