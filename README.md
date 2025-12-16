@@ -5,6 +5,7 @@ A player statistics leaderboard app for our local football club.
 ## Features
 
 - **Season-based data** — View stats per year (2024, 2025, etc.)
+- **All-Time leaderboard** — Aggregate career stats across all seasons
 - **Sortable columns** — Click any column header to sort (ascending/descending)
 - **Player search** — Filter players by name or position
 - **Player comparison** — Select multiple players to compare stats side-by-side
@@ -70,4 +71,7 @@ npm run preview  # Preview the build locally
 ---
 
 ## Future Enhancements
+
+- [x] All-Time stats view (aggregate across seasons)
 - [ ] Export to CSV
+- [ ] Favorites / Watchlist

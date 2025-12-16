@@ -13,6 +13,48 @@ const seasonData = {
 
 const availableYears = Object.keys(seasonData).sort((a, b) => b - a);
 
+// Aggregate all seasons into "All-Time" stats
+const aggregateAllTimeStats = () => {
+  const playerMap = new Map();
+
+  Object.values(seasonData).forEach((seasonPlayers) => {
+    seasonPlayers.forEach((player) => {
+      const key = player.name; // Use name as unique identifier across seasons
+      
+      if (playerMap.has(key)) {
+        const existing = playerMap.get(key);
+        playerMap.set(key, {
+          ...existing,
+          matches: (existing.matches || 0) + (player.matches || 0),
+          wins: existing.wins + player.wins,
+          draws: existing.draws + player.draws,
+          losses: existing.losses + player.losses,
+          goals: existing.goals + player.goals,
+          cleanSheets: existing.cleanSheets + player.cleanSheets,
+          hatTricks: existing.hatTricks + player.hatTricks,
+          seasonsPlayed: existing.seasonsPlayed + 1,
+        });
+      } else {
+        playerMap.set(key, {
+          id: player.id,
+          name: player.name,
+          position: player.position,
+          matches: player.matches || 0,
+          wins: player.wins,
+          draws: player.draws,
+          losses: player.losses,
+          goals: player.goals,
+          cleanSheets: player.cleanSheets,
+          hatTricks: player.hatTricks,
+          seasonsPlayed: 1,
+        });
+      }
+    });
+  });
+
+  return Array.from(playerMap.values());
+};
+
 function App() {
   const [selectedYear, setSelectedYear] = useState(availableYears[0]);
   const [players, setPlayers] = useState(seasonData[selectedYear]);
@@ -21,7 +63,11 @@ function App() {
   });
 
   useEffect(() => {
-    setPlayers(seasonData[selectedYear]);
+    if (selectedYear === "all-time") {
+      setPlayers(aggregateAllTimeStats());
+    } else {
+      setPlayers(seasonData[selectedYear]);
+    }
   }, [selectedYear]);
 
   useEffect(() => {
@@ -42,7 +88,9 @@ function App() {
           </button>
           <div className="club-badge">⚽</div>
           <h1 className="title">PUFC Leaderboard</h1>
-          <p className="subtitle">Player Statistics</p>
+          <p className="subtitle">
+            {selectedYear === "all-time" ? "All-Time Career Stats" : "Player Statistics"}
+          </p>
         </div>
       </header>
 
@@ -61,6 +109,7 @@ function App() {
                     {year}
                   </option>
                 ))}
+                <option value="all-time">All-Time</option>
               </select>
               <span className="select-arrow">▼</span>
             </div>
