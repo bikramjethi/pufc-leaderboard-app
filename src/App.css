@@ -531,23 +531,23 @@ body::before {
   color: var(--text-muted);
 }
 
-/* Top 3 Highlighting - Background intensity scale (Yellow/Amber) */
+/* Top 3 Highlighting - Background intensity scale (Purple) */
 .stat-gold {
-  background: rgba(245, 158, 11, 0.4);
+  background: rgba(168, 85, 247, 0.4);
   border-radius: 4px;
   padding: 0.15rem 0.35rem;
   font-weight: 700;
 }
 
 .stat-silver {
-  background: rgba(245, 158, 11, 0.25);
+  background: rgba(168, 85, 247, 0.25);
   border-radius: 4px;
   padding: 0.15rem 0.35rem;
   font-weight: 600;
 }
 
 .stat-bronze {
-  background: rgba(245, 158, 11, 0.12);
+  background: rgba(168, 85, 247, 0.12);
   border-radius: 4px;
   padding: 0.15rem 0.35rem;
 }
@@ -777,7 +777,7 @@ body::before {
 }
 
 .highlight-gold {
-  background: rgba(245, 158, 11, 0.4);
+  background: rgba(168, 85, 247, 0.4);
   border-radius: 3px;
   padding: 0.1rem 0.3rem;
   font-weight: 700;
@@ -785,7 +785,7 @@ body::before {
 }
 
 .highlight-silver {
-  background: rgba(245, 158, 11, 0.25);
+  background: rgba(168, 85, 247, 0.25);
   border-radius: 3px;
   padding: 0.1rem 0.3rem;
   font-weight: 600;
@@ -793,7 +793,7 @@ body::before {
 }
 
 .highlight-bronze {
-  background: rgba(245, 158, 11, 0.12);
+  background: rgba(168, 85, 247, 0.12);
   border-radius: 3px;
   padding: 0.1rem 0.3rem;
 }

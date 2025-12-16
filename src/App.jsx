@@ -26,26 +26,26 @@ const aggregateAllTimeStats = () => {
         playerMap.set(key, {
           ...existing,
           matches: (existing.matches || 0) + (player.matches || 0),
-          wins: existing.wins + player.wins,
-          draws: existing.draws + player.draws,
-          losses: existing.losses + player.losses,
-          goals: existing.goals + player.goals,
-          cleanSheets: existing.cleanSheets + player.cleanSheets,
-          hatTricks: existing.hatTricks + player.hatTricks,
+          wins: (existing.wins || 0) + (player.wins || 0),
+          draws: (existing.draws || 0) + (player.draws || 0),
+          losses: (existing.losses || 0) + (player.losses || 0),
+          goals: (existing.goals || 0) + (player.goals || 0),
+          cleanSheets: (existing.cleanSheets || 0) + (player.cleanSheets || 0),
+          hatTricks: (existing.hatTricks || 0) + (player.hatTricks || 0),
           seasonsPlayed: existing.seasonsPlayed + 1,
         });
       } else {
         playerMap.set(key, {
-          id: player.id,
+          id: `alltime-${key.replace(/\s+/g, '-').toLowerCase()}`, // Unique ID based on name
           name: player.name,
           position: player.position,
           matches: player.matches || 0,
-          wins: player.wins,
-          draws: player.draws,
-          losses: player.losses,
-          goals: player.goals,
-          cleanSheets: player.cleanSheets,
-          hatTricks: player.hatTricks,
+          wins: player.wins || 0,
+          draws: player.draws || 0,
+          losses: player.losses || 0,
+          goals: player.goals || 0,
+          cleanSheets: player.cleanSheets || 0,
+          hatTricks: player.hatTricks || 0,
           seasonsPlayed: 1,
         });
       }
