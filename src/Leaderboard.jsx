@@ -108,18 +108,88 @@ export const Leaderboard = ({ players, allSeasonData }) => {
     });
   }, [filteredPlayers, sortKey, sortDirection]);
 
-  // Calculate max values for each stat column (and min for lossPct)
-  const maxValues = useMemo(() => {
-    const statKeys = ["matches", "wins", "draws", "losses", "winPct", "cleanSheets", "goals", "hatTricks"];
-    const maxes = {};
-    statKeys.forEach((key) => {
+  // Calculate top 3 values per column (capped at 3 highlights max)
+  const topValues = useMemo(() => {
+    // Higher is better for these stats
+    const higherIsBetter = ["matches", "wins", "draws", "winPct", "cleanSheets", "goals", "hatTricks"];
+    // Lower is better for these stats
+    const lowerIsBetter = ["losses", "lossPct"];
+    
+    const tops = {};
+    
+    // Process "higher is better" stats
+    higherIsBetter.forEach((key) => {
       const values = playersWithPct.map((p) => p[key] ?? 0);
-      maxes[key] = values.length > 0 ? Math.max(...values) : 0;
+      const uniqueSorted = [...new Set(values)].sort((a, b) => b - a); // descending
+      const top3Values = uniqueSorted.slice(0, 3);
+      
+      let count = 0;
+      tops[key] = { first: null, second: null, third: null };
+      
+      for (let i = 0; i < top3Values.length && count < 3; i++) {
+        const val = top3Values[i];
+        if (val <= 0) continue;
+        
+        const playersWithVal = values.filter(v => 
+          (key === "winPct") ? Math.round(v) === Math.round(val) : v === val
+        ).length;
+        
+        if (i === 0) {
+          tops[key].first = val;
+          count += playersWithVal;
+        } else if (i === 1 && count < 3) {
+          tops[key].second = val;
+          count += playersWithVal;
+        } else if (i === 2 && count < 3) {
+          tops[key].third = val;
+          count += playersWithVal;
+        }
+        
+        if (count > 3 && i > 0) {
+          if (i === 1) tops[key].second = null;
+          if (i === 2) tops[key].third = null;
+          break;
+        }
+      }
     });
-    // For lossPct, lower is better - calculate minimum
-    const lossPctValues = playersWithPct.map((p) => p.lossPct ?? 100);
-    maxes.minLossPct = lossPctValues.length > 0 ? Math.min(...lossPctValues) : 0;
-    return maxes;
+    
+    // Process "lower is better" stats (losses, lossPct)
+    lowerIsBetter.forEach((key) => {
+      const defaultVal = key === "lossPct" ? 100 : 999;
+      const values = playersWithPct.map((p) => p[key] ?? defaultVal);
+      const uniqueSorted = [...new Set(values)].sort((a, b) => a - b); // ascending (lower is better)
+      const top3Values = uniqueSorted.slice(0, 3);
+      
+      let count = 0;
+      tops[key] = { first: null, second: null, third: null };
+      
+      for (let i = 0; i < top3Values.length && count < 3; i++) {
+        const val = top3Values[i];
+        
+        const playersWithVal = values.filter(v => 
+          (key === "lossPct") ? Math.round(v) === Math.round(val) : v === val
+        ).length;
+        
+        if (i === 0) {
+          tops[key].first = val;
+          count += playersWithVal;
+        } else if (i === 1 && count < 3) {
+          tops[key].second = val;
+          count += playersWithVal;
+        } else if (i === 2 && count < 3) {
+          tops[key].third = val;
+          count += playersWithVal;
+        }
+        
+        if (count > 3 && i > 0) {
+          if (i === 1) tops[key].second = null;
+          if (i === 2) tops[key].third = null;
+          break;
+        }
+      }
+    });
+    
+    return tops;
   }, [playersWithPct]);
 
   const getSortIndicator = (key) => {
@@ -176,7 +246,7 @@ export const Leaderboard = ({ players, allSeasonData }) => {
                 key={player.id}
                 player={player}
                 rank={index + 1}
-                maxValues={maxValues}
+                topValues={topValues}
                 showHighlight={config.ENABLE_MAX_HIGHLIGHT}
                 showCheckbox={config.ENABLE_COMPARISON}
                 showPlayerModal={config.ENABLE_PLAYER_MODAL}
@@ -200,7 +270,11 @@ export const Leaderboard = ({ players, allSeasonData }) => {
         <span><strong>G</strong> Goals</span>
         <span><strong>HT</strong> Hat Tricks</span>
         <span className="legend-divider"></span>
-        <span className="legend-highlight"><strong className="highlight-sample">123</strong> Max</span>
+        <span className="legend-highlight">
+          <strong className="highlight-gold">1st</strong>
+          <strong className="highlight-silver">2nd</strong>
+          <strong className="highlight-bronze">3rd</strong>
+        </span>
       </div>
 
       {config.ENABLE_COMPARISON && selectedPlayers.length === config.MAX_COMPARE_PLAYERS && (

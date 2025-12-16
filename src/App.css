@@ -531,9 +531,25 @@ body::before {
   color: var(--text-muted);
 }
 
-.stat-highlight {
-  color: var(--gold) !important;
+/* Top 3 Highlighting - Background intensity scale (Yellow/Amber) */
+.stat-gold {
+  background: rgba(245, 158, 11, 0.4);
+  border-radius: 4px;
+  padding: 0.15rem 0.35rem;
   font-weight: 700;
+}
+
+.stat-silver {
+  background: rgba(245, 158, 11, 0.25);
+  border-radius: 4px;
+  padding: 0.15rem 0.35rem;
+  font-weight: 600;
+}
+
+.stat-bronze {
+  background: rgba(245, 158, 11, 0.12);
+  border-radius: 4px;
+  padding: 0.15rem 0.35rem;
 }
 
 /* Selection & Compare */
@@ -760,9 +776,26 @@ body::before {
   gap: 0.35rem;
 }
 
-.highlight-sample {
-  color: var(--gold) !important;
+.highlight-gold {
+  background: rgba(245, 158, 11, 0.4);
+  border-radius: 3px;
+  padding: 0.1rem 0.3rem;
   font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.highlight-silver {
+  background: rgba(245, 158, 11, 0.25);
+  border-radius: 3px;
+  padding: 0.1rem 0.3rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.highlight-bronze {
+  background: rgba(245, 158, 11, 0.12);
+  border-radius: 3px;
+  padding: 0.1rem 0.3rem;
 }
 
 /* Player Name Button */

@@ -1,7 +1,7 @@
 export const Row = ({ 
   player, 
   rank, 
-  maxValues, 
+  topValues, 
   showHighlight = true,
   showCheckbox = true,
   showPlayerModal = true,
@@ -19,26 +19,28 @@ export const Row = ({
     return "rank";
   };
 
-  const isMax = (key) => {
-    if (!showHighlight || !maxValues) return false;
+  // Returns highlight class based on rank (gold, silver, bronze) or empty string
+  const getHighlightClass = (key) => {
+    if (!showHighlight || !topValues || !topValues[key]) return "";
     const playerVal = player[key] ?? 0;
+    const { first, second, third } = topValues[key];
     
-    // For lossPct, lower is better - compare against minimum
-    if (key === "lossPct") {
-      const minVal = maxValues.minLossPct ?? 0;
-      return Math.round(playerVal) === Math.round(minVal);
+    // For percentage values, use rounded comparison
+    if (key === "winPct" || key === "lossPct") {
+      const rounded = Math.round(playerVal);
+      if (first !== null && rounded === Math.round(first)) return "stat-gold";
+      if (second !== null && rounded === Math.round(second)) return "stat-silver";
+      if (third !== null && rounded === Math.round(third)) return "stat-bronze";
+      return "";
     }
     
-    // For winPct, use rounded comparison for float precision
-    if (key === "winPct") {
-      if (maxValues[key] <= 0) return false;
-      return Math.round(playerVal) === Math.round(maxValues[key]);
-    }
-    
-    // For other stats, highlight max values
-    if (maxValues[key] <= 0) return false;
-    return playerVal === maxValues[key];
+    // For other stats, exact comparison
+    if (first !== null && playerVal === first) return "stat-gold";
+    if (second !== null && playerVal === second) return "stat-silver";
+    if (third !== null && playerVal === third) return "stat-bronze";
+    return "";
   };
+
   const safeNumber = (val) => (typeof val === "number" ? val : 0);
 
   return (
@@ -71,15 +73,15 @@ export const Row = ({
       <td>
         <span className={positionClass}>{player.position}</span>
       </td>
-      <td className={`stat ${isMax("matches") ? "stat-highlight" : ""}`}>{player.matches}</td>
-      <td className={`stat ${isMax("wins") ? "stat-highlight" : ""}`}>{player.wins}</td>
-      <td className={`stat ${isMax("draws") ? "stat-highlight" : ""}`}>{player.draws}</td>
-      <td className={`stat ${isMax("losses") ? "stat-highlight" : ""}`}>{player.losses}</td>
-      <td className={`stat stat-pct ${isMax("winPct") ? "stat-highlight" : ""}`}>{safeNumber(player.winPct).toFixed(0)}%</td>
-      <td className={`stat stat-pct ${isMax("lossPct") ? "stat-highlight" : ""}`}>{safeNumber(player.lossPct).toFixed(0)}%</td>
-      <td className={`stat ${isMax("cleanSheets") ? "stat-highlight" : ""}`}>{player.cleanSheets}</td>
-      <td className={`stat stat-goals ${isMax("goals") ? "stat-highlight" : ""}`}>{player.goals}</td>
-      <td className={`stat ${isMax("hatTricks") ? "stat-highlight" : ""}`}>{player.hatTricks}</td>
+      <td className={`stat ${getHighlightClass("matches")}`}>{player.matches}</td>
+      <td className={`stat ${getHighlightClass("wins")}`}>{player.wins}</td>
+      <td className={`stat ${getHighlightClass("draws")}`}>{player.draws}</td>
+      <td className={`stat ${getHighlightClass("losses")}`}>{player.losses}</td>
+      <td className={`stat stat-pct ${getHighlightClass("winPct")}`}>{safeNumber(player.winPct).toFixed(0)}%</td>
+      <td className={`stat stat-pct ${getHighlightClass("lossPct")}`}>{safeNumber(player.lossPct).toFixed(0)}%</td>
+      <td className={`stat ${getHighlightClass("cleanSheets")}`}>{player.cleanSheets}</td>
+      <td className={`stat stat-goals ${getHighlightClass("goals")}`}>{player.goals}</td>
+      <td className={`stat ${getHighlightClass("hatTricks")}`}>{player.hatTricks}</td>
     </tr>
   );
 };
