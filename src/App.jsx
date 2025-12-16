@@ -56,8 +56,8 @@ const aggregateAllTimeStats = () => {
 };
 
 function App() {
-  const [selectedYear, setSelectedYear] = useState(availableYears[0]);
-  const [players, setPlayers] = useState(seasonData[selectedYear]);
+  const [selectedYear, setSelectedYear] = useState("all-time");
+  const [players, setPlayers] = useState(() => aggregateAllTimeStats());
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("pufc-theme") || "dark";
   });
