@@ -4,17 +4,17 @@ import { ComparePanel } from "./ComparePanel.jsx";
 import { config } from "./leaderboard-config.js";
 
 const columns = [
-  { key: "name", label: "Player", className: "player-col", sortable: true },
-  { key: "position", label: "Pos", className: "position-col", sortable: true },
-  { key: "matches", label: "MP", className: "stat-col", sortable: true },
-  { key: "wins", label: "W", className: "stat-col", sortable: true },
-  { key: "draws", label: "D", className: "stat-col", sortable: true },
-  { key: "losses", label: "L", className: "stat-col", sortable: true },
-  { key: "winPct", label: "W%", className: "stat-col", sortable: true },
-  { key: "lossPct", label: "L%", className: "stat-col", sortable: true },
-  { key: "cleanSheets", label: "CS", className: "stat-col", sortable: true },
-  { key: "goals", label: "G", className: "stat-col", sortable: true },
-  { key: "hatTricks", label: "HT", className: "stat-col", sortable: true },
+  { key: "name", label: "Player", className: "player-col", sortable: true, tooltip: "Player Name" },
+  { key: "position", label: "Pos", className: "position-col", sortable: true, tooltip: "Playing Position" },
+  { key: "matches", label: "MP", className: "stat-col", sortable: true, tooltip: "Matches Played" },
+  { key: "wins", label: "W", className: "stat-col", sortable: true, tooltip: "Total Wins" },
+  { key: "draws", label: "D", className: "stat-col", sortable: true, tooltip: "Total Draws" },
+  { key: "losses", label: "L", className: "stat-col", sortable: true, tooltip: "Total Losses" },
+  { key: "winPct", label: "W%", className: "stat-col", sortable: true, tooltip: "Win Percentage" },
+  { key: "lossPct", label: "L%", className: "stat-col", sortable: true, tooltip: "Loss Percentage" },
+  { key: "cleanSheets", label: "CS", className: "stat-col", sortable: true, tooltip: "Clean Sheets" },
+  { key: "goals", label: "G", className: "stat-col", sortable: true, tooltip: "Goals Scored" },
+  { key: "hatTricks", label: "HT", className: "stat-col", sortable: true, tooltip: "Hat Tricks" },
 ];
 
 // Helper to calculate percentages
@@ -145,8 +145,9 @@ export const Leaderboard = ({ players }) => {
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`${col.className} ${col.sortable ? "sortable" : ""} ${sortKey === col.key ? "sorted" : ""}`}
+                  className={`${col.className} ${col.sortable ? "sortable" : ""} ${sortKey === col.key ? "sorted" : ""} ${col.tooltip ? "has-tooltip" : ""}`}
                   onClick={() => col.sortable && handleSort(col.key)}
+                  data-tooltip={col.tooltip}
                 >
                   <span className="th-content">
                     {col.label}
