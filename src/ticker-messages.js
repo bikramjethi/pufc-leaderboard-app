@@ -19,6 +19,7 @@ export const tickerMessages = [
   "Vinay: 10/10 performance, 0/10 luck 🍀",
   "Vinit picking teams like it's someone else's problem 🤷",
   "CEO Prateek will join next game — pending board approval 💼",
+  "Rishav: proof that movement is optional, finishing is not ⚽",
   "Breaking: Prateek's work-life balance does not include football ⚖️",
   "Pandey receiving the ball... and we'll check back next week for the turn 🐢",
   "Animesh spotted breaking the sound barrier down the flank ✈️",
@@ -28,6 +29,7 @@ export const tickerMessages = [
   "Ammar's marking: tighter than your budget after rent 🎯",
   "Breaking: Tushar Lal expected back... sometime next decade ⏳",
   "Ashish negotiating teams harder than salary packages 🤝",
+  "Rishav doesn't chase the ball. The ball comes to him. Eventually 🧘",
   "Subbu's luck left the chat... in 2024 😭",
   "Open goal? Rishabh: 'But have we considered a 1-2?' 🤔",
   "Subarna treating forward passes like they're a paid subscription 🔙",
@@ -37,5 +39,6 @@ export const tickerMessages = [
   "Breaking: Vikalp spotted at training. Physio on standby 🏥",
   "Breaking: Vinit let an attacker through because confrontation is stressful 😌",
   "Prateek traded matchdays for paydays 💵",
+  "Rishav's diet plan: If it's fried, it's fine 🍟",
   "Breaking: Rishabh completed 200 passes. We're still waiting for the shot 📊",
 ];
