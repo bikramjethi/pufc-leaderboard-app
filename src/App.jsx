@@ -83,14 +83,16 @@ function App() {
     <div className="app">
       <header className="header">
         <div className="header-content">
+          <div className="club-badge">⚽</div>
+          <div className="header-text">
+            <h1 className="title">PUFC Leaderboard</h1>
+            <p className="subtitle">
+              {selectedYear === "all-time" ? "All-Time Career Stats" : "Player Statistics"}
+            </p>
+          </div>
           <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
             {theme === "dark" ? "☀️" : "🌙"}
           </button>
-          <div className="club-badge">⚽</div>
-          <h1 className="title">PUFC Leaderboard</h1>
-          <p className="subtitle">
-            {selectedYear === "all-time" ? "All-Time Career Stats" : "Player Statistics"}
-          </p>
         </div>
       </header>
 
