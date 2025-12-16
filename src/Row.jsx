@@ -13,9 +13,6 @@ export const Row = ({
   const positionClass = `position-badge position-${position.toLowerCase()}`;
   
   const getRankClass = () => {
-    if (rank === 1) return "rank rank-gold";
-    if (rank === 2) return "rank rank-silver";
-    if (rank === 3) return "rank rank-bronze";
     return "rank";
   };
 
