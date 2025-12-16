@@ -1,4 +1,12 @@
-export const Row = ({ player, rank, maxValues, isSelected = false, onSelect }) => {
+export const Row = ({ 
+  player, 
+  rank, 
+  maxValues, 
+  showHighlight = true,
+  showCheckbox = true,
+  isSelected = false, 
+  onSelect 
+}) => {
   const position = player?.position ?? "N/A";
   const positionClass = `position-badge position-${position.toLowerCase()}`;
   
@@ -9,20 +17,22 @@ export const Row = ({ player, rank, maxValues, isSelected = false, onSelect }) =
     return "rank";
   };
 
-  const isMax = (key) => maxValues && player[key] === maxValues[key] && maxValues[key] > 0;
+  const isMax = (key) => showHighlight && maxValues && player[key] === maxValues[key] && maxValues[key] > 0;
   const safeNumber = (val) => (typeof val === "number" ? val : 0);
 
   return (
     <tr className={`player-row ${isSelected ? "player-row-selected" : ""}`}>
-      <td className="select-cell">
-        <input
-          type="checkbox"
-          className="player-checkbox"
-          checked={isSelected}
-          onChange={onSelect}
-          aria-label={`Select ${player?.name ?? "player"} for comparison`}
-        />
-      </td>
+      {showCheckbox && (
+        <td className="select-cell">
+          <input
+            type="checkbox"
+            className="player-checkbox"
+            checked={isSelected}
+            onChange={onSelect}
+            aria-label={`Select ${player?.name ?? "player"} for comparison`}
+          />
+        </td>
+      )}
       <td className={getRankClass()}>{rank}</td>
       <td className="player-name">{player.name}</td>
       <td>

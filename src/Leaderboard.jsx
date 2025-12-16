@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Row } from "./Row.jsx";
 import { ComparePanel } from "./ComparePanel.jsx";
+import { config } from "./leaderboard-config.js";
 
 const columns = [
   { key: "name", label: "Player", className: "player-col", sortable: true },
@@ -27,18 +28,20 @@ const calcPercentages = (player) => {
 };
 
 export const Leaderboard = ({ players }) => {
-  const [sortKey, setSortKey] = useState("matches");
-  const [sortDirection, setSortDirection] = useState("desc");
+  const [sortKey, setSortKey] = useState(config.DEFAULT_SORT_KEY);
+  const [sortDirection, setSortDirection] = useState(config.DEFAULT_SORT_DIR);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPlayers, setSelectedPlayers] = useState([]);
 
   const handlePlayerSelect = (player) => {
+    if (!config.ENABLE_COMPARISON) return;
+    
     setSelectedPlayers((prev) => {
       const isSelected = prev.some((p) => p.id === player.id);
       if (isSelected) {
         return prev.filter((p) => p.id !== player.id);
       }
-      if (prev.length >= 2) {
+      if (prev.length >= config.MAX_COMPARE_PLAYERS) {
         return [prev[1], player]; // Replace oldest selection
       }
       return [...prev, player];
@@ -117,25 +120,27 @@ export const Leaderboard = ({ players }) => {
 
   return (
     <div className="leaderboard">
-      <div className="search-container">
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search players..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        {searchTerm && (
-          <button className="search-clear" onClick={() => setSearchTerm("")}>
-            ✕
-          </button>
-        )}
-      </div>
+      {config.ENABLE_SEARCH && (
+        <div className="search-container">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search players..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <button className="search-clear" onClick={() => setSearchTerm("")}>
+              ✕
+            </button>
+          )}
+        </div>
+      )}
       <div className="table-container">
         <table className="leaderboard-table">
           <thead>
             <tr>
-              <th className="select-col"></th>
+              {config.ENABLE_COMPARISON && <th className="select-col"></th>}
               <th className="rank-col">#</th>
               {columns.map((col) => (
                 <th
@@ -158,6 +163,8 @@ export const Leaderboard = ({ players }) => {
                 player={player}
                 rank={index + 1}
                 maxValues={maxValues}
+                showHighlight={config.ENABLE_MAX_HIGHLIGHT}
+                showCheckbox={config.ENABLE_COMPARISON}
                 isSelected={selectedPlayers.some((p) => p.id === player.id)}
                 onSelect={() => handlePlayerSelect(player)}
               />
@@ -180,7 +187,7 @@ export const Leaderboard = ({ players }) => {
         <span className="legend-highlight"><strong className="highlight-sample">123</strong> Max</span>
       </div>
 
-      {selectedPlayers.length === 2 && (
+      {config.ENABLE_COMPARISON && selectedPlayers.length === config.MAX_COMPARE_PLAYERS && (
         <ComparePanel
           player1={selectedPlayers[0]}
           player2={selectedPlayers[1]}
