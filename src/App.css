@@ -241,6 +241,8 @@ body::before {
 
 .table-container {
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: 70vh;
 }
 
 .leaderboard-table {
@@ -249,8 +251,20 @@ body::before {
 }
 
 .leaderboard-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   background: var(--bg-secondary);
-  border-bottom: 2px solid var(--accent-primary);
+}
+
+.leaderboard-table thead::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent-primary);
 }
 
 .leaderboard-table th {
@@ -261,6 +275,7 @@ body::before {
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  background: var(--bg-secondary);
 }
 
 .leaderboard-table th.sortable {
