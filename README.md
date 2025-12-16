@@ -7,6 +7,7 @@ A player statistics leaderboard app for our local football club.
 - **Season-based data** — View stats per year (2024, 2025, etc.)
 - **Sortable columns** — Click any column header to sort (ascending/descending)
 - **Player search** — Filter players by name or position
+- **Player comparison** — Select 2 players to compare stats side-by-side
 - **Max value highlighting** — Season leaders highlighted in gold
 - **Position badges** — Color-coded player positions (FWD, MID, DEF, GK, ALL)
 - **Win/Loss percentages** — Calculated W% and L% columns
@@ -48,5 +49,4 @@ npm run preview  # Preview the build locally
 - [ ] Player profile cards (click to expand details)
 - [ ] Add/edit player form
 - [ ] Export to CSV
-- [ ] Compare two players side-by-side
 - [ ] All-time stats view (aggregate across seasons)
