@@ -560,6 +560,13 @@ body::before {
 
 .select-cell {
   text-align: center;
+  vertical-align: middle;
+  padding: 0 !important;
+}
+
+.select-cell .player-checkbox {
+  display: block;
+  margin: 0 auto;
 }
 
 /* Custom Checkbox Styling - Sleek Circle Design */
