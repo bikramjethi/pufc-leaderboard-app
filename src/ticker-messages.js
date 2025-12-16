@@ -29,6 +29,6 @@ export const tickerMessages = [
   "Subarna treating forward passes like they're a paid subscription",
   "Cross it in — Vivek's already won the header before it's kicked",
   "Soumyadeep: 50% hold-up play, 50% trash talk, 100% entertainment 🎤",
-  "David collects losses like Pokémon — gotta catch 'em all",
+  "David's win column looking like my bank balance 💸",
   "Breaking: Vikalp spotted at training. Physio on standby 🏥",
 ];
