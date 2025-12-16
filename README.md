@@ -73,3 +73,6 @@ npm run preview  # Preview the build locally
 ## Future Enhancements
 - [ ] Export to CSV
 - [ ] Favorites / Watchlist
+- [ ] Profile pic
+- [ ] Personalised player description
+
