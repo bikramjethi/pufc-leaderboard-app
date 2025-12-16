@@ -28,6 +28,7 @@ const calcPercentages = (player) => {
 export const Leaderboard = ({ players }) => {
   const [sortKey, setSortKey] = useState("matches");
   const [sortDirection, setSortDirection] = useState("desc");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSort = (key) => {
     if (sortKey === key) {
@@ -45,8 +46,19 @@ export const Leaderboard = ({ players }) => {
     return players.map(calcPercentages);
   }, [players]);
 
+  // Filter players by search term
+  const filteredPlayers = useMemo(() => {
+    if (!searchTerm.trim()) return playersWithPct;
+    const term = searchTerm.toLowerCase();
+    return playersWithPct.filter(
+      (player) =>
+        player.name.toLowerCase().includes(term) ||
+        player.position.toLowerCase().includes(term)
+    );
+  }, [playersWithPct, searchTerm]);
+
   const sortedPlayers = useMemo(() => {
-    return [...playersWithPct].sort((a, b) => {
+    return [...filteredPlayers].sort((a, b) => {
       const aVal = a[sortKey];
       const bVal = b[sortKey];
 
@@ -59,7 +71,7 @@ export const Leaderboard = ({ players }) => {
       // Handle numeric comparison
       return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
     });
-  }, [playersWithPct, sortKey, sortDirection]);
+  }, [filteredPlayers, sortKey, sortDirection]);
 
   // Calculate max values for each stat column
   const maxValues = useMemo(() => {
@@ -82,6 +94,20 @@ export const Leaderboard = ({ players }) => {
 
   return (
     <div className="leaderboard">
+      <div className="search-container">
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search players..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        {searchTerm && (
+          <button className="search-clear" onClick={() => setSearchTerm("")}>
+            ✕
+          </button>
+        )}
+      </div>
       <div className="table-container">
         <table className="leaderboard-table">
           <thead>
