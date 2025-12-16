@@ -26,7 +26,7 @@ const calcPercentages = (player) => {
 };
 
 export const Leaderboard = ({ players }) => {
-  const [sortKey, setSortKey] = useState("wins");
+  const [sortKey, setSortKey] = useState("matches");
   const [sortDirection, setSortDirection] = useState("desc");
 
   const handleSort = (key) => {
