@@ -35,4 +35,5 @@ export const tickerMessages = [
   "David's win column looking like my bank balance 💸",
   "Breaking: Vikalp spotted at training. Physio on standby 🏥",
   "Breaking: Vinit let an attacker through because confrontation is stressful 😌",
+  "Prateek traded matchdays for paydays 💵",
 ];
