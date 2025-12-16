@@ -116,7 +116,7 @@ function App() {
           </div>
         </div>
 
-        <Leaderboard players={players} allSeasonData={seasonData} />
+        <Leaderboard players={players} allSeasonData={seasonData} isAllTime={selectedYear === "all-time"} />
       </main>
 
       <footer className="footer">

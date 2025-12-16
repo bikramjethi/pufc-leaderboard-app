@@ -28,7 +28,7 @@ const calcPercentages = (player) => {
   };
 };
 
-export const Leaderboard = ({ players, allSeasonData }) => {
+export const Leaderboard = ({ players, allSeasonData, isAllTime = false }) => {
   const [sortKey, setSortKey] = useState(config.DEFAULT_SORT_KEY);
   const [sortDirection, setSortDirection] = useState(config.DEFAULT_SORT_DIR);
   const [searchTerm, setSearchTerm] = useState("");
@@ -288,6 +288,7 @@ export const Leaderboard = ({ players, allSeasonData }) => {
         <PlayerModal
           player={modalPlayer}
           allSeasonData={allSeasonData}
+          isAllTime={isAllTime}
           onClose={closeModal}
         />
       )}

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export const PlayerModal = ({ player, allSeasonData, onClose }) => {
+export const PlayerModal = ({ player, allSeasonData, isAllTime = false, onClose }) => {
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (e) => {
@@ -83,7 +83,7 @@ export const PlayerModal = ({ player, allSeasonData, onClose }) => {
 
         {/* Detailed Stats */}
         <div className="modal-section">
-          <h3 className="modal-section-title">Season Stats</h3>
+          <h3 className="modal-section-title">{isAllTime ? "Career Stats" : "Season Stats"}</h3>
           <div className="modal-stats-grid">
             <div className="modal-stat">
               <span className="modal-stat-icon">⚽</span>
@@ -135,8 +135,8 @@ export const PlayerModal = ({ player, allSeasonData, onClose }) => {
           </div>
         )}
 
-        {/* Career Totals (if multiple seasons) */}
-        {history.length > 1 && (
+        {/* Career Totals (if multiple seasons and not already in All-Time view) */}
+        {!isAllTime && history.length > 1 && (
           <div className="modal-section">
             <h3 className="modal-section-title">Career Totals</h3>
             <div className="career-totals">
