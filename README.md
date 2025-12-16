@@ -12,6 +12,9 @@ A player statistics leaderboard app for our local football club.
 - **Position badges** — Color-coded player positions (FWD, MID, DEF, GK, ALL)
 - **Win/Loss percentages** — Calculated W% and L% columns
 - **Matches played tracking** — Default sorting by matches played
+- **Sticky table header** — Column headers stay visible when scrolling
+- **Tooltips** — Hover over column headers to see full descriptions
+- **Dark/Light theme** — Toggle between themes (preference saved to localStorage)
 - **Configurable** — Toggle features on/off via config file
 
 ## Stats Tracked
