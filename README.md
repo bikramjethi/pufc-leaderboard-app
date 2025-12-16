@@ -8,6 +8,7 @@ A player statistics leaderboard app for our local football club.
 - **Sortable columns** — Click any column header to sort (ascending/descending)
 - **Player search** — Filter players by name or position
 - **Player comparison** — Select multiple players to compare stats side-by-side
+- **Player profile modal** — Click any player name to view detailed stats, season history, and career totals
 - **Max value highlighting** — Season leaders highlighted in gold
 - **Position badges** — Color-coded player positions (FWD, MID, DEF, GK, ALL)
 - **Win/Loss percentages** — Calculated W% and L% columns
@@ -41,6 +42,7 @@ export const config = {
   ENABLE_COMPARISON: true,       // Show checkboxes and allow player comparison
   ENABLE_SEARCH: true,           // Show search input for filtering players
   ENABLE_MAX_HIGHLIGHT: true,    // Highlight max values in gold
+  ENABLE_PLAYER_MODAL: true,     // Click player name to view detailed profile
 
   // Default Settings
   DEFAULT_SORT_KEY: "matches",   // Default column to sort by
@@ -68,7 +70,4 @@ npm run preview  # Preview the build locally
 ---
 
 ## Future Enhancements
-
-- [ ] Player profile cards (click to expand details)
 - [ ] Export to CSV
-- [ ] All-time stats view (aggregate across seasons)
