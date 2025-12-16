@@ -12,10 +12,12 @@ export const tickerMessages = [
   "Jethi playing defense but forgot to tell his feet 🤣",
   "Breaking: Sourabh seen avoiding teams with Vinit on defense 👀",
   "Rishav's shooting — powered by pure frustration 😤",
+  "Vinit's motto: Win or lose, at least we vibed 🎶",
   "Rohit Hyd's pre-match warmup: stretches, sprints, and selecting today's argument 🥊",
   "Lalit got shouted at again... must be a Tuesday 😅",
   "Breaking: Matthew's signature move now has its own Wikipedia page 🕺",
   "Vinay: 10/10 performance, 0/10 luck 🍀",
+  "Vinit picking teams like it's someone else's problem 🤷",
   "CEO Prateek will join next game — pending board approval 💼",
   "Breaking: Prateek's work-life balance does not include football ⚖️",
   "Pandey receiving the ball... and we'll check back next week for the turn 🐢",
@@ -31,4 +33,5 @@ export const tickerMessages = [
   "Soumyadeep: 50% hold-up play, 50% trash talk, 100% entertainment 🎤",
   "David's win column looking like my bank balance 💸",
   "Breaking: Vikalp spotted at training. Physio on standby 🏥",
+  "Breaking: Vinit let an attacker through because confrontation is stressful 😌",
 ];
