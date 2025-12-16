@@ -7,7 +7,6 @@
  */
 
 export const tickerMessages = [
-  // Originals
   "Vinit: The wall that occasionally lets a few through 🧱",
   "Ashish has played more games than some of us have excuses 📊",
   "Jethi playing defense but forgot to tell his feet 🤣",
@@ -26,4 +25,10 @@ export const tickerMessages = [
   "Tushar now requires a visa to play with us 🇺🇸",
   "Ammar's marking: tighter than your budget after rent",
   "Breaking: Tushar Lal expected back... sometime next decade",
+  "Subbu's luck left the chat... in 2024",
+  "Subarna treating forward passes like they're a paid subscription",
+  "Cross it in — Vivek's already won the header before it's kicked",
+  "Soumyadeep: 50% hold-up play, 50% trash talk, 100% entertainment 🎤",
+  "David collects losses like Pokémon — gotta catch 'em all",
+  "Breaking: Vikalp spotted at training. Physio on standby 🏥",
 ];
