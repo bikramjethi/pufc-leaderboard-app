@@ -202,22 +202,40 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false }) => {
     );
   };
 
-  // Build ticker content by joining messages
-  const tickerContent = useMemo(() => {
-    if (!tickerMessages.length) return "";
-    return tickerMessages.join("  •  ");
+  // Shuffle ticker messages randomly (once on mount)
+  const shuffledMessages = useMemo(() => {
+    const shuffled = [...tickerMessages];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
   }, []);
 
   return (
     <div className="leaderboard">
       {/* News Ticker */}
-      {config.ENABLE_TICKER && tickerMessages.length > 0 && (
+      {config.ENABLE_TICKER && shuffledMessages.length > 0 && (
         <div className="news-ticker">
-          <span className="ticker-icon">📢</span>
+          <div className="ticker-label">
+            <span className="ticker-label-text">EXTRA TIME</span>
+          </div>
           <div className="ticker-wrapper">
             <div className="ticker-content">
-              <span>{tickerContent}</span>
-              <span>{tickerContent}</span>
+              {/* First set of messages */}
+              {shuffledMessages.map((msg, idx) => (
+                <span key={`a-${idx}`} className="ticker-item">
+                  <span className="ticker-bullet">▸</span>
+                  <span className="ticker-text">{msg}</span>
+                </span>
+              ))}
+              {/* Duplicate for seamless loop */}
+              {shuffledMessages.map((msg, idx) => (
+                <span key={`b-${idx}`} className="ticker-item">
+                  <span className="ticker-bullet">▸</span>
+                  <span className="ticker-text">{msg}</span>
+                </span>
+              ))}
             </div>
           </div>
         </div>
