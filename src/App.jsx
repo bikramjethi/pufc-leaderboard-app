@@ -16,15 +16,30 @@ const availableYears = Object.keys(seasonData).sort((a, b) => b - a);
 function App() {
   const [selectedYear, setSelectedYear] = useState(availableYears[0]);
   const [players, setPlayers] = useState(seasonData[selectedYear]);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("pufc-theme") || "dark";
+  });
 
   useEffect(() => {
     setPlayers(seasonData[selectedYear]);
   }, [selectedYear]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("pufc-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+
   return (
     <div className="app">
       <header className="header">
         <div className="header-content">
+          <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+            {theme === "dark" ? "☀️" : "🌙"}
+          </button>
           <div className="club-badge">⚽</div>
           <h1 className="title">PUFC Leaderboard</h1>
           <p className="subtitle">Player Statistics</p>
