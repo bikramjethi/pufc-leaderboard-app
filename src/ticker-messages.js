@@ -29,6 +29,7 @@ export const tickerMessages = [
   "Breaking: Tushar Lal expected back... sometime next decade ⏳",
   "Ashish negotiating teams harder than salary packages 🤝",
   "Subbu's luck left the chat... in 2024 😭",
+  "Open goal? Rishabh: 'But have we considered a 1-2?' 🤔",
   "Subarna treating forward passes like they're a paid subscription 🔙",
   "Cross it in — Vivek's already won the header before it's kicked 🗿",
   "Soumyadeep: 50% hold-up play, 50% trash talk, 100% entertainment 🎤",
@@ -36,4 +37,5 @@ export const tickerMessages = [
   "Breaking: Vikalp spotted at training. Physio on standby 🏥",
   "Breaking: Vinit let an attacker through because confrontation is stressful 😌",
   "Prateek traded matchdays for paydays 💵",
+  "Breaking: Rishabh completed 200 passes. We're still waiting for the shot 📊",
 ];
