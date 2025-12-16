@@ -42,4 +42,5 @@ export const tickerMessages = [
   "Jethi's hamstrings running on faith and fried food alone 🙏",
   "Rishav's diet plan: If it's fried, it's fine 🍟",
   "Breaking: Rishabh completed 200 passes. We're still waiting for the shot 📊",
+  "Sudeep's watch collection worth more than our transfer budget 💎"
 ];
