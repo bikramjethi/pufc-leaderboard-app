@@ -4,8 +4,10 @@ export const Row = ({
   maxValues, 
   showHighlight = true,
   showCheckbox = true,
+  showPlayerModal = true,
   isSelected = false, 
-  onSelect 
+  onSelect,
+  onPlayerClick
 }) => {
   const position = player?.position ?? "N/A";
   const positionClass = `position-badge position-${position.toLowerCase()}`;
@@ -34,7 +36,19 @@ export const Row = ({
         </td>
       )}
       <td className={getRankClass()}>{rank}</td>
-      <td className="player-name">{player.name}</td>
+      <td className="player-name">
+        {showPlayerModal ? (
+          <button 
+            className="player-name-btn" 
+            onClick={onPlayerClick}
+            aria-label={`View ${player.name}'s profile`}
+          >
+            {player.name}
+          </button>
+        ) : (
+          player.name
+        )}
+      </td>
       <td>
         <span className={positionClass}>{player.position}</span>
       </td>

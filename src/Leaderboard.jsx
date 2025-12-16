@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Row } from "./Row.jsx";
 import { ComparePanel } from "./ComparePanel.jsx";
+import { PlayerModal } from "./PlayerModal.jsx";
 import { config } from "./leaderboard-config.js";
 
 const columns = [
@@ -27,11 +28,20 @@ const calcPercentages = (player) => {
   };
 };
 
-export const Leaderboard = ({ players }) => {
+export const Leaderboard = ({ players, allSeasonData }) => {
   const [sortKey, setSortKey] = useState(config.DEFAULT_SORT_KEY);
   const [sortDirection, setSortDirection] = useState(config.DEFAULT_SORT_DIR);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPlayers, setSelectedPlayers] = useState([]);
+  const [modalPlayer, setModalPlayer] = useState(null);
+
+  const handlePlayerClick = (player) => {
+    if (config.ENABLE_PLAYER_MODAL) {
+      setModalPlayer(player);
+    }
+  };
+
+  const closeModal = () => setModalPlayer(null);
 
   const handlePlayerSelect = (player) => {
     if (!config.ENABLE_COMPARISON) return;
@@ -166,8 +176,10 @@ export const Leaderboard = ({ players }) => {
                 maxValues={maxValues}
                 showHighlight={config.ENABLE_MAX_HIGHLIGHT}
                 showCheckbox={config.ENABLE_COMPARISON}
+                showPlayerModal={config.ENABLE_PLAYER_MODAL}
                 isSelected={selectedPlayers.some((p) => p.id === player.id)}
                 onSelect={() => handlePlayerSelect(player)}
+                onPlayerClick={() => handlePlayerClick(player)}
               />
             ))}
           </tbody>
@@ -192,6 +204,14 @@ export const Leaderboard = ({ players }) => {
         <ComparePanel
           players={selectedPlayers}
           onClose={clearComparison}
+        />
+      )}
+
+      {config.ENABLE_PLAYER_MODAL && modalPlayer && (
+        <PlayerModal
+          player={modalPlayer}
+          allSeasonData={allSeasonData}
+          onClose={closeModal}
         />
       )}
     </div>

@@ -67,7 +67,7 @@ function App() {
           </div>
         </div>
 
-        <Leaderboard players={players} />
+        <Leaderboard players={players} allSeasonData={seasonData} />
       </main>
 
       <footer className="footer">

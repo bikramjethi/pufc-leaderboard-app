@@ -7,9 +7,10 @@
 
 export const config = {
   // Feature Toggles
-  ENABLE_COMPARISON: false,       // Show checkboxes and allow player comparison
+  ENABLE_COMPARISON: false,      // Show checkboxes and allow player comparison
   ENABLE_SEARCH: true,           // Show search input for filtering players
   ENABLE_MAX_HIGHLIGHT: true,    // Highlight max values in gold
+  ENABLE_PLAYER_MODAL: true,     // Click player name to view detailed profile
 
   // Default Settings
   DEFAULT_SORT_KEY: "matches",   // Default column to sort by
