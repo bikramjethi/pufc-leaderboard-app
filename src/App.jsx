@@ -27,7 +27,7 @@ function App() {
         <div className="header-content">
           <div className="club-badge">⚽</div>
           <h1 className="title">PUFC Leaderboard</h1>
-          <p className="subtitle">Player Statistics & Rankings</p>
+          <p className="subtitle">Player Statistics</p>
         </div>
       </header>
 
