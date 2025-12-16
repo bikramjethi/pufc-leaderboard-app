@@ -7,6 +7,7 @@
   --bg-secondary: #111916;
   --bg-card: #151d19;
   --bg-hover: #1a2420;
+  --bg-zebra: #111916;
   --accent-primary: #22c55e;
   --accent-secondary: #16a34a;
   --accent-glow: rgba(34, 197, 94, 0.2);
@@ -29,6 +30,7 @@
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
   --bg-hover: #f0f5f3;
+  --bg-zebra: #f5f7f6;
   --accent-primary: #16a34a;
   --accent-secondary: #15803d;
   --accent-glow: rgba(22, 163, 74, 0.15);
@@ -426,6 +428,10 @@ body::before {
 .player-row {
   border-bottom: 1px solid var(--border-color);
   transition: all 0.2s ease;
+}
+
+.player-row:nth-child(even) {
+  background: var(--bg-zebra);
 }
 
 .player-row:last-child {
