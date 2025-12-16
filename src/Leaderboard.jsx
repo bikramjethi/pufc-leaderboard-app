@@ -108,14 +108,17 @@ export const Leaderboard = ({ players, allSeasonData }) => {
     });
   }, [filteredPlayers, sortKey, sortDirection]);
 
-  // Calculate max values for each stat column
+  // Calculate max values for each stat column (and min for lossPct)
   const maxValues = useMemo(() => {
-    const statKeys = ["matches", "wins", "draws", "losses", "winPct", "lossPct", "cleanSheets", "goals", "hatTricks"];
+    const statKeys = ["matches", "wins", "draws", "losses", "winPct", "cleanSheets", "goals", "hatTricks"];
     const maxes = {};
     statKeys.forEach((key) => {
       const values = playersWithPct.map((p) => p[key] ?? 0);
       maxes[key] = values.length > 0 ? Math.max(...values) : 0;
     });
+    // For lossPct, lower is better - calculate minimum
+    const lossPctValues = playersWithPct.map((p) => p.lossPct ?? 100);
+    maxes.minLossPct = lossPctValues.length > 0 ? Math.min(...lossPctValues) : 0;
     return maxes;
   }, [playersWithPct]);
 

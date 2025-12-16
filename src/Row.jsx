@@ -19,7 +19,26 @@ export const Row = ({
     return "rank";
   };
 
-  const isMax = (key) => showHighlight && maxValues && player[key] === maxValues[key] && maxValues[key] > 0;
+  const isMax = (key) => {
+    if (!showHighlight || !maxValues) return false;
+    const playerVal = player[key] ?? 0;
+    
+    // For lossPct, lower is better - compare against minimum
+    if (key === "lossPct") {
+      const minVal = maxValues.minLossPct ?? 0;
+      return Math.round(playerVal) === Math.round(minVal);
+    }
+    
+    // For winPct, use rounded comparison for float precision
+    if (key === "winPct") {
+      if (maxValues[key] <= 0) return false;
+      return Math.round(playerVal) === Math.round(maxValues[key]);
+    }
+    
+    // For other stats, highlight max values
+    if (maxValues[key] <= 0) return false;
+    return playerVal === maxValues[key];
+  };
   const safeNumber = (val) => (typeof val === "number" ? val : 0);
 
   return (
