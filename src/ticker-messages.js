@@ -27,6 +27,7 @@ export const tickerMessages = [
   "Tushar now requires a visa to play with us 🇺🇸",
   "Ammar's marking: tighter than your budget after rent 🎯",
   "Breaking: Tushar Lal expected back... sometime next decade ⏳",
+  "Ashish negotiating teams harder than salary packages 🤝",
   "Subbu's luck left the chat... in 2024 😭",
   "Subarna treating forward passes like they're a paid subscription 🔙",
   "Cross it in — Vivek's already won the header before it's kicked 🗿",
