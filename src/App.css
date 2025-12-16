@@ -293,7 +293,7 @@ body::before {
 
 .ticker-content {
   display: flex;
-  animation: ticker-scroll 45s linear infinite;
+  animation: ticker-scroll 120s linear infinite;
   width: max-content;
 }
 
