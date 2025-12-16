@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Row } from "./Row.jsx";
+import { ComparePanel } from "./ComparePanel.jsx";
 
 const columns = [
   { key: "name", label: "Player", className: "player-col", sortable: true },
@@ -29,6 +30,27 @@ export const Leaderboard = ({ players }) => {
   const [sortKey, setSortKey] = useState("matches");
   const [sortDirection, setSortDirection] = useState("desc");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedPlayers, setSelectedPlayers] = useState([]);
+
+  const handlePlayerSelect = (player) => {
+    setSelectedPlayers((prev) => {
+      const isSelected = prev.some((p) => p.id === player.id);
+      if (isSelected) {
+        return prev.filter((p) => p.id !== player.id);
+      }
+      if (prev.length >= 2) {
+        return [prev[1], player]; // Replace oldest selection
+      }
+      return [...prev, player];
+    });
+  };
+
+  const clearComparison = () => setSelectedPlayers([]);
+
+  // Clear selection when players data changes (season switch)
+  useEffect(() => {
+    setSelectedPlayers([]);
+  }, [players]);
 
   const handleSort = (key) => {
     if (sortKey === key) {
@@ -78,7 +100,8 @@ export const Leaderboard = ({ players }) => {
     const statKeys = ["matches", "wins", "draws", "losses", "winPct", "lossPct", "cleanSheets", "goals", "hatTricks"];
     const maxes = {};
     statKeys.forEach((key) => {
-      maxes[key] = Math.max(...playersWithPct.map((p) => p[key]));
+      const values = playersWithPct.map((p) => p[key] ?? 0);
+      maxes[key] = values.length > 0 ? Math.max(...values) : 0;
     });
     return maxes;
   }, [playersWithPct]);
@@ -112,6 +135,7 @@ export const Leaderboard = ({ players }) => {
         <table className="leaderboard-table">
           <thead>
             <tr>
+              <th className="select-col"></th>
               <th className="rank-col">#</th>
               {columns.map((col) => (
                 <th
@@ -129,7 +153,14 @@ export const Leaderboard = ({ players }) => {
           </thead>
           <tbody>
             {sortedPlayers.map((player, index) => (
-              <Row key={player.id} player={player} rank={index + 1} maxValues={maxValues} />
+              <Row
+                key={player.id}
+                player={player}
+                rank={index + 1}
+                maxValues={maxValues}
+                isSelected={selectedPlayers.some((p) => p.id === player.id)}
+                onSelect={() => handlePlayerSelect(player)}
+              />
             ))}
           </tbody>
         </table>
@@ -148,6 +179,14 @@ export const Leaderboard = ({ players }) => {
         <span className="legend-divider"></span>
         <span className="legend-highlight"><strong className="highlight-sample">123</strong> Max</span>
       </div>
+
+      {selectedPlayers.length === 2 && (
+        <ComparePanel
+          player1={selectedPlayers[0]}
+          player2={selectedPlayers[1]}
+          onClose={clearComparison}
+        />
+      )}
     </div>
   );
 };
