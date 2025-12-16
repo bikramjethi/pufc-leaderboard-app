@@ -3,6 +3,7 @@ import { Row } from "./Row.jsx";
 import { ComparePanel } from "./ComparePanel.jsx";
 import { PlayerModal } from "./PlayerModal.jsx";
 import { config } from "./leaderboard-config.js";
+import { tickerMessages } from "./ticker-messages.js";
 
 const columns = [
   { key: "name", label: "Player", className: "player-col", sortable: true, tooltip: "Player Name" },
@@ -201,8 +202,27 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false }) => {
     );
   };
 
+  // Build ticker content by joining messages
+  const tickerContent = useMemo(() => {
+    if (!tickerMessages.length) return "";
+    return tickerMessages.join("  •  ");
+  }, []);
+
   return (
     <div className="leaderboard">
+      {/* News Ticker */}
+      {config.ENABLE_TICKER && tickerMessages.length > 0 && (
+        <div className="news-ticker">
+          <span className="ticker-icon">📢</span>
+          <div className="ticker-wrapper">
+            <div className="ticker-content">
+              <span>{tickerContent}</span>
+              <span>{tickerContent}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {config.ENABLE_SEARCH && (
         <div className="search-container">
           <input

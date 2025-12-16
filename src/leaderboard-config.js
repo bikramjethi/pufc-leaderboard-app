@@ -11,6 +11,7 @@ export const config = {
   ENABLE_SEARCH: true,           // Show search input for filtering players
   ENABLE_MAX_HIGHLIGHT: true,    // Highlight max values in gold
   ENABLE_PLAYER_MODAL: true,     // Click player name to view detailed profile
+  ENABLE_TICKER: true,           // Show news ticker with witty messages
 
   // Default Settings
   DEFAULT_SORT_KEY: "matches",   // Default column to sort by
