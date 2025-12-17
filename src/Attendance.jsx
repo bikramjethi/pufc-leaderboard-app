@@ -143,6 +143,7 @@ export const Attendance = ({ year }) => {
     const hadCleanSheet = match.cleanSheets?.includes(player);
     const result = getPlayerResult(match, player);
 
+    // TODO: Remove this console.log
     console.log({
       match,
       player,
