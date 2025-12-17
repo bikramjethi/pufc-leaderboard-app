@@ -2,16 +2,56 @@
   "season": 2025,
   "matches": [
     {
-      "id": "2025-01-04",
+      "id": "04-01-2025",
       "date": "04/01/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
-      "ownGoals": [],
+      "attendance": [
+        "Ranvir",
+        "Savan",
+        "Ashish",
+        "Tushar",
+        "Archie",
+        "Ammar",
+        "Subarna",
+        "Rishav",
+        "Deepak",
+        "Pandey",
+        "Rohit",
+        "Vinoth",
+        "Joe",
+        "Ram",
+        "Vinit",
+        "Pulkit"
+      ],
+      "winners": [
+        "Deepak",
+        "Pandey",
+        "Rohit",
+        "Vinoth",
+        "Joe",
+        "Ram",
+        "Vinit",
+        "Pulkit"
+      ],
+      "losers": [
+        "Ranvir",
+        "Savan",
+        "Ashish",
+        "Tushar",
+        "Archie",
+        "Ammar",
+        "Subarna",
+        "Rishav"
+      ],
+      "scorers": [
+        { "name": "Vinoth", "goals": 2, "team": "BLACK" },
+        { "name": "Ram", "goals": 1, "team": "BLACK" },
+        { "name": "Rishav", "goals": 1, "team": "YELLOW" },
+        { "name": "Ashish", "goals": 1, "team": "YELLOW" }
+      ],
+      "ownGoals": [{ "name": "Ashish", "goals": 1, "forTeam": "BLACK" }],
       "cleanSheets": []
     },
     {
