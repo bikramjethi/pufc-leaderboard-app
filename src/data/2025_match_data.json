@@ -1383,17 +1383,10 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-12-09",
+      "id": "09-12-2025",
       "date": "09/12/2025",
       "day": "Tuesday",
-      "matchPlayed": false,
-      "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
-      "ownGoals": [],
-      "cleanSheets": []
+      "matchCancelled": true
     },
     {
       "id": "2025-12-13",
