@@ -862,15 +862,55 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-08-02",
+      "id": "02-08-2025",
       "date": "02/08/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Joe",
+        "Savan",
+        "Vinit",
+        "Animesh",
+        "Rohit",
+        "Ammar",
+        "Subarna",
+        "Vinoth",
+        "Jethi",
+        "Vivek",
+        "Pandey",
+        "Subbu",
+        "Ashish",
+        "Prateek",
+        "Sourabh",
+        "Vikalp"
+      ],
+      "winners": [
+        "Joe",
+        "Savan",
+        "Vinit",
+        "Animesh",
+        "Rohit",
+        "Ammar",
+        "Subarna",
+        "Vinoth"
+      ],
+      "losers": [
+        "Jethi",
+        "Vivek",
+        "Pandey",
+        "Subbu",
+        "Ashish",
+        "Prateek",
+        "Sourabh",
+        "Vikalp"
+      ],
+      "scorers": [
+        { "name": "Subarna", "goals": 3, "team": "BLUE" },
+        { "name": "Vinoth", "goals": 1, "team": "BLUE" },
+        { "name": "Ashish", "goals": 1, "team": "RED" },
+        { "name": "Vikalp", "goals": 1, "team": "RED" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
     },
