@@ -56,9 +56,13 @@ const aggregateAllTimeStats = () => {
   return Array.from(playerMap.values());
 };
 
+// Available years for attendance data
+const attendanceYears = ["2025"];
+
 function App() {
   const [activeTab, setActiveTab] = useState("leaderboard");
   const [selectedYear, setSelectedYear] = useState("all-time");
+  const [attendanceYear, setAttendanceYear] = useState("2025");
   const [players, setPlayers] = useState(() => aggregateAllTimeStats());
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("pufc-theme") || "dark";
@@ -90,7 +94,7 @@ function App() {
             <h1 className="title">PUFC Leaderboard</h1>
             <p className="subtitle">
               {activeTab === "attendance" 
-                ? "2025 Match Attendance" 
+                ? `${attendanceYear} Match Attendance` 
                 : selectedYear === "all-time" 
                   ? "All-Time Career Stats" 
                   : "Player Statistics"}
@@ -124,12 +128,12 @@ function App() {
           </button>
         </div>
 
-        {/* Controls - Show season selector only for Leaderboard */}
-        {activeTab === "leaderboard" && (
-          <div className="controls">
-            <div className="year-selector">
-              <label htmlFor="year-select">Season</label>
-              <div className="select-wrapper">
+        {/* Controls - Season selector for both tabs */}
+        <div className="controls">
+          <div className="year-selector">
+            <label htmlFor="year-select">Season</label>
+            <div className="select-wrapper">
+              {activeTab === "leaderboard" ? (
                 <select
                   id="year-select"
                   value={selectedYear}
@@ -142,17 +146,29 @@ function App() {
                   ))}
                   <option value="all-time">All-Time</option>
                 </select>
-                <span className="select-arrow">▼</span>
-              </div>
+              ) : (
+                <select
+                  id="year-select"
+                  value={attendanceYear}
+                  onChange={(e) => setAttendanceYear(e.target.value)}
+                >
+                  {attendanceYears.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <span className="select-arrow">▼</span>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Tab Content */}
         {activeTab === "leaderboard" ? (
           <Leaderboard players={players} allSeasonData={seasonData} isAllTime={selectedYear === "all-time"} />
         ) : (
-          <Attendance />
+          <Attendance year={attendanceYear} />
         )}
       </main>
 

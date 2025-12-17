@@ -23,9 +23,10 @@ const formatDate = (dateStr) => {
   return `${dayNum}${suffix(dayNum)} ${monthName}`;
 };
 
-export const Attendance = () => {
+export const Attendance = ({ year }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
+  // For now, only 2025 data exists. Ready for future years.
   const { matches, allPlayers } = matchData;
 
   // Filter players by search
