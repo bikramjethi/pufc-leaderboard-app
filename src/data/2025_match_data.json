@@ -68,15 +68,31 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-01-11",
+      "id": "11-01-2025",
       "date": "11/01/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Vivek", "Tushar", "Ashish", "Savan",
+        "Rohit", "Subbu", "Subarna", "Rishav",
+        "Rohit Hyd", "Joe", "Vinit", "Animesh",
+        "Ram", "Pandey", "Thomas", "Deepak"
+      ],
+      "winners": [
+        "Rohit Hyd", "Joe", "Vinit", "Animesh",
+        "Ram", "Pandey", "Thomas", "Deepak"
+      ],
+      "losers": [
+        "Vivek", "Tushar", "Ashish", "Savan",
+        "Rohit", "Subbu", "Subarna", "Rishav"
+      ],
+      "scorers": [
+        { "name": "Vivek",   "goals": 1, "team": "BLUE" },
+        { "name": "Animesh", "goals": 1, "team": "RED" },
+        { "name": "Ram",     "goals": 1, "team": "RED" },
+        { "name": "Vinit",   "goals": 1, "team": "RED" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
     },
@@ -1506,6 +1522,7 @@
     "Ram",
     "Pulkit",
     "Ranvir",
-    "Archie"
+    "Archie",
+    "Thomas"
   ]
 }
