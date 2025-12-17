@@ -15,6 +15,11 @@ const seasonData = {
 
 const availableYears = Object.keys(seasonData).sort((a, b) => b - a);
 
+// Check if screen width is below 420px
+const isSmallScreen = () => {
+  return window.innerWidth < 420;
+};
+
 // Aggregate all seasons into "All-Time" stats
 const aggregateAllTimeStats = () => {
   const playerMap = new Map();
@@ -68,6 +73,7 @@ function App() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("pufc-theme") || "dark";
   });
+  const [isSmall, setIsSmall] = useState(() => isSmallScreen());
 
   useEffect(() => {
     if (selectedYear === "all-time") {
@@ -81,6 +87,15 @@ function App() {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("pufc-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmall(isSmallScreen());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
@@ -97,8 +112,8 @@ function App() {
               {activeTab === "attendance"
                 ? `${attendanceYear} Match Attendance`
                 : selectedYear === "all-time"
-                ? "All-Time Career Stats"
-                : "Player Statistics"}
+                  ? "All-Time Career Stats"
+                  : "Player Statistics"}
             </p>
           </div>
           <button
@@ -123,52 +138,50 @@ function App() {
               setPlayers(aggregateAllTimeStats());
             }}
           >
-            📊 Leaderboard
+            📊 {isSmall ? "Board" : "Leaderboard"}
           </button>
           {config.ENABLE_ATTENDANCE && (
             <button
-              className={`tab-btn ${
-                activeTab === "attendance" ? "active" : ""
-              }`}
+              className={`tab-btn ${activeTab === "attendance" ? "active" : ""
+                }`}
               onClick={() => setActiveTab("attendance")}
             >
               📅 Attendance
             </button>
           )}
-        </div>
-
-        {/* Controls - Season selector for both tabs */}
-        <div className="controls">
-          <div className="year-selector">
-            <label htmlFor="year-select">Season</label>
-            <div className="select-wrapper">
-              {activeTab === "leaderboard" ? (
-                <select
-                  id="year-select"
-                  value={selectedYear}
-                  onChange={(e) => setSelectedYear(e.target.value)}
-                >
-                  {availableYears.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                  <option value="all-time">All-Time</option>
-                </select>
-              ) : (
-                <select
-                  id="year-select"
-                  value={attendanceYear}
-                  onChange={(e) => setAttendanceYear(e.target.value)}
-                >
-                  {attendanceYears.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              )}
-              <span className="select-arrow">▼</span>
+          {/* Controls - Season selector for both tabs */}
+          <div className="controls">
+            <div className="year-selector">
+              <label htmlFor="year-select">Season</label>
+              <div className="select-wrapper">
+                {activeTab === "leaderboard" ? (
+                  <select
+                    id="year-select"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                  >
+                    {availableYears.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                    <option value="all-time">All-Time</option>
+                  </select>
+                ) : (
+                  <select
+                    id="year-select"
+                    value={attendanceYear}
+                    onChange={(e) => setAttendanceYear(e.target.value)}
+                  >
+                    {attendanceYears.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                <span className="select-arrow">▼</span>
+              </div>
             </div>
           </div>
         </div>
