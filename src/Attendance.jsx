@@ -5,21 +5,38 @@ import matchData from "./data/2025_match_data.json";
 const formatDate = (dateStr) => {
   const [day, month] = dateStr.split("/");
   const dayNum = parseInt(day, 10);
-  
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const monthName = months[parseInt(month, 10) - 1];
-  
+
   // Add ordinal suffix
   const suffix = (d) => {
     if (d > 3 && d < 21) return "th";
     switch (d % 10) {
-      case 1: return "st";
-      case 2: return "nd";
-      case 3: return "rd";
-      default: return "th";
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
     }
   };
-  
+
   return `${dayNum}${suffix(dayNum)} ${monthName}`;
 };
 
@@ -27,7 +44,7 @@ const formatDate = (dateStr) => {
 const getPlayerResult = (match, player) => {
   if (!match.matchPlayed || match.matchCancelled) return null;
   if (!match.attendance.includes(player)) return null;
-  
+
   if (match.winners?.includes(player)) return "W";
   if (match.losers?.includes(player)) return "L";
   // If both arrays are empty or player is in neither, it's a draw
@@ -35,7 +52,8 @@ const getPlayerResult = (match, player) => {
   return null;
 };
 
-export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
+export const Attendance = ({ year }) => {
+  // eslint-disable-line no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
 
   // For now, only 2025 data exists. Ready for future years.
@@ -57,8 +75,13 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
   // Calculate attendance stats for each player (only for played matches)
   const playerStats = useMemo(() => {
     return allPlayers.map((player) => {
-      const attended = playedMatches.filter((m) => m.attendance.includes(player)).length;
-      const percentage = playedMatches.length > 0 ? Math.round((attended / playedMatches.length) * 100) : 0;
+      const attended = playedMatches.filter((m) =>
+        m.attendance.includes(player)
+      ).length;
+      const percentage =
+        playedMatches.length > 0
+          ? Math.round((attended / playedMatches.length) * 100)
+          : 0;
       return { player, attended, total: playedMatches.length, percentage };
     });
   }, [playedMatches, allPlayers]);
@@ -87,11 +110,14 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
 
   // Render cell content based on match status
   const renderCellContent = (match, player) => {
+    console.log({ match, player });
     // Cancelled match - supersedes all other flags
     if (match.matchCancelled) {
       return (
         <div className="attendance-indicator">
-          <span className="cancelled" title="Match Cancelled">🚫</span>
+          <span className="cancelled" title="Match Cancelled">
+            🚫
+          </span>
         </div>
       );
     }
@@ -100,7 +126,9 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
     if (!match.matchPlayed) {
       return (
         <div className="attendance-indicator">
-          <span className="pending" title="Match Not Yet Played">—</span>
+          <span className="pending" title="Match Not Yet Played">
+            —
+          </span>
         </div>
       );
     }
@@ -116,7 +144,9 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
       <div className="attendance-indicator">
         {/* Result indicator (W/L/D) */}
         {result && (
-          <span className={`result-badge result-${result.toLowerCase()}`}>{result}</span>
+          <span className={`result-badge result-${result.toLowerCase()}`}>
+            {result}
+          </span>
         )}
         {/* Attendance indicator (only show if no result or absent) */}
         {!wasPresent && <span className="cross">✗</span>}
@@ -132,14 +162,14 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
   const getCellClass = (match, player) => {
     if (match.matchCancelled) return "match-cell cancelled";
     if (!match.matchPlayed) return "match-cell pending";
-    
+
     const wasPresent = match.attendance.includes(player);
     const result = getPlayerResult(match, player);
-    
+
     let classes = "match-cell";
     classes += wasPresent ? " present" : " absent";
     if (result) classes += ` result-${result.toLowerCase()}`;
-    
+
     return classes;
   };
 
@@ -147,7 +177,7 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
   const getCellTitle = (match, player) => {
     if (match.matchCancelled) return "Match Cancelled";
     if (!match.matchPlayed) return "Match Not Yet Played";
-    
+
     const wasPresent = match.attendance.includes(player);
     const scored = match.scorers?.find((s) => s.player === player);
     const hadOwnGoal = match.ownGoals?.includes(player);
@@ -155,7 +185,14 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
     const result = getPlayerResult(match, player);
 
     if (wasPresent) {
-      let tip = result === "W" ? "Won" : result === "L" ? "Lost" : result === "D" ? "Draw" : "Present";
+      let tip =
+        result === "W"
+          ? "Won"
+          : result === "L"
+          ? "Lost"
+          : result === "D"
+          ? "Draw"
+          : "Present";
       if (scored) tip += ` • ${scored.goals} goal(s)`;
       if (hadCleanSheet) tip += " • Clean Sheet";
       if (hadOwnGoal) tip += " • Own Goal";
@@ -185,8 +222,13 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
       {/* Stats Summary */}
       <div className="attendance-summary">
         <span>📊 {playedMatches.length} matches played</span>
-        <span>📅 {matches.filter(m => !m.matchPlayed && !m.matchCancelled).length} upcoming</span>
-        <span>🚫 {matches.filter(m => m.matchCancelled).length} cancelled</span>
+        <span>
+          📅 {matches.filter((m) => !m.matchPlayed && !m.matchCancelled).length}{" "}
+          upcoming
+        </span>
+        <span>
+          🚫 {matches.filter((m) => m.matchCancelled).length} cancelled
+        </span>
       </div>
 
       {/* Attendance Table */}
@@ -197,10 +239,16 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
               <th className="player-col sticky-col">Player</th>
               <th className="stat-col attendance-stat">%</th>
               {matches.map((match) => (
-                <th 
-                  key={match.id} 
+                <th
+                  key={match.id}
                   className={`match-col ${getMatchHeaderClass(match)}`}
-                  title={`${match.day} - ${match.date}${match.matchCancelled ? " (Cancelled)" : !match.matchPlayed ? " (Not Yet Played)" : ""}`}
+                  title={`${match.day} - ${match.date}${
+                    match.matchCancelled
+                      ? " (Cancelled)"
+                      : !match.matchPlayed
+                      ? " (Not Yet Played)"
+                      : ""
+                  }`}
                 >
                   <div className="match-header">
                     <span className="match-day">{match.day.slice(0, 3)}</span>
@@ -216,12 +264,16 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
               return (
                 <tr key={player} className="player-row">
                   <td className="player-name sticky-col">{player}</td>
-                  <td className={`stat attendance-stat ${getAttendanceClass(stats?.percentage || 0)}`}>
+                  <td
+                    className={`stat attendance-stat ${getAttendanceClass(
+                      stats?.percentage || 0
+                    )}`}
+                  >
                     {stats?.percentage || 0}%
                   </td>
                   {matches.map((match) => (
-                    <td 
-                      key={match.id} 
+                    <td
+                      key={match.id}
                       className={getCellClass(match, player)}
                       title={getCellTitle(match, player)}
                     >
@@ -237,15 +289,31 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
 
       {/* Legend */}
       <div className="legend attendance-legend">
-        <span><span className="result-badge result-w">W</span> Won</span>
-        <span><span className="result-badge result-l">L</span> Lost</span>
-        <span><span className="result-badge result-d">D</span> Draw</span>
-        <span><span className="cross">✗</span> Absent</span>
-        <span><span className="pending">—</span> Not Played</span>
-        <span><span className="cancelled">🚫</span> Cancelled</span>
-        <span><span className="goal-badge">2</span> Goals</span>
+        <span>
+          <span className="result-badge result-w">W</span> Won
+        </span>
+        <span>
+          <span className="result-badge result-l">L</span> Lost
+        </span>
+        <span>
+          <span className="result-badge result-d">D</span> Draw
+        </span>
+        <span>
+          <span className="cross">✗</span> Absent
+        </span>
+        <span>
+          <span className="pending">—</span> Not Played
+        </span>
+        <span>
+          <span className="cancelled">🚫</span> Cancelled
+        </span>
+        <span>
+          <span className="goal-badge">2</span> Goals
+        </span>
         <span>🧤 Clean Sheet</span>
-        <span><span className="og-badge">OG</span> Own Goal</span>
+        <span>
+          <span className="og-badge">OG</span> Own Goal
+        </span>
       </div>
     </div>
   );
