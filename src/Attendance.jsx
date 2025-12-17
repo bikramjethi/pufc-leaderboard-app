@@ -23,10 +23,11 @@ const formatDate = (dateStr) => {
   return `${dayNum}${suffix(dayNum)} ${monthName}`;
 };
 
-export const Attendance = ({ year }) => {
+export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
 
   // For now, only 2025 data exists. Ready for future years.
+  // TODO: Use `year` prop to load different match data when available
   const { matches, allPlayers } = matchData;
 
   // Filter players by search
@@ -79,8 +80,8 @@ export const Attendance = ({ year }) => {
       </div>
 
       {/* Attendance Table */}
-      <div className="table-container attendance-table-container">
-        <table className="leaderboard-table attendance-table">
+      <div className="attendance-table-container">
+        <table className="attendance-table">
           <thead>
             <tr>
               <th className="player-col sticky-col">Player</th>
