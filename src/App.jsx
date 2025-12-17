@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Leaderboard } from "./Leaderboard.jsx";
 import { Attendance } from "./Attendance.jsx";
 import "./App.css";
+import { config } from "./leaderboard-config.js";
 
 // Import all season data
 import data2024 from "./data/2024.json";
@@ -21,7 +22,7 @@ const aggregateAllTimeStats = () => {
   Object.values(seasonData).forEach((seasonPlayers) => {
     seasonPlayers.forEach((player) => {
       const key = player.name; // Use name as unique identifier across seasons
-      
+
       if (playerMap.has(key)) {
         const existing = playerMap.get(key);
         playerMap.set(key, {
@@ -37,7 +38,7 @@ const aggregateAllTimeStats = () => {
         });
       } else {
         playerMap.set(key, {
-          id: `alltime-${key.replace(/\s+/g, '-').toLowerCase()}`, // Unique ID based on name
+          id: `alltime-${key.replace(/\s+/g, "-").toLowerCase()}`, // Unique ID based on name
           name: player.name,
           position: player.position,
           matches: player.matches || 0,
@@ -93,14 +94,18 @@ function App() {
           <div className="header-text">
             <h1 className="title">PUFC Leaderboard</h1>
             <p className="subtitle">
-              {activeTab === "attendance" 
-                ? `${attendanceYear} Match Attendance` 
-                : selectedYear === "all-time" 
-                  ? "All-Time Career Stats" 
-                  : "Player Statistics"}
+              {activeTab === "attendance"
+                ? `${attendanceYear} Match Attendance`
+                : selectedYear === "all-time"
+                ? "All-Time Career Stats"
+                : "Player Statistics"}
             </p>
           </div>
-          <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+          >
             {theme === "dark" ? "☀️" : "🌙"}
           </button>
         </div>
@@ -120,12 +125,16 @@ function App() {
           >
             📊 Leaderboard
           </button>
-          <button
-            className={`tab-btn ${activeTab === "attendance" ? "active" : ""}`}
-            onClick={() => setActiveTab("attendance")}
-          >
-            📅 Attendance
-          </button>
+          {config.ENABLE_ATTENDANCE && (
+            <button
+              className={`tab-btn ${
+                activeTab === "attendance" ? "active" : ""
+              }`}
+              onClick={() => setActiveTab("attendance")}
+            >
+              📅 Attendance
+            </button>
+          )}
         </div>
 
         {/* Controls - Season selector for both tabs */}
@@ -166,7 +175,11 @@ function App() {
 
         {/* Tab Content */}
         {activeTab === "leaderboard" ? (
-          <Leaderboard players={players} allSeasonData={seasonData} isAllTime={selectedYear === "all-time"} />
+          <Leaderboard
+            players={players}
+            allSeasonData={seasonData}
+            isAllTime={selectedYear === "all-time"}
+          />
         ) : (
           <Attendance year={attendanceYear} />
         )}

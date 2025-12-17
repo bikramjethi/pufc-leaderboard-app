@@ -19,5 +19,6 @@ export const config = {
 
   // Comparison Settings
   MAX_COMPARE_PLAYERS: 3,        // Maximum players that can be compared
+  ENABLE_ATTENDANCE: false,       // Show attendance data for each player
 };
 
