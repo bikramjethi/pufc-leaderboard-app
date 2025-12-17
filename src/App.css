@@ -1521,6 +1521,28 @@ body::before {
   background: rgba(239, 68, 68, 0.05);
 }
 
+.match-cell.pending {
+  background: rgba(100, 116, 139, 0.1);
+}
+
+.match-cell.cancelled {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+/* Match header states */
+.match-col.match-pending {
+  opacity: 0.6;
+}
+
+.match-col.match-cancelled {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.match-col.match-cancelled .match-date {
+  text-decoration: line-through;
+}
+
 .check {
   color: #22c55e;
   font-weight: 700;
@@ -1532,6 +1554,35 @@ body::before {
   font-weight: 700;
   font-size: 0.9rem;
   opacity: 0.6;
+}
+
+.pending {
+  color: #64748b;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.cancelled {
+  font-size: 0.9rem;
+}
+
+/* Attendance Summary */
+.attendance-summary {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.attendance-summary span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .goal-badge {
@@ -1582,7 +1633,9 @@ body::before {
 }
 
 .attendance-legend .check,
-.attendance-legend .cross {
+.attendance-legend .cross,
+.attendance-legend .pending,
+.attendance-legend .cancelled {
   margin-right: 0.25rem;
 }
 

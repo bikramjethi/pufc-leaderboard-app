@@ -37,14 +37,19 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
     return allPlayers.filter((player) => player.toLowerCase().includes(term));
   }, [searchTerm, allPlayers]);
 
-  // Calculate attendance stats for each player
+  // Get only played matches (not cancelled)
+  const playedMatches = useMemo(() => {
+    return matches.filter((m) => m.matchPlayed && !m.matchCancelled);
+  }, [matches]);
+
+  // Calculate attendance stats for each player (only for played matches)
   const playerStats = useMemo(() => {
     return allPlayers.map((player) => {
-      const attended = matches.filter((m) => m.attendance.includes(player)).length;
-      const percentage = matches.length > 0 ? Math.round((attended / matches.length) * 100) : 0;
-      return { player, attended, total: matches.length, percentage };
+      const attended = playedMatches.filter((m) => m.attendance.includes(player)).length;
+      const percentage = playedMatches.length > 0 ? Math.round((attended / playedMatches.length) * 100) : 0;
+      return { player, attended, total: playedMatches.length, percentage };
     });
-  }, [matches, allPlayers]);
+  }, [playedMatches, allPlayers]);
 
   // Sort players by attendance percentage (descending)
   const sortedPlayers = useMemo(() => {
@@ -59,6 +64,81 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
     if (percentage >= 80) return "attendance-high";
     if (percentage >= 50) return "attendance-medium";
     return "attendance-low";
+  };
+
+  // Get match status class for header styling
+  const getMatchHeaderClass = (match) => {
+    if (match.matchCancelled) return "match-cancelled";
+    if (!match.matchPlayed) return "match-pending";
+    return "match-played";
+  };
+
+  // Render cell content based on match status
+  const renderCellContent = (match, player) => {
+    // Cancelled match - supersedes all other flags
+    if (match.matchCancelled) {
+      return (
+        <div className="attendance-indicator">
+          <span className="cancelled" title="Match Cancelled">🚫</span>
+        </div>
+      );
+    }
+
+    // Match not yet played
+    if (!match.matchPlayed) {
+      return (
+        <div className="attendance-indicator">
+          <span className="pending" title="Match Not Yet Played">—</span>
+        </div>
+      );
+    }
+
+    // Match was played - show attendance data
+    const wasPresent = match.attendance.includes(player);
+    const scored = match.scorers.find((s) => s.player === player);
+    const hadOwnGoal = match.ownGoals.includes(player);
+    const hadCleanSheet = match.cleanSheets.includes(player);
+
+    return (
+      <div className="attendance-indicator">
+        {wasPresent ? (
+          <span className="check">✓</span>
+        ) : (
+          <span className="cross">✗</span>
+        )}
+        {scored && <span className="goal-badge">{scored.goals}</span>}
+        {hadCleanSheet && <span className="cs-badge">🧤</span>}
+        {hadOwnGoal && <span className="og-badge">OG</span>}
+      </div>
+    );
+  };
+
+  // Get cell class based on match status and attendance
+  const getCellClass = (match, player) => {
+    if (match.matchCancelled) return "match-cell cancelled";
+    if (!match.matchPlayed) return "match-cell pending";
+    const wasPresent = match.attendance.includes(player);
+    return `match-cell ${wasPresent ? "present" : "absent"}`;
+  };
+
+  // Get cell tooltip
+  const getCellTitle = (match, player) => {
+    if (match.matchCancelled) return "Match Cancelled";
+    if (!match.matchPlayed) return "Match Not Yet Played";
+    
+    const wasPresent = match.attendance.includes(player);
+    const scored = match.scorers.find((s) => s.player === player);
+    const hadOwnGoal = match.ownGoals.includes(player);
+    const hadCleanSheet = match.cleanSheets.includes(player);
+
+    if (wasPresent) {
+      let tip = "Present";
+      if (scored) tip += ` • ${scored.goals} goal(s)`;
+      if (hadCleanSheet) tip += " • Clean Sheet";
+      if (hadOwnGoal) tip += " • Own Goal";
+      return tip;
+    }
+    return "Absent";
   };
 
   return (
@@ -79,6 +159,13 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
         )}
       </div>
 
+      {/* Stats Summary */}
+      <div className="attendance-summary">
+        <span>📊 {playedMatches.length} matches played</span>
+        <span>📅 {matches.filter(m => !m.matchPlayed && !m.matchCancelled).length} upcoming</span>
+        <span>🚫 {matches.filter(m => m.matchCancelled).length} cancelled</span>
+      </div>
+
       {/* Attendance Table */}
       <div className="attendance-table-container">
         <table className="attendance-table">
@@ -89,8 +176,8 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
               {matches.map((match) => (
                 <th 
                   key={match.id} 
-                  className="match-col"
-                  title={`${match.day} - ${match.date}`}
+                  className={`match-col ${getMatchHeaderClass(match)}`}
+                  title={`${match.day} - ${match.date}${match.matchCancelled ? " (Cancelled)" : !match.matchPlayed ? " (Not Yet Played)" : ""}`}
                 >
                   <div className="match-header">
                     <span className="match-day">{match.day.slice(0, 3)}</span>
@@ -109,35 +196,15 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
                   <td className={`stat attendance-stat ${getAttendanceClass(stats?.percentage || 0)}`}>
                     {stats?.percentage || 0}%
                   </td>
-                  {matches.map((match) => {
-                    const wasPresent = match.attendance.includes(player);
-                    const scored = match.scorers.find((s) => s.player === player);
-                    const hadOwnGoal = match.ownGoals.includes(player);
-                    const hadCleanSheet = match.cleanSheets.includes(player);
-
-                    return (
-                      <td 
-                        key={match.id} 
-                        className={`match-cell ${wasPresent ? "present" : "absent"}`}
-                        title={
-                          wasPresent
-                            ? `Present${scored ? ` • ${scored.goals} goal(s)` : ""}${hadCleanSheet ? " • Clean Sheet" : ""}${hadOwnGoal ? " • Own Goal" : ""}`
-                            : "Absent"
-                        }
-                      >
-                        <div className="attendance-indicator">
-                          {wasPresent ? (
-                            <span className="check">✓</span>
-                          ) : (
-                            <span className="cross">✗</span>
-                          )}
-                          {scored && <span className="goal-badge">{scored.goals}</span>}
-                          {hadCleanSheet && <span className="cs-badge">🧤</span>}
-                          {hadOwnGoal && <span className="og-badge">OG</span>}
-                        </div>
-                      </td>
-                    );
-                  })}
+                  {matches.map((match) => (
+                    <td 
+                      key={match.id} 
+                      className={getCellClass(match, player)}
+                      title={getCellTitle(match, player)}
+                    >
+                      {renderCellContent(match, player)}
+                    </td>
+                  ))}
                 </tr>
               );
             })}
@@ -149,11 +216,12 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
       <div className="legend attendance-legend">
         <span><span className="check">✓</span> Present</span>
         <span><span className="cross">✗</span> Absent</span>
-        <span><span className="goal-badge">2</span> Goals Scored</span>
+        <span><span className="pending">—</span> Not Played</span>
+        <span><span className="cancelled">🚫</span> Cancelled</span>
+        <span><span className="goal-badge">2</span> Goals</span>
         <span>🧤 Clean Sheet</span>
         <span><span className="og-badge">OG</span> Own Goal</span>
       </div>
     </div>
   );
 };
-
