@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Leaderboard } from "./Leaderboard.jsx";
+import { Attendance } from "./Attendance.jsx";
 import "./App.css";
 
 // Import all season data
@@ -56,6 +57,7 @@ const aggregateAllTimeStats = () => {
 };
 
 function App() {
+  const [activeTab, setActiveTab] = useState("leaderboard");
   const [selectedYear, setSelectedYear] = useState("all-time");
   const [players, setPlayers] = useState(() => aggregateAllTimeStats());
   const [theme, setTheme] = useState(() => {
@@ -87,7 +89,11 @@ function App() {
           <div className="header-text">
             <h1 className="title">PUFC Leaderboard</h1>
             <p className="subtitle">
-              {selectedYear === "all-time" ? "All-Time Career Stats" : "Player Statistics"}
+              {activeTab === "attendance" 
+                ? "2025 Match Attendance" 
+                : selectedYear === "all-time" 
+                  ? "All-Time Career Stats" 
+                  : "Player Statistics"}
             </p>
           </div>
           <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
@@ -97,28 +103,52 @@ function App() {
       </header>
 
       <main className="main-content">
-        <div className="controls">
-          <div className="year-selector">
-            <label htmlFor="year-select">Season</label>
-            <div className="select-wrapper">
-              <select
-                id="year-select"
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-              >
-                {availableYears.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-                <option value="all-time">All-Time</option>
-              </select>
-              <span className="select-arrow">▼</span>
-            </div>
-          </div>
+        {/* Tab Navigation */}
+        <div className="tab-nav">
+          <button
+            className={`tab-btn ${activeTab === "leaderboard" ? "active" : ""}`}
+            onClick={() => setActiveTab("leaderboard")}
+          >
+            📊 Leaderboard
+          </button>
+          <button
+            className={`tab-btn ${activeTab === "attendance" ? "active" : ""}`}
+            onClick={() => setActiveTab("attendance")}
+          >
+            📅 Attendance
+          </button>
         </div>
 
-        <Leaderboard players={players} allSeasonData={seasonData} isAllTime={selectedYear === "all-time"} />
+        {/* Controls - Show season selector only for Leaderboard */}
+        {activeTab === "leaderboard" && (
+          <div className="controls">
+            <div className="year-selector">
+              <label htmlFor="year-select">Season</label>
+              <div className="select-wrapper">
+                <select
+                  id="year-select"
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                >
+                  {availableYears.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                  <option value="all-time">All-Time</option>
+                </select>
+                <span className="select-arrow">▼</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Tab Content */}
+        {activeTab === "leaderboard" ? (
+          <Leaderboard players={players} allSeasonData={seasonData} isAllTime={selectedYear === "all-time"} />
+        ) : (
+          <Attendance />
+        )}
       </main>
 
       <footer className="footer">

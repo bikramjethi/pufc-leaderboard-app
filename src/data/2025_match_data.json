@@ -1,0 +1,139 @@
+{
+  "season": 2025,
+  "matches": [
+    {
+      "id": "2025-01-04",
+      "date": "04/01/2025",
+      "day": "Saturday",
+      "attendance": ["Ashish", "Jethi", "Vinit", "Subarna", "Rishav", "Joe", "Vinay", "Pandey", "Animesh", "Sourabh"],
+      "scorers": [
+        { "player": "Jethi", "goals": 3 },
+        { "player": "Rishav", "goals": 2 },
+        { "player": "Vinay", "goals": 1 }
+      ],
+      "ownGoals": [],
+      "cleanSheets": ["Joe"]
+    },
+    {
+      "id": "2025-01-07",
+      "date": "07/01/2025",
+      "day": "Tuesday",
+      "attendance": ["Ashish", "Vinit", "Subarna", "Prateek", "Rohit Hyd", "Ammar", "Akshat", "Sudeep", "Lalit", "Matthew"],
+      "scorers": [
+        { "player": "Matthew", "goals": 2 },
+        { "player": "Akshat", "goals": 2 },
+        { "player": "Lalit", "goals": 1 }
+      ],
+      "ownGoals": [],
+      "cleanSheets": []
+    },
+    {
+      "id": "2025-01-11",
+      "date": "11/01/2025",
+      "day": "Saturday",
+      "attendance": ["Ashish", "Jethi", "Vinit", "Rishav", "Joe", "Vinay", "Animesh", "Sourabh", "Pandey", "Subbu"],
+      "scorers": [
+        { "player": "Jethi", "goals": 4 },
+        { "player": "Vinay", "goals": 2 }
+      ],
+      "ownGoals": ["Vinit"],
+      "cleanSheets": []
+    },
+    {
+      "id": "2025-01-14",
+      "date": "14/01/2025",
+      "day": "Tuesday",
+      "attendance": ["Subarna", "Prateek", "Rohit Hyd", "Akshat", "Sudeep", "Matthew", "Rishabh", "Deepak", "Vivek", "David"],
+      "scorers": [
+        { "player": "Matthew", "goals": 3 },
+        { "player": "David", "goals": 2 },
+        { "player": "Rishabh", "goals": 1 }
+      ],
+      "ownGoals": [],
+      "cleanSheets": []
+    },
+    {
+      "id": "2025-01-18",
+      "date": "18/01/2025",
+      "day": "Saturday",
+      "attendance": ["Ashish", "Jethi", "Vinit", "Subarna", "Rishav", "Vinay", "Animesh", "Sourabh", "Pandey", "Ammar"],
+      "scorers": [
+        { "player": "Jethi", "goals": 2 },
+        { "player": "Rishav", "goals": 3 },
+        { "player": "Animesh", "goals": 1 }
+      ],
+      "ownGoals": [],
+      "cleanSheets": ["Vinit"]
+    },
+    {
+      "id": "2025-01-21",
+      "date": "21/01/2025",
+      "day": "Tuesday",
+      "attendance": ["Prateek", "Rohit Hyd", "Akshat", "Sudeep", "Lalit", "Matthew", "Rishabh", "Soumyadeep", "John", "Vikas"],
+      "scorers": [
+        { "player": "Soumyadeep", "goals": 2 },
+        { "player": "Akshat", "goals": 1 },
+        { "player": "Lalit", "goals": 1 }
+      ],
+      "ownGoals": [],
+      "cleanSheets": []
+    },
+    {
+      "id": "2025-01-25",
+      "date": "25/01/2025",
+      "day": "Saturday",
+      "attendance": ["Ashish", "Jethi", "Vinit", "Rishav", "Joe", "Vinay", "Animesh", "Sourabh", "Subbu", "Aayush"],
+      "scorers": [
+        { "player": "Jethi", "goals": 5 },
+        { "player": "Rishav", "goals": 1 }
+      ],
+      "ownGoals": [],
+      "cleanSheets": ["Joe"]
+    },
+    {
+      "id": "2025-01-28",
+      "date": "28/01/2025",
+      "day": "Tuesday",
+      "attendance": ["Subarna", "Rohit Hyd", "Akshat", "Sudeep", "Matthew", "Rishabh", "Deepak", "Vivek", "Savan", "Vikalp"],
+      "scorers": [
+        { "player": "Matthew", "goals": 2 },
+        { "player": "Akshat", "goals": 2 }
+      ],
+      "ownGoals": ["Savan"],
+      "cleanSheets": []
+    },
+    {
+      "id": "2025-02-01",
+      "date": "01/02/2025",
+      "day": "Saturday",
+      "attendance": ["Ashish", "Jethi", "Vinit", "Subarna", "Rishav", "Joe", "Vinay", "Pandey", "Animesh", "Sourabh", "Ammar"],
+      "scorers": [
+        { "player": "Jethi", "goals": 3 },
+        { "player": "Vinay", "goals": 2 },
+        { "player": "Rishav", "goals": 2 }
+      ],
+      "ownGoals": [],
+      "cleanSheets": []
+    },
+    {
+      "id": "2025-02-04",
+      "date": "04/02/2025",
+      "day": "Tuesday",
+      "attendance": ["Prateek", "Rohit Hyd", "Akshat", "Sudeep", "Lalit", "Matthew", "Soumyadeep", "John", "Vikas", "Aayush"],
+      "scorers": [
+        { "player": "Soumyadeep", "goals": 3 },
+        { "player": "Matthew", "goals": 1 },
+        { "player": "Lalit", "goals": 1 }
+      ],
+      "ownGoals": [],
+      "cleanSheets": ["John"]
+    }
+  ],
+  "allPlayers": [
+    "Ashish", "Vinit", "Subarna", "Prateek", "Rishav", "Jethi", "Rohit Hyd", "Joe", 
+    "Tushar", "Vinay", "Animesh", "Pandey", "Sudeep", "Tushar Lal", "Sourabh", "Rohit",
+    "Ammar", "Subbu", "Savan", "Deepak", "Vivek", "Vikalp", "Aayush", "Lalit", "Akshat",
+    "John", "Nadeem", "David", "Vikas", "Aniket", "Raghav", "Soumyadeep", "Rishabh", "Matthew"
+  ]
+}
+
