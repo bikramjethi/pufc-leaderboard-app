@@ -107,7 +107,12 @@ function App() {
         <div className="tab-nav">
           <button
             className={`tab-btn ${activeTab === "leaderboard" ? "active" : ""}`}
-            onClick={() => setActiveTab("leaderboard")}
+            onClick={() => {
+              setActiveTab("leaderboard");
+              // Reset to all-time view when switching back to leaderboard
+              setSelectedYear("all-time");
+              setPlayers(aggregateAllTimeStats());
+            }}
           >
             📊 Leaderboard
           </button>
