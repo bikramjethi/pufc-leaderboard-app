@@ -110,7 +110,6 @@ export const Attendance = ({ year }) => {
 
   // Render cell content based on match status
   const renderCellContent = (match, player) => {
-    console.log({ match, player });
     // Cancelled match - supersedes all other flags
     if (match.matchCancelled) {
       return (
@@ -135,10 +134,24 @@ export const Attendance = ({ year }) => {
 
     // Match was played - show attendance data
     const wasPresent = match.attendance.includes(player);
-    const scored = match.scorers?.find((s) => s.player === player);
-    const hadOwnGoal = match.ownGoals?.includes(player);
+    const scored = match.scorers?.find((s) => {
+      return s.name.toLowerCase() === player.toLowerCase();
+    });
+    const hadOwnGoal = match.ownGoals?.find((s) => {
+      return s.name.toLowerCase() === player.toLowerCase();
+    });
     const hadCleanSheet = match.cleanSheets?.includes(player);
     const result = getPlayerResult(match, player);
+
+    console.log({
+      match,
+      player,
+      wasPresent,
+      scored,
+      hadOwnGoal,
+      hadCleanSheet,
+      result,
+    });
 
     return (
       <div className="attendance-indicator">
