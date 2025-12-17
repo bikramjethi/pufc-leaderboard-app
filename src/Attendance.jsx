@@ -23,6 +23,18 @@ const formatDate = (dateStr) => {
   return `${dayNum}${suffix(dayNum)} ${monthName}`;
 };
 
+// Get player result for a match
+const getPlayerResult = (match, player) => {
+  if (!match.matchPlayed || match.matchCancelled) return null;
+  if (!match.attendance.includes(player)) return null;
+  
+  if (match.winners?.includes(player)) return "W";
+  if (match.losers?.includes(player)) return "L";
+  // If both arrays are empty or player is in neither, it's a draw
+  if (match.winners?.length === 0 && match.losers?.length === 0) return "D";
+  return null;
+};
+
 export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -95,17 +107,20 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
 
     // Match was played - show attendance data
     const wasPresent = match.attendance.includes(player);
-    const scored = match.scorers.find((s) => s.player === player);
-    const hadOwnGoal = match.ownGoals.includes(player);
-    const hadCleanSheet = match.cleanSheets.includes(player);
+    const scored = match.scorers?.find((s) => s.player === player);
+    const hadOwnGoal = match.ownGoals?.includes(player);
+    const hadCleanSheet = match.cleanSheets?.includes(player);
+    const result = getPlayerResult(match, player);
 
     return (
       <div className="attendance-indicator">
-        {wasPresent ? (
-          <span className="check">✓</span>
-        ) : (
-          <span className="cross">✗</span>
+        {/* Result indicator (W/L/D) */}
+        {result && (
+          <span className={`result-badge result-${result.toLowerCase()}`}>{result}</span>
         )}
+        {/* Attendance indicator (only show if no result or absent) */}
+        {!wasPresent && <span className="cross">✗</span>}
+        {/* Goal stats */}
         {scored && <span className="goal-badge">{scored.goals}</span>}
         {hadCleanSheet && <span className="cs-badge">🧤</span>}
         {hadOwnGoal && <span className="og-badge">OG</span>}
@@ -117,8 +132,15 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
   const getCellClass = (match, player) => {
     if (match.matchCancelled) return "match-cell cancelled";
     if (!match.matchPlayed) return "match-cell pending";
+    
     const wasPresent = match.attendance.includes(player);
-    return `match-cell ${wasPresent ? "present" : "absent"}`;
+    const result = getPlayerResult(match, player);
+    
+    let classes = "match-cell";
+    classes += wasPresent ? " present" : " absent";
+    if (result) classes += ` result-${result.toLowerCase()}`;
+    
+    return classes;
   };
 
   // Get cell tooltip
@@ -127,12 +149,13 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
     if (!match.matchPlayed) return "Match Not Yet Played";
     
     const wasPresent = match.attendance.includes(player);
-    const scored = match.scorers.find((s) => s.player === player);
-    const hadOwnGoal = match.ownGoals.includes(player);
-    const hadCleanSheet = match.cleanSheets.includes(player);
+    const scored = match.scorers?.find((s) => s.player === player);
+    const hadOwnGoal = match.ownGoals?.includes(player);
+    const hadCleanSheet = match.cleanSheets?.includes(player);
+    const result = getPlayerResult(match, player);
 
     if (wasPresent) {
-      let tip = "Present";
+      let tip = result === "W" ? "Won" : result === "L" ? "Lost" : result === "D" ? "Draw" : "Present";
       if (scored) tip += ` • ${scored.goals} goal(s)`;
       if (hadCleanSheet) tip += " • Clean Sheet";
       if (hadOwnGoal) tip += " • Own Goal";
@@ -214,7 +237,9 @@ export const Attendance = ({ year }) => { // eslint-disable-line no-unused-vars
 
       {/* Legend */}
       <div className="legend attendance-legend">
-        <span><span className="check">✓</span> Present</span>
+        <span><span className="result-badge result-w">W</span> Won</span>
+        <span><span className="result-badge result-l">L</span> Lost</span>
+        <span><span className="result-badge result-d">D</span> Draw</span>
         <span><span className="cross">✗</span> Absent</span>
         <span><span className="pending">—</span> Not Played</span>
         <span><span className="cancelled">🚫</span> Cancelled</span>

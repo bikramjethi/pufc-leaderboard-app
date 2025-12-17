@@ -1566,6 +1566,50 @@ body::before {
   font-size: 0.9rem;
 }
 
+/* W/L/D Result Badges */
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.result-badge.result-w {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.result-badge.result-l {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.result-badge.result-d {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.4);
+}
+
+/* Cell background based on result */
+.match-cell.result-w {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.match-cell.result-l {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.match-cell.result-d {
+  background: rgba(234, 179, 8, 0.1);
+}
+
 /* Attendance Summary */
 .attendance-summary {
   display: flex;
