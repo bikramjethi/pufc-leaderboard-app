@@ -1518,7 +1518,7 @@ body::before {
 }
 
 .match-cell.absent {
-  background: rgba(239, 68, 68, 0.05);
+  background: rgba(156, 163, 175, 0.08); /* Soft gray distinct from red loss and blue-gray pending */
 }
 
 .match-cell.pending {
@@ -1550,10 +1550,10 @@ body::before {
 }
 
 .cross {
-  color: #ef4444;
+  color: #9ca3af;
   font-weight: 700;
   font-size: 0.9rem;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .pending {
