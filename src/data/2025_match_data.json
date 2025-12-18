@@ -549,18 +549,36 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-04-05",
+      "id": "05-04-2025",
       "date": "05/04/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Aayush", "Rishav", "Ashish",
+        "Sourabh", "Pandey", "Ammar", "Rohit",
+        "Sudeep",
+        "Vinoth", "Vinay", "Subarna",
+        "Animesh", "Vinit", "Joe", "Vikas", "Subbu"
+      ],
+      "winners": [
+        "Vinoth", "Vinay", "Subarna",
+        "Animesh", "Vinit", "Joe", "Vikas", "Subbu"
+      ],
+      "losers": [
+        "Aayush", "Rishav", "Ashish",
+        "Sourabh", "Pandey", "Ammar",
+        "Rohit", "Sudeep"
+      ],
+      "scorers": [
+        { "name": "Sudeep", "goals": 2, "team": "BLUE" },
+        { "name": "Aayush", "goals": 1, "team": "BLUE" },
+        { "name": "Vinoth", "goals": 3, "team": "RED" },
+        { "name": "Vinit",  "goals": 1, "team": "RED" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
-    },
+    },    
     {
       "id": "2025-04-08",
       "date": "08/04/2025",
@@ -575,18 +593,34 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-04-12",
+      "id": "12-04-2025",
       "date": "12/04/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Rohit", "Joe", "Vinit", "Ajay",
+        "Subarna", "Pandey", "Deepak",
+        "Sourabh", "Vinay", "Rishabh",
+        "Ammar", "Ashish", "Prateek", "Vikas", "Tushar Lal", "Rohit Hyd"
+      ],
+      "winners": [
+        "Sourabh", "Vinay", "Rishabh",
+        "Ammar", "Ashish", "Prateek", "Vikas", "Rohit Hyd"
+      ],
+      "losers": [
+        "Rohit", "Joe", "Vinit", "Ajay",
+        "Subarna", "Pandey", "Deepak", "Tushar Lal"
+      ],
+      "scorers": [
+        { "name": "Rishabh", "goals": 1, "team": "RED" },
+        { "name": "Sourabh", "goals": 1, "team": "RED" }
+      ],
       "ownGoals": [],
-      "cleanSheets": []
-    },
+      "cleanSheets": [
+        { "name": "Rohit Hyd", "team": "RED" }
+      ]
+    },    
     {
       "id": "2025-04-15",
       "date": "15/04/2025",
@@ -601,18 +635,35 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-04-19",
+      "id": "19-04-2025",
       "date": "19/04/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Tushar Lal", "Vikas", "Ashish", "Ajay",
+        "Rohit Hyd", "Subarna", "Rishav",
+        "Vinoth", "Sourabh", "Rishabh",
+        "Ammar", "Tushar", "Prateek", "Raghav"
+      ],
+      "winners": [
+        "Tushar Lal", "Vikas", "Ashish", "Ajay",
+        "Rohit Hyd", "Subarna", "Rishav"
+      ],
+      "losers": [
+        "Vinoth", "Sourabh", "Rishabh",
+        "Ammar", "Tushar", "Prateek", "Raghav"
+      ],
+      "scorers": [
+        { "name": "Rishav",   "goals": 2, "team": "BLACK" },
+        { "name": "Ajay",     "goals": 1, "team": "BLACK" },
+        { "name": "Subarna",  "goals": 1, "team": "BLACK" },
+        { "name": "Vinoth",   "goals": 1, "team": "WHITE" },
+        { "name": "Tushar",   "goals": 1, "team": "WHITE" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
-    },
+    },    
     {
       "id": "2025-04-22",
       "date": "22/04/2025",
@@ -627,18 +678,36 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-04-26",
+      "id": "26-04-2025",
       "date": "26/04/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Joe", "Vinit", "Subbu", "Animesh",
+        "Subarna", "Rohit", "Rishav",
+        "Sudeep", "Jethi", "Pandey", "Ammar",
+        "Ashish", "Prateek", "Rohit Hyd", "Tushar"
+      ],
+      "winners": [
+        "Sudeep", "Jethi", "Pandey", "Ammar",
+        "Ashish", "Prateek", "Rohit Hyd", "Tushar"
+      ],
+      "losers": [
+        "Joe", "Vinit", "Subbu", "Animesh",
+        "Subarna", "Rohit", "Rishav"
+      ],
+      "scorers": [
+        { "name": "Jethi",    "goals": 2, "team": "BLACK" }, 
+        { "name": "Animesh",  "goals": 1, "team": "BLACK" },
+        { "name": "Vinit",    "goals": 1, "team": "BLACK" },
+        { "name": "Pandey",   "goals": 3, "team": "WHITE" },
+        { "name": "Ashish",   "goals": 1, "team": "WHITE" },
+        { "name": "Rohit Hyd","goals": 1, "team": "WHITE" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
-    },
+    },    
     {
       "id": "2025-04-29",
       "date": "29/04/2025",
@@ -653,18 +722,27 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-05-03",
+      "id": "03-05-2025",
       "date": "03/05/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
+      "attendance": [
+        "Subarna", "Jethi", "Ajay", "Miten", "Prateek", "Vikas", "Ashish",
+        "Pandey", "Deepak", "Vinay", "Animesh", "Rohit", "Rishabh", "Rishav", "Ammar"
+      ],
       "winners": [],
       "losers": [],
-      "scorers": [],
+      "scorers": [
+        { "name": "Subarna", "goals": 1, "team": "BLUE" },
+        { "name": "Parth",   "goals": 1, "team": "BLUE" },
+        { "name": "Jethi",   "goals": 1, "team": "BLUE" },
+        { "name": "Deepak",  "goals": 2, "team": "RED" },
+        { "name": "Rishav",  "goals": 1, "team": "RED" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
-    },
+    },    
     {
       "id": "2025-05-06",
       "date": "06/05/2025",
@@ -679,18 +757,36 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-05-10",
+      "id": "10-05-2025",
       "date": "10/05/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Rohit Hyd", "Vivek", "Vinit", "Joe",
+        "Ammar", "Rishabh", "Jethi", "Sudeep",
+        "Rishav", "Sayan", "Subarna",
+        "Vinay", "Sourabh", "Prateek", "Pandey", "Deepak"
+      ],
+      "winners": [
+        "Rishav", "Sayan", "Subarna",
+        "Vinay", "Sourabh", "Prateek", "Pandey", "Deepak"
+      ],
+      "losers": [
+        "Rohit Hyd", "Vivek", "Vinit", "Joe",
+        "Ammar", "Rishabh", "Jethi", "Sudeep"
+      ],
+      "scorers": [
+        { "name": "Sudeep",  "goals": 1, "team": "BLUE" },
+        { "name": "Jethi",   "goals": 2, "team": "BLUE" },
+        { "name": "Subarna", "goals": 1, "team": "RED" },
+        { "name": "Rishav",  "goals": 1, "team": "RED" },
+        { "name": "Vinay",   "goals": 1, "team": "RED" },
+        { "name": "Deepak",  "goals": 1, "team": "RED" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
-    },
+    },    
     {
       "id": "2025-05-13",
       "date": "13/05/2025",
@@ -705,16 +801,31 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-05-17",
+      "id": "17-05-2025",
       "date": "17/05/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
+      "attendance": [
+        "Raghav", "Joe", "Vinit", "Pulkit",
+        "Vivek", "Pandey", "Deepak", "Vikalp",
+        "Sudeep", "Subarna", "Subbu",
+        "Ammar", "Ashish", "Prateek", "Vikas", "Tushar"
+      ],
       "winners": [],
       "losers": [],
-      "scorers": [],
-      "ownGoals": [],
+      "scorers": [
+        { "name": "Subarna", "goals": 2, "team": "BLACK" },
+        { "name": "Sudeep",  "goals": 1, "team": "BLACK" },
+        { "name": "Ashish",  "goals": 1, "team": "BLACK" },
+        { "name": "Pulkit",  "goals": 2, "team": "WHITE" },
+        { "name": "Vivek",   "goals": 1, "team": "WHITE" },
+        { "name": "Pandey",  "goals": 1, "team": "WHITE" },
+        { "name": "Deepak",  "goals": 1, "team": "WHITE" }
+      ],
+      "ownGoals": [
+        { "name": "Vivek", "goals": 1, "forTeam": "BLACK" }
+      ],
       "cleanSheets": []
     },
     {
@@ -731,18 +842,34 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-05-24",
+      "id": "24-05-2025",
       "date": "24/05/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Raghav", "Vikas", "Vinit", "Ashish",
+        "Rohit", "Ammar", "Subarna", "Sourabh",
+        "Tushar", "Rishabh", "Pandey", "Pulkit", 
+        "Animesh", "Prateek", "Joe", "Tushar Lal"
+      ],
+      "winners": [
+        "Raghav", "Vikas", "Vinit", "Ashish",
+        "Rohit", "Ammar", "Subarna", "Sourabh"
+      ],
+      "losers": [
+        "Tushar", "Rishabh", "Pandey", "Pulkit", 
+        "Animesh", "Prateek", "Joe", "Tushar Lal"
+      ],
+      "scorers": [
+        { "name": "Rohit", "goals": 3, "team": "WHITE" }
+      ],
       "ownGoals": [],
-      "cleanSheets": []
-    },
+      "cleanSheets": [
+        { "name": "Raghav", "team": "WHITE" }
+      ]
+    }
+    ,
     {
       "id": "2025-05-27",
       "date": "27/05/2025",
@@ -757,18 +884,33 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-05-31",
+      "id": "31-05-2025",
       "date": "31/05/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Tushar", "Subarna", "Pandey", "Vivek",
+        "Animesh", "Ashish", "Sourabh", "Rajesh",
+        "Savan", "Joe", "Prateek", "Vinit",
+        "Subbu", "Ammar", "Rohit", "Sudeep"
+      ],
+      "winners": [
+        "Tushar", "Subarna", "Pandey", "Vivek",
+        "Animesh", "Ashish", "Sourabh", "Rajesh"
+      ],
+      "losers": [
+        "Savan", "Joe", "Prateek", "Vinit",
+        "Subbu", "Ammar", "Rohit", "Sudeep"
+      ],
+      "scorers": [
+        { "name": "Subarna", "goals": 1, "team": "BLUE" },
+        { "name": "Pandey",  "goals": 1, "team": "BLUE" },
+        { "name": "Vinit",   "goals": 1, "team": "RED" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
-    },
+    },    
     {
       "id": "2025-06-03",
       "date": "03/06/2025",
@@ -1682,6 +1824,8 @@
     "Akshendra",
     "Anurag",
     "Akshit",
-    "Chethan"
+    "Chethan",
+    "Miten",
+    "Rajesh"
   ]
 }
