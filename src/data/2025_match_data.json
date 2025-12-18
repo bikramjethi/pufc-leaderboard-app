@@ -468,15 +468,27 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-03-22",
+      "id": "22-03-2025",
       "date": "22/03/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
+      "attendance": [
+        "Tushar Lal", "Akshendra", "Vinit", "Ashish",
+        "Deepak", "Pandey", "Vinay", "Sudeep",
+        "Rishav", "Chethan", "Rohit",
+        "Subarna", "Joe", "Prateek", "Thomas", "Vivek"
+      ],
       "winners": [],
       "losers": [],
-      "scorers": [],
+      "scorers": [
+        { "name": "Rishav",  "goals": 1, "team": "WHITE" },
+        { "name": "Rohit",   "goals": 1, "team": "WHITE" },
+        { "name": "Thomas",  "goals": 1, "team": "WHITE" },
+        { "name": "Deepak",  "goals": 1, "team": "BLACK" },
+        { "name": "Pandey",  "goals": 1, "team": "BLACK" },
+        { "name": "Ashish",  "goals": 1, "team": "BLACK" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
     },
@@ -494,18 +506,35 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-03-29",
+      "id": "29-03-2025",
       "date": "29/03/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Tushar", "Sourabh", "Savan", "Ashish",
+        "Vikalp", "Pandey", "Subbu", "Rishav",
+        "Sudeep", "Deepak", "Rohit",
+        "Animesh", "Vinit", "Aayush", "Tushar Lal", "Vivek"
+      ],
+      "winners": [
+        "Sudeep", "Deepak", "Rohit",
+        "Animesh", "Vinit", "Aayush", "Tushar Lal", "Ashish"
+      ],
+      "losers": [
+        "Tushar", "Sourabh", "Savan",
+        "Vikalp", "Pandey", "Subbu", "Rishav", "Vivek"
+      ],
+      "scorers": [
+        { "name": "Rishav",    "goals": 1, "team": "WHITE" },
+        { "name": "Pandey",    "goals": 1, "team": "WHITE" },
+        { "name": "Deepak",    "goals": 1, "team": "BLACK" },
+        { "name": "Rohit",     "goals": 1, "team": "BLACK" },
+        { "name": "Aayush",    "goals": 1, "team": "BLACK" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
-    },
+    },        
     {
       "id": "2025-04-01",
       "date": "01/04/2025",
@@ -1652,6 +1681,7 @@
     "Ajay",
     "Akshendra",
     "Anurag",
-    "Akshit"
+    "Akshit",
+    "Chethan"
   ]
 }
