@@ -63,7 +63,7 @@ const aggregateAllTimeStats = () => {
 };
 
 // Available years for attendance data
-const attendanceYears = ["2025"];
+const attendanceYears = ["2026"];
 
 function App() {
   const [activeTab, setActiveTab] = useState("leaderboard");

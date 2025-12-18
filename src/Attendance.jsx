@@ -1,5 +1,9 @@
 import { useState, useMemo } from "react";
-import matchData from "./data/2025_match_data.json";
+import matchData2026 from "./data/2026_match_data.json";
+
+const matchDataByYear = {
+  2026: matchData2026,
+};
 
 // Format date like "4th Jan", "21st Feb", etc.
 const formatDate = (dateStr) => {
@@ -53,11 +57,10 @@ const getPlayerResult = (match, player) => {
 };
 
 export const Attendance = ({ year }) => {
-  // eslint-disable-line no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
 
-  // For now, only 2025 data exists. Ready for future years.
-  // TODO: Use `year` prop to load different match data when available
+  // Load match data based on year
+  const matchData = matchDataByYear[year] || matchData2026;
   const { matches, allPlayers } = matchData;
 
   // Filter players by search
@@ -203,10 +206,10 @@ export const Attendance = ({ year }) => {
         result === "W"
           ? "Won"
           : result === "L"
-          ? "Lost"
-          : result === "D"
-          ? "Draw"
-          : "Present";
+            ? "Lost"
+            : result === "D"
+              ? "Draw"
+              : "Present";
       if (scored) tip += ` • ${scored.goals} goal(s)`;
       if (hadCleanSheet) tip += " • Clean Sheet";
       if (hadOwnGoal) tip += " • Own Goal";
@@ -256,13 +259,12 @@ export const Attendance = ({ year }) => {
                 <th
                   key={match.id}
                   className={`match-col ${getMatchHeaderClass(match)}`}
-                  title={`${match.day} - ${match.date}${
-                    match.matchCancelled
-                      ? " (Cancelled)"
-                      : !match.matchPlayed
+                  title={`${match.day} - ${match.date}${match.matchCancelled
+                    ? " (Cancelled)"
+                    : !match.matchPlayed
                       ? " (Not Yet Played)"
                       : ""
-                  }`}
+                    }`}
                 >
                   <div className="match-header">
                     <span className="match-day">{match.day.slice(0, 3)}</span>
