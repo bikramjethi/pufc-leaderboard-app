@@ -925,15 +925,31 @@
       "cleanSheets": []
     },
     {
-      "id": "2025-06-07",
+      "id": "07-06-2025",
       "date": "07/06/2025",
       "day": "Saturday",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
+      "attendance": [
+        "Subbu", "Joe", "Vinit", "Savan",
+        "Deepak", "Pandey", "Animesh", "Vinay",
+        "Sudeep",
+        "Rohit", "Rishabh", "Ashish",
+        "Prateek", "Aayush", "Subarna", "Ammar"
+      ],
+      "winners": [
+        "Subbu", "Joe", "Vinit", "Savan",
+        "Deepak", "Pandey", "Animesh", "Vinay"
+      ],
+      "losers": [
+        "Sudeep", "Rohit", "Rishabh",
+        "Ashish", "Prateek", "Aayush", "Subarna", "Ammar"
+      ],
+      "scorers": [
+        { "name": "Vinay",  "goals": 1, "team": "BLUE" },
+        { "name": "Pandey","goals": 1, "team": "BLUE" },
+        { "name": "Ammar", "goals": 1, "team": "RED" }
+      ],
       "ownGoals": [],
       "cleanSheets": []
     },
