@@ -97,21 +97,47 @@ export const Roster = ({ type }) => {
         {positionCounts.ALL > 0 && <span>🌟 {positionCounts.ALL} ALL</span>}
       </div>
 
-      {/* Player List */}
-      <div className="roster-list">
+      {/* Player Table */}
+      <div className="roster-table-container">
         {filteredPlayers.length === 0 ? (
           <div className="roster-empty">
             <p>No players found</p>
           </div>
         ) : (
-          <div className="roster-grid">
-            {filteredPlayers.map((player) => (
-              <div key={player.name} className="roster-player-card">
-                <div className="roster-player-name">{player.name}</div>
-                <div className="roster-player-position">{player.position}</div>
-              </div>
-            ))}
-          </div>
+          <table className="roster-table">
+            <thead>
+              <tr>
+                <th className="roster-rank-col">#</th>
+                <th className="roster-player-col">Player</th>
+                <th className="roster-position-col">Position</th>
+                <th className="roster-availability-col">Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPlayers.map((player, index) => (
+                <tr key={player.name} className="roster-row">
+                  <td className="roster-rank-col">{index + 1}</td>
+                  <td className="roster-player-col">{player.name}</td>
+                  <td className="roster-position-col">
+                    <span className={`position-badge position-${player.position.toLowerCase()}`}>
+                      {player.position}
+                    </span>
+                  </td>
+                  <td className="roster-availability-col">
+                    {player.groupAvailibility === "ALL" ? (
+                      <span className="availability-all">All Days</span>
+                    ) : player.groupAvailibility === "TUESDAY" ? (
+                      <span className="availability-tuesday">Tuesday</span>
+                    ) : player.groupAvailibility === "SATURDAY" ? (
+                      <span className="availability-saturday">Saturday</span>
+                    ) : (
+                      <span className="availability-inactive">Inactive</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>

@@ -1770,8 +1770,154 @@ body::before {
   gap: 0.5rem;
 }
 
-.roster-list {
+.roster-table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 70vh;
   width: 100%;
+}
+
+.roster-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.roster-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-secondary);
+}
+
+.roster-table thead::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent-primary);
+}
+
+.roster-table th {
+  padding: 1rem 0.75rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: var(--bg-secondary);
+  position: relative;
+}
+
+.roster-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.roster-table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.roster-table tbody tr:nth-child(even) {
+  background: var(--bg-zebra);
+}
+
+.roster-table tbody tr:nth-child(even):hover {
+  background: var(--bg-hover);
+}
+
+.roster-table td {
+  padding: 1rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.roster-rank-col {
+  width: 50px;
+  text-align: center;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.roster-player-col {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.roster-position-col {
+  width: 120px;
+}
+
+.roster-availability-col {
+  width: 150px;
+}
+
+.position-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.position-badge.position-gk {
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--position-gk);
+}
+
+.position-badge.position-def {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--position-def);
+}
+
+.position-badge.position-mid {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--position-mid);
+}
+
+.position-badge.position-fwd {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--position-fwd);
+}
+
+.position-badge.position-all {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--accent-primary);
+}
+
+.availability-all,
+.availability-tuesday,
+.availability-saturday,
+.availability-inactive {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.availability-all {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--accent-primary);
+}
+
+.availability-tuesday {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--position-mid);
+}
+
+.availability-saturday {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--accent-secondary);
+}
+
+.availability-inactive {
+  background: rgba(107, 114, 128, 0.2);
+  color: var(--text-muted);
 }
 
 .roster-empty {
@@ -1780,60 +1926,28 @@ body::before {
   color: var(--text-muted);
 }
 
-.roster-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
-}
-
-.roster-player-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1rem;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.roster-player-card:hover {
-  background: var(--bg-hover);
-  border-color: var(--accent-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.roster-player-name {
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--text-primary);
-  margin-bottom: 0.25rem;
-}
-
-.roster-player-position {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-}
-
 @media (max-width: 640px) {
   .roster {
     padding: 1rem;
   }
 
-  .roster-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 0.75rem;
+  .roster-table th,
+  .roster-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
   }
 
-  .roster-player-card {
-    padding: 0.75rem;
+  .roster-position-col,
+  .roster-availability-col {
+    width: auto;
   }
 
-  .roster-player-name {
-    font-size: 0.9rem;
-  }
-
-  .roster-player-position {
-    font-size: 0.75rem;
+  .position-badge,
+  .availability-all,
+  .availability-tuesday,
+  .availability-saturday,
+  .availability-inactive {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
   }
 }
