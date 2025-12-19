@@ -1,10 +1,10 @@
-import { seasonData } from "./get-season-data";
+import { leaderboardData } from "./get-data";
 
 // Aggregate all seasons into "All-Time" stats
 export const aggregateAllTimeStats = () => {
     const playerMap = new Map();
 
-    Object.values(seasonData).forEach((seasonPlayers) => {
+    Object.values(leaderboardData).forEach((seasonPlayers) => {
         seasonPlayers.forEach((player) => {
             const key = player.name; // Use name as unique identifier across seasons
 

@@ -6,9 +6,9 @@ import "./App.css";
 import { config } from "./leaderboard-config.js";
 import { isSmallScreen } from "./utils/isSmallScreen.js";
 import { aggregateAllTimeStats } from "./utils/leaderboard-calculations.js";
-import { seasonData } from "./utils/get-season-data.js";
+import { leaderboardData } from "./utils/get-data.js";
 
-const availableYears = Object.keys(seasonData).sort((a, b) => b - a);
+const availableYears = Object.keys(leaderboardData).sort((a, b) => b - a);
 
 // Available years for attendance data
 const attendanceYears = ["2026"];
@@ -27,7 +27,7 @@ function App() {
     if (selectedYear === "all-time") {
       setPlayers(aggregateAllTimeStats());
     } else {
-      setPlayers(seasonData[selectedYear]);
+      setPlayers(leaderboardData[selectedYear]);
     }
   }, [selectedYear]);
 
@@ -164,7 +164,7 @@ function App() {
         {activeTab === "leaderboard" ? (
           <Leaderboard
             players={players}
-            allSeasonData={seasonData}
+            allSeasonData={leaderboardData}
             isAllTime={selectedYear === "all-time"}
           />
         ) : activeTab === "attendance" ? (
