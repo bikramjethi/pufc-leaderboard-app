@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import matchData2026 from "./data/attendance-data/2026_match_data.json";
+import matchData2026 from "./data/attendance-data/2026.json";
 
 const matchDataByYear = {
   2026: matchData2026,
