@@ -160,13 +160,13 @@ function App() {
             className={`tab-btn ${activeTab === "tuesday-roster" ? "active" : ""}`}
             onClick={() => setActiveTab("tuesday-roster")}
           >
-            🔵 Tuesday
+            Tue
           </button>
           <button
             className={`tab-btn ${activeTab === "saturday-roster" ? "active" : ""}`}
             onClick={() => setActiveTab("saturday-roster")}
           >
-            🟢 Saturday
+            Sat
           </button>
           <button
             className={`tab-btn ${activeTab === "inactive-players" ? "active" : ""}`}
