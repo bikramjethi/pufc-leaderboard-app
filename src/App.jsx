@@ -6,8 +6,8 @@ import "./App.css";
 import { config } from "./leaderboard-config.js";
 
 // Import all season data
-import data2024 from "./data/2024.json";
-import data2025 from "./data/2025.json";
+import data2024 from "./data/leaderboard-data/2024.json";
+import data2025 from "./data/leaderboard-data/2025.json";
 
 const seasonData = {
   2024: data2024,
