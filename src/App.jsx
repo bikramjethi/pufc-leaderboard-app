@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Leaderboard } from "./Leaderboard.jsx";
 import { Attendance } from "./Attendance.jsx";
+import { Roster } from "./Roster.jsx";
 import "./App.css";
 import { config } from "./leaderboard-config.js";
 
@@ -111,9 +112,15 @@ function App() {
             <p className="subtitle">
               {activeTab === "attendance"
                 ? `${attendanceYear} Match Attendance`
-                : selectedYear === "all-time"
-                  ? "All-Time Career Stats"
-                  : "Player Statistics"}
+                : activeTab === "tuesday-roster"
+                  ? "Tuesday Roster"
+                  : activeTab === "saturday-roster"
+                    ? "Saturday Roster"
+                    : activeTab === "inactive-players"
+                      ? "Inactive Players"
+                      : selectedYear === "all-time"
+                        ? "All-Time Career Stats"
+                        : "Player Statistics"}
             </p>
           </div>
           <button
@@ -149,41 +156,61 @@ function App() {
               📅 Attendance
             </button>
           )}
-          {/* Controls - Season selector for both tabs */}
-          <div className="controls">
-            <div className="year-selector">
-              <label htmlFor="year-select">Season</label>
-              <div className="select-wrapper">
-                {activeTab === "leaderboard" ? (
-                  <select
-                    id="year-select"
-                    value={selectedYear}
-                    onChange={(e) => setSelectedYear(e.target.value)}
-                  >
-                    {availableYears.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                    <option value="all-time">All-Time</option>
-                  </select>
-                ) : (
-                  <select
-                    id="year-select"
-                    value={attendanceYear}
-                    onChange={(e) => setAttendanceYear(e.target.value)}
-                  >
-                    {attendanceYears.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                )}
-                <span className="select-arrow">▼</span>
+          <button
+            className={`tab-btn ${activeTab === "tuesday-roster" ? "active" : ""}`}
+            onClick={() => setActiveTab("tuesday-roster")}
+          >
+            🔵 Tuesday
+          </button>
+          <button
+            className={`tab-btn ${activeTab === "saturday-roster" ? "active" : ""}`}
+            onClick={() => setActiveTab("saturday-roster")}
+          >
+            🟢 Saturday
+          </button>
+          <button
+            className={`tab-btn ${activeTab === "inactive-players" ? "active" : ""}`}
+            onClick={() => setActiveTab("inactive-players")}
+          >
+            ⚪ Inactive
+          </button>
+          {/* Controls - Season selector for leaderboard and attendance tabs */}
+          {(activeTab === "leaderboard" || activeTab === "attendance") && (
+            <div className="controls">
+              <div className="year-selector">
+                <label htmlFor="year-select">Season</label>
+                <div className="select-wrapper">
+                  {activeTab === "leaderboard" ? (
+                    <select
+                      id="year-select"
+                      value={selectedYear}
+                      onChange={(e) => setSelectedYear(e.target.value)}
+                    >
+                      {availableYears.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                      <option value="all-time">All-Time</option>
+                    </select>
+                  ) : (
+                    <select
+                      id="year-select"
+                      value={attendanceYear}
+                      onChange={(e) => setAttendanceYear(e.target.value)}
+                    >
+                      {attendanceYears.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  <span className="select-arrow">▼</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Tab Content */}
@@ -193,9 +220,15 @@ function App() {
             allSeasonData={seasonData}
             isAllTime={selectedYear === "all-time"}
           />
-        ) : (
+        ) : activeTab === "attendance" ? (
           <Attendance year={attendanceYear} />
-        )}
+        ) : activeTab === "tuesday-roster" ? (
+          <Roster type="tuesday" />
+        ) : activeTab === "saturday-roster" ? (
+          <Roster type="saturday" />
+        ) : activeTab === "inactive-players" ? (
+          <Roster type="inactive" />
+        ) : null}
       </main>
 
       <footer className="footer">

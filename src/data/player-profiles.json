@@ -1,0 +1,177 @@
+[
+  {
+    "name": "Aayush",
+    "position": "DEF",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Akshat",
+    "position": "MID",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Ammar",
+    "position": "MID",
+    "groupAvailibility": "SATURDAY"
+  },
+  {
+    "name": "Aniket",
+    "position": "FWD",
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Animesh",
+    "position": "DEF",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Ashish",
+    "position": "DEF",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "David",
+    "position": "FWD",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Deepak",
+    "position": "FWD",
+    "groupAvailibility": "SATURDAY"
+  },
+  {
+    "name": "Jethi",
+    "position": "ALL",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Joe",
+    "position": "DEF",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "John",
+    "position": "DEF",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Lalit",
+    "position": "FWD",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Mathew",
+    "position": "FWD",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Nadeem",
+    "position": "GK",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Pandey",
+    "position": "MID",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Prateek",
+    "position": "DEF",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Raghav",
+    "position": "GK",
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Rishabh",
+    "position": "MID",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Rishav",
+    "position": "FWD",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Rohit",
+    "position": "MID",
+    "groupAvailibility":"SATURDAY"
+  },
+  {
+    "name": "Rohit Hyd",
+    "position": "MID",
+    "groupAvailibility":"ALL"
+  },
+  {
+    "name": "Savan",
+    "position": "DEF",
+    "groupAvailibility": "SATURDAY"
+  },
+  {
+    "name": "Soumyadeep",
+    "position": "FWD",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Sourabh",
+    "position": "DEF",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Subarna",
+    "position": "MID",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Subbu",
+    "position": "FWD",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Sudeep",
+    "position": "FWD",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Tushar",
+    "position": "FWD",
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Tushar Lal",
+    "position": "DEF",
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Vikalp",
+    "position": "DEF",
+    "groupAvailibility": "SATURDAY"
+  },
+  {
+    "name": "Vikas",
+    "position": "DEF",
+    "groupAvailibility": "TUESDAY"
+  },
+  {
+    "name": "Vinay",
+    "position": "MID",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Vinit",
+    "position": "DEF",
+    "groupAvailibility": "ALL"
+  },
+  {
+    "name": "Vinoth",
+    "position": "FWD",
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Vivek",
+    "position": "MID",
+    "groupAvailibility": "SATURDAY"
+  }
+]
