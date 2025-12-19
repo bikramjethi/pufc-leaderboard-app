@@ -70,10 +70,28 @@ export const tickerMessages = [
 
 ## Getting Started
 
+### Main Leaderboard App
+
 ```bash
 npm install
 npm run dev
 ```
+
+The main app will run on `http://localhost:5173`
+
+### Admin Panel
+
+A separate admin app is available for managing leaderboard data:
+
+```bash
+cd admin
+npm install
+npm run dev
+```
+
+The admin app will run on `http://localhost:5174`
+
+See `admin/README.md` for more details.
 
 ## Build for Production
 
