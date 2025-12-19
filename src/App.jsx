@@ -4,6 +4,7 @@ import { Attendance } from "./Attendance.jsx";
 import { Roster } from "./Roster.jsx";
 import "./App.css";
 import { config } from "./leaderboard-config.js";
+import { isSmallScreen } from "./utils/isSmallScreen.js";
 
 // Import all season data
 import data2024 from "./data/leaderboard-data/2024.json";
@@ -15,11 +16,6 @@ const seasonData = {
 };
 
 const availableYears = Object.keys(seasonData).sort((a, b) => b - a);
-
-// Check if screen width is below 420px
-const isSmallScreen = () => {
-  return window.innerWidth < 420;
-};
 
 // Aggregate all seasons into "All-Time" stats
 const aggregateAllTimeStats = () => {
