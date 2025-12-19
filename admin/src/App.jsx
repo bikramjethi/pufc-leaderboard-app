@@ -1,4 +1,5 @@
 import './App.css'
+import { CreateAttendanceShell } from './flows/CreateAttendanceShell'
 
 function App() {
     return (
@@ -11,6 +12,10 @@ function App() {
                     </div>
                 </div>
             </header>
+
+            <main className="admin-main single">
+                <CreateAttendanceShell />
+            </main>
         </div>
     )
 }
