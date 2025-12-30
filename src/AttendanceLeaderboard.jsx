@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import attendanceLeaderboardData2025 from "./data/attendance-data/leaderboard/2025.json";
 import attendanceLeaderboardData2026 from "./data/attendance-data/leaderboard/2026.json";
 
@@ -14,21 +14,10 @@ const attendanceLeaderboardDataByYear = {
 export const AttendanceLeaderboard = ({ year = "2025" }) => {
   const yearKey = String(year);
   const data = attendanceLeaderboardDataByYear[yearKey];
-
-  // Group players by category - must be called before early return
-  const groupedPlayers = useMemo(() => {
-    if (!data || !data.players || data.players.length === 0) {
-      return {};
-    }
-    const groups = {};
-    data.players.forEach((player) => {
-      if (!groups[player.category]) {
-        groups[player.category] = [];
-      }
-      groups[player.category].push(player);
-    });
-    return groups;
-  }, [data]);
+  
+  // Sorting state
+  const [sortKey, setSortKey] = useState("totalGames");
+  const [sortDirection, setSortDirection] = useState("desc");
 
   if (!data || !data.summary || !data.players || data.players.length === 0) {
     return (
@@ -44,6 +33,143 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
 
   // Category order
   const categoryOrder = ["ALL", "WEEKEND", "MIDWEEK", "Others"];
+
+  // Handle sorting
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      // Toggle direction if same column
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      // New column: default to desc for numeric, asc for text
+      setSortKey(key);
+      setSortDirection(key === "name" || key === "category" ? "asc" : "desc");
+    }
+  };
+
+  // Calculate percentages dynamically
+  const calculatePercentages = (player) => {
+    const midweekPercentage = summary.midweekGames > 0
+      ? Math.round((player.midweekGames / summary.midweekGames) * 100)
+      : 0;
+    
+    const weekendPercentage = summary.weekendGames > 0
+      ? Math.round((player.weekendGames / summary.weekendGames) * 100)
+      : 0;
+    
+    const totalPercentage = summary.totalGames > 0
+      ? Math.round((player.totalGames / summary.totalGames) * 100)
+      : 0;
+    
+    return { midweekPercentage, weekendPercentage, totalPercentage };
+  };
+
+  // Get sort indicator
+  const getSortIndicator = (key) => {
+    if (sortKey !== key) return <span className="sort-indicator">⇅</span>;
+    return (
+      <span className="sort-indicator active">
+        {sortDirection === "asc" ? "↑" : "↓"}
+      </span>
+    );
+  };
+
+  // Sort and group players
+  const groupedPlayers = useMemo(() => {
+    if (!data || !data.players || data.players.length === 0) {
+      return {};
+    }
+
+    // Create a copy of all players with calculated percentages
+    const playersWithCalculations = data.players.map((player) => {
+      const percentages = calculatePercentages(player);
+      return {
+        ...player,
+        calculatedMidweekPercentage: percentages.midweekPercentage,
+        calculatedWeekendPercentage: percentages.weekendPercentage,
+        calculatedTotalPercentage: percentages.totalPercentage,
+      };
+    });
+
+    // Sort all players
+    const sortedPlayers = [...playersWithCalculations].sort((a, b) => {
+      let aVal, bVal;
+
+      // Handle different sort keys
+      switch (sortKey) {
+        case "name":
+          aVal = a.name;
+          bVal = b.name;
+          break;
+        case "category":
+          aVal = a.category;
+          bVal = b.category;
+          break;
+        case "midweekGames":
+          aVal = a.midweekGames;
+          bVal = b.midweekGames;
+          break;
+        case "weekendGames":
+          aVal = a.weekendGames;
+          bVal = b.weekendGames;
+          break;
+        case "totalGames":
+          aVal = a.totalGames;
+          bVal = b.totalGames;
+          break;
+        case "midweekPercentage":
+          aVal = a.calculatedMidweekPercentage;
+          bVal = b.calculatedMidweekPercentage;
+          break;
+        case "weekendPercentage":
+          aVal = a.calculatedWeekendPercentage;
+          bVal = b.calculatedWeekendPercentage;
+          break;
+        case "totalPercentage":
+          aVal = a.calculatedTotalPercentage;
+          bVal = b.calculatedTotalPercentage;
+          break;
+        case "games2024":
+          // Handle null values - put them at the end
+          if (a.games2024 === null && b.games2024 === null) return 0;
+          if (a.games2024 === null) return 1;
+          if (b.games2024 === null) return -1;
+          aVal = a.games2024;
+          bVal = b.games2024;
+          break;
+        case "difference":
+          // Handle null values - put them at the end
+          if (a.difference === null && b.difference === null) return 0;
+          if (a.difference === null) return 1;
+          if (b.difference === null) return -1;
+          aVal = a.difference;
+          bVal = b.difference;
+          break;
+        default:
+          aVal = a[sortKey];
+          bVal = b[sortKey];
+      }
+
+      // Handle string comparison
+      if (typeof aVal === "string") {
+        const comparison = aVal.localeCompare(bVal);
+        return sortDirection === "asc" ? comparison : -comparison;
+      }
+
+      // Handle numeric comparison
+      return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
+    });
+
+    // Group sorted players by category
+    const groups = {};
+    sortedPlayers.forEach((player) => {
+      if (!groups[player.category]) {
+        groups[player.category] = [];
+      }
+      groups[player.category].push(player);
+    });
+
+    return groups;
+  }, [data, sortKey, sortDirection, summary]);
 
   // Format difference value
   const formatDifference = (player) => {
@@ -62,23 +188,6 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     if (player.difference > 0) return "diff-positive";
     if (player.difference < 0) return "diff-negative";
     return "diff-neutral";
-  };
-
-  // Calculate percentages dynamically
-  const calculatePercentages = (player) => {
-    const midweekPercentage = summary.midweekGames > 0
-      ? Math.round((player.midweekGames / summary.midweekGames) * 100)
-      : 0;
-    
-    const weekendPercentage = summary.weekendGames > 0
-      ? Math.round((player.weekendGames / summary.weekendGames) * 100)
-      : 0;
-    
-    const totalPercentage = summary.totalGames > 0
-      ? Math.round((player.totalGames / summary.totalGames) * 100)
-      : 0;
-    
-    return { midweekPercentage, weekendPercentage, totalPercentage };
   };
 
   // Get percentage class for styling
@@ -105,32 +214,106 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
         <table className="attendance-leaderboard-table">
           <thead>
             <tr>
-              <th className="category-col">Category</th>
+              <th 
+                className={`category-col sortable ${sortKey === "category" ? "sorted" : ""}`}
+                title="Category"
+                onClick={() => handleSort("category")}
+              >
+                <span className="th-content">
+                  Category
+                  {getSortIndicator("category")}
+                </span>
+              </th>
               <th className="sno-col">#</th>
-              <th className="name-col">Player</th>
-              <th className="stat-col" title="Midweek Games">
-                MW
+              <th 
+                className={`name-col sortable ${sortKey === "name" ? "sorted" : ""}`}
+                title="Player Name"
+                onClick={() => handleSort("name")}
+              >
+                <span className="th-content">
+                  Player
+                  {getSortIndicator("name")}
+                </span>
               </th>
-              <th className="stat-col" title="Weekend Games">
-                WE
+              <th 
+                className={`stat-col sortable ${sortKey === "midweekGames" ? "sorted" : ""}`}
+                title="Midweek Games"
+                onClick={() => handleSort("midweekGames")}
+              >
+                <span className="th-content">
+                  MW
+                  {getSortIndicator("midweekGames")}
+                </span>
               </th>
-              <th className="stat-col" title="Total Games">
-                Total
+              <th 
+                className={`stat-col sortable ${sortKey === "weekendGames" ? "sorted" : ""}`}
+                title="Weekend Games"
+                onClick={() => handleSort("weekendGames")}
+              >
+                <span className="th-content">
+                  WE
+                  {getSortIndicator("weekendGames")}
+                </span>
               </th>
-              <th className="stat-col" title="% of Midweek Games">
-                %MW
+              <th 
+                className={`stat-col sortable ${sortKey === "totalGames" ? "sorted" : ""}`}
+                title="Total Games"
+                onClick={() => handleSort("totalGames")}
+              >
+                <span className="th-content">
+                  Total
+                  {getSortIndicator("totalGames")}
+                </span>
               </th>
-              <th className="stat-col" title="% of Weekend Games">
-                %WE
+              <th 
+                className={`stat-col sortable ${sortKey === "midweekPercentage" ? "sorted" : ""}`}
+                title="% of Midweek Games"
+                onClick={() => handleSort("midweekPercentage")}
+              >
+                <span className="th-content">
+                  %MW
+                  {getSortIndicator("midweekPercentage")}
+                </span>
               </th>
-              <th className="stat-col" title="% of Total Games">
-                %Total
+              <th 
+                className={`stat-col sortable ${sortKey === "weekendPercentage" ? "sorted" : ""}`}
+                title="% of Weekend Games"
+                onClick={() => handleSort("weekendPercentage")}
+              >
+                <span className="th-content">
+                  %WE
+                  {getSortIndicator("weekendPercentage")}
+                </span>
               </th>
-              <th className="stat-col" title="Games Played in 2024">
-                2024
+              <th 
+                className={`stat-col sortable ${sortKey === "totalPercentage" ? "sorted" : ""}`}
+                title="% of Total Games"
+                onClick={() => handleSort("totalPercentage")}
+              >
+                <span className="th-content">
+                  %Total
+                  {getSortIndicator("totalPercentage")}
+                </span>
               </th>
-              <th className="stat-col" title="Difference from 2024">
-                Diff
+              <th 
+                className={`stat-col sortable ${sortKey === "games2024" ? "sorted" : ""}`}
+                title="Games Played in 2024"
+                onClick={() => handleSort("games2024")}
+              >
+                <span className="th-content">
+                  2024
+                  {getSortIndicator("games2024")}
+                </span>
+              </th>
+              <th 
+                className={`stat-col sortable ${sortKey === "difference" ? "sorted" : ""}`}
+                title="Difference from 2024"
+                onClick={() => handleSort("difference")}
+              >
+                <span className="th-content">
+                  Diff
+                  {getSortIndicator("difference")}
+                </span>
               </th>
             </tr>
           </thead>

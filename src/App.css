@@ -1886,6 +1886,43 @@ body::before {
   letter-spacing: 0.02em;
 }
 
+.attendance-leaderboard-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.attendance-leaderboard-table th.sortable:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.attendance-leaderboard-table th.sorted {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.attendance-leaderboard-table .th-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  justify-content: center;
+}
+
+.attendance-leaderboard-table .sort-indicator {
+  font-size: 0.65rem;
+  opacity: 0.5;
+  transition: all 0.2s ease;
+}
+
+.attendance-leaderboard-table th.sortable:hover .sort-indicator {
+  opacity: 0.8;
+}
+
+.attendance-leaderboard-table .sort-indicator.active {
+  opacity: 1;
+  color: #ffffff;
+  font-weight: bold;
+}
+
 .attendance-leaderboard-table th:last-child {
   border-right: none;
 }
