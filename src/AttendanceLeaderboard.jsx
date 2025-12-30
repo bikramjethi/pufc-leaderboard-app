@@ -19,35 +19,8 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   const [sortKey, setSortKey] = useState("totalGames");
   const [sortDirection, setSortDirection] = useState("desc");
 
-  if (!data || !data.summary || !data.players || data.players.length === 0) {
-    return (
-      <div className="attendance-leaderboard">
-        <div className="attendance-no-data">
-          <p>No data available for {year}</p>
-        </div>
-      </div>
-    );
-  }
-
-  const { summary } = data;
-
-  // Category order
-  const categoryOrder = ["ALL", "WEEKEND", "MIDWEEK", "Others"];
-
-  // Handle sorting
-  const handleSort = (key) => {
-    if (sortKey === key) {
-      // Toggle direction if same column
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      // New column: default to desc for numeric, asc for text
-      setSortKey(key);
-      setSortDirection(key === "name" || key === "category" ? "asc" : "desc");
-    }
-  };
-
-  // Calculate percentages dynamically
-  const calculatePercentages = (player) => {
+  // Calculate percentages dynamically - must be defined before useMemo
+  const calculatePercentages = (player, summary) => {
     const midweekPercentage = summary.midweekGames > 0
       ? Math.round((player.midweekGames / summary.midweekGames) * 100)
       : 0;
@@ -63,25 +36,20 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     return { midweekPercentage, weekendPercentage, totalPercentage };
   };
 
-  // Get sort indicator
-  const getSortIndicator = (key) => {
-    if (sortKey !== key) return <span className="sort-indicator">⇅</span>;
-    return (
-      <span className="sort-indicator active">
-        {sortDirection === "asc" ? "↑" : "↓"}
-      </span>
-    );
-  };
+  // Check if user has applied a custom sort (not the default)
+  const isDefaultSort = sortKey === "totalGames" && sortDirection === "desc";
 
-  // Sort and group players
-  const groupedPlayers = useMemo(() => {
-    if (!data || !data.players || data.players.length === 0) {
-      return {};
+  // Sort all players together (not by category) - must be called before early return
+  const sortedPlayers = useMemo(() => {
+    if (!data || !data.players || data.players.length === 0 || !data.summary) {
+      return [];
     }
+
+    const { summary } = data;
 
     // Create a copy of all players with calculated percentages
     const playersWithCalculations = data.players.map((player) => {
-      const percentages = calculatePercentages(player);
+      const percentages = calculatePercentages(player, summary);
       return {
         ...player,
         calculatedMidweekPercentage: percentages.midweekPercentage,
@@ -90,8 +58,8 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
       };
     });
 
-    // Sort all players
-    const sortedPlayers = [...playersWithCalculations].sort((a, b) => {
+    // Sort all players together
+    return [...playersWithCalculations].sort((a, b) => {
       let aVal, bVal;
 
       // Handle different sort keys
@@ -158,18 +126,59 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
       // Handle numeric comparison
       return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
     });
+  }, [data, sortKey, sortDirection]);
 
-    // Group sorted players by category
+  // Group players by category for default categorical view
+  const groupedPlayers = useMemo(() => {
+    if (!data || !data.players || data.players.length === 0) {
+      return {};
+    }
     const groups = {};
-    sortedPlayers.forEach((player) => {
+    data.players.forEach((player) => {
       if (!groups[player.category]) {
         groups[player.category] = [];
       }
       groups[player.category].push(player);
     });
-
     return groups;
-  }, [data, sortKey, sortDirection, summary]);
+  }, [data]);
+
+  // Category order for default view
+  const categoryOrder = ["ALL", "WEEKEND", "MIDWEEK", "Others"];
+
+  if (!data || !data.summary || !data.players || data.players.length === 0) {
+    return (
+      <div className="attendance-leaderboard">
+        <div className="attendance-no-data">
+          <p>No data available for {year}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { summary } = data;
+
+  // Handle sorting
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      // Toggle direction if same column
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      // New column: default to desc for numeric, asc for text
+      setSortKey(key);
+      setSortDirection(key === "name" || key === "category" ? "asc" : "desc");
+    }
+  };
+
+  // Get sort indicator
+  const getSortIndicator = (key) => {
+    if (sortKey !== key) return <span className="sort-indicator">⇅</span>;
+    return (
+      <span className="sort-indicator active">
+        {sortDirection === "asc" ? "↑" : "↓"}
+      </span>
+    );
+  };
 
   // Format difference value
   const formatDifference = (player) => {
@@ -318,92 +327,163 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
             </tr>
           </thead>
           <tbody>
-            {(() => {
-              let globalRowIndex = 0;
-              return categoryOrder.map((category) => {
-                const categoryPlayers = groupedPlayers[category] || [];
-                if (categoryPlayers.length === 0) return null;
+            {isDefaultSort ? (
+              // Default categorical view
+              (() => {
+                let globalRowIndex = 0;
+                return categoryOrder.map((category) => {
+                  const categoryPlayers = groupedPlayers[category] || [];
+                  if (categoryPlayers.length === 0) return null;
 
-                return (
-                  <React.Fragment key={category}>
-                    {categoryPlayers.map((player, idx) => {
-                      const isEven = globalRowIndex % 2 === 0;
-                      globalRowIndex++;
-                      return (
-                        <tr
-                          key={player.sno}
-                          className={`player-row ${isEven ? "even" : "odd"}`}
-                        >
-                          {idx === 0 && (
-                            <td
-                              className="category-col"
-                              rowSpan={categoryPlayers.length}
-                            >
-                              {category}
-                            </td>
-                          )}
-                          <td className="sno-col">{player.sno}</td>
-                          <td className="name-col">{player.name}</td>
-                      <td className="stat-col">{player.midweekGames}</td>
-                      <td className="stat-col">{player.weekendGames}</td>
-                      <td className="stat-col">{player.totalGames}</td>
-                      {(() => {
-                        const percentages = calculatePercentages(player);
+                  return (
+                    <React.Fragment key={category}>
+                      {categoryPlayers.map((player, idx) => {
+                        const isEven = globalRowIndex % 2 === 0;
+                        globalRowIndex++;
                         return (
-                          <>
-                            <td
-                              className={`stat-col pct-col ${getPercentageClass(
-                                percentages.midweekPercentage
-                              )}`}
-                            >
-                              {percentages.midweekPercentage}%
+                          <tr
+                            key={player.sno}
+                            className={`player-row ${isEven ? "even" : "odd"}`}
+                          >
+                            {idx === 0 && (
+                              <td
+                                className="category-col"
+                                rowSpan={categoryPlayers.length}
+                              >
+                                {category}
+                              </td>
+                            )}
+                            <td className="sno-col">{player.sno}</td>
+                            <td className="name-col">{player.name}</td>
+                            <td className="stat-col">{player.midweekGames}</td>
+                            <td className="stat-col">{player.weekendGames}</td>
+                            <td className="stat-col">{player.totalGames}</td>
+                            {(() => {
+                              const percentages = calculatePercentages(player, summary);
+                              return (
+                                <>
+                                  <td
+                                    className={`stat-col pct-col ${getPercentageClass(
+                                      percentages.midweekPercentage
+                                    )}`}
+                                  >
+                                    {percentages.midweekPercentage}%
+                                  </td>
+                                  <td
+                                    className={`stat-col pct-col ${getPercentageClass(
+                                      percentages.weekendPercentage
+                                    )}`}
+                                  >
+                                    {percentages.weekendPercentage}%
+                                  </td>
+                                  <td
+                                    className={`stat-col pct-col ${getPercentageClass(
+                                      percentages.totalPercentage
+                                    )}`}
+                                  >
+                                    {percentages.totalPercentage}%
+                                  </td>
+                                </>
+                              );
+                            })()}
+                            <td className="stat-col games2024-col">
+                              {player.games2024 === null ? (
+                                player.notes && player.notes.toLowerCase().includes("injured") ? (
+                                  <span className="injured-player-emoji" title={player.notes || "Injured"}>
+                                    {"🏥"}
+                                  </span>
+                                ) : (
+                                  <span className="new-player-emoji" title={player.notes || "New Player"}>
+                                    {"🆕"}
+                                  </span>
+                                )
+                              ) : (
+                                player.games2024
+                              )}
                             </td>
                             <td
-                              className={`stat-col pct-col ${getPercentageClass(
-                                percentages.weekendPercentage
+                              className={`stat-col diff-col ${getDifferenceClass(
+                                player
                               )}`}
                             >
-                              {percentages.weekendPercentage}%
+                              {formatDifference(player)}
                             </td>
-                            <td
-                              className={`stat-col pct-col ${getPercentageClass(
-                                percentages.totalPercentage
-                              )}`}
-                            >
-                              {percentages.totalPercentage}%
-                            </td>
-                          </>
+                          </tr>
                         );
-                      })()}
-                      <td className="stat-col games2024-col">
-                        {player.games2024 === null ? (
-                          player.notes && player.notes.toLowerCase().includes("injured") ? (
-                            <span className="injured-player-emoji" title={player.notes || "Injured"}>
-                              {"🏥"}
-                            </span>
-                          ) : (
-                            <span className="new-player-emoji" title={player.notes || "New Player"}>
-                              {"🆕"}
-                            </span>
-                          )
-                        ) : (
-                          player.games2024
-                        )}
-                      </td>
+                      })}
+                    </React.Fragment>
+                  );
+                });
+              })()
+            ) : (
+              // Sorted flat view
+              sortedPlayers.map((player, index) => {
+                const isEven = index % 2 === 0;
+                return (
+                  <tr
+                    key={player.sno}
+                    className={`player-row ${isEven ? "even" : "odd"}`}
+                  >
+                    <td className="category-col">{player.category}</td>
+                    <td className="sno-col">{player.sno}</td>
+                    <td className="name-col">{player.name}</td>
+                    <td className="stat-col">{player.midweekGames}</td>
+                    <td className="stat-col">{player.weekendGames}</td>
+                    <td className="stat-col">{player.totalGames}</td>
+                    {(() => {
+                      const percentages = calculatePercentages(player, summary);
+                      return (
+                        <>
                           <td
-                            className={`stat-col diff-col ${getDifferenceClass(
-                              player
+                            className={`stat-col pct-col ${getPercentageClass(
+                              percentages.midweekPercentage
                             )}`}
                           >
-                            {formatDifference(player)}
+                            {percentages.midweekPercentage}%
                           </td>
-                        </tr>
+                          <td
+                            className={`stat-col pct-col ${getPercentageClass(
+                              percentages.weekendPercentage
+                            )}`}
+                          >
+                            {percentages.weekendPercentage}%
+                          </td>
+                          <td
+                            className={`stat-col pct-col ${getPercentageClass(
+                              percentages.totalPercentage
+                            )}`}
+                          >
+                            {percentages.totalPercentage}%
+                          </td>
+                        </>
                       );
-                    })}
-                  </React.Fragment>
+                    })()}
+                    <td className="stat-col games2024-col">
+                      {player.games2024 === null ? (
+                        player.notes && player.notes.toLowerCase().includes("injured") ? (
+                          <span className="injured-player-emoji" title={player.notes || "Injured"}>
+                            {"🏥"}
+                          </span>
+                        ) : (
+                          <span className="new-player-emoji" title={player.notes || "New Player"}>
+                            {"🆕"}
+                          </span>
+                        )
+                      ) : (
+                        player.games2024
+                      )}
+                    </td>
+                    <td
+                      className={`stat-col diff-col ${getDifferenceClass(
+                        player
+                      )}`}
+                    >
+                      {formatDifference(player)}
+                    </td>
+                  </tr>
                 );
-              });
-            })()}
+              })
+            )}
           </tbody>
         </table>
       </div>
