@@ -7,7 +7,7 @@
   },
   "players": [
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 1,
       "name": "Ashish",
       "midweekGames": 47,
@@ -21,7 +21,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 2,
       "name": "Vinit",
       "midweekGames": 34,
@@ -35,7 +35,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 3,
       "name": "Subarna",
       "midweekGames": 37,
@@ -49,7 +49,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 4,
       "name": "Joe",
       "midweekGames": 28,
@@ -63,7 +63,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 5,
       "name": "Rishav",
       "midweekGames": 39,
@@ -77,7 +77,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 6,
       "name": "Pandey",
       "midweekGames": 29,
@@ -91,7 +91,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 7,
       "name": "Vinay",
       "midweekGames": 40,
@@ -105,7 +105,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 8,
       "name": "Sudeep",
       "midweekGames": 32,
@@ -119,7 +119,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 9,
       "name": "Sourabh",
       "midweekGames": 39,
@@ -133,7 +133,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 10,
       "name": "Animesh",
       "midweekGames": 27,
@@ -147,7 +147,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 11,
       "name": "Rohit Hyd",
       "midweekGames": 27,
@@ -161,7 +161,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 12,
       "name": "Jethi",
       "midweekGames": 30,
@@ -175,7 +175,7 @@
       "notes": null
     },
     {
-      "category": "MIDWEEK + WEEKEND",
+      "category": "ALL",
       "sno": 13,
       "name": "Rishabh",
       "midweekGames": 23,
@@ -189,7 +189,7 @@
       "notes": "Added in 2025 New Player"
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 14,
       "name": "Rohit",
       "midweekGames": 0,
@@ -203,7 +203,7 @@
       "notes": null
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 15,
       "name": "Ammar",
       "midweekGames": 1,
@@ -217,7 +217,7 @@
       "notes": null
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 16,
       "name": "Prateek",
       "midweekGames": 13,
@@ -231,7 +231,7 @@
       "notes": null
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 17,
       "name": "Vivek",
       "midweekGames": 0,
@@ -245,7 +245,7 @@
       "notes": null
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 18,
       "name": "Deepak",
       "midweekGames": 0,
@@ -259,7 +259,7 @@
       "notes": null
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 19,
       "name": "Savan",
       "midweekGames": 0,
@@ -273,7 +273,7 @@
       "notes": null
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 20,
       "name": "Vikalp",
       "midweekGames": 0,
@@ -287,7 +287,7 @@
       "notes": null
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 21,
       "name": "Subbu",
       "midweekGames": 1,
@@ -301,7 +301,7 @@
       "notes": null
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 22,
       "name": "Vedant",
       "midweekGames": 0,
@@ -315,7 +315,7 @@
       "notes": "Added in 2025 New Player"
     },
     {
-      "category": "ONLY WEEKEND",
+      "category": "WEEKEND",
       "sno": 23,
       "name": "Rajat",
       "midweekGames": 5,
@@ -329,7 +329,7 @@
       "notes": "Added in 2025 New Player"
     },
     {
-      "category": "ONLY MIDWEEK",
+      "category": "MIDWEEK",
       "sno": 24,
       "name": "Akshat",
       "midweekGames": 39,
@@ -343,7 +343,7 @@
       "notes": null
     },
     {
-      "category": "ONLY MIDWEEK",
+      "category": "MIDWEEK",
       "sno": 25,
       "name": "John",
       "midweekGames": 37,
@@ -357,7 +357,7 @@
       "notes": null
     },
     {
-      "category": "ONLY MIDWEEK",
+      "category": "MIDWEEK",
       "sno": 26,
       "name": "Aayush",
       "midweekGames": 36,
@@ -371,7 +371,7 @@
       "notes": null
     },
     {
-      "category": "ONLY MIDWEEK",
+      "category": "MIDWEEK",
       "sno": 27,
       "name": "Lalit",
       "midweekGames": 36,
@@ -385,7 +385,7 @@
       "notes": "Added in 2025 New Player"
     },
     {
-      "category": "ONLY MIDWEEK",
+      "category": "MIDWEEK",
       "sno": 28,
       "name": "Mathew",
       "midweekGames": 31,
@@ -399,7 +399,7 @@
       "notes": "Added in 2025 New Player"
     },
     {
-      "category": "ONLY MIDWEEK",
+      "category": "MIDWEEK",
       "sno": 29,
       "name": "Vikas",
       "midweekGames": 32,
@@ -413,7 +413,7 @@
       "notes": null
     },
     {
-      "category": "ONLY MIDWEEK",
+      "category": "MIDWEEK",
       "sno": 30,
       "name": "Soumyadeep",
       "midweekGames": 28,
@@ -427,7 +427,7 @@
       "notes": null
     },
     {
-      "category": "ONLY MIDWEEK",
+      "category": "MIDWEEK",
       "sno": 31,
       "name": "David",
       "midweekGames": 17,
@@ -441,7 +441,7 @@
       "notes": null
     },
     {
-      "category": "ONLY MIDWEEK",
+      "category": "MIDWEEK",
       "sno": 32,
       "name": "Nadeem",
       "midweekGames": 14,
