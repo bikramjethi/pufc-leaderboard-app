@@ -15,6 +15,21 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   const yearKey = String(year);
   const data = attendanceLeaderboardDataByYear[yearKey];
 
+  // Group players by category - must be called before early return
+  const groupedPlayers = useMemo(() => {
+    if (!data || !data.players || data.players.length === 0) {
+      return {};
+    }
+    const groups = {};
+    data.players.forEach((player) => {
+      if (!groups[player.category]) {
+        groups[player.category] = [];
+      }
+      groups[player.category].push(player);
+    });
+    return groups;
+  }, [data]);
+
   if (!data || !data.summary || !data.players || data.players.length === 0) {
     return (
       <div className="attendance-leaderboard">
@@ -25,19 +40,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     );
   }
 
-  const { summary, players } = data;
-
-  // Group players by category
-  const groupedPlayers = useMemo(() => {
-    const groups = {};
-    players.forEach((player) => {
-      if (!groups[player.category]) {
-        groups[player.category] = [];
-      }
-      groups[player.category].push(player);
-    });
-    return groups;
-  }, [players]);
+  const { summary } = data;
 
   // Category order
   const categoryOrder = ["ALL", "WEEKEND", "MIDWEEK", "Others"];
@@ -150,15 +153,21 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                           >
                             {player.totalPercentage}%
                           </td>
-                          <td className="stat-col games2024-col">
-                            {player.games2024 === null ? (
-                              <span className="new-player-emoji" title={player.notes || "New Player"}>
-                                🆕
-                              </span>
-                            ) : (
-                              player.games2024
-                            )}
-                          </td>
+                      <td className="stat-col games2024-col">
+                        {player.games2024 === null ? (
+                          player.notes && player.notes.toLowerCase().includes("injured") ? (
+                            <span className="injured-player-emoji" title={player.notes || "Injured"}>
+                              {"🏥"}
+                            </span>
+                          ) : (
+                            <span className="new-player-emoji" title={player.notes || "New Player"}>
+                              {"🆕"}
+                            </span>
+                          )
+                        ) : (
+                          player.games2024
+                        )}
+                      </td>
                           <td
                             className={`stat-col diff-col ${getDifferenceClass(
                               player

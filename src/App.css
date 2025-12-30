@@ -1954,6 +1954,11 @@ body::before {
   display: inline-block;
 }
 
+.attendance-leaderboard-table .injured-player-emoji {
+  font-size: 1.2rem;
+  display: inline-block;
+}
+
 .attendance-leaderboard-table .diff-col {
   font-weight: 600;
 }
