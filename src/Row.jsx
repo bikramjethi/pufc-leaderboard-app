@@ -38,6 +38,21 @@ export const Row = ({
     return "";
   };
 
+  // Get trophy emoji for goals value only
+  const getTrophyEmoji = () => {
+    if (!topValues || !topValues.goals) return null;
+    
+    const playerGoals = player.goals ?? 0;
+    const { first, second, third } = topValues.goals;
+    
+    // Exact match for goals
+    if (first !== null && playerGoals === first) return "🥇";
+    if (second !== null && playerGoals === second) return "🥈";
+    if (third !== null && playerGoals === third) return "🥉";
+    
+    return null;
+  };
+
   const safeNumber = (val) => (typeof val === "number" ? val : 0);
 
   return (
@@ -77,7 +92,14 @@ export const Row = ({
       <td className={`stat stat-pct ${getHighlightClass("winPct")}`}>{safeNumber(player.winPct).toFixed(0)}%</td>
       <td className={`stat stat-pct ${getHighlightClass("lossPct")}`}>{safeNumber(player.lossPct).toFixed(0)}%</td>
       <td className={`stat ${getHighlightClass("cleanSheets")}`}>{player.cleanSheets}</td>
-      <td className={`stat stat-goals ${getHighlightClass("goals")}`}>{player.goals}</td>
+      <td className={`stat stat-goals ${getHighlightClass("goals")}`}>
+        {player.goals}
+        {getTrophyEmoji() && (
+          <span className="trophy-emoji">
+            {getTrophyEmoji()}
+          </span>
+        )}
+      </td>
       <td className={`stat ${getHighlightClass("hatTricks")}`}>{player.hatTricks}</td>
     </tr>
   );
