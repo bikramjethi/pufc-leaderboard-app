@@ -143,8 +143,8 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     return groups;
   }, [data]);
 
-  // Category order for default view
-  const categoryOrder = ["ALLGAMES", "WEEKEND", "MIDWEEK", "Others"];
+  // Category order for default view - handle both "ALL" and "ALLGAMES"
+  const categoryOrder = ["ALL", "ALLGAMES", "WEEKEND", "MIDWEEK", "Others"];
 
   if (!data || !data.summary || !data.players || data.players.length === 0) {
     return (
@@ -338,8 +338,8 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                   return (
                     <React.Fragment key={category}>
                       {categoryPlayers.map((player, idx) => {
-                        const isEven = globalRowIndex % 2 === 0;
                         globalRowIndex++;
+                        const isEven = (globalRowIndex - 1) % 2 === 0;
                         return (
                           <tr
                             key={player.sno}
@@ -353,7 +353,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                                 {category}
                               </td>
                             )}
-                            <td className="sno-col">{player.sno}</td>
+                            <td className="sno-col">{globalRowIndex}</td>
                             <td className="name-col">{player.name}</td>
                             <td className="stat-col">{player.midweekGames}</td>
                             <td className="stat-col">{player.weekendGames}</td>
@@ -425,7 +425,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                     className={`player-row ${isEven ? "even" : "odd"}`}
                   >
                     <td className="category-col">{player.category}</td>
-                    <td className="sno-col">{player.sno}</td>
+                    <td className="sno-col">{index + 1}</td>
                     <td className="name-col">{player.name}</td>
                     <td className="stat-col">{player.midweekGames}</td>
                     <td className="stat-col">{player.weekendGames}</td>
