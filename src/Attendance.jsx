@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import matchData2026 from "./data/attendance-data/2026.json";
+import { AttendanceLeaderboard } from "./AttendanceLeaderboard.jsx";
 
 const matchDataByYear = {
   2026: matchData2026,
@@ -345,9 +346,7 @@ export const Attendance = ({ year }) => {
 
       {/* Leaderboard Content */}
       {activeSubTab === "leaderboard" && (
-        <div className="attendance-leaderboard">
-          {/* Empty for now - content to be added later */}
-        </div>
+        <AttendanceLeaderboard year={year} />
       )}
     </div>
   );
