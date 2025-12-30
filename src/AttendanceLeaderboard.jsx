@@ -75,7 +75,12 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     <div className="attendance-leaderboard">
       {/* Summary Header */}
       <div className="attendance-leaderboard-header">
-        <h2>Attendance Summary {summary.season} - Total {summary.totalGames} Games Played</h2>
+        <h2>Attendance Summary {summary.season}</h2>
+        <div className="attendance-leaderboard-stats">
+          <span>Total: {summary.totalGames} games</span>
+          <span>Midweek: {summary.midweekGames}</span>
+          <span>Weekend: {summary.weekendGames}</span>
+        </div>
       </div>
 
       {/* Table Container */}
@@ -84,22 +89,32 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
           <thead>
             <tr>
               <th className="category-col">Category</th>
-              <th className="sno-col">S.no</th>
-              <th className="name-col">Names</th>
-              <th className="stat-col">
-                MIDWEEK - {summary.midweekGames} Games Played
+              <th className="sno-col">#</th>
+              <th className="name-col">Player</th>
+              <th className="stat-col" title="Midweek Games">
+                MW
               </th>
-              <th className="stat-col">
-                WEEKEND - {summary.weekendGames} Games Played
+              <th className="stat-col" title="Weekend Games">
+                WE
               </th>
-              <th className="stat-col">
-                Total Games Played - {summary.totalGames}
+              <th className="stat-col" title="Total Games">
+                Total
               </th>
-              <th className="stat-col">% of MIDWEEK Games Played</th>
-              <th className="stat-col">% of WEEKEND Games Played</th>
-              <th className="stat-col">% of Total Games Played</th>
-              <th className="stat-col">Games Played in 2024</th>
-              <th className="stat-col">Difference</th>
+              <th className="stat-col" title="% of Midweek Games">
+                %MW
+              </th>
+              <th className="stat-col" title="% of Weekend Games">
+                %WE
+              </th>
+              <th className="stat-col" title="% of Total Games">
+                %Total
+              </th>
+              <th className="stat-col" title="Games Played in 2024">
+                2024
+              </th>
+              <th className="stat-col" title="Difference from 2024">
+                Diff
+              </th>
             </tr>
           </thead>
           <tbody>

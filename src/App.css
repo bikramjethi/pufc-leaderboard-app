@@ -1822,19 +1822,29 @@ body::before {
 
 .attendance-leaderboard {
   width: 100%;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
 }
 
 .attendance-leaderboard-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
 .attendance-leaderboard-header h2 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin: 0;
+  margin: 0 0 0.5rem 0;
+}
+
+.attendance-leaderboard-stats {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
 .attendance-leaderboard-table-container {
@@ -1850,7 +1860,7 @@ body::before {
 .attendance-leaderboard-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .attendance-leaderboard-table thead {
@@ -1862,12 +1872,13 @@ body::before {
 }
 
 .attendance-leaderboard-table th {
-  padding: 0.75rem 0.5rem;
+  padding: 0.6rem 0.4rem;
   text-align: center;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   white-space: nowrap;
   border-right: 1px solid rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.02em;
 }
 
 .attendance-leaderboard-table th:last-child {
@@ -1892,7 +1903,7 @@ body::before {
 }
 
 .attendance-leaderboard-table td {
-  padding: 0.75rem 0.5rem;
+  padding: 0.6rem 0.4rem;
   text-align: center;
   border-right: 1px solid var(--border-color);
   color: var(--text-primary);
@@ -1907,25 +1918,48 @@ body::before {
   color: var(--accent-primary);
   background-color: var(--bg-secondary);
   text-align: left;
-  padding-left: 1rem;
-  min-width: 120px;
+  padding-left: 0.75rem;
+  min-width: 90px;
+  font-size: 0.8rem;
 }
 
 .attendance-leaderboard-table .sno-col {
   font-weight: 500;
-  min-width: 50px;
+  min-width: 40px;
+  color: var(--text-muted);
 }
 
 .attendance-leaderboard-table .name-col {
   font-weight: 600;
   text-align: left;
-  padding-left: 1rem;
-  min-width: 120px;
+  padding-left: 0.75rem;
+  min-width: 100px;
   color: var(--text-primary);
+  position: sticky;
+  left: 0;
+  background-color: inherit;
+  z-index: 1;
+}
+
+.attendance-leaderboard-table thead .name-col {
+  z-index: 11;
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.attendance-leaderboard-table tbody tr.odd .name-col {
+  background-color: var(--bg-zebra);
+}
+
+.attendance-leaderboard-table tbody tr.even .name-col {
+  background-color: var(--bg-card);
+}
+
+.attendance-leaderboard-table tbody tr:hover .name-col {
+  background-color: var(--bg-hover);
 }
 
 .attendance-leaderboard-table .stat-col {
-  min-width: 80px;
+  min-width: 60px;
 }
 
 .attendance-leaderboard-table .pct-col {
@@ -1976,39 +2010,81 @@ body::before {
 }
 
 @media (max-width: 1024px) {
+  .attendance-leaderboard {
+    padding: 0.75rem 1rem;
+  }
+
+  .attendance-leaderboard-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .attendance-leaderboard-stats {
+    font-size: 0.8rem;
+    gap: 1rem;
+  }
+
   .attendance-leaderboard-table {
     font-size: 0.8rem;
   }
 
-  .attendance-leaderboard-table th,
+  .attendance-leaderboard-table th {
+    padding: 0.5rem 0.3rem;
+    font-size: 0.7rem;
+  }
+
   .attendance-leaderboard-table td {
-    padding: 0.5rem 0.35rem;
+    padding: 0.5rem 0.3rem;
+  }
+
+  .attendance-leaderboard-table .stat-col {
+    min-width: 55px;
   }
 }
 
 @media (max-width: 768px) {
   .attendance-leaderboard {
-    padding: 1rem;
+    padding: 0.5rem;
   }
 
   .attendance-leaderboard-header h2 {
-    font-size: 1.2rem;
+    font-size: 1rem;
+  }
+
+  .attendance-leaderboard-stats {
+    font-size: 0.75rem;
+    gap: 0.75rem;
   }
 
   .attendance-leaderboard-table {
     font-size: 0.75rem;
   }
 
-  .attendance-leaderboard-table th,
-  .attendance-leaderboard-table td {
+  .attendance-leaderboard-table th {
     padding: 0.4rem 0.25rem;
-    min-width: 60px;
+    font-size: 0.65rem;
   }
 
-  .attendance-leaderboard-table .category-col,
+  .attendance-leaderboard-table td {
+    padding: 0.4rem 0.25rem;
+  }
+
+  .attendance-leaderboard-table .category-col {
+    min-width: 70px;
+    padding-left: 0.5rem;
+    font-size: 0.7rem;
+  }
+
   .attendance-leaderboard-table .name-col {
     min-width: 80px;
     padding-left: 0.5rem;
+  }
+
+  .attendance-leaderboard-table .sno-col {
+    min-width: 30px;
+  }
+
+  .attendance-leaderboard-table .stat-col {
+    min-width: 50px;
   }
 }
 
