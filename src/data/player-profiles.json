@@ -2,12 +2,12 @@
   {
     "name": "Aayush",
     "position": "DEF",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Akshat",
     "position": "MID",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Ammar",
@@ -32,7 +32,7 @@
   {
     "name": "David",
     "position": "FWD",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Deepak",
@@ -52,22 +52,22 @@
   {
     "name": "John",
     "position": "DEF",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Lalit",
     "position": "FWD",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Mathew",
     "position": "FWD",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Nadeem",
     "position": "GK",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Pandey",
@@ -112,7 +112,7 @@
   {
     "name": "Soumyadeep",
     "position": "FWD",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Sourabh",
@@ -127,7 +127,7 @@
   {
     "name": "Subbu",
     "position": "FWD",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Sudeep",
@@ -152,7 +152,7 @@
   {
     "name": "Vikas",
     "position": "DEF",
-    "groupAvailibility": "TUESDAY"
+    "groupAvailibility": "MIDWEEK"
   },
   {
     "name": "Vinay",

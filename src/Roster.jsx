@@ -5,9 +5,9 @@ const positionOrder = { GK: 0, DEF: 1, MID: 2, FWD: 3, ALL: 4 };
 
 const getFilteredPlayers = (filterType) => {
     switch (filterType) {
-        case "tuesday":
+        case "midweek":
             return playerProfiles.filter(
-                (p) => p.groupAvailibility === "TUESDAY" || p.groupAvailibility === "ALL"
+                (p) => p.groupAvailibility === "MIDWEEK" || p.groupAvailibility === "ALL"
             );
         case "saturday":
             return playerProfiles.filter(
@@ -33,8 +33,8 @@ export const Roster = ({ type }) => {
 
     const getTitle = () => {
         switch (type) {
-            case "tuesday":
-                return "Tuesday Roster";
+            case "midweek":
+                return "Midweek Roster";
             case "saturday":
                 return "Saturday Roster";
             case "inactive":
@@ -96,8 +96,8 @@ export const Roster = ({ type }) => {
                                     <td className="roster-availability-col">
                                         {player.groupAvailibility === "ALL" ? (
                                             <span className="availability-all">All Days</span>
-                                        ) : player.groupAvailibility === "TUESDAY" ? (
-                                            <span className="availability-tuesday">Tuesday</span>
+                                        ) : player.groupAvailibility === "MIDWEEK" ? (
+                                            <span className="availability-midweek">Midweek</span>
                                         ) : player.groupAvailibility === "SATURDAY" ? (
                                             <span className="availability-saturday">Saturday</span>
                                         ) : (

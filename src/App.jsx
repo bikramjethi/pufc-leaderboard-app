@@ -59,8 +59,8 @@ function App() {
             <p className="subtitle">
               {activeTab === "attendance"
                 ? `${attendanceYear} Match Attendance`
-                : activeTab === "tuesday-roster"
-                  ? "Tuesday Roster"
+                : activeTab === "midweek-roster"
+                  ? "Midweek Roster"
                   : activeTab === "saturday-roster"
                     ? "Saturday Roster"
                     : activeTab === "inactive-players"
@@ -104,10 +104,10 @@ function App() {
             </button>
           )}
           <button
-            className={`tab-btn ${activeTab === "tuesday-roster" ? "active" : ""}`}
-            onClick={() => setActiveTab("tuesday-roster")}
+            className={`tab-btn ${activeTab === "midweek-roster" ? "active" : ""}`}
+            onClick={() => setActiveTab("midweek-roster")}
           >
-            Tue
+            Midweek
           </button>
           <button
             className={`tab-btn ${activeTab === "saturday-roster" ? "active" : ""}`}
@@ -169,8 +169,8 @@ function App() {
           />
         ) : activeTab === "attendance" ? (
           <Attendance year={attendanceYear} />
-        ) : activeTab === "tuesday-roster" ? (
-          <Roster type="tuesday" />
+        ) : activeTab === "midweek-roster" ? (
+          <Roster type="midweek" />
         ) : activeTab === "saturday-roster" ? (
           <Roster type="saturday" />
         ) : activeTab === "inactive-players" ? (
