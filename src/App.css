@@ -1926,7 +1926,7 @@ body::before {
 .attendance-leaderboard-table .sno-col {
   font-weight: 500;
   min-width: 40px;
-  color: var(--text-muted);
+  color: var(--text-primary);
 }
 
 .attendance-leaderboard-table .name-col {
