@@ -93,6 +93,54 @@ The admin app will run on `http://localhost:5174`
 
 See `admin/README.md` for more details.
 
+## Dynamic Scripts
+
+The project includes utility scripts for maintaining and updating data files. These scripts help ensure data consistency and automate calculations.
+
+### Update Attendance Percentages
+
+The `update-attendance-percentages.js` script calculates and updates attendance percentages in leaderboard JSON files based on the summary totals.
+
+**What it does:**
+- Calculates `midweekPercentage` = `(player.midweekGames / summary.midweekGames) * 100`
+- Calculates `weekendPercentage` = `(player.weekendGames / summary.weekendGames) * 100`
+- Calculates `totalPercentage` = `(player.totalGames / summary.totalGames) * 100`
+- Updates the JSON file with corrected percentages
+- Provides a summary of changes made
+
+**Usage:**
+
+```bash
+# Update percentages for a specific year
+npm run update-percentages 2025
+
+# Or use node directly
+node scripts/update-attendance-percentages.js 2026
+
+# Defaults to 2025 if no year is specified
+npm run update-percentages
+```
+
+**Example Output:**
+```
+📊 Updating Ashish:
+   MW: 96% → 96%
+   WE: 89% → 87%
+   Total: 93% → 92%
+
+✅ Successfully updated 2025.json
+   📝 Updated: 15 players
+   ✓ Unchanged: 20 players
+   📊 Total players: 35
+```
+
+**When to use:**
+- After manually updating game counts in the JSON file
+- When percentages in the JSON don't match the calculated values
+- To ensure data consistency before committing changes
+
+**Note:** The attendance leaderboard component calculates percentages dynamically at runtime, so this script is primarily for keeping the JSON data accurate and consistent.
+
 ## Build for Production
 
 ```bash
