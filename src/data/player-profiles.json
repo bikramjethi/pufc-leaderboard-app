@@ -12,7 +12,7 @@
   {
     "name": "Ammar",
     "position": "MID",
-    "groupAvailibility": "SATURDAY"
+    "groupAvailibility": "WEEKEND"
   },
   {
     "name": "Aniket",
@@ -37,7 +37,7 @@
   {
     "name": "Deepak",
     "position": "FWD",
-    "groupAvailibility": "SATURDAY"
+    "groupAvailibility": "WEEKEND"
   },
   {
     "name": "Jethi",
@@ -97,7 +97,7 @@
   {
     "name": "Rohit",
     "position": "MID",
-    "groupAvailibility":"SATURDAY"
+    "groupAvailibility":"WEEKEND"
   },
   {
     "name": "Rohit Hyd",
@@ -107,7 +107,7 @@
   {
     "name": "Savan",
     "position": "DEF",
-    "groupAvailibility": "SATURDAY"
+    "groupAvailibility": "WEEKEND"
   },
   {
     "name": "Soumyadeep",
@@ -147,7 +147,7 @@
   {
     "name": "Vikalp",
     "position": "DEF",
-    "groupAvailibility": "SATURDAY"
+    "groupAvailibility": "WEEKEND"
   },
   {
     "name": "Vikas",
@@ -172,6 +172,6 @@
   {
     "name": "Vivek",
     "position": "MID",
-    "groupAvailibility": "SATURDAY"
+    "groupAvailibility": "WEEKEND"
   }
 ]

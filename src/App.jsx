@@ -61,8 +61,8 @@ function App() {
                 ? `${attendanceYear} Match Attendance`
                 : activeTab === "midweek-roster"
                   ? "Midweek Roster"
-                  : activeTab === "saturday-roster"
-                    ? "Saturday Roster"
+                  : activeTab === "weekend-roster"
+                    ? "Weekend Roster"
                     : activeTab === "inactive-players"
                       ? "Inactive Players"
                       : selectedYear === "all-time"
@@ -110,10 +110,10 @@ function App() {
             Midweek
           </button>
           <button
-            className={`tab-btn ${activeTab === "saturday-roster" ? "active" : ""}`}
-            onClick={() => setActiveTab("saturday-roster")}
+            className={`tab-btn ${activeTab === "weekend-roster" ? "active" : ""}`}
+            onClick={() => setActiveTab("weekend-roster")}
           >
-            Sat
+            Weekend
           </button>
           <button
             className={`tab-btn ${activeTab === "inactive-players" ? "active" : ""}`}
@@ -171,8 +171,8 @@ function App() {
           <Attendance year={attendanceYear} />
         ) : activeTab === "midweek-roster" ? (
           <Roster type="midweek" />
-        ) : activeTab === "saturday-roster" ? (
-          <Roster type="saturday" />
+        ) : activeTab === "weekend-roster" ? (
+          <Roster type="weekend" />
         ) : activeTab === "inactive-players" ? (
           <Roster type="inactive" />
         ) : null}

@@ -1936,7 +1936,7 @@ body::before {
 
 .availability-all,
 .availability-midweek,
-.availability-saturday,
+.availability-weekend,
 .availability-inactive {
   display: inline-block;
   padding: 0.25rem 0.75rem;
@@ -1955,7 +1955,7 @@ body::before {
   color: var(--position-mid);
 }
 
-.availability-saturday {
+.availability-weekend {
   background: rgba(34, 197, 94, 0.2);
   color: var(--accent-secondary);
 }
@@ -1990,7 +1990,7 @@ body::before {
   .position-badge,
   .availability-all,
   .availability-midweek,
-  .availability-saturday,
+  .availability-weekend,
   .availability-inactive {
     font-size: 0.7rem;
     padding: 0.2rem 0.5rem;

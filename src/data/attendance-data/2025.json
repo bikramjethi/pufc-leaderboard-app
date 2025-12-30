@@ -4,7 +4,7 @@
     {
       "id": "04-01-2025",
       "date": "04/01/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -70,7 +70,7 @@
     {
       "id": "11-01-2025",
       "date": "11/01/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -112,7 +112,7 @@
 {
   "id": "18-01-2025",
   "date": "18/01/2025",
-  "day": "Saturday",
+  "day": "Weekend",
   "matchPlayed": true,
   "matchCancelled": false,
   "attendance": [
@@ -156,7 +156,7 @@
     {
       "id": "25-01-2025",
       "date": "25/01/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -204,7 +204,7 @@
     {
       "id": "01-02-2025",
       "date": "01/02/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -244,7 +244,7 @@
     {
       "id": "08-02-2025",
       "date": "08/02/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -285,7 +285,7 @@
     {
       "id": "15-02-2025",
       "date": "15/02/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -319,7 +319,7 @@
     {
       "id": "22-02-2025",
       "date": "22/02/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -365,7 +365,7 @@
     {
       "id": "2025-03-01",
       "date": "01/03/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchCancelled": true,
       "matchPlayed": false
     },
@@ -385,7 +385,7 @@
     {
       "id": "08-03-2025",
       "date": "08/03/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -427,7 +427,7 @@
     {
       "id": "15-03-2025",
       "date": "15/03/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -470,7 +470,7 @@
     {
       "id": "22-03-2025",
       "date": "22/03/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -508,7 +508,7 @@
     {
       "id": "29-03-2025",
       "date": "29/03/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -551,7 +551,7 @@
     {
       "id": "05-04-2025",
       "date": "05/04/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -595,7 +595,7 @@
     {
       "id": "12-04-2025",
       "date": "12/04/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -637,7 +637,7 @@
     {
       "id": "19-04-2025",
       "date": "19/04/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -680,7 +680,7 @@
     {
       "id": "26-04-2025",
       "date": "26/04/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -724,7 +724,7 @@
     {
       "id": "03-05-2025",
       "date": "03/05/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -759,7 +759,7 @@
     {
       "id": "10-05-2025",
       "date": "10/05/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -803,7 +803,7 @@
     {
       "id": "17-05-2025",
       "date": "17/05/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -844,7 +844,7 @@
     {
       "id": "24-05-2025",
       "date": "24/05/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -886,7 +886,7 @@
     {
       "id": "31-05-2025",
       "date": "31/05/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -927,7 +927,7 @@
     {
       "id": "07-06-2025",
       "date": "07/06/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -969,7 +969,7 @@
     {
       "id": "2025-06-14",
       "date": "14/06/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -995,7 +995,7 @@
     {
       "id": "2025-06-21",
       "date": "21/06/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1021,7 +1021,7 @@
     {
       "id": "2025-06-28",
       "date": "28/06/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1047,7 +1047,7 @@
     {
       "id": "2025-07-05",
       "date": "05/07/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1073,7 +1073,7 @@
     {
       "id": "2025-07-12",
       "date": "12/07/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1099,7 +1099,7 @@
     {
       "id": "2025-07-19",
       "date": "19/07/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1125,7 +1125,7 @@
     {
       "id": "26-07-2025",
       "date": "26/07/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -1191,7 +1191,7 @@
     {
       "id": "02-08-2025",
       "date": "02/08/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": [
@@ -1257,7 +1257,7 @@
     {
       "id": "2025-08-09",
       "date": "09/08/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1283,7 +1283,7 @@
     {
       "id": "2025-08-16",
       "date": "16/08/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1309,7 +1309,7 @@
     {
       "id": "2025-08-23",
       "date": "23/08/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1335,7 +1335,7 @@
     {
       "id": "2025-08-30",
       "date": "30/08/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1361,7 +1361,7 @@
     {
       "id": "2025-09-06",
       "date": "06/09/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1387,7 +1387,7 @@
     {
       "id": "2025-09-13",
       "date": "13/09/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1413,7 +1413,7 @@
     {
       "id": "2025-09-20",
       "date": "20/09/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1439,7 +1439,7 @@
     {
       "id": "2025-09-27",
       "date": "27/09/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1465,7 +1465,7 @@
     {
       "id": "2025-10-04",
       "date": "04/10/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1491,7 +1491,7 @@
     {
       "id": "2025-10-11",
       "date": "11/10/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1517,7 +1517,7 @@
     {
       "id": "2025-10-18",
       "date": "18/10/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1543,7 +1543,7 @@
     {
       "id": "2025-10-25",
       "date": "25/10/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1569,7 +1569,7 @@
     {
       "id": "2025-11-01",
       "date": "01/11/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1595,7 +1595,7 @@
     {
       "id": "2025-11-08",
       "date": "08/11/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1621,7 +1621,7 @@
     {
       "id": "2025-11-15",
       "date": "15/11/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1647,7 +1647,7 @@
     {
       "id": "2025-11-22",
       "date": "22/11/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1673,7 +1673,7 @@
     {
       "id": "2025-11-29",
       "date": "29/11/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1699,7 +1699,7 @@
     {
       "id": "2025-12-06",
       "date": "06/12/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1718,7 +1718,7 @@
     {
       "id": "2025-12-13",
       "date": "13/12/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1744,7 +1744,7 @@
     {
       "id": "2025-12-20",
       "date": "20/12/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
@@ -1770,7 +1770,7 @@
     {
       "id": "2025-12-27",
       "date": "27/12/2025",
-      "day": "Saturday",
+      "day": "Weekend",
       "matchPlayed": false,
       "matchCancelled": false,
       "attendance": [],
