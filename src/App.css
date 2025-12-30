@@ -2035,6 +2035,13 @@ body::before {
   display: inline-block;
 }
 
+.attendance-leaderboard-table .trophy-emoji {
+  font-size: 1rem;
+  display: inline-block;
+  margin-left: 0.25rem;
+  vertical-align: middle;
+}
+
 .attendance-leaderboard-table .diff-col {
   font-weight: 600;
 }

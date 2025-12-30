@@ -143,6 +143,49 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     return groups;
   }, [data]);
 
+  // Calculate top 3 values for totalGames column only
+  const topValues = useMemo(() => {
+    if (!sortedPlayers || sortedPlayers.length === 0 || !data?.summary) {
+      return {};
+    }
+
+    // Only calculate top 3 for totalGames
+    const values = sortedPlayers.map((player) => player.totalGames ?? 0);
+    
+    // Filter out invalid values and get unique sorted values
+    const validValues = values.filter(v => v !== null && v !== undefined && (typeof v === "number" && !isNaN(v)));
+    
+    if (validValues.length === 0) {
+      return { totalGames: { first: null, second: null, third: null } };
+    }
+
+    // Get unique values and sort (higher is better)
+    const uniqueSorted = [...new Set(validValues)].sort((a, b) => b - a);
+    const top3 = uniqueSorted.slice(0, 3);
+    
+    return {
+      totalGames: {
+        first: top3[0] ?? null,
+        second: top3[1] ?? null,
+        third: top3[2] ?? null
+      }
+    };
+  }, [sortedPlayers, data]);
+
+  // Get trophy emoji for totalGames value only
+  const getTrophyEmoji = (value) => {
+    if (!topValues.totalGames) return null;
+    
+    const { first, second, third } = topValues.totalGames;
+    
+    // Exact match for totalGames
+    if (first !== null && value === first) return "🥇";
+    if (second !== null && value === second) return "🥈";
+    if (third !== null && value === third) return "🥉";
+    
+    return null;
+  };
+
   // Category order for default view - handle both "ALL" and "ALLGAMES"
   const categoryOrder = ["ALL", "ALLGAMES", "WEEKEND", "MIDWEEK", "Others"];
 
@@ -357,7 +400,14 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                             <td className="name-col">{player.name}</td>
                             <td className="stat-col">{player.midweekGames}</td>
                             <td className="stat-col">{player.weekendGames}</td>
-                            <td className="stat-col">{player.totalGames}</td>
+                            <td className="stat-col">
+                              {player.totalGames}
+                              {getTrophyEmoji(player.totalGames) && (
+                                <span className="trophy-emoji">
+                                  {getTrophyEmoji(player.totalGames)}
+                                </span>
+                              )}
+                            </td>
                             {(() => {
                               const percentages = calculatePercentages(player, summary);
                               return (
@@ -429,7 +479,14 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                     <td className="name-col">{player.name}</td>
                     <td className="stat-col">{player.midweekGames}</td>
                     <td className="stat-col">{player.weekendGames}</td>
-                    <td className="stat-col">{player.totalGames}</td>
+                    <td className="stat-col">
+                      {player.totalGames}
+                      {getTrophyEmoji(player.totalGames) && (
+                        <span className="trophy-emoji">
+                          {getTrophyEmoji(player.totalGames)}
+                        </span>
+                      )}
+                    </td>
                     {(() => {
                       const percentages = calculatePercentages(player, summary);
                       return (
