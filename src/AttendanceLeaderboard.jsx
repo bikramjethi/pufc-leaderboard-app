@@ -64,6 +64,23 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     return "diff-neutral";
   };
 
+  // Calculate percentages dynamically
+  const calculatePercentages = (player) => {
+    const midweekPercentage = summary.midweekGames > 0
+      ? Math.round((player.midweekGames / summary.midweekGames) * 100)
+      : 0;
+    
+    const weekendPercentage = summary.weekendGames > 0
+      ? Math.round((player.weekendGames / summary.weekendGames) * 100)
+      : 0;
+    
+    const totalPercentage = summary.totalGames > 0
+      ? Math.round((player.totalGames / summary.totalGames) * 100)
+      : 0;
+    
+    return { midweekPercentage, weekendPercentage, totalPercentage };
+  };
+
   // Get percentage class for styling
   const getPercentageClass = (percentage) => {
     if (percentage >= 80) return "pct-high";
@@ -144,30 +161,37 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                           )}
                           <td className="sno-col">{player.sno}</td>
                           <td className="name-col">{player.name}</td>
-                          <td className="stat-col">{player.midweekGames}</td>
-                          <td className="stat-col">{player.weekendGames}</td>
-                          <td className="stat-col">{player.totalGames}</td>
-                          <td
-                            className={`stat-col pct-col ${getPercentageClass(
-                              player.midweekPercentage
-                            )}`}
-                          >
-                            {player.midweekPercentage}%
-                          </td>
-                          <td
-                            className={`stat-col pct-col ${getPercentageClass(
-                              player.weekendPercentage
-                            )}`}
-                          >
-                            {player.weekendPercentage}%
-                          </td>
-                          <td
-                            className={`stat-col pct-col ${getPercentageClass(
-                              player.totalPercentage
-                            )}`}
-                          >
-                            {player.totalPercentage}%
-                          </td>
+                      <td className="stat-col">{player.midweekGames}</td>
+                      <td className="stat-col">{player.weekendGames}</td>
+                      <td className="stat-col">{player.totalGames}</td>
+                      {(() => {
+                        const percentages = calculatePercentages(player);
+                        return (
+                          <>
+                            <td
+                              className={`stat-col pct-col ${getPercentageClass(
+                                percentages.midweekPercentage
+                              )}`}
+                            >
+                              {percentages.midweekPercentage}%
+                            </td>
+                            <td
+                              className={`stat-col pct-col ${getPercentageClass(
+                                percentages.weekendPercentage
+                              )}`}
+                            >
+                              {percentages.weekendPercentage}%
+                            </td>
+                            <td
+                              className={`stat-col pct-col ${getPercentageClass(
+                                percentages.totalPercentage
+                              )}`}
+                            >
+                              {percentages.totalPercentage}%
+                            </td>
+                          </>
+                        );
+                      })()}
                       <td className="stat-col games2024-col">
                         {player.games2024 === null ? (
                           player.notes && player.notes.toLowerCase().includes("injured") ? (
