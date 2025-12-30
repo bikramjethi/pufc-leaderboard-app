@@ -58,6 +58,7 @@ const getPlayerResult = (match, player) => {
 
 export const Attendance = ({ year }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeSubTab, setActiveSubTab] = useState("leaderboard");
 
   // Load match data based on year
   const matchData = matchDataByYear[year] || matchData2026;
@@ -146,17 +147,6 @@ export const Attendance = ({ year }) => {
     const hadCleanSheet = match.cleanSheets?.includes(player);
     const result = getPlayerResult(match, player);
 
-    // TODO: Remove this console.log
-    console.log({
-      match,
-      player,
-      wasPresent,
-      scored,
-      hadOwnGoal,
-      hadCleanSheet,
-      result,
-    });
-
     return (
       <div className="attendance-indicator">
         {/* Result indicator (W/L/D) */}
@@ -220,8 +210,27 @@ export const Attendance = ({ year }) => {
 
   return (
     <div className="attendance">
-      {/* Search */}
-      <div className="search-container">
+      {/* Sub-tab Navigation */}
+      <div className="sub-tab-nav">
+        <button
+          className={`sub-tab-btn ${activeSubTab === "leaderboard" ? "active" : ""}`}
+          onClick={() => setActiveSubTab("leaderboard")}
+        >
+          🏆 Leaderboard
+        </button>
+        <button
+          className={`sub-tab-btn ${activeSubTab === "tracker" ? "active" : ""}`}
+          onClick={() => setActiveSubTab("tracker")}
+        >
+          📊 Tracker
+        </button>
+      </div>
+
+      {/* Tracker Content */}
+      {activeSubTab === "tracker" && (
+        <>
+          {/* Search */}
+          <div className="search-container">
         <input
           type="text"
           className="search-input"
@@ -303,34 +312,43 @@ export const Attendance = ({ year }) => {
         </table>
       </div>
 
-      {/* Legend */}
-      <div className="legend attendance-legend">
-        <span>
-          <span className="result-badge result-w">W</span> Won
-        </span>
-        <span>
-          <span className="result-badge result-l">L</span> Lost
-        </span>
-        <span>
-          <span className="result-badge result-d">D</span> Draw
-        </span>
-        <span>
-          <span className="cross">✗</span> Absent
-        </span>
-        <span>
-          <span className="pending">—</span> Not Played
-        </span>
-        <span>
-          <span className="cancelled">🚫</span> Cancelled
-        </span>
-        <span>
-          <span className="goal-badge">2</span> Goals
-        </span>
-        <span>🧤 Clean Sheet</span>
-        <span>
-          <span className="og-badge">OG</span> Own Goal
-        </span>
-      </div>
+          {/* Legend */}
+          <div className="legend attendance-legend">
+            <span>
+              <span className="result-badge result-w">W</span> Won
+            </span>
+            <span>
+              <span className="result-badge result-l">L</span> Lost
+            </span>
+            <span>
+              <span className="result-badge result-d">D</span> Draw
+            </span>
+            <span>
+              <span className="cross">✗</span> Absent
+            </span>
+            <span>
+              <span className="pending">—</span> Not Played
+            </span>
+            <span>
+              <span className="cancelled">🚫</span> Cancelled
+            </span>
+            <span>
+              <span className="goal-badge">2</span> Goals
+            </span>
+            <span>🧤 Clean Sheet</span>
+            <span>
+              <span className="og-badge">OG</span> Own Goal
+            </span>
+          </div>
+        </>
+      )}
+
+      {/* Leaderboard Content */}
+      {activeSubTab === "leaderboard" && (
+        <div className="attendance-leaderboard">
+          {/* Empty for now - content to be added later */}
+        </div>
+      )}
     </div>
   );
 };
