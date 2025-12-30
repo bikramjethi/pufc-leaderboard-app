@@ -1725,6 +1725,8 @@ body::before {
   margin-bottom: 1.5rem;
   border-bottom: 2px solid var(--border-color);
   padding-bottom: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .sub-tab-btn {
@@ -1751,6 +1753,71 @@ body::before {
   color: var(--accent-primary);
   border-bottom-color: var(--accent-primary);
   font-weight: 600;
+}
+
+/* Attendance Year Selector */
+.attendance-year-selector {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.attendance-year-selector label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.attendance-year-selector .select-wrapper {
+  position: relative;
+  min-width: 100px;
+}
+
+.attendance-year-selector .select-wrapper select {
+  appearance: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.attendance-year-selector .select-wrapper select:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-hover);
+}
+
+.attendance-year-selector .select-wrapper select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.attendance-year-selector .select-arrow {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+
+.attendance-no-data {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
 }
 
 .attendance-leaderboard {

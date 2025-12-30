@@ -10,13 +10,9 @@ import { leaderboardData } from "./utils/get-data.js";
 
 const availableYears = Object.keys(leaderboardData).sort((a, b) => b - a);
 
-// Available years for attendance data
-const attendanceYears = ["2026"];
-
 function App() {
   const [activeTab, setActiveTab] = useState("leaderboard");
   const [selectedYear, setSelectedYear] = useState("all-time");
-  const [attendanceYear, setAttendanceYear] = useState("2025");
   const [players, setPlayers] = useState(() => aggregateAllTimeStats());
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("pufc-theme") || "dark";
@@ -58,7 +54,7 @@ function App() {
             <h1 className="title">PUFC Leaderboard</h1>
             <p className="subtitle">
               {activeTab === "attendance"
-                ? `${attendanceYear} Match Attendance`
+                ? "Match Attendance"
                 : activeTab === "midweek-roster"
                   ? "Midweek Roster"
                   : activeTab === "weekend-roster"
@@ -121,38 +117,24 @@ function App() {
           >
             ⚪ Inactive
           </button>
-          {/* Controls - Season selector for leaderboard and attendance tabs */}
-          {(activeTab === "leaderboard" || activeTab === "attendance") && (
+          {/* Controls - Season selector for leaderboard tab only */}
+          {activeTab === "leaderboard" && (
             <div className="controls">
               <div className="year-selector">
                 <label htmlFor="year-select">Season</label>
                 <div className="select-wrapper">
-                  {activeTab === "leaderboard" ? (
-                    <select
-                      id="year-select"
-                      value={selectedYear}
-                      onChange={(e) => setSelectedYear(e.target.value)}
-                    >
-                      {availableYears.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                      <option value="all-time">All-Time</option>
-                    </select>
-                  ) : (
-                    <select
-                      id="year-select"
-                      value={attendanceYear}
-                      onChange={(e) => setAttendanceYear(e.target.value)}
-                    >
-                      {attendanceYears.map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
-                  )}
+                  <select
+                    id="year-select"
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(e.target.value)}
+                  >
+                    {availableYears.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                    <option value="all-time">All-Time</option>
+                  </select>
                   <span className="select-arrow">▼</span>
                 </div>
               </div>
@@ -168,7 +150,7 @@ function App() {
             isAllTime={selectedYear === "all-time"}
           />
         ) : activeTab === "attendance" ? (
-          <Attendance year={attendanceYear} />
+          <Attendance />
         ) : activeTab === "midweek-roster" ? (
           <Roster type="midweek" />
         ) : activeTab === "weekend-roster" ? (

@@ -1,18 +1,26 @@
 import React, { useMemo } from "react";
 import attendanceLeaderboardData2025 from "./data/attendance-data/leaderboard/2025.json";
+import attendanceLeaderboardData2026 from "./data/attendance-data/leaderboard/2026.json";
 
 const attendanceLeaderboardDataByYear = {
   2025: attendanceLeaderboardData2025,
+  // Only include 2026 if it has valid data structure
+  ...(attendanceLeaderboardData2026 && 
+      attendanceLeaderboardData2026.summary && 
+      attendanceLeaderboardData2026.players && 
+      { 2026: attendanceLeaderboardData2026 }),
 };
 
 export const AttendanceLeaderboard = ({ year = "2025" }) => {
   const yearKey = String(year);
   const data = attendanceLeaderboardDataByYear[yearKey];
 
-  if (!data) {
+  if (!data || !data.summary || !data.players || data.players.length === 0) {
     return (
       <div className="attendance-leaderboard">
-        <p>No data available for {year}</p>
+        <div className="attendance-no-data">
+          <p>No data available for {year}</p>
+        </div>
       </div>
     );
   }

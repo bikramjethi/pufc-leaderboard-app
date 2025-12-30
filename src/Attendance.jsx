@@ -6,6 +6,12 @@ const matchDataByYear = {
   2026: matchData2026,
 };
 
+// Available years for tracker (game-by-game data) - starts from 2026
+const trackerYears = ["2026"];
+
+// Available years for leaderboard (summary data) - starts from 2025
+const leaderboardYears = ["2025", "2026"];
+
 // Format date like "4th Jan", "21st Feb", etc.
 const formatDate = (dateStr) => {
   const [day, month] = dateStr.split("/");
@@ -57,13 +63,19 @@ const getPlayerResult = (match, player) => {
   return null;
 };
 
-export const Attendance = ({ year }) => {
+export const Attendance = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSubTab, setActiveSubTab] = useState("leaderboard");
+  // Separate year states for leaderboard and tracker
+  const [leaderboardYear, setLeaderboardYear] = useState("2025");
+  const [trackerYear, setTrackerYear] = useState("2026");
 
-  // Load match data based on year
-  const matchData = matchDataByYear[year] || matchData2026;
-  const { matches, allPlayers } = matchData;
+  // Get current year based on active sub-tab
+  const currentYear = activeSubTab === "leaderboard" ? leaderboardYear : trackerYear;
+
+  // Load match data based on year (only for tracker)
+  const matchData = matchDataByYear[currentYear];
+  const { matches, allPlayers } = matchData || { matches: [], allPlayers: [] };
 
   // Filter players by search
   const filteredPlayers = useMemo(() => {
@@ -211,7 +223,7 @@ export const Attendance = ({ year }) => {
 
   return (
     <div className="attendance">
-      {/* Sub-tab Navigation */}
+      {/* Sub-tab Navigation with Year Selectors */}
       <div className="sub-tab-nav">
         <button
           className={`sub-tab-btn ${activeSubTab === "leaderboard" ? "active" : ""}`}
@@ -225,10 +237,36 @@ export const Attendance = ({ year }) => {
         >
           📊 Tracker
         </button>
+        
+        {/* Year Selector - Different options for leaderboard vs tracker */}
+        <div className="attendance-year-selector">
+          <label htmlFor="attendance-year-select">Season</label>
+          <div className="select-wrapper">
+            <select
+              id="attendance-year-select"
+              value={currentYear}
+              onChange={(e) => {
+                const newYear = e.target.value;
+                if (activeSubTab === "leaderboard") {
+                  setLeaderboardYear(newYear);
+                } else {
+                  setTrackerYear(newYear);
+                }
+              }}
+            >
+              {(activeSubTab === "leaderboard" ? leaderboardYears : trackerYears).map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <span className="select-arrow">▼</span>
+          </div>
+        </div>
       </div>
 
       {/* Tracker Content */}
-      {activeSubTab === "tracker" && (
+      {activeSubTab === "tracker" && matchData && (
         <>
           {/* Search */}
           <div className="search-container">
@@ -346,7 +384,14 @@ export const Attendance = ({ year }) => {
 
       {/* Leaderboard Content */}
       {activeSubTab === "leaderboard" && (
-        <AttendanceLeaderboard year={year} />
+        <AttendanceLeaderboard year={leaderboardYear} />
+      )}
+      
+      {/* Tracker - No data message */}
+      {activeSubTab === "tracker" && !matchData && (
+        <div className="attendance-no-data">
+          <p>No tracker data available for {trackerYear}</p>
+        </div>
       )}
     </div>
   );
