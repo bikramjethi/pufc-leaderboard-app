@@ -22,12 +22,12 @@
   {
     "name": "Animesh",
     "position": "DEF",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Ashish",
     "position": "DEF",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "David",
@@ -42,12 +42,12 @@
   {
     "name": "Jethi",
     "position": "ALL",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Joe",
     "position": "DEF",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "John",
@@ -72,12 +72,12 @@
   {
     "name": "Pandey",
     "position": "MID",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Prateek",
     "position": "DEF",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Raghav",
@@ -87,12 +87,12 @@
   {
     "name": "Rishabh",
     "position": "MID",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Rishav",
     "position": "FWD",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Rohit",
@@ -102,7 +102,7 @@
   {
     "name": "Rohit Hyd",
     "position": "MID",
-    "groupAvailibility":"ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Savan",
@@ -117,12 +117,12 @@
   {
     "name": "Sourabh",
     "position": "DEF",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Subarna",
     "position": "MID",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Subbu",
@@ -132,7 +132,7 @@
   {
     "name": "Sudeep",
     "position": "FWD",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Tushar",
@@ -157,12 +157,12 @@
   {
     "name": "Vinay",
     "position": "MID",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Vinit",
     "position": "DEF",
-    "groupAvailibility": "ALL"
+    "groupAvailibility": "ALLGAMES"
   },
   {
     "name": "Vinoth",

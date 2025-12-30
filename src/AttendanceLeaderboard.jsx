@@ -144,7 +144,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   }, [data]);
 
   // Category order for default view
-  const categoryOrder = ["ALL", "WEEKEND", "MIDWEEK", "Others"];
+  const categoryOrder = ["ALLGAMES", "WEEKEND", "MIDWEEK", "Others"];
 
   if (!data || !data.summary || !data.players || data.players.length === 0) {
     return (
