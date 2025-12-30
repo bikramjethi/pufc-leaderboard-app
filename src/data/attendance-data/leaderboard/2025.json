@@ -268,8 +268,8 @@
       "midweekPercentage": 0,
       "weekendPercentage": 40,
       "totalPercentage": 19,
-      "games2024": 29,
-      "difference": -11,
+      "games2024": 34,
+      "difference": -16,
       "notes": null
     },
     {
@@ -282,8 +282,8 @@
       "midweekPercentage": 0,
       "weekendPercentage": 40,
       "totalPercentage": 19,
-      "games2024": 34,
-      "difference": -16,
+      "games2024": 14,
+      "difference": 4,
       "notes": null
     },
     {
@@ -380,9 +380,9 @@
       "midweekPercentage": 73,
       "weekendPercentage": 0,
       "totalPercentage": 38,
-      "games2024": null,
-      "difference": null,
-      "notes": "Added in 2025 New Player"
+      "games2024": 29,
+      "difference": 7,
+      "notes": null
     },
     {
       "category": "MIDWEEK",
@@ -394,7 +394,7 @@
       "midweekPercentage": 63,
       "weekendPercentage": 0,
       "totalPercentage": 33,
-      "games2024": 29,
+      "games2024": null,
       "difference": null,
       "notes": "Added in 2025 New Player"
     },
@@ -422,7 +422,7 @@
       "midweekPercentage": 57,
       "weekendPercentage": 0,
       "totalPercentage": 30,
-      "games2024": 19,
+      "games2024": 13,
       "difference": 15,
       "notes": null
     },
@@ -437,7 +437,7 @@
       "weekendPercentage": 0,
       "totalPercentage": 18,
       "games2024": 13,
-      "difference": 15,
+      "difference": -4,
       "notes": null
     },
     {
@@ -450,8 +450,8 @@
       "midweekPercentage": 29,
       "weekendPercentage": 0,
       "totalPercentage": 15,
-      "games2024": 21,
-      "difference": -4,
+      "games2024": 24,
+      "difference": -10,
       "notes": null
     },
     {

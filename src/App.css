@@ -2047,6 +2047,15 @@ body::before {
 }
 
 @media (max-width: 768px) {
+  .attendance {
+    padding: 1rem;
+  }
+
+  .sub-tab-nav {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
   .attendance-leaderboard {
     padding: 0.5rem;
   }
