@@ -12,8 +12,12 @@ const availableYears = Object.keys(leaderboardData).sort((a, b) => b - a);
 
 function App() {
   const [activeTab, setActiveTab] = useState("leaderboard");
-  const [selectedYear, setSelectedYear] = useState("all-time");
-  const [players, setPlayers] = useState(() => aggregateAllTimeStats());
+  // Default to 2025 if available, otherwise fall back to all-time
+  const defaultYear = availableYears.includes("2025") ? "2025" : "all-time";
+  const [selectedYear, setSelectedYear] = useState(defaultYear);
+  const [players, setPlayers] = useState(() => {
+    return defaultYear === "2025" ? leaderboardData["2025"] : aggregateAllTimeStats();
+  });
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("pufc-theme") || "dark";
   });
@@ -83,9 +87,10 @@ function App() {
             className={`tab-btn ${activeTab === "leaderboard" ? "active" : ""}`}
             onClick={() => {
               setActiveTab("leaderboard");
-              // Reset to all-time view when switching back to leaderboard
-              setSelectedYear("all-time");
-              setPlayers(aggregateAllTimeStats());
+              // Reset to 2025 view when switching back to leaderboard (if available)
+              const resetYear = availableYears.includes("2025") ? "2025" : "all-time";
+              setSelectedYear(resetYear);
+              setPlayers(resetYear === "2025" ? leaderboardData["2025"] : aggregateAllTimeStats());
             }}
           >
             📊 {isSmall ? "Board" : "Leaderboard"}
