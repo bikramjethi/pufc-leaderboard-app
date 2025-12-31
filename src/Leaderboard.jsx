@@ -95,6 +95,11 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false }) => {
 
   const sortedPlayers = useMemo(() => {
     return [...filteredPlayers].sort((a, b) => {
+      // Always put "Others" at the bottom
+      if (a.name === "Others" && b.name !== "Others") return 1;
+      if (b.name === "Others" && a.name !== "Others") return -1;
+      if (a.name === "Others" && b.name === "Others") return 0;
+
       const aVal = a[sortKey];
       const bVal = b[sortKey];
 
@@ -110,7 +115,11 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false }) => {
   }, [filteredPlayers, sortKey, sortDirection]);
 
   // Calculate top 3 values per column (capped at 3 highlights max)
+  // Exclude "Others" from top 3 calculations
   const topValues = useMemo(() => {
+    // Filter out "Others" player from calculations
+    const playersForTopValues = playersWithPct.filter((p) => p.name !== "Others");
+    
     // Higher is better for these stats
     const higherIsBetter = ["matches", "wins", "draws", "winPct", "cleanSheets", "goals", "hatTricks"];
     // Lower is better for these stats
@@ -120,7 +129,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false }) => {
     
     // Process "higher is better" stats
     higherIsBetter.forEach((key) => {
-      const values = playersWithPct.map((p) => p[key] ?? 0);
+      const values = playersForTopValues.map((p) => p[key] ?? 0);
       const uniqueSorted = [...new Set(values)].sort((a, b) => b - a); // descending
       const top3Values = uniqueSorted.slice(0, 3);
       
@@ -157,7 +166,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false }) => {
     // Process "lower is better" stats (losses, lossPct)
     lowerIsBetter.forEach((key) => {
       const defaultVal = key === "lossPct" ? 100 : 999;
-      const values = playersWithPct.map((p) => p[key] ?? defaultVal);
+      const values = playersForTopValues.map((p) => p[key] ?? defaultVal);
       const uniqueSorted = [...new Set(values)].sort((a, b) => a - b); // ascending (lower is better)
       const top3Values = uniqueSorted.slice(0, 3);
       

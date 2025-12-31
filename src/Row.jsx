@@ -17,8 +17,9 @@ export const Row = ({
   };
 
   // Returns highlight class based on rank (gold, silver, bronze) or empty string
+  // Exclude "Others" from highlights
   const getHighlightClass = (key) => {
-    if (!showHighlight || !topValues || !topValues[key]) return "";
+    if (!showHighlight || !topValues || !topValues[key] || player.name === "Others") return "";
     const playerVal = player[key] ?? 0;
     const { first, second, third } = topValues[key];
     
@@ -39,8 +40,9 @@ export const Row = ({
   };
 
   // Get trophy emoji for goals value only
+  // Exclude "Others" from medals
   const getTrophyEmoji = () => {
-    if (!topValues || !topValues.goals) return null;
+    if (!topValues || !topValues.goals || player.name === "Others") return null;
     
     const playerGoals = player.goals ?? 0;
     const { first, second, third } = topValues.goals;
