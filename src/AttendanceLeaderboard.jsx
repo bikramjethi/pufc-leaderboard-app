@@ -60,13 +60,10 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
 
     // Sort all players together
     return [...playersWithCalculations].sort((a, b) => {
-      // Always put "Others" category at the bottom
-      if (a.category === "Others" && b.category !== "Others") return 1;
-      if (b.category === "Others" && a.category !== "Others") return -1;
-      if (a.category === "Others" && b.category === "Others") {
-        // If both are "Others", sort by name
-        return a.name.localeCompare(b.name);
-      }
+      // Always put player with name "Others" at the bottom
+      if (a.name === "Others" && b.name !== "Others") return 1;
+      if (b.name === "Others" && a.name !== "Others") return -1;
+      if (a.name === "Others" && b.name === "Others") return 0;
 
       let aVal, bVal;
 
@@ -137,6 +134,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   }, [data, sortKey, sortDirection]);
 
   // Group players by category for default categorical view
+  // Sort players within each category, putting "Others" name at bottom
   const groupedPlayers = useMemo(() => {
     if (!data || !data.players || data.players.length === 0) {
       return {};
@@ -148,17 +146,31 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
       }
       groups[player.category].push(player);
     });
+    
+    // Sort players within each category, putting player named "Others" at bottom
+    Object.keys(groups).forEach((category) => {
+      groups[category].sort((a, b) => {
+        if (a.name === "Others" && b.name !== "Others") return 1;
+        if (b.name === "Others" && a.name !== "Others") return -1;
+        return 0; // Keep original order for other players
+      });
+    });
+    
     return groups;
   }, [data]);
 
   // Calculate top 3 values for totalGames column only
+  // Exclude player named "Others" from top 3 calculations
   const topValues = useMemo(() => {
     if (!sortedPlayers || sortedPlayers.length === 0 || !data?.summary) {
       return {};
     }
 
+    // Filter out player named "Others" from calculations
+    const playersForTopValues = sortedPlayers.filter((p) => p.name !== "Others");
+
     // Only calculate top 3 for totalGames
-    const values = sortedPlayers.map((player) => player.totalGames ?? 0);
+    const values = playersForTopValues.map((player) => player.totalGames ?? 0);
     
     // Filter out invalid values and get unique sorted values
     const validValues = values.filter(v => v !== null && v !== undefined && (typeof v === "number" && !isNaN(v)));
@@ -181,8 +193,9 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   }, [sortedPlayers, data]);
 
   // Get trophy emoji for totalGames value only
-  const getTrophyEmoji = (value) => {
-    if (!topValues.totalGames) return null;
+  // Exclude player named "Others" from medals
+  const getTrophyEmoji = (value, playerName) => {
+    if (!topValues.totalGames || playerName === "Others") return null;
     
     const { first, second, third } = topValues.totalGames;
     
@@ -410,9 +423,9 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                             <td className="stat-col">{player.weekendGames}</td>
                             <td className="stat-col">
                               {player.totalGames}
-                              {getTrophyEmoji(player.totalGames) && (
+                              {getTrophyEmoji(player.totalGames, player.name) && (
                                 <span className="trophy-emoji">
-                                  {getTrophyEmoji(player.totalGames)}
+                                  {getTrophyEmoji(player.totalGames, player.name)}
                                 </span>
                               )}
                             </td>
@@ -489,9 +502,9 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                     <td className="stat-col">{player.weekendGames}</td>
                     <td className="stat-col">
                       {player.totalGames}
-                      {getTrophyEmoji(player.totalGames) && (
+                      {getTrophyEmoji(player.totalGames, player.name) && (
                         <span className="trophy-emoji">
-                          {getTrophyEmoji(player.totalGames)}
+                          {getTrophyEmoji(player.totalGames, player.name)}
                         </span>
                       )}
                     </td>
