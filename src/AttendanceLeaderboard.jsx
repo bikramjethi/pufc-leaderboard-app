@@ -60,6 +60,14 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
 
     // Sort all players together
     return [...playersWithCalculations].sort((a, b) => {
+      // Always put "Others" category at the bottom
+      if (a.category === "Others" && b.category !== "Others") return 1;
+      if (b.category === "Others" && a.category !== "Others") return -1;
+      if (a.category === "Others" && b.category === "Others") {
+        // If both are "Others", sort by name
+        return a.name.localeCompare(b.name);
+      }
+
       let aVal, bVal;
 
       // Handle different sort keys
