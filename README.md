@@ -141,6 +141,98 @@ npm run update-percentages
 
 **Note:** The attendance leaderboard component calculates percentages dynamically at runtime, so this script is primarily for keeping the JSON data accurate and consistent.
 
+### Sync Stats from Tracker
+
+The `sync-stats.js` script automatically syncs statistics from the tracker file (`src/data/attendance-data/{year}.json`) to both the attendance leaderboard and main leaderboard files. This script processes all matches where `matchPlayed: true` and updates all relevant statistics.
+
+**What it does:**
+
+1. **Reads the tracker file** for the specified year
+2. **Processes all played matches** (where `matchPlayed: true` and `matchCancelled: false`)
+3. **Updates Attendance Leaderboard** (`src/data/attendance-data/leaderboard/{year}.json`):
+   - Counts `midweekGames`, `weekendGames`, and `totalGames` for each player
+   - Calculates attendance percentages dynamically
+   - Updates summary totals (totalGames, midweekGames, weekendGames)
+   - Calculates difference from previous year (if `games2024` exists)
+4. **Updates Main Leaderboard** (`src/data/leaderboard-data/{year}.json`):
+   - Counts `matches`, `wins`, `losses`, `draws`
+   - Counts `goals` (sums all goals scored by player)
+   - Counts `hatTricks` (3+ goals in a single match)
+   - Counts `cleanSheets`
+5. **Handles new players**:
+   - Automatically adds new players found in tracker to both leaderboards
+   - Gets player position from `player-profiles.json` (defaults to "MID" if not found)
+   - Assigns appropriate category for attendance leaderboard based on `groupAvailibility`
+
+**Usage:**
+
+```bash
+# Sync stats for a specific year
+npm run sync-stats 2026
+
+# Or use node directly
+node scripts/sync-stats.js 2026
+```
+
+**Example Output:**
+
+```
+📊 Processing 1 played matches for 2026...
+  ➕ Added new player to attendance leaderboard: Suyash (Others)
+  ➕ Added new player to attendance leaderboard: Tejas (Others)
+  ➕ Added new player to main leaderboard: Suyash (MID)
+  ➕ Added new player to main leaderboard: Tejas (MID)
+✅ Successfully synced stats for 2026:
+   - Attendance leaderboard: 37 players
+   - Main leaderboard: 37 players
+   - Total matches processed: 1
+```
+
+**Workflow:**
+
+1. **Manually update the tracker file** (`src/data/attendance-data/{year}.json`):
+   - Set `matchPlayed: true` for completed matches
+   - Add `attendance` array with all players who attended
+   - Add `winners` and `losers` arrays (or leave both empty for draws)
+   - Add `scorers` array with goal information: `[{ "name": "Player", "goals": 2, "team": "BLUE" }]`
+   - Add `cleanSheets` array with players who kept clean sheets
+   - Update `scoreline` object: `{ "BLUE": 3, "RED": 2 }`
+
+2. **Run the sync script**:
+   ```bash
+   npm run sync-stats 2026
+   ```
+
+3. **Verify the results** in both leaderboard files
+
+**Important Notes:**
+
+- **Only the tracker file needs manual updates** - the script handles all calculations
+- The script processes **all matches** with `matchPlayed: true`, so make sure your tracker is up to date
+- **New players** are automatically detected and added to both leaderboards
+- Player positions are pulled from `player-profiles.json` - add new players there first for accurate positions
+- **Hat tricks** are counted as 3+ goals in a **single match** (not cumulative)
+- The script **overwrites** existing stats, so ensure your tracker file is the source of truth
+
+**When to use:**
+
+- After updating match data in the tracker file
+- When you've added new matches with `matchPlayed: true`
+- When you've added new players to the tracker
+- Before committing changes to ensure all stats are synchronized
+
+**File Structure:**
+
+```
+src/data/
+├── attendance-data/
+│   ├── {year}.json              ← Manual updates (tracker)
+│   └── leaderboard/
+│       └── {year}.json          ← Auto-updated by script
+└── leaderboard-data/
+    └── {year}.json               ← Auto-updated by script
+```
+
 ## Build for Production
 
 ```bash
