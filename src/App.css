@@ -1488,6 +1488,67 @@ body::before {
   color: var(--text-primary);
   margin-bottom: 0.1rem;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+}
+
+.scoreline-item {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.team-color-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.team-color-red {
+  background-color: #dc2626;
+  border-color: #b91c1c;
+}
+
+.team-color-blue {
+  background-color: #2563eb;
+  border-color: #1d4ed8;
+}
+
+.team-color-white {
+  background-color: #ffffff;
+  border-color: #d1d5db;
+}
+
+[data-theme="dark"] .team-color-white {
+  border-color: #6b7280;
+}
+
+.team-color-black {
+  background-color: #1f2937;
+  border-color: #111827;
+}
+
+.team-color-yellow {
+  background-color: #eab308;
+  border-color: #ca8a04;
+}
+
+.team-color-default {
+  background-color: #6b7280;
+  border-color: #4b5563;
+}
+
+.score-value {
+  font-weight: 700;
+}
+
+.score-separator {
+  margin: 0 0.1rem;
+  opacity: 0.6;
 }
 
 .match-day {

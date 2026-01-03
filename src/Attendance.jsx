@@ -63,6 +63,38 @@ const getPlayerResult = (match, player) => {
   return null;
 };
 
+// Get color class for team color
+const getColorClass = (color) => {
+  const colorMap = {
+    RED: "team-color-red",
+    BLUE: "team-color-blue",
+    WHITE: "team-color-white",
+    BLACK: "team-color-black",
+    YELLOW: "team-color-yellow",
+  };
+  return colorMap[color] || "team-color-default";
+};
+
+// Render scoreline with color indicators
+const renderScoreline = (scoreline) => {
+  if (!scoreline || typeof scoreline !== 'object') return null;
+  
+  const teams = Object.keys(scoreline);
+  if (teams.length === 0) return null;
+  
+  return (
+    <span className="match-scoreline">
+      {teams.map((team, index) => (
+        <span key={team} className="scoreline-item">
+          <span className={`team-color-indicator ${getColorClass(team)}`}></span>
+          <span className="score-value">{scoreline[team]}</span>
+          {index < teams.length - 1 && <span className="score-separator">-</span>}
+        </span>
+      ))}
+    </span>
+  );
+};
+
 export const Attendance = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSubTab, setActiveSubTab] = useState("leaderboard");
@@ -315,9 +347,7 @@ export const Attendance = () => {
                     }`}
                 >
                   <div className="match-header">
-                    {match.matchPlayed && match.scoreline && (
-                      <span className="match-scoreline">{match.scoreline}</span>
-                    )}
+                    {match.matchPlayed && match.scoreline && renderScoreline(match.scoreline)}
                     <span className="match-day">{match.day.slice(0, 3)}</span>
                     <span className="match-date">{formatDate(match.date)}</span>
                   </div>
