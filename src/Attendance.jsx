@@ -315,6 +315,9 @@ export const Attendance = () => {
                     }`}
                 >
                   <div className="match-header">
+                    {match.matchPlayed && match.scoreline && (
+                      <span className="match-scoreline">{match.scoreline}</span>
+                    )}
                     <span className="match-day">{match.day.slice(0, 3)}</span>
                     <span className="match-date">{formatDate(match.date)}</span>
                   </div>

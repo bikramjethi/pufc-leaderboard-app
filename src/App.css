@@ -1482,6 +1482,14 @@ body::before {
   gap: 0.1rem;
 }
 
+.match-scoreline {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.1rem;
+  letter-spacing: 0.5px;
+}
+
 .match-day {
   font-size: 0.65rem;
   font-weight: 600;
