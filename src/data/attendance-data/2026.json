@@ -1,5 +1,6 @@
 {
   "season": 2026,
+  "totalGoals": 5,
   "matches": [
     {
       "id": "03-01-2026",
@@ -67,7 +68,8 @@
       "scoreline": {
         "BLUE": 3,
         "RED": 2
-      }
+      },
+      "totalGoals": 5
     },
     {
       "id": "06-01-2026",
@@ -84,7 +86,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "10-01-2026",
@@ -101,7 +104,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "13-01-2026",
@@ -118,7 +122,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "17-01-2026",
@@ -135,7 +140,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "20-01-2026",
@@ -152,7 +158,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "24-01-2026",
@@ -169,7 +176,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "27-01-2026",
@@ -186,7 +194,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "31-01-2026",
@@ -203,7 +212,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "03-02-2026",
@@ -220,7 +230,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "07-02-2026",
@@ -237,7 +248,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "10-02-2026",
@@ -254,7 +266,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "14-02-2026",
@@ -271,7 +284,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "17-02-2026",
@@ -288,7 +302,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "21-02-2026",
@@ -305,7 +320,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "24-02-2026",
@@ -322,7 +338,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "28-02-2026",
@@ -339,7 +356,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "03-03-2026",
@@ -356,7 +374,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "07-03-2026",
@@ -373,7 +392,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "10-03-2026",
@@ -390,7 +410,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "14-03-2026",
@@ -407,7 +428,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "17-03-2026",
@@ -424,7 +446,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "21-03-2026",
@@ -441,7 +464,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "24-03-2026",
@@ -458,7 +482,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "28-03-2026",
@@ -475,7 +500,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "31-03-2026",
@@ -492,7 +518,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "04-04-2026",
@@ -509,7 +536,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "07-04-2026",
@@ -526,7 +554,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "11-04-2026",
@@ -543,7 +572,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "14-04-2026",
@@ -560,7 +590,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "18-04-2026",
@@ -577,7 +608,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "21-04-2026",
@@ -594,7 +626,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "25-04-2026",
@@ -611,7 +644,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "28-04-2026",
@@ -628,7 +662,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "02-05-2026",
@@ -645,7 +680,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "05-05-2026",
@@ -662,7 +698,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "09-05-2026",
@@ -679,7 +716,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "12-05-2026",
@@ -696,7 +734,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "16-05-2026",
@@ -713,7 +752,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "19-05-2026",
@@ -730,7 +770,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "23-05-2026",
@@ -747,7 +788,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "26-05-2026",
@@ -764,7 +806,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "30-05-2026",
@@ -781,7 +824,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "02-06-2026",
@@ -798,7 +842,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "06-06-2026",
@@ -815,7 +860,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "09-06-2026",
@@ -832,7 +878,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "13-06-2026",
@@ -849,7 +896,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "16-06-2026",
@@ -866,7 +914,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "20-06-2026",
@@ -883,7 +932,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "23-06-2026",
@@ -900,7 +950,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "27-06-2026",
@@ -917,7 +968,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "30-06-2026",
@@ -934,7 +986,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "04-07-2026",
@@ -951,7 +1004,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "07-07-2026",
@@ -968,7 +1022,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "11-07-2026",
@@ -985,7 +1040,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "14-07-2026",
@@ -1002,7 +1058,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "18-07-2026",
@@ -1019,7 +1076,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "21-07-2026",
@@ -1036,7 +1094,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "25-07-2026",
@@ -1053,7 +1112,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "28-07-2026",
@@ -1070,7 +1130,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "01-08-2026",
@@ -1087,7 +1148,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "04-08-2026",
@@ -1104,7 +1166,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "08-08-2026",
@@ -1121,7 +1184,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "11-08-2026",
@@ -1138,7 +1202,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "15-08-2026",
@@ -1155,7 +1220,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "18-08-2026",
@@ -1172,7 +1238,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "22-08-2026",
@@ -1189,7 +1256,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "25-08-2026",
@@ -1206,7 +1274,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "29-08-2026",
@@ -1223,7 +1292,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "01-09-2026",
@@ -1240,7 +1310,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "05-09-2026",
@@ -1257,7 +1328,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "08-09-2026",
@@ -1274,7 +1346,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "12-09-2026",
@@ -1291,7 +1364,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "15-09-2026",
@@ -1308,7 +1382,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "19-09-2026",
@@ -1325,7 +1400,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "22-09-2026",
@@ -1342,7 +1418,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "26-09-2026",
@@ -1359,7 +1436,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "29-09-2026",
@@ -1376,7 +1454,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "03-10-2026",
@@ -1393,7 +1472,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "06-10-2026",
@@ -1410,7 +1490,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "10-10-2026",
@@ -1427,7 +1508,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "13-10-2026",
@@ -1444,7 +1526,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "17-10-2026",
@@ -1461,7 +1544,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "20-10-2026",
@@ -1478,7 +1562,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "24-10-2026",
@@ -1495,7 +1580,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "27-10-2026",
@@ -1512,7 +1598,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "31-10-2026",
@@ -1529,7 +1616,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "03-11-2026",
@@ -1546,7 +1634,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "07-11-2026",
@@ -1563,7 +1652,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "10-11-2026",
@@ -1580,7 +1670,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "14-11-2026",
@@ -1597,7 +1688,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "17-11-2026",
@@ -1614,7 +1706,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "21-11-2026",
@@ -1631,7 +1724,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "24-11-2026",
@@ -1648,7 +1742,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "28-11-2026",
@@ -1665,7 +1760,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "01-12-2026",
@@ -1682,7 +1778,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "05-12-2026",
@@ -1699,7 +1796,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "08-12-2026",
@@ -1716,7 +1814,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "12-12-2026",
@@ -1733,7 +1832,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "15-12-2026",
@@ -1750,7 +1850,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "19-12-2026",
@@ -1767,7 +1868,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "22-12-2026",
@@ -1784,7 +1886,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "26-12-2026",
@@ -1801,7 +1904,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     },
     {
       "id": "29-12-2026",
@@ -1818,7 +1922,8 @@
       "scoreline": {
         "BLUE": 0,
         "RED": 0
-      }
+      },
+      "totalGoals": 0
     }
   ],
   "allPlayers": [
