@@ -134,7 +134,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   }, [data, sortKey, sortDirection]);
 
   // Group players by category for default categorical view
-  // Sort players within each category, putting "Others" name at bottom
+  // Sort players within each category by totalGames (desc), putting "Others" name at bottom
   const groupedPlayers = useMemo(() => {
     if (!data || !data.players || data.players.length === 0) {
       return {};
@@ -147,12 +147,16 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
       groups[player.category].push(player);
     });
     
-    // Sort players within each category, putting player named "Others" at bottom
+    // Sort players within each category by totalGames (descending), putting player named "Others" at bottom
     Object.keys(groups).forEach((category) => {
       groups[category].sort((a, b) => {
+        // Always put player with name "Others" at the bottom
         if (a.name === "Others" && b.name !== "Others") return 1;
         if (b.name === "Others" && a.name !== "Others") return -1;
-        return 0; // Keep original order for other players
+        if (a.name === "Others" && b.name === "Others") return 0;
+        
+        // Sort by totalGames descending
+        return (b.totalGames || 0) - (a.totalGames || 0);
       });
     });
     
