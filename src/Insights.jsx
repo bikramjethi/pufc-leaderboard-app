@@ -4,6 +4,15 @@ import { config } from "./leaderboard-config.js";
 import matchData2026 from "./data/attendance-data/2026.json";
 import attendanceLeaderboard2025 from "./data/attendance-data/leaderboard/2025.json";
 import attendanceLeaderboard2026 from "./data/attendance-data/leaderboard/2026.json";
+import { trivia2024 } from "./data/insights/2024.js";
+import { trivia2025 } from "./data/insights/2025.js";
+import { trivia2026 } from "./data/insights/2026.js";
+
+const triviaByYear = {
+  2024: trivia2024,
+  2025: trivia2025,
+  2026: trivia2026,
+};
 
 const matchDataByYear = {
   2026: matchData2026,
@@ -242,6 +251,11 @@ export const Insights = () => {
     };
   }, [selectedSeason, trackerDataForSeason, leaderboardDataForSeason]);
 
+  // Load trivia data for the season
+  const triviaData = useMemo(() => {
+    return triviaByYear[selectedSeason] || [];
+  }, [selectedSeason]);
+
   if (!overallInsights) {
     return (
       <div className="insights">
@@ -400,6 +414,23 @@ export const Insights = () => {
           </div>
         )}
       </section>
+
+      {/* Trivia Section */}
+      {triviaData && triviaData.length > 0 && (
+        <section className="insights-section insights-trivia-section">
+          <h2 className="insights-heading">🎯 Season Trivia</h2>
+          <div className="trivia-container">
+            {triviaData.map((trivia, index) => (
+              <div key={index} className="trivia-item">
+                <div className="trivia-icon">💡</div>
+                <div className="trivia-content">
+                  <p className="trivia-text">{trivia}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Quarterly Insights (only for 2026) */}
       {selectedSeason === "2026" && quarterlyInsights && (
