@@ -250,79 +250,23 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
         </div>
       )}
 
-      {config.ENABLE_SEARCH && (
-        <div className="search-container">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search players..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <button className="search-clear" onClick={() => setSearchTerm("")}>
-              ✕
-            </button>
-          )}
-        </div>
-      )}
-      <div className="table-container">
-        <table className="leaderboard-table">
-          <thead>
-            <tr>
-              {config.ENABLE_COMPARISON && <th className="select-col"></th>}
-              <th className="rank-col">#</th>
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className={`${col.className} ${col.sortable ? "sortable" : ""} ${sortKey === col.key ? "sorted" : ""} ${col.tooltip ? "has-tooltip" : ""}`}
-                  onClick={() => col.sortable && handleSort(col.key)}
-                  data-tooltip={col.tooltip}
-                >
-                  <span className="th-content">
-                    {col.label}
-                    {col.sortable && getSortIndicator(col.key)}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {sortedPlayers.map((player, index) => (
-              <Row
-                key={player.id}
-                player={player}
-                rank={index + 1}
-                topValues={topValues}
-                showHighlight={config.ENABLE_MAX_HIGHLIGHT}
-                showCheckbox={config.ENABLE_COMPARISON}
-                showPlayerModal={config.ENABLE_PLAYER_MODAL}
-                isSelected={selectedPlayers.some((p) => p.id === player.id)}
-                onSelect={() => handlePlayerSelect(player)}
-                onPlayerClick={() => handlePlayerClick(player)}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="legend">
-        <span><strong>MP</strong> Matches Played</span>
-        <span><strong>W</strong> Wins</span>
-        <span><strong>D</strong> Draws</span>
-        <span><strong>L</strong> Losses</span>
-        <span><strong>W%</strong> Win Rate</span>
-        <span><strong>L%</strong> Loss Rate</span>
-        <span><strong>CS</strong> Clean Sheets</span>
-        <span><strong>G</strong> Goals</span>
-        <span><strong>HT</strong> Hat Tricks</span>
-        <span className="legend-divider"></span>
-        <span className="legend-highlight">
-          <strong className="highlight-gold">1st</strong>
-          <strong className="highlight-silver">2nd</strong>
-          <strong className="highlight-bronze">3rd</strong>
-        </span>
-        <span className="legend-divider"></span>
+      <div className="leaderboard-actions">
+        {config.ENABLE_SEARCH && (
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search players..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {searchTerm && (
+              <button className="search-clear" onClick={() => setSearchTerm("")}>
+                ✕
+              </button>
+            )}
+          </div>
+        )}
         <button
           className="download-csv-btn-compact"
           onClick={() => {
@@ -393,6 +337,63 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
         >
           📥 Download CSV
         </button>
+      </div>
+      <div className="table-container">
+        <table className="leaderboard-table">
+          <thead>
+            <tr>
+              {config.ENABLE_COMPARISON && <th className="select-col"></th>}
+              <th className="rank-col">#</th>
+              {columns.map((col) => (
+                <th
+                  key={col.key}
+                  className={`${col.className} ${col.sortable ? "sortable" : ""} ${sortKey === col.key ? "sorted" : ""} ${col.tooltip ? "has-tooltip" : ""}`}
+                  onClick={() => col.sortable && handleSort(col.key)}
+                  data-tooltip={col.tooltip}
+                >
+                  <span className="th-content">
+                    {col.label}
+                    {col.sortable && getSortIndicator(col.key)}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sortedPlayers.map((player, index) => (
+              <Row
+                key={player.id}
+                player={player}
+                rank={index + 1}
+                topValues={topValues}
+                showHighlight={config.ENABLE_MAX_HIGHLIGHT}
+                showCheckbox={config.ENABLE_COMPARISON}
+                showPlayerModal={config.ENABLE_PLAYER_MODAL}
+                isSelected={selectedPlayers.some((p) => p.id === player.id)}
+                onSelect={() => handlePlayerSelect(player)}
+                onPlayerClick={() => handlePlayerClick(player)}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="legend">
+        <span><strong>MP</strong> Matches Played</span>
+        <span><strong>W</strong> Wins</span>
+        <span><strong>D</strong> Draws</span>
+        <span><strong>L</strong> Losses</span>
+        <span><strong>W%</strong> Win Rate</span>
+        <span><strong>L%</strong> Loss Rate</span>
+        <span><strong>CS</strong> Clean Sheets</span>
+        <span><strong>G</strong> Goals</span>
+        <span><strong>HT</strong> Hat Tricks</span>
+        <span className="legend-divider"></span>
+        <span className="legend-highlight">
+          <strong className="highlight-gold">1st</strong>
+          <strong className="highlight-silver">2nd</strong>
+          <strong className="highlight-bronze">3rd</strong>
+        </span>
       </div>
 
       {config.ENABLE_COMPARISON && selectedPlayers.length === config.MAX_COMPARE_PLAYERS && (
