@@ -23,7 +23,7 @@ export const config = {
 
   // Insights Settings
   INSIGHTS: {
-    enabled: true,               // Show/hide the Insights tab
+    enabled: false,               // Show/hide the Insights tab
     seasons: ["2024", "2025"],  // Seasons available in the Insights tab
     defaultSeason: "2025",       // Default season shown on Insights tab
   },
