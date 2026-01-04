@@ -569,6 +569,68 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Footer with CSV Download */}
+      <div className="attendance-leaderboard-footer">
+        <button
+          className="download-csv-btn-compact"
+          onClick={() => {
+            // Convert attendance leaderboard data to CSV
+            const csvRows = [];
+            
+            // CSV Headers
+            csvRows.push([
+              "Category",
+              "Player",
+              "Midweek Games",
+              "Weekend Games",
+              "Total Games",
+              "Midweek %",
+              "Weekend %",
+              "Total %",
+              "2024 Games",
+              "Difference"
+            ].join(","));
+
+            // Add each player as a row (using sorted players for consistency)
+            sortedPlayers.forEach((player) => {
+              const percentages = calculatePercentages(player, summary);
+              const games2024 = player.games2024 === null ? "" : player.games2024;
+              const difference = player.difference === null ? "" : player.difference;
+
+              csvRows.push([
+                player.category,
+                player.name,
+                player.midweekGames || 0,
+                player.weekendGames || 0,
+                player.totalGames || 0,
+                percentages.midweekPercentage,
+                percentages.weekendPercentage,
+                percentages.totalPercentage,
+                games2024,
+                difference
+              ].join(","));
+            });
+
+            // Create CSV content
+            const csvContent = csvRows.join("\n");
+            
+            // Create blob and download
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `attendance-leaderboard-${year}.csv`);
+            link.style.visibility = "hidden";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }}
+          title="Download CSV"
+        >
+          📥 CSV Download
+        </button>
+      </div>
     </div>
   );
 };

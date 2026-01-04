@@ -243,7 +243,6 @@ npm run preview  # Preview the build locally
 ---
 
 ## Future Enhancements
-- [ ] Export to CSV
 - [ ] Favorites / Watchlist
 - [ ] Player profile pictures
 - [ ] Keyboard navigation
