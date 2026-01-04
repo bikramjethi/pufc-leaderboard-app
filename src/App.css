@@ -2712,7 +2712,7 @@ body::before {
 
 .trivia-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 1rem;
   padding: 1.25rem;
   background: var(--card-bg);
@@ -2750,6 +2750,10 @@ body::before {
   flex-shrink: 0;
   animation: pulse 2s ease-in-out infinite;
   filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.3));
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes pulse {
@@ -2765,6 +2769,8 @@ body::before {
 
 .trivia-content {
   flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .trivia-text {
