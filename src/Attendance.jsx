@@ -99,7 +99,7 @@ export const Attendance = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSubTab, setActiveSubTab] = useState("leaderboard");
   // Separate year states for leaderboard and tracker
-  const [leaderboardYear, setLeaderboardYear] = useState("2025");
+  const [leaderboardYear, setLeaderboardYear] = useState("2026");
   const [trackerYear, setTrackerYear] = useState("2026");
 
   // Get current year based on active sub-tab
@@ -326,6 +326,9 @@ export const Attendance = () => {
         <span>
           🚫 {matches.filter((m) => m.matchCancelled).length} cancelled
         </span>
+        {matchData?.totalGoals !== undefined && (
+          <span>⚽ {matchData.totalGoals} total goals</span>
+        )}
       </div>
 
       {/* Attendance Table */}
