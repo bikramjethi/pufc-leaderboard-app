@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Leaderboard } from "./Leaderboard.jsx";
 import { Attendance } from "./Attendance.jsx";
 import { Roster } from "./Roster.jsx";
+import { Insights } from "./Insights.jsx";
 import "./App.css";
 import { config } from "./leaderboard-config.js";
 import { isSmallScreen } from "./utils/isSmallScreen.js";
@@ -59,15 +60,17 @@ function App() {
             <p className="subtitle">
               {activeTab === "attendance"
                 ? "Match Attendance"
-                : activeTab === "midweek-roster"
-                  ? "Midweek Roster"
-                  : activeTab === "weekend-roster"
-                    ? "Weekend Roster"
-                    : activeTab === "inactive-players"
-                      ? "Inactive Players"
-                      : selectedYear === "all-time"
-                        ? "All-Time Career Stats"
-                        : "Player Statistics"}
+                : activeTab === "insights"
+                  ? "Season Insights"
+                  : activeTab === "midweek-roster"
+                    ? "Midweek Roster"
+                    : activeTab === "weekend-roster"
+                      ? "Weekend Roster"
+                      : activeTab === "inactive-players"
+                        ? "Inactive Players"
+                        : selectedYear === "all-time"
+                          ? "All-Time Career Stats"
+                          : "Player Statistics"}
             </p>
           </div>
           <button
@@ -104,6 +107,12 @@ function App() {
               📅 Attendance
             </button>
           )}
+          <button
+            className={`tab-btn ${activeTab === "insights" ? "active" : ""}`}
+            onClick={() => setActiveTab("insights")}
+          >
+            📈 Insights
+          </button>
           <button
             className={`tab-btn ${activeTab === "midweek-roster" ? "active" : ""}`}
             onClick={() => setActiveTab("midweek-roster")}
@@ -156,6 +165,8 @@ function App() {
           />
         ) : activeTab === "attendance" ? (
           <Attendance />
+        ) : activeTab === "insights" ? (
+          <Insights />
         ) : activeTab === "midweek-roster" ? (
           <Roster type="midweek" />
         ) : activeTab === "weekend-roster" ? (
