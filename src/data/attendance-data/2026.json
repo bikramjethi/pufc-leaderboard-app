@@ -1,6 +1,8 @@
 {
   "season": 2026,
   "totalGoals": 5,
+  "weekendGoals": 5,
+  "weekdayGoals": 0,
   "matches": [
     {
       "id": "03-01-2026",

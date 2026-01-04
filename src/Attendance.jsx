@@ -329,6 +329,12 @@ export const Attendance = () => {
         {matchData?.totalGoals !== undefined && (
           <span>⚽ {matchData.totalGoals} total goals</span>
         )}
+        {matchData?.weekendGoals !== undefined && (
+          <span>🏖️ {matchData.weekendGoals} weekend goals</span>
+        )}
+        {matchData?.weekdayGoals !== undefined && (
+          <span>📅 {matchData.weekdayGoals} weekday goals</span>
+        )}
       </div>
 
       {/* Attendance Table */}
