@@ -35,8 +35,12 @@ const calculateOverallInsights = (leaderboardData, attendanceData) => {
     totalGoals: leaderboardData.reduce((sum, p) => sum + (p.goals || 0), 0),
     totalHatTricks: leaderboardData.reduce((sum, p) => sum + (p.hatTricks || 0), 0),
     topScorer: null,
-    mostMatches: null,
     bestWinRate: null,
+    lowestWinRate: null,
+    highestLossPct: null,
+    lowestLossPct: null,
+    highestHatTricks: null,
+    cleanSheets: [],
   };
 
   // Find top scorer
@@ -44,12 +48,6 @@ const calculateOverallInsights = (leaderboardData, attendanceData) => {
     .filter((p) => p.name !== "Others")
     .reduce((max, p) => (p.goals > (max?.goals || 0) ? p : max), null);
   insights.topScorer = topScorer;
-
-  // Find most matches
-  const mostMatches = leaderboardData
-    .filter((p) => p.name !== "Others")
-    .reduce((max, p) => (p.matches > (max?.matches || 0) ? p : max), null);
-  insights.mostMatches = mostMatches;
 
   // Find best win rate (minimum 10 matches)
   const bestWinRate = leaderboardData
@@ -60,6 +58,49 @@ const calculateOverallInsights = (leaderboardData, attendanceData) => {
       return winRate > maxWinRate ? p : max;
     }, null);
   insights.bestWinRate = bestWinRate;
+
+  // Find lowest win rate (minimum 10 matches)
+  const lowestWinRate = leaderboardData
+    .filter((p) => p.name !== "Others" && p.matches >= 10)
+    .reduce((min, p) => {
+      const winRate = p.matches > 0 ? (p.wins / p.matches) * 100 : 0;
+      const minWinRate = min?.matches > 0 ? (min.wins / min.matches) * 100 : 100;
+      return winRate < minWinRate ? p : min;
+    }, null);
+  insights.lowestWinRate = lowestWinRate;
+
+  // Find highest loss percentage (minimum 10 matches)
+  const highestLossPct = leaderboardData
+    .filter((p) => p.name !== "Others" && p.matches >= 10)
+    .reduce((max, p) => {
+      const lossPct = p.matches > 0 ? (p.losses / p.matches) * 100 : 0;
+      const maxLossPct = max?.matches > 0 ? (max.losses / max.matches) * 100 : 0;
+      return lossPct > maxLossPct ? p : max;
+    }, null);
+  insights.highestLossPct = highestLossPct;
+
+  // Find lowest loss percentage (minimum 10 matches)
+  const lowestLossPct = leaderboardData
+    .filter((p) => p.name !== "Others" && p.matches >= 10)
+    .reduce((min, p) => {
+      const lossPct = p.matches > 0 ? (p.losses / p.matches) * 100 : 0;
+      const minLossPct = min?.matches > 0 ? (min.losses / min.matches) * 100 : 100;
+      return lossPct < minLossPct ? p : min;
+    }, null);
+  insights.lowestLossPct = lowestLossPct;
+
+  // Find highest hat tricks
+  const highestHatTricks = leaderboardData
+    .filter((p) => p.name !== "Others")
+    .reduce((max, p) => (p.hatTricks > (max?.hatTricks || 0) ? p : max), null);
+  insights.highestHatTricks = highestHatTricks;
+
+  // Get all players with clean sheets
+  const cleanSheets = leaderboardData
+    .filter((p) => p.name !== "Others" && p.cleanSheets > 0)
+    .map((p) => ({ name: p.name, cleanSheets: p.cleanSheets }))
+    .sort((a, b) => b.cleanSheets - a.cleanSheets);
+  insights.cleanSheets = cleanSheets;
 
   // Add attendance insights if available
   if (attendanceData) {
@@ -99,6 +140,7 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     weekdayMatches: quarterMatches.filter((m) => m.day === "Midweek").length,
     topScorers: [],
     mostAttended: null,
+    cleanSheets: [],
   };
 
   // Calculate top scorers for the quarter
@@ -130,14 +172,27 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     .sort((a, b) => b.games - a.games)[0];
   insights.mostAttended = mostAttended;
 
+  // Calculate clean sheets for the quarter
+  const cleanSheetsMap = new Map();
+  quarterMatches.forEach((match) => {
+    match.cleanSheets?.forEach((player) => {
+      const current = cleanSheetsMap.get(player) || 0;
+      cleanSheetsMap.set(player, current + 1);
+    });
+  });
+
+  const cleanSheets = Array.from(cleanSheetsMap.entries())
+    .map(([name, count]) => ({ name, cleanSheets: count }))
+    .sort((a, b) => b.cleanSheets - a.cleanSheets);
+  insights.cleanSheets = cleanSheets;
+
   return insights;
 };
 
 export const Insights = () => {
-  // Default to the most recent available season
-  const defaultSeason = availableSeasons.length > 0 
-    ? availableSeasons[availableSeasons.length - 1] 
-    : "2026";
+  // Default to configured defaultSeason or most recent available season
+  const defaultSeason = config.INSIGHTS?.defaultSeason || 
+    (availableSeasons.length > 0 ? availableSeasons[availableSeasons.length - 1] : "2026");
   const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
 
   // Load data based on season
@@ -252,11 +307,11 @@ export const Insights = () => {
               </span>
             </div>
           )}
-          {overallInsights.mostMatches && (
+          {overallInsights.highestHatTricks && overallInsights.highestHatTricks.hatTricks > 0 && (
             <div className="highlight-item">
-              <span className="highlight-label">📊 Most Matches:</span>
+              <span className="highlight-label">🎩 Most Hat Tricks:</span>
               <span className="highlight-value">
-                {overallInsights.mostMatches.name} ({overallInsights.mostMatches.matches} matches)
+                {overallInsights.highestHatTricks.name} ({overallInsights.highestHatTricks.hatTricks} hat tricks)
               </span>
             </div>
           )}
@@ -272,6 +327,42 @@ export const Insights = () => {
               </span>
             </div>
           )}
+          {overallInsights.lowestWinRate && (
+            <div className="highlight-item">
+              <span className="highlight-label">📉 Lowest Win Rate:</span>
+              <span className="highlight-value">
+                {overallInsights.lowestWinRate.name} (
+                {overallInsights.lowestWinRate.matches > 0
+                  ? Math.round((overallInsights.lowestWinRate.wins / overallInsights.lowestWinRate.matches) * 100)
+                  : 0}
+                %)
+              </span>
+            </div>
+          )}
+          {overallInsights.highestLossPct && (
+            <div className="highlight-item">
+              <span className="highlight-label">📈 Highest Loss %:</span>
+              <span className="highlight-value">
+                {overallInsights.highestLossPct.name} (
+                {overallInsights.highestLossPct.matches > 0
+                  ? Math.round((overallInsights.highestLossPct.losses / overallInsights.highestLossPct.matches) * 100)
+                  : 0}
+                %)
+              </span>
+            </div>
+          )}
+          {overallInsights.lowestLossPct && (
+            <div className="highlight-item">
+              <span className="highlight-label">📉 Lowest Loss %:</span>
+              <span className="highlight-value">
+                {overallInsights.lowestLossPct.name} (
+                {overallInsights.lowestLossPct.matches > 0
+                  ? Math.round((overallInsights.lowestLossPct.losses / overallInsights.lowestLossPct.matches) * 100)
+                  : 0}
+                %)
+              </span>
+            </div>
+          )}
           {overallInsights.mostAttended && (
             <div className="highlight-item">
               <span className="highlight-label">📅 Most Attended:</span>
@@ -281,6 +372,21 @@ export const Insights = () => {
             </div>
           )}
         </div>
+
+        {/* Clean Sheets Section */}
+        {overallInsights.cleanSheets && overallInsights.cleanSheets.length > 0 && (
+          <div className="insights-clean-sheets">
+            <h3 className="clean-sheets-heading">🧤 Clean Sheets</h3>
+            <div className="clean-sheets-list">
+              {overallInsights.cleanSheets.map((player) => (
+                <div key={player.name} className="clean-sheet-item">
+                  <span className="clean-sheet-name">{player.name}</span>
+                  <span className="clean-sheet-count">{player.cleanSheets}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Quarterly Insights (only for 2026) */}
@@ -371,6 +477,19 @@ export const Insights = () => {
                   )}
                 </div>
               )}
+              {quarterlyInsights.q2.cleanSheets && quarterlyInsights.q2.cleanSheets.length > 0 && (
+                <div className="insights-clean-sheets">
+                  <h3 className="clean-sheets-heading">🧤 Clean Sheets</h3>
+                  <div className="clean-sheets-list">
+                    {quarterlyInsights.q2.cleanSheets.map((player) => (
+                      <div key={player.name} className="clean-sheet-item">
+                        <span className="clean-sheet-name">{player.name}</span>
+                        <span className="clean-sheet-count">{player.cleanSheets}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </section>
           )}
 
@@ -415,6 +534,19 @@ export const Insights = () => {
                   )}
                 </div>
               )}
+              {quarterlyInsights.q3.cleanSheets && quarterlyInsights.q3.cleanSheets.length > 0 && (
+                <div className="insights-clean-sheets">
+                  <h3 className="clean-sheets-heading">🧤 Clean Sheets</h3>
+                  <div className="clean-sheets-list">
+                    {quarterlyInsights.q3.cleanSheets.map((player) => (
+                      <div key={player.name} className="clean-sheet-item">
+                        <span className="clean-sheet-name">{player.name}</span>
+                        <span className="clean-sheet-count">{player.cleanSheets}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </section>
           )}
 
@@ -457,6 +589,19 @@ export const Insights = () => {
                       </span>
                     </div>
                   )}
+                </div>
+              )}
+              {quarterlyInsights.q4.cleanSheets && quarterlyInsights.q4.cleanSheets.length > 0 && (
+                <div className="insights-clean-sheets">
+                  <h3 className="clean-sheets-heading">🧤 Clean Sheets</h3>
+                  <div className="clean-sheets-list">
+                    {quarterlyInsights.q4.cleanSheets.map((player) => (
+                      <div key={player.name} className="clean-sheet-item">
+                        <span className="clean-sheet-name">{player.name}</span>
+                        <span className="clean-sheet-count">{player.cleanSheets}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </section>
