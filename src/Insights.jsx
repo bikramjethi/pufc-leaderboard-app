@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { leaderboardData } from "./utils/get-data.js";
+import { config } from "./leaderboard-config.js";
 import matchData2026 from "./data/attendance-data/2026.json";
 import attendanceLeaderboard2025 from "./data/attendance-data/leaderboard/2025.json";
 import attendanceLeaderboard2026 from "./data/attendance-data/leaderboard/2026.json";
@@ -13,7 +14,7 @@ const attendanceLeaderboardByYear = {
   2026: attendanceLeaderboard2026,
 };
 
-const availableSeasons = ["2024", "2025", "2026"];
+const availableSeasons = config.INSIGHTS?.seasons || ["2024", "2025", "2026"];
 
 // Helper function to get quarter from date
 const getQuarter = (dateStr) => {
@@ -133,7 +134,11 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
 };
 
 export const Insights = () => {
-  const [selectedSeason, setSelectedSeason] = useState("2026");
+  // Default to the most recent available season
+  const defaultSeason = availableSeasons.length > 0 
+    ? availableSeasons[availableSeasons.length - 1] 
+    : "2026";
+  const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
 
   // Load data based on season
   const leaderboardDataForSeason = useMemo(() => {

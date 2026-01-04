@@ -20,5 +20,11 @@ export const config = {
   // Comparison Settings
   MAX_COMPARE_PLAYERS: 3,        // Maximum players that can be compared
   ENABLE_ATTENDANCE: true,      // Show attendance data for each player
+
+  // Insights Settings
+  INSIGHTS: {
+    enabled: true,               // Show/hide the Insights tab
+    seasons: ["2024", "2025", "2026"],  // Seasons available in the Insights tab
+  },
 };
 

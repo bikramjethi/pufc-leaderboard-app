@@ -107,12 +107,14 @@ function App() {
               📅 Attendance
             </button>
           )}
-          <button
-            className={`tab-btn ${activeTab === "insights" ? "active" : ""}`}
-            onClick={() => setActiveTab("insights")}
-          >
-            📈 Insights
-          </button>
+          {config.INSIGHTS?.enabled && (
+            <button
+              className={`tab-btn ${activeTab === "insights" ? "active" : ""}`}
+              onClick={() => setActiveTab("insights")}
+            >
+              📈 Insights
+            </button>
+          )}
           <button
             className={`tab-btn ${activeTab === "midweek-roster" ? "active" : ""}`}
             onClick={() => setActiveTab("midweek-roster")}
