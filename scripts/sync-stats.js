@@ -223,7 +223,51 @@ try {
     player.cleanSheets = stats.cleanSheets;
   });
 
+  // Calculate and update goal totals in tracker file
+  let totalGoals = 0;
+  let weekendGoals = 0;
+  let weekdayGoals = 0;
+
+  playedMatches.forEach((match) => {
+    // Calculate totalGoals for match if not present
+    let matchTotalGoals = match.totalGoals;
+    if (matchTotalGoals === undefined) {
+      matchTotalGoals = 0;
+      if (match.scorers && Array.isArray(match.scorers)) {
+        matchTotalGoals = match.scorers.reduce((sum, scorer) => {
+          return sum + (scorer.goals || 0);
+        }, 0);
+      }
+      match.totalGoals = matchTotalGoals;
+    }
+
+    // Add to appropriate totals
+    totalGoals += matchTotalGoals;
+    if (match.day === 'Weekend') {
+      weekendGoals += matchTotalGoals;
+    } else if (match.day === 'Midweek') {
+      weekdayGoals += matchTotalGoals;
+    }
+  });
+
+  // Update tracker file with goal totals
+  trackerData.totalGoals = totalGoals;
+  trackerData.weekendGoals = weekendGoals;
+  trackerData.weekdayGoals = weekdayGoals;
+
+  // Reorder tracker data to have goals at top
+  const { season, totalGoals: tg, weekendGoals: wg, weekdayGoals: wdg, matches, allPlayers } = trackerData;
+  const reorderedTracker = {
+    season,
+    totalGoals: tg,
+    weekendGoals: wg,
+    weekdayGoals: wdg,
+    matches,
+    allPlayers
+  };
+
   // Write updated files
+  fs.writeFileSync(trackerPath, JSON.stringify(reorderedTracker, null, 2));
   fs.writeFileSync(attendanceLeaderboardPath, JSON.stringify(attendanceLeaderboard, null, 2));
   fs.writeFileSync(mainLeaderboardPath, JSON.stringify(mainLeaderboard, null, 2));
 
@@ -231,6 +275,7 @@ try {
   console.log(`   - Attendance leaderboard: ${attendanceLeaderboard.players.length} players`);
   console.log(`   - Main leaderboard: ${mainLeaderboard.length} players`);
   console.log(`   - Total matches processed: ${playedMatches.length}`);
+  console.log(`   - Total goals: ${totalGoals} (Weekend: ${weekendGoals}, Weekday: ${weekdayGoals})`);
 } catch (error) {
   console.error('❌ Error syncing stats:', error);
   process.exit(1);
