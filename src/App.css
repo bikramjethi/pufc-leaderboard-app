@@ -1694,6 +1694,36 @@ body::before {
   gap: 0.25rem;
 }
 
+.tracker-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.download-csv-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.download-csv-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.download-csv-btn:active {
+  transform: translateY(0);
+}
+
 .goal-badge {
   background: var(--accent-primary);
   color: white;

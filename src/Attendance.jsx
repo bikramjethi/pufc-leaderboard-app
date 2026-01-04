@@ -300,6 +300,66 @@ export const Attendance = () => {
       {/* Tracker Content */}
       {activeSubTab === "tracker" && matchData && (
         <>
+          {/* Download CSV Button */}
+          <div className="tracker-actions">
+            <button
+              className="download-csv-btn"
+              onClick={() => {
+                // Get all unique player names from all matches
+                const allPlayers = new Set();
+                matchData.matches.forEach((match) => {
+                  if (match.attendance && Array.isArray(match.attendance)) {
+                    match.attendance.forEach((player) => allPlayers.add(player));
+                  }
+                });
+                
+                // Sort players alphabetically
+                const sortedPlayers = Array.from(allPlayers).sort();
+                
+                // Get all match dates (only for played matches)
+                const matchDates = matchData.matches
+                  .filter((match) => match.matchPlayed && !match.matchCancelled)
+                  .map((match) => match.date || match.id)
+                  .sort();
+                
+                // Create CSV rows
+                const csvRows = [];
+                
+                // Header row: Player, then all match dates
+                csvRows.push(["Player", ...matchDates].join(","));
+                
+                // For each player, create a row with 1 if they attended, blank if not
+                sortedPlayers.forEach((player) => {
+                  const row = [player];
+                  matchDates.forEach((date) => {
+                    const match = matchData.matches.find(
+                      (m) => (m.date === date || m.id === date) && m.matchPlayed && !m.matchCancelled
+                    );
+                    const attended = match && match.attendance && match.attendance.includes(player);
+                    row.push(attended ? "1" : "");
+                  });
+                  csvRows.push(row.join(","));
+                });
+
+                // Create CSV content
+                const csvContent = csvRows.join("\n");
+                
+                // Create blob and download
+                const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+                const link = document.createElement("a");
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", `attendance-tracker-${trackerYear}.csv`);
+                link.style.visibility = "hidden";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+            >
+              📥 Download CSV
+            </button>
+          </div>
+
           {/* Search */}
           <div className="search-container">
         <input
