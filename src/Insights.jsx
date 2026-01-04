@@ -110,6 +110,18 @@ const calculateOverallInsights = (leaderboardData, attendanceData) => {
     insights.mostAttended = attendanceData.players
       ?.filter((p) => p.name !== "Others")
       .reduce((max, p) => (p.totalGames > (max?.totalGames || 0) ? p : max), null);
+  } else {
+    // If no attendance data, calculate most attended from leaderboard data (matches played)
+    const mostAttendedFromLeaderboard = leaderboardData
+      .filter((p) => p.name !== "Others")
+      .reduce((max, p) => (p.matches > (max?.matches || 0) ? p : max), null);
+    
+    if (mostAttendedFromLeaderboard) {
+      insights.mostAttended = {
+        name: mostAttendedFromLeaderboard.name,
+        totalGames: mostAttendedFromLeaderboard.matches,
+      };
+    }
   }
 
   return insights;
