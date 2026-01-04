@@ -29,7 +29,7 @@ const calcPercentages = (player) => {
   };
 };
 
-export const Leaderboard = ({ players, allSeasonData, isAllTime = false }) => {
+export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selectedYear = null }) => {
   const [sortKey, setSortKey] = useState(config.DEFAULT_SORT_KEY);
   const [sortDirection, setSortDirection] = useState(config.DEFAULT_SORT_DIR);
   const [searchTerm, setSearchTerm] = useState("");
@@ -250,22 +250,93 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false }) => {
         </div>
       )}
 
-      {config.ENABLE_SEARCH && (
-        <div className="search-container">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search players..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <button className="search-clear" onClick={() => setSearchTerm("")}>
-              ✕
-            </button>
-          )}
-        </div>
-      )}
+      <div className="leaderboard-actions">
+        {config.ENABLE_SEARCH && (
+          <div className="search-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search players..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {searchTerm && (
+              <button className="search-clear" onClick={() => setSearchTerm("")}>
+                ✕
+              </button>
+            )}
+          </div>
+        )}
+        <button
+          className="download-csv-btn"
+          onClick={() => {
+            // Convert leaderboard data to CSV
+            const csvRows = [];
+            
+            // CSV Headers
+            csvRows.push([
+              "Rank",
+              "Player",
+              "Position",
+              "Matches Played",
+              "Wins",
+              "Draws",
+              "Losses",
+              "Win %",
+              "Loss %",
+              "Clean Sheets",
+              "Goals",
+              "Hat Tricks"
+            ].join(","));
+
+            // Add each player as a row
+            sortedPlayers.forEach((player, index) => {
+              const winPct = player.matches > 0 
+                ? ((player.wins / player.matches) * 100).toFixed(1)
+                : "0.0";
+              const lossPct = player.matches > 0
+                ? ((player.losses / player.matches) * 100).toFixed(1)
+                : "0.0";
+
+              csvRows.push([
+                index + 1,
+                player.name,
+                player.position,
+                player.matches || 0,
+                player.wins || 0,
+                player.draws || 0,
+                player.losses || 0,
+                winPct,
+                lossPct,
+                player.cleanSheets || 0,
+                player.goals || 0,
+                player.hatTricks || 0
+              ].join(","));
+            });
+
+            // Create CSV content
+            const csvContent = csvRows.join("\n");
+            
+            // Create blob and download
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            const fileName = isAllTime 
+              ? "leaderboard-all-time.csv"
+              : selectedYear 
+                ? `leaderboard-${selectedYear}.csv`
+                : `leaderboard-${new Date().getFullYear()}.csv`;
+            link.setAttribute("href", url);
+            link.setAttribute("download", fileName);
+            link.style.visibility = "hidden";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }}
+        >
+          📥 Download CSV
+        </button>
+      </div>
       <div className="table-container">
         <table className="leaderboard-table">
           <thead>

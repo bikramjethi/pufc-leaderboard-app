@@ -164,6 +164,7 @@ function App() {
             players={players}
             allSeasonData={leaderboardData}
             isAllTime={selectedYear === "all-time"}
+            selectedYear={selectedYear}
           />
         ) : activeTab === "attendance" ? (
           <Attendance />

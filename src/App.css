@@ -230,6 +230,19 @@ body::before {
 }
 
 /* Leaderboard */
+.leaderboard-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.leaderboard-actions .search-container {
+  flex: 1;
+  max-width: 400px;
+}
+
 .leaderboard {
   background: var(--bg-card);
   border-radius: 16px;
