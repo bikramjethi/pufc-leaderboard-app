@@ -17,7 +17,7 @@ const availableSeasons = ["2024", "2025", "2026"];
 
 // Helper function to get quarter from date
 const getQuarter = (dateStr) => {
-  const [day, month] = dateStr.split("/");
+  const [, month] = dateStr.split("/");
   const monthNum = parseInt(month, 10);
   if (monthNum >= 1 && monthNum <= 3) return 1;
   if (monthNum >= 4 && monthNum <= 6) return 2;
@@ -26,16 +26,12 @@ const getQuarter = (dateStr) => {
 };
 
 // Calculate overall season insights
-const calculateOverallInsights = (leaderboardData, attendanceData, year) => {
+const calculateOverallInsights = (leaderboardData, attendanceData) => {
   if (!leaderboardData || leaderboardData.length === 0) return null;
 
   const insights = {
     totalPlayers: leaderboardData.length,
-    totalMatches: leaderboardData.reduce((sum, p) => sum + (p.matches || 0), 0),
     totalGoals: leaderboardData.reduce((sum, p) => sum + (p.goals || 0), 0),
-    totalWins: leaderboardData.reduce((sum, p) => sum + (p.wins || 0), 0),
-    totalLosses: leaderboardData.reduce((sum, p) => sum + (p.losses || 0), 0),
-    totalDraws: leaderboardData.reduce((sum, p) => sum + (p.draws || 0), 0),
     totalHatTricks: leaderboardData.reduce((sum, p) => sum + (p.hatTricks || 0), 0),
     topScorer: null,
     mostMatches: null,
@@ -140,23 +136,27 @@ export const Insights = () => {
   const [selectedSeason, setSelectedSeason] = useState("2026");
 
   // Load data based on season
-  const leaderboardDataForSeason = leaderboardData[selectedSeason] || [];
+  const leaderboardDataForSeason = useMemo(() => {
+    return leaderboardData[selectedSeason] || [];
+  }, [selectedSeason]);
   
   // Load attendance leaderboard data
   // Note: 2025 attendance data is incomplete, so we'll only use it for basic stats
-  const attendanceDataForSeason = attendanceLeaderboardByYear[selectedSeason] || null;
+  const attendanceDataForSeason = useMemo(() => {
+    return attendanceLeaderboardByYear[selectedSeason] || null;
+  }, [selectedSeason]);
   
-  const trackerDataForSeason =
-    selectedSeason === "2026" ? matchDataByYear[2026] : null;
+  const trackerDataForSeason = useMemo(() => {
+    return selectedSeason === "2026" ? matchDataByYear[2026] : null;
+  }, [selectedSeason]);
 
   // Calculate overall insights
   const overallInsights = useMemo(() => {
     return calculateOverallInsights(
       leaderboardDataForSeason,
-      attendanceDataForSeason,
-      selectedSeason
+      attendanceDataForSeason
     );
-  }, [leaderboardDataForSeason, attendanceDataForSeason, selectedSeason]);
+  }, [leaderboardDataForSeason, attendanceDataForSeason]);
 
   // Calculate quarterly insights (only for 2026)
   const quarterlyInsights = useMemo(() => {
@@ -210,24 +210,8 @@ export const Insights = () => {
             <div className="insight-value">{overallInsights.totalPlayers}</div>
           </div>
           <div className="insight-card">
-            <div className="insight-label">Total Matches</div>
-            <div className="insight-value">{overallInsights.totalMatches}</div>
-          </div>
-          <div className="insight-card">
             <div className="insight-label">Total Goals</div>
             <div className="insight-value">{overallInsights.totalGoals}</div>
-          </div>
-          <div className="insight-card">
-            <div className="insight-label">Total Wins</div>
-            <div className="insight-value">{overallInsights.totalWins}</div>
-          </div>
-          <div className="insight-card">
-            <div className="insight-label">Total Losses</div>
-            <div className="insight-value">{overallInsights.totalLosses}</div>
-          </div>
-          <div className="insight-card">
-            <div className="insight-label">Total Draws</div>
-            <div className="insight-value">{overallInsights.totalDraws}</div>
           </div>
           {overallInsights.totalHatTricks > 0 && (
             <div className="insight-card">
