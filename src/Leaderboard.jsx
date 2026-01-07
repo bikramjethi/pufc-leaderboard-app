@@ -38,11 +38,22 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [modalPlayer, setModalPlayer] = useState(null);
+  const [statsView, setStatsView] = useState("overall"); // "overall", "weekday", "weekend"
+
+  // Check if any player has weekend/weekday stats (for 2026+)
+  const hasDetailedStats = useMemo(() => {
+    return players.some(player => player.weekendStats && player.weekdayStats);
+  }, [players]);
 
   // Check if any player has the ownGoals key to conditionally show OG column
   const hasOwnGoals = useMemo(() => {
     return players.some(player => player.ownGoals !== undefined);
   }, [players]);
+
+  // Reset statsView when year changes
+  useEffect(() => {
+    setStatsView("overall");
+  }, [selectedYear]);
 
   // Build columns dynamically based on data
   const columns = useMemo(() => {
@@ -93,10 +104,35 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
     }
   };
 
+  // Transform players based on selected statsView (overall, weekday, weekend)
+  const transformedPlayers = useMemo(() => {
+    if (statsView === "overall" || !hasDetailedStats) {
+      return players;
+    }
+    
+    // For weekday/weekend views, extract the relevant stats
+    return players.map(player => {
+      const periodStats = statsView === "weekday" ? player.weekdayStats : player.weekendStats;
+      if (!periodStats) return player;
+      
+      return {
+        ...player,
+        matches: periodStats.matches || 0,
+        wins: periodStats.wins || 0,
+        losses: periodStats.losses || 0,
+        draws: periodStats.draws || 0,
+        cleanSheets: periodStats.cleanSheets || 0,
+        goals: periodStats.goals || 0,
+        hatTricks: periodStats.hatTricks || 0,
+        ownGoals: periodStats.ownGoals || 0,
+      };
+    });
+  }, [players, statsView, hasDetailedStats]);
+
   // Add calculated percentages to players
   const playersWithPct = useMemo(() => {
-    return players.map(calcPercentages);
-  }, [players]);
+    return transformedPlayers.map(calcPercentages);
+  }, [transformedPlayers]);
 
   // Filter players by search term
   const filteredPlayers = useMemo(() => {
@@ -341,10 +377,11 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
             const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
             const link = document.createElement("a");
             const url = URL.createObjectURL(blob);
+            const viewSuffix = statsView !== "overall" && hasDetailedStats ? `-${statsView}` : "";
             const fileName = isAllTime 
               ? "leaderboard-all-time.csv"
               : selectedYear 
-                ? `leaderboard-${selectedYear}.csv`
+                ? `leaderboard-${selectedYear}${viewSuffix}.csv`
                 : `leaderboard-${new Date().getFullYear()}.csv`;
             link.setAttribute("href", url);
             link.setAttribute("download", fileName);
@@ -358,6 +395,31 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
           📥 Download CSV
         </button>
       </div>
+
+      {/* Stats View Sub-tabs - only show for specific years with detailed stats */}
+      {selectedYear && !isAllTime && hasDetailedStats && (
+        <div className="stats-view-tabs">
+          <button
+            className={`stats-view-tab ${statsView === "overall" ? "active" : ""}`}
+            onClick={() => setStatsView("overall")}
+          >
+            📊 Overall
+          </button>
+          <button
+            className={`stats-view-tab ${statsView === "weekday" ? "active" : ""}`}
+            onClick={() => setStatsView("weekday")}
+          >
+            🌙 Weekday
+          </button>
+          <button
+            className={`stats-view-tab ${statsView === "weekend" ? "active" : ""}`}
+            onClick={() => setStatsView("weekend")}
+          >
+            ☀️ Weekend
+          </button>
+        </div>
+      )}
+
       <div className="table-container">
         <table className="leaderboard-table">
           <thead>
