@@ -1136,12 +1136,158 @@ body::before {
   border: 1px solid var(--border-color);
   border-radius: 16px;
   width: 100%;
-  max-width: 480px;
+  max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
   animation: slideUp 0.3s ease;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Trading Card Style Header */
+.modal-card-header {
+  position: relative;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+}
+
+/* Geometric Border Pattern - Inspired by football cards */
+.card-border-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.border-stripe {
+  position: absolute;
+  width: 40px;
+  height: 200%;
+  transform-origin: top left;
+}
+
+.stripe-1 {
+  left: -10px;
+  top: -20%;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(220, 38, 38, 0.9) 20%, 
+    rgba(0, 0, 0, 0.8) 40%, 
+    rgba(34, 197, 94, 0.9) 60%, 
+    transparent 80%
+  );
+  transform: rotate(25deg);
+}
+
+.stripe-2 {
+  right: -10px;
+  top: -20%;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(34, 197, 94, 0.9) 20%, 
+    rgba(0, 0, 0, 0.8) 40%, 
+    rgba(220, 38, 38, 0.9) 60%, 
+    transparent 80%
+  );
+  transform: rotate(-25deg);
+  transform-origin: top right;
+}
+
+.stripe-3 {
+  display: none;
+}
+
+/* Player Image Container */
+.card-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+.card-player-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  filter: brightness(1.05) contrast(1.08) saturate(1.05);
+}
+
+.card-image-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, 
+    rgba(0, 0, 0, 0.95) 0%, 
+    rgba(0, 0, 0, 0.7) 40%, 
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Player Info Overlay */
+.card-player-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  z-index: 3;
+}
+
+.card-info-content {
+  flex: 1;
+}
+
+.card-player-name {
+  font-family: 'Bebas Neue', 'Impact', 'Arial Black', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1;
+}
+
+.card-position-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.card-position-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.card-position-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-football-icon {
+  font-size: 2.5rem;
+  opacity: 0.9;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 @keyframes slideUp {
@@ -1155,17 +1301,19 @@ body::before {
   }
 }
 
-.modal-close {
+/* Close Button for Trading Card */
+.modal-card-header .modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  color: var(--text-muted);
-  width: 36px;
-  height: 36px;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -1174,33 +1322,10 @@ body::before {
   z-index: 10;
 }
 
-.modal-close:hover {
-  background: var(--bg-hover);
-  border-color: var(--accent-primary);
-  color: var(--text-primary);
-}
-
-/* Modal Header */
-.modal-header {
-  padding: 2rem 2rem 1.5rem;
-  text-align: center;
-  border-bottom: 1px solid var(--border-color);
-  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
-}
-
-.modal-header .position-badge {
-  font-size: 0.7rem;
-  padding: 0.35rem 0.75rem;
-  margin-bottom: 0.75rem;
-  display: inline-block;
-}
-
-.modal-player-name {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0;
-  letter-spacing: -0.02em;
+.modal-card-header .modal-close:hover {
+  background: rgba(220, 38, 38, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
 }
 
 /* Key Stats */
@@ -1209,7 +1334,8 @@ body::before {
   justify-content: center;
   gap: 1rem;
   padding: 1.5rem 1rem;
-  background: var(--bg-secondary);
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .key-stat {

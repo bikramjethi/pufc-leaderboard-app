@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { getPlayerImage } from "./utils/playerImages";
 
 export const PlayerModal = ({ player, allSeasonData, isAllTime = false, onClose }) => {
   // Close on Escape key
@@ -55,20 +56,42 @@ export const PlayerModal = ({ player, allSeasonData, isAllTime = false, onClose 
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="player-modal">
-        <button className="modal-close" onClick={onClose}>✕</button>
-
-        {/* Header */}
-        <div className="modal-header">
-          {player.position && Array.isArray(player.position) && player.position.length > 0 && (
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
-              {player.position.map((pos, idx) => (
-                <span key={idx} className={`position-badge position-${pos.toLowerCase()}`}>
-                  {pos}
-                </span>
-              ))}
+        {/* Trading Card Style Header */}
+        <div className="modal-card-header">
+          {/* Geometric Border Pattern */}
+          <div className="card-border-pattern">
+            <div className="border-stripe stripe-1"></div>
+            <div className="border-stripe stripe-2"></div>
+            <div className="border-stripe stripe-3"></div>
+          </div>
+          
+          {/* Player Image Container */}
+          <div className="card-image-container">
+            <img 
+              src={getPlayerImage(player.name)} 
+              alt={player.name}
+              className="card-player-image"
+            />
+            {/* Gradient Overlay for text readability */}
+            <div className="card-image-gradient"></div>
+          </div>
+          
+          {/* Player Info Overlay */}
+          <div className="card-player-info">
+            <div className="card-info-content">
+              <h2 className="card-player-name">{player.name}</h2>
+              {player.position && Array.isArray(player.position) && player.position.length > 0 && (
+                <div className="card-position-row">
+                  <span className="card-position-label">Position:</span>
+                  <span className="card-position-value">{player.position.join(' / ')}</span>
+                </div>
+              )}
             </div>
-          )}
-          <h2 className="modal-player-name">{player.name}</h2>
+            <div className="card-football-icon">⚽</div>
+          </div>
+          
+          {/* Close Button */}
+          <button className="modal-close" onClick={onClose}>✕</button>
         </div>
 
         {/* Key Stats */}
