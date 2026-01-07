@@ -9,7 +9,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 2,
@@ -21,7 +42,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 1,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 3,
@@ -33,7 +75,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 4,
@@ -45,7 +108,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 5,
@@ -57,7 +141,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 6,
@@ -69,7 +174,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 7,
@@ -81,7 +207,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 1,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 8,
@@ -93,7 +240,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 9,
@@ -105,7 +273,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 4,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 10,
@@ -117,7 +306,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 2,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 11,
@@ -129,7 +339,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 12,
@@ -141,7 +372,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 13,
@@ -153,7 +405,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 14,
@@ -165,7 +438,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 4,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 15,
@@ -177,7 +471,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 16,
@@ -189,7 +504,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 4,
-    "hatTricks": 1
+    "hatTricks": 1,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 17,
@@ -201,7 +537,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 18,
@@ -213,7 +570,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 19,
@@ -225,7 +603,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 1,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 20,
@@ -237,7 +636,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 21,
@@ -249,7 +669,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 22,
@@ -261,7 +702,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 23,
@@ -273,7 +735,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 24,
@@ -285,7 +768,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 1,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 25,
@@ -297,7 +801,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 1,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 26,
@@ -309,7 +834,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 27,
@@ -321,7 +867,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 28,
@@ -333,7 +900,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 29,
@@ -345,7 +933,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 30,
@@ -357,7 +966,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 31,
@@ -369,7 +999,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 32,
@@ -381,7 +1032,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 33,
@@ -393,7 +1065,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 34,
@@ -405,7 +1098,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 35,
@@ -417,7 +1131,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 50,
@@ -429,7 +1164,28 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   },
   {
     "id": 51,
@@ -441,6 +1197,27 @@
     "draws": 0,
     "cleanSheets": 0,
     "goals": 0,
-    "hatTricks": 0
+    "hatTricks": 0,
+    "ownGoals": 0,
+    "weekendStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    },
+    "weekdayStats": {
+      "matches": 0,
+      "wins": 0,
+      "losses": 0,
+      "draws": 0,
+      "cleanSheets": 0,
+      "goals": 0,
+      "hatTricks": 0,
+      "ownGoals": 0
+    }
   }
 ]
