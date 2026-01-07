@@ -18,6 +18,18 @@ const attendanceLeaderboardPath = path.join(__dirname, `../src/data/attendance-d
 const mainLeaderboardPath = path.join(__dirname, `../src/data/leaderboard-data/${year}.json`);
 const playerProfilesPath = path.join(__dirname, `../src/data/player-profiles.json`);
 
+// Default stats structure for weekend/weekday
+const createEmptyStats = () => ({
+  matches: 0,
+  wins: 0,
+  losses: 0,
+  draws: 0,
+  cleanSheets: 0,
+  goals: 0,
+  hatTricks: 0,
+  ownGoals: 0
+});
+
 try {
   // Read all necessary files
   const trackerData = JSON.parse(fs.readFileSync(trackerPath, 'utf8'));
@@ -58,6 +70,7 @@ try {
     match.attendance?.forEach((playerName) => {
       if (!leaderboardStats.has(playerName)) {
         leaderboardStats.set(playerName, {
+          // Overall stats
           matches: 0,
           wins: 0,
           losses: 0,
@@ -65,18 +78,33 @@ try {
           goals: 0,
           hatTricks: 0,
           cleanSheets: 0,
+          ownGoals: 0,
+          // Weekend and weekday stats
+          weekendStats: createEmptyStats(),
+          weekdayStats: createEmptyStats(),
         });
       }
       const stats = leaderboardStats.get(playerName);
+      const periodStats = isWeekend ? stats.weekendStats : stats.weekdayStats;
+      
+      // Update match counts
       stats.matches++;
+      periodStats.matches++;
 
       // Determine result
-      if (match.winners?.includes(playerName)) {
+      const isWinner = match.winners?.includes(playerName);
+      const isLoser = match.losers?.includes(playerName);
+      const isDraw = match.winners?.length === 0 && match.losers?.length === 0;
+      
+      if (isWinner) {
         stats.wins++;
-      } else if (match.losers?.includes(playerName)) {
+        periodStats.wins++;
+      } else if (isLoser) {
         stats.losses++;
-      } else if (match.winners?.length === 0 && match.losers?.length === 0) {
+        periodStats.losses++;
+      } else if (isDraw) {
         stats.draws++;
+        periodStats.draws++;
       }
 
       // Count goals and hat tricks
@@ -86,15 +114,36 @@ try {
         matchGoals += scorer.goals || 0;
       });
       stats.goals += matchGoals;
+      periodStats.goals += matchGoals;
+      
       // Hat trick is 3+ goals in a single match
       if (matchGoals >= 3) {
         stats.hatTricks++;
+        periodStats.hatTricks++;
       }
 
-      // Count clean sheets
-      if (match.cleanSheets?.includes(playerName)) {
-        stats.cleanSheets++;
+      // Count clean sheets - handle both array of strings and array of objects
+      let hasCleanSheet = false;
+      if (match.cleanSheets && Array.isArray(match.cleanSheets)) {
+        if (typeof match.cleanSheets[0] === 'string') {
+          hasCleanSheet = match.cleanSheets.includes(playerName);
+        } else {
+          hasCleanSheet = match.cleanSheets.some(cs => cs.name === playerName);
+        }
       }
+      if (hasCleanSheet) {
+        stats.cleanSheets++;
+        periodStats.cleanSheets++;
+      }
+
+      // Count own goals
+      const playerOwnGoals = match.ownGoals?.filter(og => og.name === playerName) || [];
+      let matchOwnGoals = 0;
+      playerOwnGoals.forEach((og) => {
+        matchOwnGoals += og.goals || 1; // Default to 1 if goals not specified
+      });
+      stats.ownGoals += matchOwnGoals;
+      periodStats.ownGoals += matchOwnGoals;
     });
   });
 
@@ -187,6 +236,9 @@ try {
     ? Math.max(...mainLeaderboard.map(p => p.id))
     : 0;
 
+  // Track total own goals for logging
+  let totalOwnGoals = 0;
+
   // Update existing players and add new ones
   leaderboardStats.forEach((stats, playerName) => {
     let player = existingLeaderboardPlayers.get(playerName);
@@ -207,13 +259,27 @@ try {
         cleanSheets: 0,
         goals: 0,
         hatTricks: 0,
+        ownGoals: 0,
+        weekendStats: createEmptyStats(),
+        weekdayStats: createEmptyStats(),
       };
       mainLeaderboard.push(player);
       existingLeaderboardPlayers.set(playerName, player);
       console.log(`  ➕ Added new player to main leaderboard: ${playerName} (${position})`);
     }
 
-    // Update stats
+    // Ensure the player has weekendStats and weekdayStats (for existing players)
+    if (!player.weekendStats) {
+      player.weekendStats = createEmptyStats();
+    }
+    if (!player.weekdayStats) {
+      player.weekdayStats = createEmptyStats();
+    }
+    if (player.ownGoals === undefined) {
+      player.ownGoals = 0;
+    }
+
+    // Update overall stats
     player.matches = stats.matches;
     player.wins = stats.wins;
     player.losses = stats.losses;
@@ -221,6 +287,15 @@ try {
     player.goals = stats.goals;
     player.hatTricks = stats.hatTricks;
     player.cleanSheets = stats.cleanSheets;
+    player.ownGoals = stats.ownGoals;
+    
+    // Update weekend stats
+    player.weekendStats = { ...stats.weekendStats };
+    
+    // Update weekday stats
+    player.weekdayStats = { ...stats.weekdayStats };
+
+    totalOwnGoals += stats.ownGoals;
   });
 
   // Calculate and update goal totals in tracker file
@@ -276,8 +351,8 @@ try {
   console.log(`   - Main leaderboard: ${mainLeaderboard.length} players`);
   console.log(`   - Total matches processed: ${playedMatches.length}`);
   console.log(`   - Total goals: ${totalGoals} (Weekend: ${weekendGoals}, Weekday: ${weekdayGoals})`);
+  console.log(`   - Total own goals: ${totalOwnGoals}`);
 } catch (error) {
   console.error('❌ Error syncing stats:', error);
   process.exit(1);
 }
-
