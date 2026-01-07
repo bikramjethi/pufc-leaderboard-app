@@ -5,6 +5,7 @@ export const Row = ({
   showHighlight = true,
   showCheckbox = true,
   showPlayerModal = true,
+  showOwnGoals = false,
   isSelected = false, 
   onSelect,
   onPlayerClick
@@ -103,6 +104,7 @@ export const Row = ({
         )}
       </td>
       <td className={`stat ${getHighlightClass("hatTricks")}`}>{player.hatTricks}</td>
+      {showOwnGoals && <td className="stat">{player.ownGoals ?? 0}</td>}
     </tr>
   );
 };

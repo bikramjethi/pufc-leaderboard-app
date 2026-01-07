@@ -5,7 +5,7 @@ import { PlayerModal } from "./PlayerModal.jsx";
 import { config } from "./leaderboard-config.js";
 import { tickerMessages } from "./ticker-messages.js";
 
-const columns = [
+const baseColumns = [
   { key: "name", label: "Player", className: "player-col", sortable: true, tooltip: "Player Name" },
   { key: "position", label: "Pos", className: "position-col", sortable: true, tooltip: "Playing Position" },
   { key: "matches", label: "MP", className: "stat-col", sortable: true, tooltip: "Matches Played" },
@@ -18,6 +18,9 @@ const columns = [
   { key: "goals", label: "G", className: "stat-col", sortable: true, tooltip: "Goals Scored" },
   { key: "hatTricks", label: "HT", className: "stat-col", sortable: true, tooltip: "Hat Tricks" },
 ];
+
+// OG column - only shown when data has ownGoals key
+const ogColumn = { key: "ownGoals", label: "OG", className: "stat-col", sortable: true, tooltip: "Own Goals" };
 
 // Helper to calculate percentages
 const calcPercentages = (player) => {
@@ -35,6 +38,19 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [modalPlayer, setModalPlayer] = useState(null);
+
+  // Check if any player has the ownGoals key to conditionally show OG column
+  const hasOwnGoals = useMemo(() => {
+    return players.some(player => player.ownGoals !== undefined);
+  }, [players]);
+
+  // Build columns dynamically based on data
+  const columns = useMemo(() => {
+    if (hasOwnGoals) {
+      return [...baseColumns, ogColumn];
+    }
+    return baseColumns;
+  }, [hasOwnGoals]);
 
   const handlePlayerClick = (player) => {
     if (config.ENABLE_PLAYER_MODAL) {
@@ -273,8 +289,8 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
             // Convert leaderboard data to CSV
             const csvRows = [];
             
-            // CSV Headers
-            csvRows.push([
+            // CSV Headers - conditionally include OG
+            const headers = [
               "Rank",
               "Player",
               "Position",
@@ -287,7 +303,9 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
               "Clean Sheets",
               "Goals",
               "Hat Tricks"
-            ].join(","));
+            ];
+            if (hasOwnGoals) headers.push("Own Goals");
+            csvRows.push(headers.join(","));
 
             // Add each player as a row
             sortedPlayers.forEach((player, index) => {
@@ -298,7 +316,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
                 ? ((player.losses / player.matches) * 100).toFixed(1)
                 : "0.0";
 
-              csvRows.push([
+              const row = [
                 index + 1,
                 player.name,
                 player.position,
@@ -311,7 +329,9 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
                 player.cleanSheets || 0,
                 player.goals || 0,
                 player.hatTricks || 0
-              ].join(","));
+              ];
+              if (hasOwnGoals) row.push(player.ownGoals || 0);
+              csvRows.push(row.join(","));
             });
 
             // Create CSV content
@@ -369,6 +389,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
                 showHighlight={config.ENABLE_MAX_HIGHLIGHT}
                 showCheckbox={config.ENABLE_COMPARISON}
                 showPlayerModal={config.ENABLE_PLAYER_MODAL}
+                showOwnGoals={hasOwnGoals}
                 isSelected={selectedPlayers.some((p) => p.id === player.id)}
                 onSelect={() => handlePlayerSelect(player)}
                 onPlayerClick={() => handlePlayerClick(player)}
@@ -388,6 +409,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
         <span><strong>CS</strong> Clean Sheets</span>
         <span><strong>G</strong> Goals</span>
         <span><strong>HT</strong> Hat Tricks</span>
+        {hasOwnGoals && <span><strong>OG</strong> Own Goals</span>}
         <span className="legend-divider"></span>
         <span className="legend-highlight">
           <strong className="highlight-gold">1st</strong>
