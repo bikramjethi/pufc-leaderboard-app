@@ -4,11 +4,13 @@
 import defaultImage from '../assets/player-profiles/default.jpeg';
 import jethiImage from '../assets/player-profiles/jethi.jpg';
 import vinitImage from '../assets/player-profiles/vinit.jpg';
+import rahulDhekImage from '../assets/player-profiles/rahuldhek.jpg';
 
 // Map player names (lowercase) to their profile images
 const playerImageMap = {
   'jethi': jethiImage,
   'vinit': vinitImage,
+  "rahul dhek": rahulDhekImage,
   // Add more player images here as they become available
   // 'ashish': ashishImage,
   // 'vinay': vinayImage,
