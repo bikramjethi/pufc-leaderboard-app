@@ -14,7 +14,7 @@ const availableYears = Object.keys(leaderboardData).sort((a, b) => b - a);
 function App() {
   const [activeTab, setActiveTab] = useState("leaderboard");
   // Default to 2025 if available, otherwise fall back to all-time
-  const defaultYear = availableYears.includes("2025") ? "2025" : "all-time";
+  const defaultYear = availableYears.includes("2026") ? "2026" : "all-time";
   const [selectedYear, setSelectedYear] = useState(defaultYear);
   const [players, setPlayers] = useState(() => {
     return defaultYear === "2025" ? leaderboardData["2025"] : aggregateAllTimeStats();

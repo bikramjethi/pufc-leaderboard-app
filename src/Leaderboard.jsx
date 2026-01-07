@@ -178,7 +178,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
     const playersForTopValues = playersWithPct.filter((p) => p.name !== "Others");
     
     // Higher is better for these stats
-    const higherIsBetter = ["matches", "wins", "draws", "winPct", "cleanSheets", "goals", "hatTricks"];
+    const higherIsBetter = ["matches", "wins", "draws", "winPct", "cleanSheets", "goals", "hatTricks", "ownGoals"];
     // Lower is better for these stats
     const lowerIsBetter = ["losses", "lossPct"];
     

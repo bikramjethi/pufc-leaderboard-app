@@ -114,7 +114,7 @@ export const Row = ({
         )}
       </td>
       <td className={`stat ${getHighlightClass("hatTricks")}`}>{player.hatTricks}</td>
-      {showOwnGoals && <td className="stat">{player.ownGoals ?? 0}</td>}
+      {showOwnGoals && <td className={`stat ${getHighlightClass("ownGoals")}`}>{player.ownGoals ?? 0}</td>}
     </tr>
   );
 };
