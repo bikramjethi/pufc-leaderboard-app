@@ -635,6 +635,13 @@ body::before {
   color: var(--text-primary);
 }
 
+.position-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  justify-content: center;
+}
+
 .position-badge {
   display: inline-block;
   padding: 0.25rem 0.5rem;
@@ -643,6 +650,33 @@ body::before {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Hybrid position styles (LB, RB, LW, RW, etc.) */
+.position-lb,
+.position-rb,
+.position-cb {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--position-def);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.position-lw,
+.position-rw,
+.position-lm,
+.position-rm,
+.position-cam,
+.position-cdm {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--position-mid);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.position-cf,
+.position-st {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--position-fwd);
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .position-fwd {

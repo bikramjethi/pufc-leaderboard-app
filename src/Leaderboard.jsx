@@ -138,11 +138,16 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
   const filteredPlayers = useMemo(() => {
     if (!searchTerm.trim()) return playersWithPct;
     const term = searchTerm.toLowerCase();
-    return playersWithPct.filter(
-      (player) =>
-        player.name.toLowerCase().includes(term) ||
-        player.position.toLowerCase().includes(term)
-    );
+    return playersWithPct.filter((player) => {
+      // Check name
+      if (player.name.toLowerCase().includes(term)) return true;
+      
+      // Check position (always an array)
+      const positions = player.position && Array.isArray(player.position) 
+        ? player.position 
+        : [];
+      return positions.some(pos => pos?.toLowerCase().includes(term));
+    });
   }, [playersWithPct, searchTerm]);
 
   const sortedPlayers = useMemo(() => {
@@ -352,10 +357,15 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
                 ? ((player.losses / player.matches) * 100).toFixed(1)
                 : "0.0";
 
+              // Position is always an array, join with "/" for CSV
+              const positionStr = player.position && Array.isArray(player.position)
+                ? player.position.join("/")
+                : "N/A";
+              
               const row = [
                 index + 1,
                 player.name,
-                player.position,
+                positionStr,
                 player.matches || 0,
                 player.wins || 0,
                 player.draws || 0,

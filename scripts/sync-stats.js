@@ -244,9 +244,12 @@ try {
     let player = existingLeaderboardPlayers.get(playerName);
 
     if (!player) {
-      // New player - get position from profiles or default to "MID"
+      // New player - get position from profiles or default to ["MID"]
       const profile = playerProfiles.find(p => p.name === playerName);
-      const position = profile?.position || 'MID';
+      // Position is always an array
+      const position = profile?.position && Array.isArray(profile.position) 
+        ? profile.position 
+        : ['MID'];
 
       player = {
         id: maxId + 1 + Array.from(leaderboardStats.keys()).indexOf(playerName),

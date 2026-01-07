@@ -59,9 +59,15 @@ export const PlayerModal = ({ player, allSeasonData, isAllTime = false, onClose 
 
         {/* Header */}
         <div className="modal-header">
-          <span className={`position-badge position-${player.position?.toLowerCase()}`}>
-            {player.position}
-          </span>
+          {player.position && Array.isArray(player.position) && player.position.length > 0 && (
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+              {player.position.map((pos, idx) => (
+                <span key={idx} className={`position-badge position-${pos.toLowerCase()}`}>
+                  {pos}
+                </span>
+              ))}
+            </div>
+          )}
           <h2 className="modal-player-name">{player.name}</h2>
         </div>
 

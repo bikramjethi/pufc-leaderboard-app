@@ -10,8 +10,10 @@ export const Row = ({
   onSelect,
   onPlayerClick
 }) => {
-  const position = player?.position ?? "N/A";
-  const positionClass = `position-badge position-${position.toLowerCase()}`;
+  // Position is always an array
+  const positions = player?.position && Array.isArray(player.position) 
+    ? player.position 
+    : ["N/A"];
   
   const getRankClass = () => {
     return "rank";
@@ -85,8 +87,16 @@ export const Row = ({
           player.name
         )}
       </td>
-      <td>
-        <span className={positionClass}>{player.position}</span>
+      <td className="position-cell">
+        {positions.map((pos, idx) => (
+          <span 
+            key={idx} 
+            className={`position-badge position-${pos.toLowerCase()}`}
+            title={pos}
+          >
+            {pos}
+          </span>
+        ))}
       </td>
       <td className={`stat ${getHighlightClass("matches")}`}>{player.matches}</td>
       <td className={`stat ${getHighlightClass("wins")}`}>{player.wins}</td>

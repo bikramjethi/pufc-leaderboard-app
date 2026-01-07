@@ -62,9 +62,17 @@ export const ComparePanel = ({ players = [], onClose }) => {
             <div key={player.id} className="compare-player-wrapper">
               {idx > 0 && <div className="compare-vs">VS</div>}
               <div className="compare-player">
-                <span className={`position-badge position-${(player.position ?? "N/A").toLowerCase()}`}>
-                  {player.position ?? "N/A"}
-                </span>
+                <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {player.position && Array.isArray(player.position) && player.position.length > 0 ? (
+                    player.position.map((pos, idx) => (
+                      <span key={idx} className={`position-badge position-${pos.toLowerCase()}`}>
+                        {pos}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="position-badge position-n/a">N/A</span>
+                  )}
+                </div>
                 <span className="compare-player-name">{player.name ?? "Unknown"}</span>
               </div>
             </div>

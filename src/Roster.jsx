@@ -3,6 +3,17 @@ import playerProfiles from "./data/player-profiles.json";
 
 const positionOrder = { GK: 0, DEF: 1, MID: 2, FWD: 3, ALL: 4 };
 
+// Map specific positions to their categories
+const getPositionCategory = (pos) => {
+  const upperPos = pos.toUpperCase();
+  if (upperPos === 'GK') return 'GK';
+  if (['DEF', 'CB', 'LB', 'RB'].includes(upperPos)) return 'DEF';
+  if (['MID', 'LM', 'RM', 'CAM', 'CDM'].includes(upperPos)) return 'MID';
+  if (['FWD', 'LW', 'RW', 'CF', 'ST'].includes(upperPos)) return 'FWD';
+  if (upperPos === 'ALL') return 'ALL';
+  return 'DEF'; // Default fallback
+};
+
 const getFilteredPlayers = (filterType) => {
     switch (filterType) {
         case "midweek":
@@ -24,8 +35,14 @@ export const Roster = ({ type }) => {
     const filteredPlayers = useMemo(() => {
         const players = getFilteredPlayers(type);
         return players.sort((a, b) => {
-            // Sort by position first, then by name
-            const posDiff = (positionOrder[a.position] || 99) - (positionOrder[b.position] || 99);
+            // Sort by first position first, then by name
+            const aPos = Array.isArray(a.position) && a.position.length > 0 
+              ? getPositionCategory(a.position[0]) 
+              : 'DEF';
+            const bPos = Array.isArray(b.position) && b.position.length > 0 
+              ? getPositionCategory(b.position[0]) 
+              : 'DEF';
+            const posDiff = (positionOrder[aPos] || 99) - (positionOrder[bPos] || 99);
             if (posDiff !== 0) return posDiff;
             return a.name.localeCompare(b.name);
         });
@@ -47,7 +64,16 @@ export const Roster = ({ type }) => {
     const getPositionCounts = () => {
         const counts = { GK: 0, DEF: 0, MID: 0, FWD: 0, ALL: 0 };
         filteredPlayers.forEach((player) => {
-            counts[player.position] = (counts[player.position] || 0) + 1;
+            // Count each position in the array
+            if (Array.isArray(player.position) && player.position.length > 0) {
+                player.position.forEach(pos => {
+                    const category = getPositionCategory(pos);
+                    counts[category] = (counts[category] || 0) + 1;
+                });
+            } else {
+                // Fallback for invalid data
+                counts.DEF = (counts.DEF || 0) + 1;
+            }
         });
         return counts;
     };
@@ -89,9 +115,17 @@ export const Roster = ({ type }) => {
                                     <td className="roster-rank-col">{index + 1}</td>
                                     <td className="roster-player-col">{player.name}</td>
                                     <td className="roster-position-col">
-                                        <span className={`position-badge position-${player.position.toLowerCase()}`}>
-                                            {player.position}
-                                        </span>
+                                        {Array.isArray(player.position) && player.position.length > 0 ? (
+                                            <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                                {player.position.map((pos, idx) => (
+                                                    <span key={idx} className={`position-badge position-${pos.toLowerCase()}`}>
+                                                        {pos}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <span className="position-badge position-n/a">N/A</span>
+                                        )}
                                     </td>
                                     <td className="roster-availability-col">
                                         {player.groupAvailibility === "ALLGAMES" ? (
