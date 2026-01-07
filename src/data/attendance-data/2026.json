@@ -77,19 +77,71 @@
       "id": "06-01-2026",
       "date": "06/01/2026",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": [],
-      "winners": [],
-      "losers": [],
-      "scorers": [],
-      "ownGoals": [],
-      "cleanSheets": [],
+      "attendance": [
+        "Rishav",
+        "Jethi",
+        "Ashish",
+        "Sourabh",
+        "Rishabh",
+        "Akshat",
+        "Aayush",
+        "Joe",
+        "Vinay",
+        "Pandey",
+        "Animesh",
+        "Vinit",
+        "John",
+        "Vikas",
+        "Subarna",
+        "Vinoth"
+      ],
+      "winners": [
+        "Vinay",
+        "Pandey",
+        "Animesh",
+        "Vinit",
+        "John",
+        "Vikas",
+        "Subarna",
+        "Vinoth"
+      ],
+      "losers": [
+        "Rishav",
+        "Jethi",
+        "Ashish",
+        "Sourabh",
+        "Rishabh",
+        "Akshat",
+        "Aayush",
+        "Joe"
+      ],
+      "scorers": [
+        {
+          "name": "Vinay",
+          "goals": 2,
+          "team": "BLACK"
+        },
+        {
+          "name": "Vinoth",
+          "goals": 4,
+          "team": "BLACK"
+        },
+        { "name": "Animesh", "goals": 2, "team": "BLACK" },
+        { "name": "Subarna", "goals": 1, "team": "BLACK" },
+        { "name": "Rishabh", "goals": 2, "team": "WHITE" },
+        { "name": "Rishav", "goals": 1, "team": "WHITE" },
+        { "name": "Akshat", "goals": 1, "team": "WHITE" },
+        { "name": "Aayush", "goals": 1, "team": "WHITE" }
+      ],
+      "ownGoals": [{ "name": "John", "goals": 1, "forTeam": "BLACK" }],
+      "cleanSheets": [{ "name": "Rishav", "team": "WHITE" }],
       "scoreline": {
-        "BLUE": 0,
-        "RED": 0
+        "WHITE": 6,
+        "BLACK": 9
       },
-      "totalGoals": 0
+      "totalGoals": 15
     },
     {
       "id": "10-01-2026",
