@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "totalGoals": 5,
+  "totalGoals": 20,
   "weekendGoals": 5,
-  "weekdayGoals": 0,
+  "weekdayGoals": 15,
   "matches": [
     {
       "id": "03-01-2026",
@@ -128,15 +128,50 @@
           "goals": 4,
           "team": "BLACK"
         },
-        { "name": "Animesh", "goals": 2, "team": "BLACK" },
-        { "name": "Subarna", "goals": 1, "team": "BLACK" },
-        { "name": "Rishabh", "goals": 2, "team": "WHITE" },
-        { "name": "Rishav", "goals": 1, "team": "WHITE" },
-        { "name": "Akshat", "goals": 1, "team": "WHITE" },
-        { "name": "Aayush", "goals": 1, "team": "WHITE" }
+        {
+          "name": "Animesh",
+          "goals": 2,
+          "team": "BLACK"
+        },
+        {
+          "name": "Subarna",
+          "goals": 1,
+          "team": "BLACK"
+        },
+        {
+          "name": "Rishabh",
+          "goals": 2,
+          "team": "WHITE"
+        },
+        {
+          "name": "Rishav",
+          "goals": 1,
+          "team": "WHITE"
+        },
+        {
+          "name": "Akshat",
+          "goals": 1,
+          "team": "WHITE"
+        },
+        {
+          "name": "Aayush",
+          "goals": 1,
+          "team": "WHITE"
+        }
       ],
-      "ownGoals": [{ "name": "John", "goals": 1, "forTeam": "BLACK" }],
-      "cleanSheets": [{ "name": "Rishav", "team": "WHITE" }],
+      "ownGoals": [
+        {
+          "name": "John",
+          "goals": 1,
+          "forTeam": "BLACK"
+        }
+      ],
+      "cleanSheets": [
+        {
+          "name": "Rishav",
+          "team": "WHITE"
+        }
+      ],
       "scoreline": {
         "WHITE": 6,
         "BLACK": 9
