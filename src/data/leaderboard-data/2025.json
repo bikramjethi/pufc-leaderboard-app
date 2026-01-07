@@ -73,7 +73,8 @@
     "id": 6,
     "name": "Joe",
     "position": [
-      "DEF"
+      "GK",
+      "ST"
     ],
     "matches": 67,
     "wins": 25,
