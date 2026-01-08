@@ -24,6 +24,7 @@ function App() {
     return localStorage.getItem("pufc-theme") || "dark";
   });
   const [isSmall, setIsSmall] = useState(() => isSmallScreen());
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (selectedYear === "all-time") {
@@ -89,61 +90,97 @@ function App() {
       <main className="main-content">
         {/* Tab Navigation */}
         <div className="tab-nav">
+          {/* Mobile Hamburger Menu Button */}
           <button
-            className={`tab-btn ${activeTab === "leaderboard" ? "active" : ""}`}
-            onClick={() => {
-              setActiveTab("leaderboard");
-              // Reset to 2025 view when switching back to leaderboard (if available)
-              const resetYear = availableYears.includes("2025") ? "2025" : "all-time";
-              setSelectedYear(resetYear);
-              setPlayers(resetYear === "2025" ? leaderboardData["2025"] : aggregateAllTimeStats());
-            }}
+            className="hamburger-btn"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
           >
-            📊 {isSmall ? "Board" : "Leaderboard"}
+            <span className={`hamburger-icon ${mobileMenuOpen ? "open" : ""}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
           </button>
-          {config.ENABLE_ATTENDANCE && (
+
+          {/* Tab Buttons Container */}
+          <div className={`tab-buttons ${mobileMenuOpen ? "mobile-open" : ""}`}>
             <button
-              className={`tab-btn ${activeTab === "attendance" ? "active" : ""
-                }`}
-              onClick={() => setActiveTab("attendance")}
+              className={`tab-btn ${activeTab === "leaderboard" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("leaderboard");
+                setMobileMenuOpen(false);
+                // Reset to 2025 view when switching back to leaderboard (if available)
+                const resetYear = availableYears.includes("2025") ? "2025" : "all-time";
+                setSelectedYear(resetYear);
+                setPlayers(resetYear === "2025" ? leaderboardData["2025"] : aggregateAllTimeStats());
+              }}
             >
-              📅 Attendance
+              📊 {isSmall ? "Board" : "Leaderboard"}
             </button>
-          )}
-          {config.INSIGHTS?.enabled && (
+            {config.ENABLE_ATTENDANCE && (
+              <button
+                className={`tab-btn ${activeTab === "attendance" ? "active" : ""
+                  }`}
+                onClick={() => {
+                  setActiveTab("attendance");
+                  setMobileMenuOpen(false);
+                }}
+              >
+                📅 Attendance
+              </button>
+            )}
+            {config.INSIGHTS?.enabled && (
+              <button
+                className={`tab-btn ${activeTab === "insights" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("insights");
+                  setMobileMenuOpen(false);
+                }}
+              >
+                📈 Insights
+              </button>
+            )}
+            {config.SCORING_TRENDS?.enabled && (
+              <button
+                className={`tab-btn ${activeTab === "scoring-trends" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("scoring-trends");
+                  setMobileMenuOpen(false);
+                }}
+              >
+                📊 Trends
+              </button>
+            )}
             <button
-              className={`tab-btn ${activeTab === "insights" ? "active" : ""}`}
-              onClick={() => setActiveTab("insights")}
+              className={`tab-btn ${activeTab === "midweek-roster" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("midweek-roster");
+                setMobileMenuOpen(false);
+              }}
             >
-              📈 Insights
+              Midweek
             </button>
-          )}
-          {config.SCORING_TRENDS?.enabled && (
             <button
-              className={`tab-btn ${activeTab === "scoring-trends" ? "active" : ""}`}
-              onClick={() => setActiveTab("scoring-trends")}
+              className={`tab-btn ${activeTab === "weekend-roster" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("weekend-roster");
+                setMobileMenuOpen(false);
+              }}
             >
-              📊 Trends
+              Weekend
             </button>
-          )}
-          <button
-            className={`tab-btn ${activeTab === "midweek-roster" ? "active" : ""}`}
-            onClick={() => setActiveTab("midweek-roster")}
-          >
-            Midweek
-          </button>
-          <button
-            className={`tab-btn ${activeTab === "weekend-roster" ? "active" : ""}`}
-            onClick={() => setActiveTab("weekend-roster")}
-          >
-            Weekend
-          </button>
-          <button
-            className={`tab-btn ${activeTab === "inactive-players" ? "active" : ""}`}
-            onClick={() => setActiveTab("inactive-players")}
-          >
-            ⚪ Inactive
-          </button>
+            <button
+              className={`tab-btn ${activeTab === "inactive-players" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("inactive-players");
+                setMobileMenuOpen(false);
+              }}
+            >
+              ⚪ Inactive
+            </button>
+          </div>
+
           {/* Controls - Season selector for leaderboard tab only */}
           {activeTab === "leaderboard" && (
             <div className="controls">
@@ -168,6 +205,11 @@ function App() {
             </div>
           )}
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {mobileMenuOpen && (
+          <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)} />
+        )}
 
         {/* Tab Content */}
         {activeTab === "leaderboard" ? (

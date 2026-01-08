@@ -2043,6 +2043,82 @@ body::before {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  position: relative;
+  align-items: center;
+}
+
+/* Hamburger Menu Button - Hidden on desktop */
+.hamburger-btn {
+  display: none;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.75rem;
+  cursor: pointer;
+  z-index: 101;
+  transition: all 0.2s ease;
+}
+
+.hamburger-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-primary);
+}
+
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 20px;
+  height: 16px;
+  position: relative;
+}
+
+.hamburger-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  position: absolute;
+}
+
+.hamburger-icon span:nth-child(1) {
+  top: 0;
+}
+
+.hamburger-icon span:nth-child(2) {
+  top: 7px;
+}
+
+.hamburger-icon span:nth-child(3) {
+  top: 14px;
+}
+
+.hamburger-icon.open span:nth-child(1) {
+  transform: rotate(45deg);
+  top: 7px;
+}
+
+.hamburger-icon.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-icon.open span:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 7px;
+}
+
+/* Tab Buttons Container */
+.tab-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+  display: none;
 }
 
 .tab-btn {
@@ -2071,6 +2147,70 @@ body::before {
   border-color: var(--accent-primary);
   color: white;
   font-weight: 600;
+}
+
+/* Mobile Styles for Tab Navigation */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tab-buttons {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    gap: 0.5rem;
+  }
+
+  .tab-buttons.mobile-open {
+    display: flex;
+    animation: slideDown 0.2s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .tab-buttons .tab-btn {
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+  }
+
+  .mobile-menu-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .controls {
+    margin-left: auto;
+  }
 }
 
 /* Sub-tab Navigation (within Attendance) */
@@ -3373,5 +3513,264 @@ body::before {
   .match-details-table td {
     padding: 0.5rem 0.75rem;
     font-size: 0.85rem;
+  }
+}
+
+/* Trends Sub-Navigation */
+.trends-sub-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.trends-sub-tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.trends-sub-tab:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.trends-sub-tab.active {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+}
+
+/* Scorers Trend Section */
+.scorers-trend-section {
+  margin-top: 1rem;
+}
+
+.scorers-trend-table-container {
+  overflow-x: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.scorers-trend-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+
+.scorers-trend-table thead {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, #16a34a 100%);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.scorers-trend-table th {
+  padding: 1rem 0.75rem;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scorers-trend-table th:last-child {
+  border-right: none;
+}
+
+.th-icon {
+  margin-right: 0.25rem;
+}
+
+.scorers-trend-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.scorers-trend-table tbody tr.odd {
+  background-color: var(--bg-card);
+}
+
+.scorers-trend-table tbody tr.even {
+  background-color: var(--bg-zebra);
+}
+
+.scorers-trend-table tbody tr:hover {
+  background-color: var(--bg-hover);
+}
+
+.scorers-trend-table td {
+  padding: 0.75rem;
+  text-align: center;
+  border-right: 1px solid var(--border-color);
+}
+
+.scorers-trend-table td:last-child {
+  border-right: none;
+}
+
+.week-cell {
+  font-weight: 600;
+  min-width: 60px;
+}
+
+.week-number {
+  display: inline-block;
+  background: var(--bg-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.scorer-cell {
+  min-width: 150px;
+}
+
+.scorer-cell.no-match {
+  opacity: 0.5;
+}
+
+.no-match-text {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+}
+
+.scorer-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.scorer-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.scorer-goals {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.weekday-goals {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.weekend-goals {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.overall-goals {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--accent-primary);
+}
+
+.scorer-info.overall .scorer-name {
+  color: var(--accent-primary);
+}
+
+.overall-cell {
+  background: rgba(34, 197, 94, 0.05);
+}
+
+/* Scorers Trend Legend */
+.scorers-trend-legend {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.legend-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.legend-icon {
+  font-size: 1rem;
+}
+
+/* Responsive Styles for Scorers Trend */
+@media (max-width: 768px) {
+  .trends-sub-nav {
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .trends-sub-tab {
+    padding: 0.625rem;
+    font-size: 0.85rem;
+  }
+
+  .scorers-trend-table th {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .scorers-trend-table td {
+    padding: 0.5rem 0.4rem;
+  }
+
+  .scorer-info {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .scorer-name {
+    font-size: 0.8rem;
+  }
+
+  .scorer-goals {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .scorers-trend-table {
+    min-width: 400px;
+  }
+
+  .week-number {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .scorer-cell {
+    min-width: 100px;
   }
 }
