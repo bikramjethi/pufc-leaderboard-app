@@ -27,5 +27,12 @@ export const config = {
     seasons: ["2024", "2025"],  // Seasons available in the Insights tab
     defaultSeason: "2025",       // Default season shown on Insights tab
   },
+
+  // Scoring Trends Settings
+  SCORING_TRENDS: {
+    enabled: true,               // Show/hide the Scoring Trends tab
+    seasons: ["2026"],           // Seasons with per-match data available
+    defaultSeason: "2026",       // Default season shown on Scoring Trends tab
+  },
 };
 

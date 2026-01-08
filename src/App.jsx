@@ -3,6 +3,7 @@ import { Leaderboard } from "./Leaderboard.jsx";
 import { Attendance } from "./Attendance.jsx";
 import { Roster } from "./Roster.jsx";
 import { Insights } from "./Insights.jsx";
+import { ScoringTrends } from "./ScoringTrends.jsx";
 import "./App.css";
 import { config } from "./leaderboard-config.js";
 import { isSmallScreen } from "./utils/isSmallScreen.js";
@@ -62,15 +63,17 @@ function App() {
                 ? "Match Attendance"
                 : activeTab === "insights"
                   ? "Season Insights"
-                  : activeTab === "midweek-roster"
-                    ? "Midweek Roster"
-                    : activeTab === "weekend-roster"
-                      ? "Weekend Roster"
-                      : activeTab === "inactive-players"
-                        ? "Inactive Players"
-                        : selectedYear === "all-time"
-                          ? "All-Time Career Stats"
-                          : "Player Statistics"}
+                  : activeTab === "scoring-trends"
+                    ? "Scoring Trends"
+                    : activeTab === "midweek-roster"
+                      ? "Midweek Roster"
+                      : activeTab === "weekend-roster"
+                        ? "Weekend Roster"
+                        : activeTab === "inactive-players"
+                          ? "Inactive Players"
+                          : selectedYear === "all-time"
+                            ? "All-Time Career Stats"
+                            : "Player Statistics"}
             </p>
           </div>
           <button
@@ -113,6 +116,14 @@ function App() {
               onClick={() => setActiveTab("insights")}
             >
               📈 Insights
+            </button>
+          )}
+          {config.SCORING_TRENDS?.enabled && (
+            <button
+              className={`tab-btn ${activeTab === "scoring-trends" ? "active" : ""}`}
+              onClick={() => setActiveTab("scoring-trends")}
+            >
+              📊 Trends
             </button>
           )}
           <button
@@ -170,6 +181,8 @@ function App() {
           <Attendance />
         ) : activeTab === "insights" ? (
           <Insights />
+        ) : activeTab === "scoring-trends" ? (
+          <ScoringTrends />
         ) : activeTab === "midweek-roster" ? (
           <Roster type="midweek" />
         ) : activeTab === "weekend-roster" ? (
