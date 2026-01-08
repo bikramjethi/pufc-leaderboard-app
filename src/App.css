@@ -2149,6 +2149,89 @@ body::before {
   font-weight: 600;
 }
 
+/* Desktop Roster Dropdown */
+.roster-dropdown-container {
+  position: relative;
+}
+
+.roster-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dropdown-arrow {
+  font-size: 0.6rem;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.roster-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  min-width: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  z-index: 100;
+  animation: dropdownSlide 0.15s ease;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.roster-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.roster-dropdown-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.roster-dropdown-item.active {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+/* Desktop/Mobile visibility utilities */
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
 /* Mobile Styles for Tab Navigation */
 @media (max-width: 768px) {
   .hamburger-btn {
@@ -2210,6 +2293,15 @@ body::before {
 
   .controls {
     margin-left: auto;
+  }
+
+  /* Hide desktop dropdown, show mobile buttons */
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: flex !important;
   }
 }
 

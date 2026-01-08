@@ -25,6 +25,21 @@ function App() {
   });
   const [isSmall, setIsSmall] = useState(() => isSmallScreen());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [rosterDropdownOpen, setRosterDropdownOpen] = useState(false);
+
+  // Check if any roster tab is active
+  const isRosterActive = ["midweek-roster", "weekend-roster", "inactive-players"].includes(activeTab);
+
+  // Close roster dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (rosterDropdownOpen && !e.target.closest('.roster-dropdown-container')) {
+        setRosterDropdownOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [rosterDropdownOpen]);
 
   useEffect(() => {
     if (selectedYear === "all-time") {
@@ -110,6 +125,7 @@ function App() {
               onClick={() => {
                 setActiveTab("leaderboard");
                 setMobileMenuOpen(false);
+                setRosterDropdownOpen(false);
                 // Reset to 2025 view when switching back to leaderboard (if available)
                 const resetYear = availableYears.includes("2025") ? "2025" : "all-time";
                 setSelectedYear(resetYear);
@@ -125,6 +141,7 @@ function App() {
                 onClick={() => {
                   setActiveTab("attendance");
                   setMobileMenuOpen(false);
+                  setRosterDropdownOpen(false);
                 }}
               >
                 📅 Attendance
@@ -136,6 +153,7 @@ function App() {
                 onClick={() => {
                   setActiveTab("insights");
                   setMobileMenuOpen(false);
+                  setRosterDropdownOpen(false);
                 }}
               >
                 📈 Insights
@@ -147,37 +165,85 @@ function App() {
                 onClick={() => {
                   setActiveTab("scoring-trends");
                   setMobileMenuOpen(false);
+                  setRosterDropdownOpen(false);
                 }}
               >
                 📊 Trends
               </button>
             )}
+
+            {/* Desktop Roster Dropdown */}
+            <div className="roster-dropdown-container desktop-only">
+              <button
+                className={`tab-btn roster-dropdown-trigger ${isRosterActive ? "active" : ""}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setRosterDropdownOpen(!rosterDropdownOpen);
+                }}
+              >
+                👥 Roster
+                <span className={`dropdown-arrow ${rosterDropdownOpen ? "open" : ""}`}>▼</span>
+              </button>
+              {rosterDropdownOpen && (
+                <div className="roster-dropdown-menu">
+                  <button
+                    className={`roster-dropdown-item ${activeTab === "midweek-roster" ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveTab("midweek-roster");
+                      setRosterDropdownOpen(false);
+                    }}
+                  >
+                    📅 Midweek Roster
+                  </button>
+                  <button
+                    className={`roster-dropdown-item ${activeTab === "weekend-roster" ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveTab("weekend-roster");
+                      setRosterDropdownOpen(false);
+                    }}
+                  >
+                    🌅 Weekend Roster
+                  </button>
+                  <button
+                    className={`roster-dropdown-item ${activeTab === "inactive-players" ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveTab("inactive-players");
+                      setRosterDropdownOpen(false);
+                    }}
+                  >
+                    ⚪ Inactive Players
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile-only roster buttons (shown in hamburger menu) */}
             <button
-              className={`tab-btn ${activeTab === "midweek-roster" ? "active" : ""}`}
+              className={`tab-btn mobile-only ${activeTab === "midweek-roster" ? "active" : ""}`}
               onClick={() => {
                 setActiveTab("midweek-roster");
                 setMobileMenuOpen(false);
               }}
             >
-              Midweek
+              📅 Midweek Roster
             </button>
             <button
-              className={`tab-btn ${activeTab === "weekend-roster" ? "active" : ""}`}
+              className={`tab-btn mobile-only ${activeTab === "weekend-roster" ? "active" : ""}`}
               onClick={() => {
                 setActiveTab("weekend-roster");
                 setMobileMenuOpen(false);
               }}
             >
-              Weekend
+              🌅 Weekend Roster
             </button>
             <button
-              className={`tab-btn ${activeTab === "inactive-players" ? "active" : ""}`}
+              className={`tab-btn mobile-only ${activeTab === "inactive-players" ? "active" : ""}`}
               onClick={() => {
                 setActiveTab("inactive-players");
                 setMobileMenuOpen(false);
               }}
             >
-              ⚪ Inactive
+              ⚪ Inactive Players
             </button>
           </div>
 
