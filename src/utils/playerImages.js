@@ -10,6 +10,7 @@ import prateekImage from "../assets/player-profiles/prateek.jpeg";
 import pandeyImage from "../assets/player-profiles/pandey.jpeg";
 import joeImage from "../assets/player-profiles/joe.jpeg";
 import rishavImage from "../assets/player-profiles/rishav.jpeg";
+import vikalpImage from "../assets/player-profiles/vikalp.jpeg";
 
 // Map player names (lowercase) to their profile images
 const playerImageMap = {
@@ -20,7 +21,8 @@ const playerImageMap = {
   "pandey": pandeyImage,
   "joe": joeImage,
   "prateek": prateekImage,
-  "rishav": rishavImage
+  "rishav": rishavImage,
+  "vikalp": vikalpImage
   // Add more player images here as they become available
   // 'ashish': ashishImage,
   // 'vinay': vinayImage,
@@ -33,10 +35,9 @@ const playerImageMap = {
  */
 export const getPlayerImage = (playerName) => {
   if (!playerName) return defaultImage;
-  
+
   const normalizedName = playerName.toLowerCase().trim();
   return playerImageMap[normalizedName] || defaultImage;
 };
 
 export default getPlayerImage;
-
