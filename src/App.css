@@ -3658,6 +3658,13 @@ body::before {
   font-size: 1.2rem;
 }
 
+.scorers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .scorer-info {
   display: flex;
   align-items: center;

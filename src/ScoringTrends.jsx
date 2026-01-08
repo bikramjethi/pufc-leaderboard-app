@@ -109,11 +109,28 @@ export const ScoringTrends = () => {
       }
     });
 
+    // Helper function to get all top scorers (handles ties)
+    const getTopScorers = (scorersMap) => {
+      if (scorersMap.size === 0) return null;
+      
+      const sortedScorers = Array.from(scorersMap.entries())
+        .sort((a, b) => b[1] - a[1]);
+      
+      const maxGoals = sortedScorers[0][1];
+      
+      // Get all players with the max goals (handles ties)
+      const topScorers = sortedScorers
+        .filter(([, goals]) => goals === maxGoals)
+        .map(([name, goals]) => ({ name, goals }));
+      
+      return topScorers;
+    };
+
     // Calculate top scorers for each week
     const results = [];
 
     weeklyData.forEach((week) => {
-      // Calculate weekday top scorer
+      // Calculate weekday top scorers
       const weekdayScorers = new Map();
       week.weekdayMatches.forEach((match) => {
         match.scorers?.forEach((scorer) => {
@@ -121,12 +138,9 @@ export const ScoringTrends = () => {
           weekdayScorers.set(scorer.name, current + (scorer.goals || 0));
         });
       });
-      const weekdayTop = weekdayScorers.size > 0
-        ? Array.from(weekdayScorers.entries())
-            .sort((a, b) => b[1] - a[1])[0]
-        : null;
+      const weekdayTopScorers = getTopScorers(weekdayScorers);
 
-      // Calculate weekend top scorer
+      // Calculate weekend top scorers
       const weekendScorers = new Map();
       week.weekendMatches.forEach((match) => {
         match.scorers?.forEach((scorer) => {
@@ -134,12 +148,9 @@ export const ScoringTrends = () => {
           weekendScorers.set(scorer.name, current + (scorer.goals || 0));
         });
       });
-      const weekendTop = weekendScorers.size > 0
-        ? Array.from(weekendScorers.entries())
-            .sort((a, b) => b[1] - a[1])[0]
-        : null;
+      const weekendTopScorers = getTopScorers(weekendScorers);
 
-      // Calculate overall top scorer for the week
+      // Calculate overall top scorers for the week
       const overallScorers = new Map();
       [...week.weekdayMatches, ...week.weekendMatches].forEach((match) => {
         match.scorers?.forEach((scorer) => {
@@ -147,18 +158,15 @@ export const ScoringTrends = () => {
           overallScorers.set(scorer.name, current + (scorer.goals || 0));
         });
       });
-      const overallTop = overallScorers.size > 0
-        ? Array.from(overallScorers.entries())
-            .sort((a, b) => b[1] - a[1])[0]
-        : null;
+      const overallTopScorers = getTopScorers(overallScorers);
 
       results.push({
         weekNum: week.weekNum,
         year: week.year,
         weekKey: week.weekKey,
-        weekdayTopScorer: weekdayTop ? { name: weekdayTop[0], goals: weekdayTop[1] } : null,
-        weekendTopScorer: weekendTop ? { name: weekendTop[0], goals: weekendTop[1] } : null,
-        overallTopScorer: overallTop ? { name: overallTop[0], goals: overallTop[1] } : null,
+        weekdayTopScorers: weekdayTopScorers,
+        weekendTopScorers: weekendTopScorers,
+        overallTopScorers: overallTopScorers,
         hasWeekdayMatch: week.weekdayMatches.length > 0,
         hasWeekendMatch: week.weekendMatches.length > 0,
       });
@@ -529,30 +537,42 @@ export const ScoringTrends = () => {
                       <span className="week-number">W{week.weekNum}</span>
                     </td>
                     <td className={`scorer-cell ${week.hasWeekdayMatch ? "has-match" : "no-match"}`}>
-                      {week.weekdayTopScorer ? (
-                        <div className="scorer-info">
-                          <span className="scorer-name">{week.weekdayTopScorer.name}</span>
-                          <span className="scorer-goals weekday-goals">{week.weekdayTopScorer.goals}⚽</span>
+                      {week.weekdayTopScorers ? (
+                        <div className="scorers-list">
+                          {week.weekdayTopScorers.map((scorer, idx) => (
+                            <div key={idx} className="scorer-info">
+                              <span className="scorer-name">{scorer.name}</span>
+                              <span className="scorer-goals weekday-goals">{scorer.goals}⚽</span>
+                            </div>
+                          ))}
                         </div>
                       ) : (
                         <span className="no-match-text">—</span>
                       )}
                     </td>
                     <td className={`scorer-cell ${week.hasWeekendMatch ? "has-match" : "no-match"}`}>
-                      {week.weekendTopScorer ? (
-                        <div className="scorer-info">
-                          <span className="scorer-name">{week.weekendTopScorer.name}</span>
-                          <span className="scorer-goals weekend-goals">{week.weekendTopScorer.goals}⚽</span>
+                      {week.weekendTopScorers ? (
+                        <div className="scorers-list">
+                          {week.weekendTopScorers.map((scorer, idx) => (
+                            <div key={idx} className="scorer-info">
+                              <span className="scorer-name">{scorer.name}</span>
+                              <span className="scorer-goals weekend-goals">{scorer.goals}⚽</span>
+                            </div>
+                          ))}
                         </div>
                       ) : (
                         <span className="no-match-text">—</span>
                       )}
                     </td>
                     <td className="scorer-cell overall-cell">
-                      {week.overallTopScorer ? (
-                        <div className="scorer-info overall">
-                          <span className="scorer-name">{week.overallTopScorer.name}</span>
-                          <span className="scorer-goals overall-goals">{week.overallTopScorer.goals}⚽</span>
+                      {week.overallTopScorers ? (
+                        <div className="scorers-list">
+                          {week.overallTopScorers.map((scorer, idx) => (
+                            <div key={idx} className="scorer-info overall">
+                              <span className="scorer-name">{scorer.name}</span>
+                              <span className="scorer-goals overall-goals">{scorer.goals}⚽</span>
+                            </div>
+                          ))}
                         </div>
                       ) : (
                         <span className="no-match-text">—</span>
