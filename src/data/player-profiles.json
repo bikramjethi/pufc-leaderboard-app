@@ -251,5 +251,26 @@
       "LW"
     ],
     "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Tejas",
+    "position": [
+      "RB"
+    ],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Suyash",
+    "position": [
+      "LW"
+    ],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Sayan",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "ONLOAN"
   }
 ]
