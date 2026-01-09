@@ -545,10 +545,13 @@ export const ScoringTrends = () => {
                             if (rect) {
                               const svgX = (cx / svgWidth) * rect.width;
                               const svgY = (cy / svgHeight) * rect.height;
+                              // If point is in upper 30% of graph, show tooltip below
+                              const isNearTop = svgY < rect.height * 0.3;
                               setTooltip({
                                 visible: true,
                                 x: svgX,
-                                y: svgY - 10,
+                                y: isNearTop ? svgY + 20 : svgY - 10,
+                                position: isNearTop ? 'below' : 'above',
                                 content: {
                                   date: match.date,
                                   scoreline: match.scoreline,
@@ -598,10 +601,13 @@ export const ScoringTrends = () => {
                             if (rect) {
                               const svgX = (cx / svgWidth) * rect.width;
                               const svgY = (cy / svgHeight) * rect.height;
+                              // If point is in upper 30% of graph, show tooltip below
+                              const isNearTop = svgY < rect.height * 0.3;
                               setTooltip({
                                 visible: true,
                                 x: svgX,
-                                y: svgY - 10,
+                                y: isNearTop ? svgY + 20 : svgY - 10,
+                                position: isNearTop ? 'below' : 'above',
                                 content: {
                                   date: match.date,
                                   scoreline: match.scoreline,
@@ -627,7 +633,7 @@ export const ScoringTrends = () => {
                 style={{
                   left: tooltip.x,
                   top: tooltip.y,
-                  transform: 'translate(-50%, -100%)'
+                  transform: tooltip.position === 'below' ? 'translate(-50%, 0)' : 'translate(-50%, -100%)'
                 }}
               >
                 <div className="tooltip-date">{tooltip.content.date}</div>
@@ -1031,10 +1037,13 @@ export const ScoringTrends = () => {
                             if (rect) {
                               const svgX = (cx / svgWidth) * rect.width;
                               const svgY = (cy / svgHeight) * rect.height;
+                              // If point is in upper 30% of graph, show tooltip below
+                              const isNearTop = svgY < rect.height * 0.3;
                               setDiffTooltip({
                                 visible: true,
                                 x: svgX,
-                                y: svgY - 10,
+                                y: isNearTop ? svgY + 20 : svgY - 10,
+                                position: isNearTop ? 'below' : 'above',
                                 content: {
                                   date: match.date,
                                   scoreline: match.scoreline,
@@ -1083,10 +1092,13 @@ export const ScoringTrends = () => {
                             if (rect) {
                               const svgX = (cx / svgWidth) * rect.width;
                               const svgY = (cy / svgHeight) * rect.height;
+                              // If point is in upper 30% of graph, show tooltip below
+                              const isNearTop = svgY < rect.height * 0.3;
                               setDiffTooltip({
                                 visible: true,
                                 x: svgX,
-                                y: svgY - 10,
+                                y: isNearTop ? svgY + 20 : svgY - 10,
+                                position: isNearTop ? 'below' : 'above',
                                 content: {
                                   date: match.date,
                                   scoreline: match.scoreline,
@@ -1112,7 +1124,7 @@ export const ScoringTrends = () => {
                 style={{
                   left: diffTooltip.x,
                   top: diffTooltip.y,
-                  transform: 'translate(-50%, -100%)'
+                  transform: diffTooltip.position === 'below' ? 'translate(-50%, 0)' : 'translate(-50%, -100%)'
                 }}
               >
                 <div className="tooltip-date">{diffTooltip.content.date}</div>

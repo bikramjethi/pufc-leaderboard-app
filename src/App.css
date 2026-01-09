@@ -3416,8 +3416,10 @@ body::before {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1rem;
+  padding-top: 2rem;
   margin-bottom: 1.5rem;
   overflow-x: auto;
+  overflow-y: visible;
 }
 
 .scoring-trends-svg,
