@@ -51,16 +51,73 @@ const formatDate = (dateStr) => {
   return `${dayNum}${suffix(dayNum)} ${monthName}`;
 };
 
-// Get player result for a match
-const getPlayerResult = (match, player) => {
-  if (!match.matchPlayed || match.matchCancelled) return null;
-  if (!match.attendance.includes(player)) return null;
+// Helper function to get all players from attendance object
+const getAllPlayersFromAttendance = (attendance) => {
+  if (!attendance || typeof attendance !== 'object') return [];
+  
+  const players = [];
+  Object.values(attendance).forEach(teamPlayers => {
+    if (Array.isArray(teamPlayers)) {
+      teamPlayers.forEach(player => {
+        if (player && player.name) {
+          players.push(player);
+        }
+      });
+    }
+  });
+  return players;
+};
 
-  if (match.winners?.includes(player)) return "W";
-  if (match.losers?.includes(player)) return "L";
-  // If both arrays are empty or player is in neither, it's a draw
-  if (match.winners?.length === 0 && match.losers?.length === 0) return "D";
+// Helper function to get all player names from attendance
+const getAllPlayerNames = (attendance) => {
+  return getAllPlayersFromAttendance(attendance).map(p => p.name);
+};
+
+// Helper function to find player in attendance and get their data
+const getPlayerFromAttendance = (attendance, playerName) => {
+  if (!attendance || typeof attendance !== 'object') return null;
+  
+  for (const [team, players] of Object.entries(attendance)) {
+    if (Array.isArray(players)) {
+      const found = players.find(p => p.name === playerName);
+      if (found) return { ...found, team };
+    }
+  }
   return null;
+};
+
+// Helper function to get winning team from scoreline
+const getWinningTeam = (scoreline) => {
+  if (!scoreline || typeof scoreline !== 'object') return null;
+  
+  const teams = Object.keys(scoreline);
+  if (teams.length !== 2) return null;
+  
+  const [team1, team2] = teams;
+  const score1 = scoreline[team1] || 0;
+  const score2 = scoreline[team2] || 0;
+  
+  if (score1 > score2) return team1;
+  if (score2 > score1) return team2;
+  return 'DRAW';
+};
+
+// Get player result for a match
+const getPlayerResult = (match, playerName) => {
+  if (!match.matchPlayed || match.matchCancelled) return null;
+  
+  const playerData = getPlayerFromAttendance(match.attendance, playerName);
+  if (!playerData) return null;
+  
+  const winningTeam = getWinningTeam(match.scoreline);
+  if (winningTeam === 'DRAW') return "D";
+  if (playerData.team === winningTeam) return "W";
+  return "L";
+};
+
+// Check if player is in attendance
+const isPlayerInAttendance = (attendance, playerName) => {
+  return getPlayerFromAttendance(attendance, playerName) !== null;
 };
 
 // Get color class for team color
@@ -125,7 +182,7 @@ export const Attendance = () => {
   const playerStats = useMemo(() => {
     return allPlayers.map((player) => {
       const attended = playedMatches.filter((m) =>
-        m.attendance.includes(player)
+        isPlayerInAttendance(m.attendance, player)
       ).length;
       const percentage =
         playedMatches.length > 0
@@ -182,14 +239,8 @@ export const Attendance = () => {
     }
 
     // Match was played - show attendance data
-    const wasPresent = match.attendance.includes(player);
-    const scored = match.scorers?.find((s) => {
-      return s.name.toLowerCase() === player.toLowerCase();
-    });
-    const hadOwnGoal = match.ownGoals?.find((s) => {
-      return s.name.toLowerCase() === player.toLowerCase();
-    });
-    const hadCleanSheet = match.cleanSheets?.includes(player);
+    const playerData = getPlayerFromAttendance(match.attendance, player);
+    const wasPresent = playerData !== null;
     const result = getPlayerResult(match, player);
 
     return (
@@ -202,10 +253,10 @@ export const Attendance = () => {
         )}
         {/* Attendance indicator (only show if no result or absent) */}
         {!wasPresent && <span className="cross">✗</span>}
-        {/* Goal stats */}
-        {scored && <span className="goal-badge">{scored.goals}</span>}
-        {hadCleanSheet && <span className="cs-badge">🧤</span>}
-        {hadOwnGoal && <span className="og-badge">OG</span>}
+        {/* Goal stats from player data */}
+        {playerData?.goals > 0 && <span className="goal-badge">{playerData.goals}</span>}
+        {playerData?.cleanSheet && <span className="cs-badge">🧤</span>}
+        {playerData?.ownGoals > 0 && <span className="og-badge">OG</span>}
       </div>
     );
   };
@@ -215,12 +266,18 @@ export const Attendance = () => {
     if (match.matchCancelled) return "match-cell cancelled";
     if (!match.matchPlayed) return "match-cell pending";
 
-    const wasPresent = match.attendance.includes(player);
+    const playerData = getPlayerFromAttendance(match.attendance, player);
+    const wasPresent = playerData !== null;
     const result = getPlayerResult(match, player);
 
     let classes = "match-cell";
     classes += wasPresent ? " present" : " absent";
     if (result) classes += ` result-${result.toLowerCase()}`;
+    
+    // Add ONLOAN class for players on loan
+    if (playerData?.groupStatus === "ONLOAN") {
+      classes += " onloan";
+    }
 
     return classes;
   };
@@ -230,10 +287,8 @@ export const Attendance = () => {
     if (match.matchCancelled) return "Match Cancelled";
     if (!match.matchPlayed) return "Match Not Yet Played";
 
-    const wasPresent = match.attendance.includes(player);
-    const scored = match.scorers?.find((s) => s.player === player);
-    const hadOwnGoal = match.ownGoals?.includes(player);
-    const hadCleanSheet = match.cleanSheets?.includes(player);
+    const playerData = getPlayerFromAttendance(match.attendance, player);
+    const wasPresent = playerData !== null;
     const result = getPlayerResult(match, player);
 
     if (wasPresent) {
@@ -245,9 +300,10 @@ export const Attendance = () => {
             : result === "D"
               ? "Draw"
               : "Present";
-      if (scored) tip += ` • ${scored.goals} goal(s)`;
-      if (hadCleanSheet) tip += " • Clean Sheet";
-      if (hadOwnGoal) tip += " • Own Goal";
+      if (playerData?.goals > 0) tip += ` • ${playerData.goals} goal(s)`;
+      if (playerData?.cleanSheet) tip += " • Clean Sheet";
+      if (playerData?.ownGoals > 0) tip += " • Own Goal";
+      if (playerData?.groupStatus === "ONLOAN") tip += " • On Loan";
       return tip;
     }
     return "Absent";
@@ -320,15 +376,15 @@ export const Attendance = () => {
               className="download-csv-btn-compact"
               onClick={() => {
                 // Get all unique player names from all matches
-                const allPlayers = new Set();
+                const allPlayersSet = new Set();
                 matchData.matches.forEach((match) => {
-                  if (match.attendance && Array.isArray(match.attendance)) {
-                    match.attendance.forEach((player) => allPlayers.add(player));
+                  if (match.attendance && typeof match.attendance === 'object') {
+                    getAllPlayerNames(match.attendance).forEach(name => allPlayersSet.add(name));
                   }
                 });
                 
                 // Sort players alphabetically
-                const sortedPlayers = Array.from(allPlayers).sort();
+                const sortedPlayersCSV = Array.from(allPlayersSet).sort();
                 
                 // Get all match dates (only for played matches)
                 const matchDates = matchData.matches
@@ -343,13 +399,13 @@ export const Attendance = () => {
                 csvRows.push(["Player", ...matchDates].join(","));
                 
                 // For each player, create a row with 1 if they attended, blank if not
-                sortedPlayers.forEach((player) => {
+                sortedPlayersCSV.forEach((player) => {
                   const row = [player];
                   matchDates.forEach((date) => {
                     const match = matchData.matches.find(
                       (m) => (m.date === date || m.id === date) && m.matchPlayed && !m.matchCancelled
                     );
-                    const attended = match && match.attendance && match.attendance.includes(player);
+                    const attended = match && isPlayerInAttendance(match.attendance, player);
                     row.push(attended ? "1" : "");
                   });
                   csvRows.push(row.join(","));
@@ -478,6 +534,9 @@ export const Attendance = () => {
             <span>🧤 Clean Sheet</span>
             <span>
               <span className="og-badge">OG</span> Own Goal
+            </span>
+            <span>
+              <span className="onloan-indicator"></span> On Loan
             </span>
           </div>
         </>

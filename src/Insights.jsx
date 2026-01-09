@@ -35,6 +35,61 @@ const getQuarter = (dateStr) => {
   return 4;
 };
 
+// Helper function to get all players from attendance object
+const getAllPlayersFromAttendance = (attendance) => {
+  if (!attendance || typeof attendance !== 'object') return [];
+  
+  const players = [];
+  Object.values(attendance).forEach(teamPlayers => {
+    if (Array.isArray(teamPlayers)) {
+      teamPlayers.forEach(player => {
+        if (player && player.name) {
+          players.push(player);
+        }
+      });
+    }
+  });
+  return players;
+};
+
+// Helper function to get scorers from attendance object
+const getScorersFromAttendance = (attendance) => {
+  if (!attendance || typeof attendance !== 'object') return [];
+  
+  const scorers = [];
+  Object.entries(attendance).forEach(([team, players]) => {
+    if (Array.isArray(players)) {
+      players.forEach(player => {
+        if (player && player.name && player.goals > 0) {
+          scorers.push({
+            name: player.name,
+            goals: player.goals,
+            team: team
+          });
+        }
+      });
+    }
+  });
+  return scorers;
+};
+
+// Helper function to get clean sheets from attendance object
+const getCleanSheetsFromAttendance = (attendance) => {
+  if (!attendance || typeof attendance !== 'object') return [];
+  
+  const cleanSheets = [];
+  Object.values(attendance).forEach(teamPlayers => {
+    if (Array.isArray(teamPlayers)) {
+      teamPlayers.forEach(player => {
+        if (player && player.name && player.cleanSheet) {
+          cleanSheets.push(player.name);
+        }
+      });
+    }
+  });
+  return cleanSheets;
+};
+
 // Calculate overall season insights
 const calculateOverallInsights = (leaderboardData, attendanceData) => {
   if (!leaderboardData || leaderboardData.length === 0) return null;
@@ -164,10 +219,11 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     cleanSheets: [],
   };
 
-  // Calculate top scorers for the quarter
+  // Calculate top scorers for the quarter - get scorers from attendance object
   const scorerMap = new Map();
   quarterMatches.forEach((match) => {
-    match.scorers?.forEach((scorer) => {
+    const scorers = getScorersFromAttendance(match.attendance);
+    scorers.forEach((scorer) => {
       const current = scorerMap.get(scorer.name) || 0;
       scorerMap.set(scorer.name, current + (scorer.goals || 0));
     });
@@ -179,12 +235,13 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     .slice(0, 3);
   insights.topScorers = topScorers;
 
-  // Calculate most attended
+  // Calculate most attended - get player names from attendance object
   const attendanceMap = new Map();
   quarterMatches.forEach((match) => {
-    match.attendance?.forEach((player) => {
-      const current = attendanceMap.get(player) || 0;
-      attendanceMap.set(player, current + 1);
+    const players = getAllPlayersFromAttendance(match.attendance);
+    players.forEach((player) => {
+      const current = attendanceMap.get(player.name) || 0;
+      attendanceMap.set(player.name, current + 1);
     });
   });
 
@@ -193,12 +250,13 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     .sort((a, b) => b.games - a.games)[0];
   insights.mostAttended = mostAttended;
 
-  // Calculate clean sheets for the quarter
+  // Calculate clean sheets for the quarter - get from attendance object
   const cleanSheetsMap = new Map();
   quarterMatches.forEach((match) => {
-    match.cleanSheets?.forEach((player) => {
-      const current = cleanSheetsMap.get(player) || 0;
-      cleanSheetsMap.set(player, current + 1);
+    const cleanSheetPlayers = getCleanSheetsFromAttendance(match.attendance);
+    cleanSheetPlayers.forEach((playerName) => {
+      const current = cleanSheetsMap.get(playerName) || 0;
+      cleanSheetsMap.set(playerName, current + 1);
     });
   });
 

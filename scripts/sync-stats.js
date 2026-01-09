@@ -30,6 +30,70 @@ const createEmptyStats = () => ({
   ownGoals: 0
 });
 
+// Helper function to get all players from attendance object
+const getAllPlayersFromAttendance = (attendance) => {
+  if (!attendance || typeof attendance !== 'object') return [];
+  
+  const players = [];
+  Object.values(attendance).forEach(teamPlayers => {
+    if (Array.isArray(teamPlayers)) {
+      teamPlayers.forEach(player => {
+        if (player && player.name) {
+          players.push(player);
+        }
+      });
+    }
+  });
+  return players;
+};
+
+// Helper function to get all player names from attendance object
+const getAllPlayerNames = (attendance) => {
+  return getAllPlayersFromAttendance(attendance).map(p => p.name);
+};
+
+// Helper function to determine winning team from scoreline
+const getWinningTeam = (scoreline) => {
+  if (!scoreline || typeof scoreline !== 'object') return null;
+  
+  const teams = Object.keys(scoreline);
+  if (teams.length !== 2) return null;
+  
+  const [team1, team2] = teams;
+  const score1 = scoreline[team1] || 0;
+  const score2 = scoreline[team2] || 0;
+  
+  if (score1 > score2) return team1;
+  if (score2 > score1) return team2;
+  return 'DRAW';
+};
+
+// Helper function to find which team a player is on
+const getPlayerTeam = (attendance, playerName) => {
+  if (!attendance || typeof attendance !== 'object') return null;
+  
+  for (const [team, players] of Object.entries(attendance)) {
+    if (Array.isArray(players)) {
+      const found = players.find(p => p.name === playerName);
+      if (found) return team;
+    }
+  }
+  return null;
+};
+
+// Helper function to get player data from attendance
+const getPlayerFromAttendance = (attendance, playerName) => {
+  if (!attendance || typeof attendance !== 'object') return null;
+  
+  for (const players of Object.values(attendance)) {
+    if (Array.isArray(players)) {
+      const found = players.find(p => p.name === playerName);
+      if (found) return found;
+    }
+  }
+  return null;
+};
+
 try {
   // Read all necessary files
   const trackerData = JSON.parse(fs.readFileSync(trackerPath, 'utf8'));
@@ -50,9 +114,14 @@ try {
   playedMatches.forEach((match) => {
     const isMidweek = match.day === 'Midweek';
     const isWeekend = match.day === 'Weekend';
+    const winningTeam = getWinningTeam(match.scoreline);
+    const isDraw = winningTeam === 'DRAW';
+
+    // Get all player names from the new attendance structure
+    const playerNames = getAllPlayerNames(match.attendance);
 
     // Process attendance
-    match.attendance?.forEach((playerName) => {
+    playerNames.forEach((playerName) => {
       if (!attendanceStats.has(playerName)) {
         attendanceStats.set(playerName, {
           midweekGames: 0,
@@ -67,7 +136,7 @@ try {
     });
 
     // Process leaderboard stats
-    match.attendance?.forEach((playerName) => {
+    playerNames.forEach((playerName) => {
       if (!leaderboardStats.has(playerName)) {
         leaderboardStats.set(playerName, {
           // Overall stats
@@ -91,59 +160,48 @@ try {
       stats.matches++;
       periodStats.matches++;
 
-      // Determine result
-      const isWinner = match.winners?.includes(playerName);
-      const isLoser = match.losers?.includes(playerName);
-      const isDraw = match.winners?.length === 0 && match.losers?.length === 0;
+      // Determine result based on team and scoreline
+      const playerTeam = getPlayerTeam(match.attendance, playerName);
+      const isWinner = playerTeam === winningTeam;
+      const isLoser = !isDraw && !isWinner;
       
-      if (isWinner) {
+      if (isDraw) {
+        stats.draws++;
+        periodStats.draws++;
+      } else if (isWinner) {
         stats.wins++;
         periodStats.wins++;
       } else if (isLoser) {
         stats.losses++;
         periodStats.losses++;
-      } else if (isDraw) {
-        stats.draws++;
-        periodStats.draws++;
       }
 
-      // Count goals and hat tricks
-      const playerScorers = match.scorers?.filter(s => s.name === playerName) || [];
-      let matchGoals = 0;
-      playerScorers.forEach((scorer) => {
-        matchGoals += scorer.goals || 0;
-      });
-      stats.goals += matchGoals;
-      periodStats.goals += matchGoals;
+      // Get player data from attendance
+      const playerData = getPlayerFromAttendance(match.attendance, playerName);
       
-      // Hat trick is 3+ goals in a single match
-      if (matchGoals >= 3) {
-        stats.hatTricks++;
-        periodStats.hatTricks++;
-      }
-
-      // Count clean sheets - handle both array of strings and array of objects
-      let hasCleanSheet = false;
-      if (match.cleanSheets && Array.isArray(match.cleanSheets)) {
-        if (typeof match.cleanSheets[0] === 'string') {
-          hasCleanSheet = match.cleanSheets.includes(playerName);
-        } else {
-          hasCleanSheet = match.cleanSheets.some(cs => cs.name === playerName);
+      if (playerData) {
+        // Count goals from player data
+        const matchGoals = playerData.goals || 0;
+        stats.goals += matchGoals;
+        periodStats.goals += matchGoals;
+        
+        // Hat trick is 3+ goals in a single match
+        if (matchGoals >= 3) {
+          stats.hatTricks++;
+          periodStats.hatTricks++;
         }
-      }
-      if (hasCleanSheet) {
-        stats.cleanSheets++;
-        periodStats.cleanSheets++;
-      }
 
-      // Count own goals
-      const playerOwnGoals = match.ownGoals?.filter(og => og.name === playerName) || [];
-      let matchOwnGoals = 0;
-      playerOwnGoals.forEach((og) => {
-        matchOwnGoals += og.goals || 1; // Default to 1 if goals not specified
-      });
-      stats.ownGoals += matchOwnGoals;
-      periodStats.ownGoals += matchOwnGoals;
+        // Count clean sheets from player data
+        if (playerData.cleanSheet) {
+          stats.cleanSheets++;
+          periodStats.cleanSheets++;
+        }
+
+        // Count own goals from player data
+        const matchOwnGoals = playerData.ownGoals || 0;
+        stats.ownGoals += matchOwnGoals;
+        periodStats.ownGoals += matchOwnGoals;
+      }
     });
   });
 
@@ -307,15 +365,15 @@ try {
   let weekdayGoals = 0;
 
   playedMatches.forEach((match) => {
-    // Calculate totalGoals for match if not present
-    let matchTotalGoals = match.totalGoals;
-    if (matchTotalGoals === undefined) {
-      matchTotalGoals = 0;
-      if (match.scorers && Array.isArray(match.scorers)) {
-        matchTotalGoals = match.scorers.reduce((sum, scorer) => {
-          return sum + (scorer.goals || 0);
-        }, 0);
-      }
+    // Calculate totalGoals for match from attendance data
+    let matchTotalGoals = 0;
+    const allPlayers = getAllPlayersFromAttendance(match.attendance);
+    allPlayers.forEach(player => {
+      matchTotalGoals += player.goals || 0;
+    });
+    
+    // Update match totalGoals if different
+    if (match.totalGoals !== matchTotalGoals) {
       match.totalGoals = matchTotalGoals;
     }
 

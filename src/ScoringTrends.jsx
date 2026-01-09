@@ -23,6 +23,27 @@ const parseDate = (dateStr) => {
   return new Date(year, month - 1, day);
 };
 
+// Helper function to get all scorers from attendance object
+const getScorersFromAttendance = (attendance) => {
+  if (!attendance || typeof attendance !== 'object') return [];
+  
+  const scorers = [];
+  Object.entries(attendance).forEach(([team, players]) => {
+    if (Array.isArray(players)) {
+      players.forEach(player => {
+        if (player && player.name && player.goals > 0) {
+          scorers.push({
+            name: player.name,
+            goals: player.goals,
+            team: team
+          });
+        }
+      });
+    }
+  });
+  return scorers;
+};
+
 export const ScoringTrends = () => {
   const defaultSeason = config.SCORING_TRENDS?.defaultSeason || "2026";
   const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
@@ -130,20 +151,22 @@ export const ScoringTrends = () => {
     const results = [];
 
     weeklyData.forEach((week) => {
-      // Calculate weekday top scorers
+      // Calculate weekday top scorers - get scorers from attendance object
       const weekdayScorers = new Map();
       week.weekdayMatches.forEach((match) => {
-        match.scorers?.forEach((scorer) => {
+        const scorers = getScorersFromAttendance(match.attendance);
+        scorers.forEach((scorer) => {
           const current = weekdayScorers.get(scorer.name) || 0;
           weekdayScorers.set(scorer.name, current + (scorer.goals || 0));
         });
       });
       const weekdayTopScorers = getTopScorers(weekdayScorers);
 
-      // Calculate weekend top scorers
+      // Calculate weekend top scorers - get scorers from attendance object
       const weekendScorers = new Map();
       week.weekendMatches.forEach((match) => {
-        match.scorers?.forEach((scorer) => {
+        const scorers = getScorersFromAttendance(match.attendance);
+        scorers.forEach((scorer) => {
           const current = weekendScorers.get(scorer.name) || 0;
           weekendScorers.set(scorer.name, current + (scorer.goals || 0));
         });
@@ -153,7 +176,8 @@ export const ScoringTrends = () => {
       // Calculate overall top scorers for the week
       const overallScorers = new Map();
       [...week.weekdayMatches, ...week.weekendMatches].forEach((match) => {
-        match.scorers?.forEach((scorer) => {
+        const scorers = getScorersFromAttendance(match.attendance);
+        scorers.forEach((scorer) => {
           const current = overallScorers.get(scorer.name) || 0;
           overallScorers.set(scorer.name, current + (scorer.goals || 0));
         });
