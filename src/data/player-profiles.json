@@ -272,5 +272,65 @@
       "MID"
     ],
     "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Ajay",
+    "position": ["MID"],
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Akshendra",
+    "position": ["MID"],
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Akshit",
+    "position": ["DEF"],
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Alan",
+    "position": ["LB", "LW"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Anis",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Mani",
+    "position": ["ST"],
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Matthew",
+    "position": ["FWD"],
+    "groupAvailibility": "MIDWEEK"
+  },
+  {
+    "name": "Rajat",
+    "position": ["DEF"],
+    "groupAvailibility": "WEEKEND"
+  },
+  {
+    "name": "Rajesh",
+    "position": ["DEF"],
+    "groupAvailibility": "N/A"
+  },
+  {
+    "name": "Ram",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Somu",
+    "position": ["FWD"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Vedant",
+    "position": ["MID"],
+    "groupAvailibility": "WEEKEND"
   }
 ]
