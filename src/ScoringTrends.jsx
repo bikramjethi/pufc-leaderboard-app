@@ -10,13 +10,17 @@ const matchDataByYear = {
 
 const availableSeasons = config.SCORING_TRENDS?.seasons || ["2026"];
 
-// Helper function to get ISO week number
-const getWeekNumber = (date) => {
+// Helper function to get ISO week number and ISO week year
+// Returns { weekNum, isoYear } to handle year boundary issues
+const getISOWeekData = (date) => {
   const d = new Date(date);
   d.setHours(0, 0, 0, 0);
+  // Set to nearest Thursday (to get correct ISO week year)
   d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-  const yearStart = new Date(d.getFullYear(), 0, 1);
-  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  const isoYear = d.getFullYear();
+  const yearStart = new Date(isoYear, 0, 1);
+  const weekNum = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  return { weekNum, isoYear };
 };
 
 // Helper to parse DD/MM/YYYY date string
@@ -110,14 +114,13 @@ export const ScoringTrends = () => {
 
     playedMatches.forEach((match) => {
       const matchDate = parseDate(match.date);
-      const weekNum = getWeekNumber(matchDate);
-      const year = matchDate.getFullYear();
-      const weekKey = `${year}-W${weekNum}`;
+      const { weekNum, isoYear } = getISOWeekData(matchDate);
+      const weekKey = `${isoYear}-W${weekNum}`;
 
       if (!weeklyData.has(weekKey)) {
         weeklyData.set(weekKey, {
           weekNum,
-          year,
+          year: isoYear,
           weekKey,
           weekdayMatches: [],
           weekendMatches: [],
