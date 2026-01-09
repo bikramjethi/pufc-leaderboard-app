@@ -102,8 +102,9 @@ async function main() {
   // Step 2: Get team colors
   console.log('\n🎨 Team Colors');
   console.log('─'.repeat(30));
-  const team1Color = (await question('What color does Team 1 wear? (e.g., RED, BLUE, BLACK, WHITE): ')).toUpperCase().trim();
-  const team2Color = (await question('What color does Team 2 wear? (e.g., RED, BLUE, BLACK, WHITE): ')).toUpperCase().trim();
+  console.log('  Available: RED, BLUE, BLACK, WHITE, YELLOW');
+  const team1Color = (await question('What color does Team 1 wear? ')).toUpperCase().trim();
+  const team2Color = (await question('What color does Team 2 wear? ')).toUpperCase().trim();
 
   if (!team1Color || !team2Color) {
     console.error('❌ Both team colors are required');

@@ -229,7 +229,12 @@ export const ScoringTrends = () => {
 
   // Scale functions
   const maxMatches = Math.max(graphData.weekday.length, graphData.weekend.length, 1);
-  const xScale = (index) => padding.left + (index / maxMatches) * chartWidth;
+  // Use 0-based index internally so first point is at left edge
+  const xScale = (index) => {
+    // If only 1 match, place at left edge; otherwise distribute evenly
+    if (maxMatches === 1) return padding.left;
+    return padding.left + ((index - 1) / (maxMatches - 1)) * chartWidth;
+  };
   const yScale = (goals) => padding.top + chartHeight - (goals / graphData.maxGoals) * chartHeight;
 
   // Generate path data
@@ -352,9 +357,12 @@ export const ScoringTrends = () => {
               ))}
 
               {/* X-axis labels */}
-              {Array.from({ length: Math.min(maxMatches, 10) }, (_, i) => {
-                const matchNum = Math.ceil((i + 1) * (maxMatches / 10));
-                if (matchNum > maxMatches) return null;
+              {Array.from({ length: maxMatches }, (_, i) => {
+                const matchNum = i + 1;
+                // Show all labels if <= 10 matches, otherwise show every nth label
+                if (maxMatches > 10 && matchNum % Math.ceil(maxMatches / 10) !== 0 && matchNum !== 1 && matchNum !== maxMatches) {
+                  return null;
+                }
                 return (
                   <text
                     key={i}
