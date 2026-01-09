@@ -14,3 +14,10 @@ Also as and when you encounter ownGoals please update them accordingly
 in @src/data/attendance-data/2025.json Once 2025.json is correctly 
 updated we can update the leaderboard stats - @src/data/leaderboard-data/2025.json 
 with the new ownGoal stat and enable own goal column on 2025 leaderboard as well.
+
+Please re-review your changes - there should ideally have been 46 weekend games 
+and 49 weekend games. Also do not add any entries for players who have not scored 
+goals, own goals OR clean sheets as those player entries will mostly be incorrect 
+as teams are swapped each week so there are no concrete names per color. 
+Only have player names who are directly there on the scoresheet.  
+Also for any missing entries consider the game as cancelled.

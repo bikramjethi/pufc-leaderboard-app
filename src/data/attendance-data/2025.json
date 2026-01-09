@@ -1,7 +1,7 @@
 {
   "season": 2025,
-  "totalGoals": 861,
-  "weekendGoals": 273,
+  "totalGoals": 874,
+  "weekendGoals": 286,
   "weekdayGoals": 588,
   "matches": [
     {
@@ -38,7 +38,7 @@
           {
             "name": "Ashish",
             "goals": 1,
-            "ownGoals": 0,
+            "ownGoals": 1,
             "cleanSheet": false,
             "groupStatus": "REGULAR"
           }
@@ -373,7 +373,7 @@
             "groupStatus": "REGULAR"
           },
           {
-            "name": "Rohit",
+            "name": "Vivek",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
@@ -828,7 +828,7 @@
           {
             "name": "Vinit",
             "goals": 1,
-            "ownGoals": 0,
+            "ownGoals": 1,
             "cleanSheet": false,
             "groupStatus": "REGULAR"
           }
@@ -848,6 +848,13 @@
       "matchCancelled": false,
       "attendance": {
         "BLUE": [
+          {
+            "name": "Vinit",
+            "goals": 0,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
           {
             "name": "Ajay",
             "goals": 2,
@@ -912,13 +919,6 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR"
-          },
-          {
-            "name": "Vinit",
-            "goals": 0,
-            "ownGoals": 1,
-            "cleanSheet": false,
-            "groupStatus": "REGULAR"
           }
         ]
       },
@@ -945,8 +945,66 @@
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": {
-        "BLACK": [],
-        "WHITE": []
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Akshat",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Soumyadeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 0,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Rohit Hyd",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Tushar",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
+        ]
       },
       "scoreline": {
         "BLACK": 7,
@@ -3772,11 +3830,61 @@
       "id": "30-08-2025",
       "date": "30/08/2025",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Arun",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Sayan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Vinoth",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vikalp",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vinay",
+            "goals": 0,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 3,
+        "RED": 3
+      },
+      "totalGoals": 6
     },
     {
       "id": "02-09-2025",
@@ -4934,6 +5042,13 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Pandey",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
           }
         ],
         "RED": [
@@ -5039,8 +5154,66 @@
       "matchPlayed": true,
       "matchCancelled": false,
       "attendance": {
-        "BLACK": [],
-        "RED": []
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Soumya",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vikram",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Mathew",
+            "goals": 5,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
+        ]
       },
       "scoreline": {
         "BLACK": 9,
@@ -5261,6 +5434,13 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vikas",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
           }
         ],
         "RED": [
@@ -5304,11 +5484,54 @@
       "id": "20-12-2025",
       "date": "20/12/2025",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Vivek",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Animesh",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Vedant",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 4,
+        "BLACK": 3
+      },
+      "totalGoals": 7
     },
     {
       "id": "23-12-2025",

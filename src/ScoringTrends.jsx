@@ -418,20 +418,25 @@ export const ScoringTrends = () => {
                     className="trend-line weekend-line"
                   />
                   {/* Weekend Points */}
-                  {graphData.weekend.map((match, i) => (
-                    <g key={`weekend-${i}`} className="data-point-group">
-                      <circle
-                        cx={xScale(i + 1)}
-                        cy={yScale(match.goals)}
-                        r="6"
-                        fill="#f59e0b"
-                        stroke="var(--bg-card)"
-                        strokeWidth="2"
-                        className="data-point weekend-point"
-                      />
-                      <title>{`${match.date}: ${match.goals} goals`}</title>
-                    </g>
-                  ))}
+                  {graphData.weekend.map((match, i) => {
+                    const scorelineText = match.scoreline && Object.keys(match.scoreline).length > 0
+                      ? Object.entries(match.scoreline).map(([team, score]) => `${team}: ${score}`).join(' vs ')
+                      : '';
+                    return (
+                      <g key={`weekend-${i}`} className="data-point-group">
+                        <circle
+                          cx={xScale(i + 1)}
+                          cy={yScale(match.goals)}
+                          r="6"
+                          fill="#f59e0b"
+                          stroke="var(--bg-card)"
+                          strokeWidth="2"
+                          className="data-point weekend-point"
+                        />
+                        <title>{`${match.date}\n${scorelineText}\nTotal: ${match.goals} goals`}</title>
+                      </g>
+                    );
+                  })}
                 </>
               )}
 
@@ -448,20 +453,25 @@ export const ScoringTrends = () => {
                     className="trend-line weekday-line"
                   />
                   {/* Weekday Points */}
-                  {graphData.weekday.map((match, i) => (
-                    <g key={`weekday-${i}`} className="data-point-group">
-                      <circle
-                        cx={xScale(i + 1)}
-                        cy={yScale(match.goals)}
-                        r="6"
-                        fill="#3b82f6"
-                        stroke="var(--bg-card)"
-                        strokeWidth="2"
-                        className="data-point weekday-point"
-                      />
-                      <title>{`${match.date}: ${match.goals} goals`}</title>
-                    </g>
-                  ))}
+                  {graphData.weekday.map((match, i) => {
+                    const scorelineText = match.scoreline && Object.keys(match.scoreline).length > 0
+                      ? Object.entries(match.scoreline).map(([team, score]) => `${team}: ${score}`).join(' vs ')
+                      : '';
+                    return (
+                      <g key={`weekday-${i}`} className="data-point-group">
+                        <circle
+                          cx={xScale(i + 1)}
+                          cy={yScale(match.goals)}
+                          r="6"
+                          fill="#3b82f6"
+                          stroke="var(--bg-card)"
+                          strokeWidth="2"
+                          className="data-point weekday-point"
+                        />
+                        <title>{`${match.date}\n${scorelineText}\nTotal: ${match.goals} goals`}</title>
+                      </g>
+                    );
+                  })}
                 </>
               )}
             </svg>
@@ -489,7 +499,7 @@ export const ScoringTrends = () => {
                     <tr>
                       <th>#</th>
                       <th>Date</th>
-                      <th>Goals</th>
+                      <th>Scoreline</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -497,7 +507,22 @@ export const ScoringTrends = () => {
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td>{match.date}</td>
-                        <td className="goals-cell">{match.goals}</td>
+                        <td className="scoreline-cell">
+                          {match.scoreline && Object.keys(match.scoreline).length > 0 ? (
+                            <div className="scoreline-display">
+                              {Object.entries(match.scoreline).map(([team, score], idx, arr) => (
+                                <span key={team}>
+                                  <span className={`team-score team-${team.toLowerCase()}`} title={team}>
+                                    {score}
+                                  </span>
+                                  {idx < arr.length - 1 && <span className="score-separator">-</span>}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="no-score">-</span>
+                          )}
+                        </td>
                       </tr>
                     ))}
                     {graphData.weekday.length === 0 && (
@@ -518,7 +543,7 @@ export const ScoringTrends = () => {
                     <tr>
                       <th>#</th>
                       <th>Date</th>
-                      <th>Goals</th>
+                      <th>Scoreline</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -526,7 +551,22 @@ export const ScoringTrends = () => {
                       <tr key={i}>
                         <td>{i + 1}</td>
                         <td>{match.date}</td>
-                        <td className="goals-cell">{match.goals}</td>
+                        <td className="scoreline-cell">
+                          {match.scoreline && Object.keys(match.scoreline).length > 0 ? (
+                            <div className="scoreline-display">
+                              {Object.entries(match.scoreline).map(([team, score], idx, arr) => (
+                                <span key={team}>
+                                  <span className={`team-score team-${team.toLowerCase()}`} title={team}>
+                                    {score}
+                                  </span>
+                                  {idx < arr.length - 1 && <span className="score-separator">-</span>}
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="no-score">-</span>
+                          )}
+                        </td>
                       </tr>
                     ))}
                     {graphData.weekend.length === 0 && (
