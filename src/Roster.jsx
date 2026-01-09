@@ -26,6 +26,8 @@ const getFilteredPlayers = (filterType) => {
             );
         case "inactive":
             return playerProfiles.filter((p) => p.groupAvailibility === "N/A");
+        case "onloan":
+            return playerProfiles.filter((p) => p.groupAvailibility === "ONLOAN");
         default:
             return [];
     }
@@ -56,6 +58,8 @@ export const Roster = ({ type }) => {
                 return "Weekend Roster";
             case "inactive":
                 return "Inactive Players";
+            case "onloan":
+                return "On Loan Players";
             default:
                 return "Roster";
         }
@@ -134,6 +138,8 @@ export const Roster = ({ type }) => {
                                             <span className="availability-midweek">Midweek</span>
                                         ) : player.groupAvailibility === "WEEKEND" ? (
                                             <span className="availability-weekend">Weekend</span>
+                                        ) : player.groupAvailibility === "ONLOAN" ? (
+                                            <span className="availability-onloan">On Loan</span>
                                         ) : (
                                             <span className="availability-inactive">Inactive</span>
                                         )}

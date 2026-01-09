@@ -2931,7 +2931,8 @@ body::before {
 .availability-all,
 .availability-midweek,
 .availability-weekend,
-.availability-inactive {
+.availability-inactive,
+.availability-onloan {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
@@ -2957,6 +2958,12 @@ body::before {
 .availability-inactive {
   background: rgba(107, 114, 128, 0.2);
   color: var(--text-muted);
+}
+
+.availability-onloan {
+  background: rgba(234, 179, 8, 0.25);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.4);
 }
 
 .roster-empty {
@@ -2985,7 +2992,8 @@ body::before {
   .availability-all,
   .availability-midweek,
   .availability-weekend,
-  .availability-inactive {
+  .availability-inactive,
+  .availability-onloan {
     font-size: 0.7rem;
     padding: 0.2rem 0.5rem;
   }

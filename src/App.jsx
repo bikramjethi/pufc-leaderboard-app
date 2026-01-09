@@ -28,7 +28,7 @@ function App() {
   const [rosterDropdownOpen, setRosterDropdownOpen] = useState(false);
 
   // Check if any roster tab is active
-  const isRosterActive = ["midweek-roster", "weekend-roster", "inactive-players"].includes(activeTab);
+  const isRosterActive = ["midweek-roster", "weekend-roster", "inactive-players", "onloan-roster"].includes(activeTab);
 
   // Close roster dropdown when clicking outside
   useEffect(() => {
@@ -87,7 +87,9 @@ function App() {
                         ? "Weekend Roster"
                         : activeTab === "inactive-players"
                           ? "Inactive Players"
-                          : selectedYear === "all-time"
+                          : activeTab === "onloan-roster"
+                            ? "On Loan Players"
+                            : selectedYear === "all-time"
                             ? "All-Time Career Stats"
                             : "Player Statistics"}
             </p>
@@ -213,6 +215,15 @@ function App() {
                   >
                     ⚪ Inactive Players
                   </button>
+                  <button
+                    className={`roster-dropdown-item ${activeTab === "onloan-roster" ? "active" : ""}`}
+                    onClick={() => {
+                      setActiveTab("onloan-roster");
+                      setRosterDropdownOpen(false);
+                    }}
+                  >
+                    📋 On Loan
+                  </button>
                 </div>
               )}
             </div>
@@ -244,6 +255,15 @@ function App() {
               }}
             >
               ⚪ Inactive Players
+            </button>
+            <button
+              className={`tab-btn mobile-only ${activeTab === "onloan-roster" ? "active" : ""}`}
+              onClick={() => {
+                setActiveTab("onloan-roster");
+                setMobileMenuOpen(false);
+              }}
+            >
+              📋 On Loan
             </button>
           </div>
 
@@ -297,6 +317,8 @@ function App() {
           <Roster type="weekend" />
         ) : activeTab === "inactive-players" ? (
           <Roster type="inactive" />
+        ) : activeTab === "onloan-roster" ? (
+          <Roster type="onloan" />
         ) : null}
       </main>
 
