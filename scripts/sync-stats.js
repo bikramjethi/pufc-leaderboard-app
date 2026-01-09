@@ -366,23 +366,38 @@ try {
 
   playedMatches.forEach((match) => {
     // Calculate totalGoals for match from attendance data
+    // Own goals count as goals too (they're scored for the opposing team)
     let matchTotalGoals = 0;
+    let matchOwnGoals = 0;
     const allPlayers = getAllPlayersFromAttendance(match.attendance);
     allPlayers.forEach(player => {
       matchTotalGoals += player.goals || 0;
+      matchOwnGoals += player.ownGoals || 0;
     });
     
+    // Total goals includes both regular goals and own goals
+    const calculatedTotal = matchTotalGoals + matchOwnGoals;
+    
+    // Validate against scoreline if available
+    if (match.scoreline && typeof match.scoreline === 'object') {
+      const scorelineTotal = Object.values(match.scoreline).reduce((sum, score) => sum + (score || 0), 0);
+      if (scorelineTotal !== calculatedTotal) {
+        console.warn(`  ⚠️  Match ${match.date}: Scoreline total (${scorelineTotal}) doesn't match calculated goals (${calculatedTotal})`);
+        console.warn(`      Regular goals: ${matchTotalGoals}, Own goals: ${matchOwnGoals}`);
+      }
+    }
+    
     // Update match totalGoals if different
-    if (match.totalGoals !== matchTotalGoals) {
-      match.totalGoals = matchTotalGoals;
+    if (match.totalGoals !== calculatedTotal) {
+      match.totalGoals = calculatedTotal;
     }
 
     // Add to appropriate totals
-    totalGoals += matchTotalGoals;
+    totalGoals += calculatedTotal;
     if (match.day === 'Weekend') {
-      weekendGoals += matchTotalGoals;
+      weekendGoals += calculatedTotal;
     } else if (match.day === 'Midweek') {
-      weekdayGoals += matchTotalGoals;
+      weekdayGoals += calculatedTotal;
     }
   });
 

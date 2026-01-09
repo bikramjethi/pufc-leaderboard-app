@@ -12,24 +12,120 @@
       "matchCancelled": false,
       "attendance": {
         "BLUE": [
-          { "name": "Jethi", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Ashish", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Pandey", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Rohit Gautam", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Vivek", "goals": 1, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Ammar", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Vinay", "goals": 2, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Joe", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" }
+          {
+            "name": "Jethi",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Ashish",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Pandey",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vivek",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Ammar",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vinay",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Joe",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
         ],
         "RED": [
-          { "name": "Subarna", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Rishav", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Rishabh", "goals": 2, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Vedant", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Animesh", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Prateek", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Suyash", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "ONLOAN" },
-          { "name": "Tejas", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "ONLOAN" }
+          {
+            "name": "Subarna",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Rishav",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vedant",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Animesh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Prateek",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Suyash",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN"
+          },
+          {
+            "name": "Tejas",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN"
+          }
         ]
       },
       "scoreline": {
@@ -46,24 +142,120 @@
       "matchCancelled": false,
       "attendance": {
         "BLACK": [
-          { "name": "Vinay", "goals": 2, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Pandey", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Animesh", "goals": 2, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Vinit", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "John", "goals": 0, "ownGoals": 1, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Vikas", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Subarna", "goals": 1, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Vinoth", "goals": 4, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" }
+          {
+            "name": "Vinay",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Pandey",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Animesh",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vinit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "John",
+            "goals": 0,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vikas",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
         ],
         "WHITE": [
-          { "name": "Rishav", "goals": 1, "ownGoals": 0, "cleanSheet": true, "groupStatus": "REGULAR" },
-          { "name": "Jethi", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Ashish", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Sourabh", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Rishabh", "goals": 2, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Akshat", "goals": 1, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Aayush", "goals": 1, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" },
-          { "name": "Joe", "goals": 0, "ownGoals": 0, "cleanSheet": false, "groupStatus": "REGULAR" }
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": true,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Jethi",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Ashish",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Joe",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
         ]
       },
       "scoreline": {
