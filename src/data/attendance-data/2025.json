@@ -1,8 +1,8 @@
 {
   "season": 2025,
-  "totalGoals": 827,
-  "weekendGoals": 270,
-  "weekdayGoals": 557,
+  "totalGoals": 861,
+  "weekendGoals": 273,
+  "weekdayGoals": 588,
   "matches": [
     {
       "id": "04-01-2025",
@@ -48,10 +48,10 @@
         "BLACK": 4,
         "YELLOW": 2
       },
-      "totalGoals": 5
+      "totalGoals": 6
     },
     {
-      "id": "2025-01-07",
+      "id": "07-01-2025",
       "date": "07/01/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -157,7 +157,7 @@
       "totalGoals": 4
     },
     {
-      "id": "2025-01-14",
+      "id": "14-01-2025",
       "date": "14/01/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -284,7 +284,7 @@
       "totalGoals": 9
     },
     {
-      "id": "2025-01-21",
+      "id": "21-01-2025",
       "date": "21/01/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -411,7 +411,7 @@
       "totalGoals": 8
     },
     {
-      "id": "2025-01-28",
+      "id": "28-01-2025",
       "date": "28/01/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -517,7 +517,7 @@
       "totalGoals": 3
     },
     {
-      "id": "2025-02-04",
+      "id": "04-02-2025",
       "date": "04/02/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -630,7 +630,7 @@
       "totalGoals": 6
     },
     {
-      "id": "2025-02-11",
+      "id": "11-02-2025",
       "date": "11/02/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -714,7 +714,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-02-18",
+      "id": "18-02-2025",
       "date": "18/02/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -838,10 +838,10 @@
         "BLACK": 5,
         "WHITE": 2
       },
-      "totalGoals": 6
+      "totalGoals": 7
     },
     {
-      "id": "2025-02-25",
+      "id": "25-02-2025",
       "date": "25/02/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -929,7 +929,7 @@
       "totalGoals": 14
     },
     {
-      "id": "2025-03-01",
+      "id": "01-03-2025",
       "date": "01/03/2025",
       "day": "Weekend",
       "matchPlayed": false,
@@ -939,7 +939,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-03-04",
+      "id": "04-03-2025",
       "date": "04/03/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -952,7 +952,7 @@
         "BLACK": 7,
         "WHITE": 6
       },
-      "totalGoals": 0
+      "totalGoals": 13
     },
     {
       "id": "08-03-2025",
@@ -1001,7 +1001,7 @@
       "totalGoals": 5
     },
     {
-      "id": "2025-03-11",
+      "id": "11-03-2025",
       "date": "11/03/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -1135,7 +1135,7 @@
       "totalGoals": 6
     },
     {
-      "id": "2025-03-18",
+      "id": "18-03-2025",
       "date": "18/03/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -1248,7 +1248,7 @@
       "totalGoals": 6
     },
     {
-      "id": "2025-03-25",
+      "id": "25-03-2025",
       "date": "25/03/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -1375,7 +1375,7 @@
       "totalGoals": 5
     },
     {
-      "id": "2025-04-01",
+      "id": "01-04-2025",
       "date": "01/04/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -1488,7 +1488,7 @@
       "totalGoals": 7
     },
     {
-      "id": "2025-04-08",
+      "id": "08-04-2025",
       "date": "08/04/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -1586,7 +1586,7 @@
       "totalGoals": 2
     },
     {
-      "id": "2025-04-15",
+      "id": "15-04-2025",
       "date": "15/04/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -1713,7 +1713,7 @@
       "totalGoals": 6
     },
     {
-      "id": "2025-04-22",
+      "id": "22-04-2025",
       "date": "22/04/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -1847,7 +1847,7 @@
       "totalGoals": 9
     },
     {
-      "id": "2025-04-29",
+      "id": "29-04-2025",
       "date": "29/04/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -1960,7 +1960,7 @@
       "totalGoals": 6
     },
     {
-      "id": "2025-05-06",
+      "id": "06-05-2025",
       "date": "06/05/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -2080,7 +2080,7 @@
       "totalGoals": 7
     },
     {
-      "id": "2025-05-13",
+      "id": "13-05-2025",
       "date": "13/05/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -2221,7 +2221,7 @@
       "totalGoals": 10
     },
     {
-      "id": "2025-05-20",
+      "id": "20-05-2025",
       "date": "20/05/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -2298,7 +2298,7 @@
       "totalGoals": 3
     },
     {
-      "id": "2025-05-27",
+      "id": "27-05-2025",
       "date": "27/05/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -2390,7 +2390,7 @@
       "totalGoals": 3
     },
     {
-      "id": "2025-06-03",
+      "id": "03-06-2025",
       "date": "03/06/2025",
       "day": "Midweek",
       "matchPlayed": false,
@@ -2439,7 +2439,7 @@
       "totalGoals": 3
     },
     {
-      "id": "2025-06-10",
+      "id": "10-06-2025",
       "date": "10/06/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -2506,7 +2506,7 @@
       "totalGoals": 10
     },
     {
-      "id": "2025-06-14",
+      "id": "14-06-2025",
       "date": "14/06/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -2559,7 +2559,7 @@
       "totalGoals": 13
     },
     {
-      "id": "2025-06-17",
+      "id": "17-06-2025",
       "date": "17/06/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -2612,7 +2612,7 @@
       "totalGoals": 6
     },
     {
-      "id": "2025-06-21",
+      "id": "21-06-2025",
       "date": "21/06/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -2665,7 +2665,7 @@
       "totalGoals": 8
     },
     {
-      "id": "2025-06-24",
+      "id": "24-06-2025",
       "date": "24/06/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -2704,7 +2704,7 @@
       "totalGoals": 4
     },
     {
-      "id": "2025-06-28",
+      "id": "28-06-2025",
       "date": "28/06/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -2761,10 +2761,10 @@
         "RED": 4,
         "BLUE": 4
       },
-      "totalGoals": 7
+      "totalGoals": 8
     },
     {
-      "id": "2025-07-01",
+      "id": "01-07-2025",
       "date": "01/07/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -2838,7 +2838,7 @@
       "totalGoals": 20
     },
     {
-      "id": "2025-07-05",
+      "id": "05-07-2025",
       "date": "05/07/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -2884,7 +2884,7 @@
       "totalGoals": 7
     },
     {
-      "id": "2025-07-08",
+      "id": "08-07-2025",
       "date": "08/07/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -2951,7 +2951,7 @@
       "totalGoals": 13
     },
     {
-      "id": "2025-07-12",
+      "id": "12-07-2025",
       "date": "12/07/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -3011,7 +3011,7 @@
       "totalGoals": 10
     },
     {
-      "id": "2025-07-15",
+      "id": "15-07-2025",
       "date": "15/07/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -3078,7 +3078,7 @@
       "totalGoals": 9
     },
     {
-      "id": "2025-07-19",
+      "id": "19-07-2025",
       "date": "19/07/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -3131,7 +3131,7 @@
       "totalGoals": 5
     },
     {
-      "id": "2025-07-22",
+      "id": "22-07-2025",
       "date": "22/07/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -3265,7 +3265,7 @@
       "totalGoals": 5
     },
     {
-      "id": "2025-07-29",
+      "id": "29-07-2025",
       "date": "29/07/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -3378,7 +3378,7 @@
       "totalGoals": 6
     },
     {
-      "id": "2025-08-05",
+      "id": "05-08-2025",
       "date": "05/08/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -3459,7 +3459,7 @@
       "totalGoals": 15
     },
     {
-      "id": "2025-08-09",
+      "id": "09-08-2025",
       "date": "09/08/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -3505,7 +3505,7 @@
       "totalGoals": 5
     },
     {
-      "id": "2025-08-12",
+      "id": "12-08-2025",
       "date": "12/08/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -3558,7 +3558,7 @@
       "totalGoals": 7
     },
     {
-      "id": "2025-08-16",
+      "id": "16-08-2025",
       "date": "16/08/2025",
       "day": "Weekend",
       "matchPlayed": false,
@@ -3568,7 +3568,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-08-19",
+      "id": "19-08-2025",
       "date": "19/08/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -3656,7 +3656,7 @@
       "totalGoals": 17
     },
     {
-      "id": "2025-08-23",
+      "id": "23-08-2025",
       "date": "23/08/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -3695,7 +3695,7 @@
       "totalGoals": 3
     },
     {
-      "id": "2025-08-26",
+      "id": "26-08-2025",
       "date": "26/08/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -3769,7 +3769,7 @@
       "totalGoals": 14
     },
     {
-      "id": "2025-08-30",
+      "id": "30-08-2025",
       "date": "30/08/2025",
       "day": "Weekend",
       "matchPlayed": false,
@@ -3779,7 +3779,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-09-02",
+      "id": "02-09-2025",
       "date": "02/09/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -3853,7 +3853,7 @@
       "totalGoals": 15
     },
     {
-      "id": "2025-09-06",
+      "id": "06-09-2025",
       "date": "06/09/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -3899,7 +3899,7 @@
       "totalGoals": 4
     },
     {
-      "id": "2025-09-09",
+      "id": "09-09-2025",
       "date": "09/09/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -3966,7 +3966,7 @@
       "totalGoals": 8
     },
     {
-      "id": "2025-09-13",
+      "id": "13-09-2025",
       "date": "13/09/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -4012,7 +4012,7 @@
       "totalGoals": 5
     },
     {
-      "id": "2025-09-16",
+      "id": "16-09-2025",
       "date": "16/09/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -4072,7 +4072,7 @@
       "totalGoals": 9
     },
     {
-      "id": "2025-09-20",
+      "id": "20-09-2025",
       "date": "20/09/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -4132,7 +4132,7 @@
       "totalGoals": 8
     },
     {
-      "id": "2025-09-23",
+      "id": "23-09-2025",
       "date": "23/09/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -4206,7 +4206,7 @@
       "totalGoals": 10
     },
     {
-      "id": "2025-09-27",
+      "id": "27-09-2025",
       "date": "27/09/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -4280,7 +4280,7 @@
       "totalGoals": 11
     },
     {
-      "id": "2025-09-30",
+      "id": "30-09-2025",
       "date": "30/09/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -4347,7 +4347,7 @@
       "totalGoals": 8
     },
     {
-      "id": "2025-10-04",
+      "id": "04-10-2025",
       "date": "04/10/2025",
       "day": "Weekend",
       "matchPlayed": false,
@@ -4357,7 +4357,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-10-07",
+      "id": "07-10-2025",
       "date": "07/10/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -4417,7 +4417,7 @@
       "totalGoals": 10
     },
     {
-      "id": "2025-10-11",
+      "id": "11-10-2025",
       "date": "11/10/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -4477,7 +4477,7 @@
       "totalGoals": 9
     },
     {
-      "id": "2025-10-14",
+      "id": "14-10-2025",
       "date": "14/10/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -4530,7 +4530,7 @@
       "totalGoals": 13
     },
     {
-      "id": "2025-10-18",
+      "id": "18-10-2025",
       "date": "18/10/2025",
       "day": "Weekend",
       "matchPlayed": false,
@@ -4540,7 +4540,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-10-21",
+      "id": "21-10-2025",
       "date": "21/10/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -4621,7 +4621,7 @@
       "totalGoals": 20
     },
     {
-      "id": "2025-10-25",
+      "id": "25-10-2025",
       "date": "25/10/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -4681,7 +4681,7 @@
       "totalGoals": 9
     },
     {
-      "id": "2025-10-28",
+      "id": "28-10-2025",
       "date": "28/10/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -4755,7 +4755,7 @@
       "totalGoals": 12
     },
     {
-      "id": "2025-11-01",
+      "id": "01-11-2025",
       "date": "01/11/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -4794,7 +4794,7 @@
       "totalGoals": 4
     },
     {
-      "id": "2025-11-04",
+      "id": "04-11-2025",
       "date": "04/11/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -4861,7 +4861,7 @@
       "totalGoals": 16
     },
     {
-      "id": "2025-11-08",
+      "id": "08-11-2025",
       "date": "08/11/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -4914,7 +4914,7 @@
       "totalGoals": 6
     },
     {
-      "id": "2025-11-11",
+      "id": "11-11-2025",
       "date": "11/11/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -4971,10 +4971,10 @@
         "BLUE": 6,
         "RED": 10
       },
-      "totalGoals": 14
+      "totalGoals": 16
     },
     {
-      "id": "2025-11-15",
+      "id": "15-11-2025",
       "date": "15/11/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -5013,7 +5013,7 @@
       "totalGoals": 3
     },
     {
-      "id": "2025-11-18",
+      "id": "18-11-2025",
       "date": "18/11/2025",
       "day": "Midweek",
       "matchPlayed": false,
@@ -5023,7 +5023,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-11-22",
+      "id": "22-11-2025",
       "date": "22/11/2025",
       "day": "Weekend",
       "matchPlayed": false,
@@ -5033,7 +5033,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-11-25",
+      "id": "25-11-2025",
       "date": "25/11/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -5046,10 +5046,10 @@
         "BLACK": 9,
         "RED": 6
       },
-      "totalGoals": 0
+      "totalGoals": 15
     },
     {
-      "id": "2025-11-29",
+      "id": "29-11-2025",
       "date": "29/11/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -5088,7 +5088,7 @@
       "totalGoals": 6
     },
     {
-      "id": "2025-12-02",
+      "id": "02-12-2025",
       "date": "02/12/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -5155,7 +5155,7 @@
       "totalGoals": 11
     },
     {
-      "id": "2025-12-06",
+      "id": "06-12-2025",
       "date": "06/12/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -5203,7 +5203,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-12-13",
+      "id": "13-12-2025",
       "date": "13/12/2025",
       "day": "Weekend",
       "matchPlayed": false,
@@ -5213,7 +5213,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-12-16",
+      "id": "16-12-2025",
       "date": "16/12/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -5298,10 +5298,10 @@
         "BLUE": 11,
         "RED": 5
       },
-      "totalGoals": 15
+      "totalGoals": 16
     },
     {
-      "id": "2025-12-20",
+      "id": "20-12-2025",
       "date": "20/12/2025",
       "day": "Weekend",
       "matchPlayed": false,
@@ -5311,7 +5311,7 @@
       "totalGoals": 0
     },
     {
-      "id": "2025-12-23",
+      "id": "23-12-2025",
       "date": "23/12/2025",
       "day": "Midweek",
       "matchPlayed": true,
@@ -5364,7 +5364,7 @@
       "totalGoals": 10
     },
     {
-      "id": "2025-12-27",
+      "id": "27-12-2025",
       "date": "27/12/2025",
       "day": "Weekend",
       "matchPlayed": true,
@@ -5431,7 +5431,7 @@
       "totalGoals": 11
     },
     {
-      "id": "2025-12-30",
+      "id": "30-12-2025",
       "date": "30/12/2025",
       "day": "Midweek",
       "matchPlayed": true,
