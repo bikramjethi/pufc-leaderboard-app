@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { config } from "./leaderboard-config.js";
 import matchData2026 from "./data/attendance-data/2026.json";
 import matchData2025 from "./data/attendance-data/2025.json";
@@ -7,6 +7,7 @@ const matchDataByYear = {
   2026: matchData2026,
   2025: matchData2025,
 };
+
 
 const availableSeasons = config.SCORING_TRENDS?.seasons || ["2026"];
 
@@ -54,6 +55,10 @@ export const ScoringTrends = () => {
   const defaultSeason = config.SCORING_TRENDS?.defaultSeason || "2026";
   const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
   const [activeSubTab, setActiveSubTab] = useState("scoring-trends");
+  const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, content: null });
+  const [diffTooltip, setDiffTooltip] = useState({ visible: false, x: 0, y: 0, content: null });
+  const svgRef = useRef(null);
+  const diffSvgRef = useRef(null);
 
   // Process match data for the graph
   const graphData = useMemo(() => {
@@ -112,15 +117,31 @@ export const ScoringTrends = () => {
     // Group matches by week
     const weeklyData = new Map();
 
+    const selectedYear = parseInt(selectedSeason);
+    
     playedMatches.forEach((match) => {
       const matchDate = parseDate(match.date);
+      const calendarYear = matchDate.getFullYear();
       const { weekNum, isoYear } = getISOWeekData(matchDate);
-      const weekKey = `${isoYear}-W${weekNum}`;
+      
+      // Handle year spillover: if match is in selected year but ISO week year is next year,
+      // show it as week 53 (or the last week of the selected year) for sanity
+      let displayWeekNum = weekNum;
+      let displayYear = isoYear;
+      
+      if (calendarYear === selectedYear && isoYear > selectedYear) {
+        // This is a late December date that spills into next year's week 1
+        // Show it as week 53 of the current year
+        displayWeekNum = 53;
+        displayYear = selectedYear;
+      }
+      
+      const weekKey = `${displayYear}-W${displayWeekNum}`;
 
       if (!weeklyData.has(weekKey)) {
         weeklyData.set(weekKey, {
-          weekNum,
-          year: isoYear,
+          weekNum: displayWeekNum,
+          year: displayYear,
           weekKey,
           weekdayMatches: [],
           weekendMatches: [],
@@ -225,6 +246,83 @@ export const ScoringTrends = () => {
     };
   }, [graphData]);
 
+  // Calculate weekly goal differences
+  const weeklyDiffs = useMemo(() => {
+    const data = matchDataByYear[selectedSeason];
+    if (!data || !data.matches) return [];
+
+    const playedMatches = data.matches
+      .filter((m) => m.matchPlayed && !m.matchCancelled && m.scoreline)
+      .sort((a, b) => parseDate(a.date) - parseDate(b.date));
+
+    const selectedYear = parseInt(selectedSeason);
+    const weeklyData = new Map();
+
+    playedMatches.forEach((match) => {
+      const matchDate = parseDate(match.date);
+      const calendarYear = matchDate.getFullYear();
+      const { weekNum, isoYear } = getISOWeekData(matchDate);
+      
+      let displayWeekNum = weekNum;
+      let displayYear = isoYear;
+      
+      if (calendarYear === selectedYear && isoYear > selectedYear) {
+        displayWeekNum = 53;
+        displayYear = selectedYear;
+      }
+      
+      const weekKey = `${displayYear}-W${displayWeekNum}`;
+
+      if (!weeklyData.has(weekKey)) {
+        weeklyData.set(weekKey, {
+          weekNum: displayWeekNum,
+          year: displayYear,
+          weekKey,
+          weekdayMatches: [],
+          weekendMatches: [],
+        });
+      }
+
+      const week = weeklyData.get(weekKey);
+      
+      // Calculate goal difference for this match
+      const scores = Object.values(match.scoreline);
+      const diff = scores.length >= 2 ? Math.abs(scores[0] - scores[1]) : 0;
+      const matchWithDiff = { ...match, goalDiff: diff };
+      
+      if (match.day === "Midweek") {
+        week.weekdayMatches.push(matchWithDiff);
+      } else if (match.day === "Weekend") {
+        week.weekendMatches.push(matchWithDiff);
+      }
+    });
+
+    const results = [];
+    weeklyData.forEach((week) => {
+      const weekdayDiff = week.weekdayMatches.length > 0 
+        ? week.weekdayMatches[0].goalDiff 
+        : null;
+      const weekendDiff = week.weekendMatches.length > 0 
+        ? week.weekendMatches[0].goalDiff 
+        : null;
+      
+      results.push({
+        weekNum: week.weekNum,
+        year: week.year,
+        weekKey: week.weekKey,
+        weekdayMatch: week.weekdayMatches[0] || null,
+        weekendMatch: week.weekendMatches[0] || null,
+        weekdayDiff,
+        weekendDiff,
+      });
+    });
+
+    return results.sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.weekNum - b.weekNum;
+    });
+  }, [selectedSeason]);
+
   // SVG dimensions
   const svgWidth = 800;
   const svgHeight = 400;
@@ -293,6 +391,12 @@ export const ScoringTrends = () => {
         >
           🏆 Scorers Trend
         </button>
+        <button
+          className={`trends-sub-tab ${activeSubTab === "scoring-diffs" ? "active" : ""}`}
+          onClick={() => setActiveSubTab("scoring-diffs")}
+        >
+          ⚖️ Scoring Diffs
+        </button>
       </div>
 
       {/* Scoring Trends View */}
@@ -319,11 +423,12 @@ export const ScoringTrends = () => {
           </div>
 
           {/* Graph Container */}
-          <div className="scoring-trends-graph-container">
+          <div className="scoring-trends-graph-container" ref={svgRef}>
             <svg
               viewBox={`0 0 ${svgWidth} ${svgHeight}`}
               className="scoring-trends-svg"
               preserveAspectRatio="xMidYMid meet"
+              onMouseLeave={() => setTooltip({ visible: false, x: 0, y: 0, content: null })}
             >
               {/* Background */}
               <rect
@@ -422,21 +527,39 @@ export const ScoringTrends = () => {
                   />
                   {/* Weekend Points */}
                   {graphData.weekend.map((match, i) => {
-                    const scorelineText = match.scoreline && Object.keys(match.scoreline).length > 0
-                      ? Object.entries(match.scoreline).map(([team, score]) => `${team}: ${score}`).join(' vs ')
-                      : '';
+                    const cx = xScale(i + 1);
+                    const cy = yScale(match.goals);
                     return (
                       <g key={`weekend-${i}`} className="data-point-group">
                         <circle
-                          cx={xScale(i + 1)}
-                          cy={yScale(match.goals)}
-                          r="6"
+                          cx={cx}
+                          cy={cy}
+                          r="8"
                           fill="#f59e0b"
                           stroke="var(--bg-card)"
                           strokeWidth="2"
                           className="data-point weekend-point"
+                          style={{ cursor: 'pointer' }}
+                          onMouseEnter={() => {
+                            const rect = svgRef.current?.getBoundingClientRect();
+                            if (rect) {
+                              const svgX = (cx / svgWidth) * rect.width;
+                              const svgY = (cy / svgHeight) * rect.height;
+                              setTooltip({
+                                visible: true,
+                                x: svgX,
+                                y: svgY - 10,
+                                content: {
+                                  date: match.date,
+                                  scoreline: match.scoreline,
+                                  goals: match.goals,
+                                  type: 'weekend'
+                                }
+                              });
+                            }
+                          }}
+                          onMouseLeave={() => setTooltip({ visible: false, x: 0, y: 0, content: null })}
                         />
-                        <title>{`${match.date}\n${scorelineText}\nTotal: ${match.goals} goals`}</title>
                       </g>
                     );
                   })}
@@ -457,27 +580,72 @@ export const ScoringTrends = () => {
                   />
                   {/* Weekday Points */}
                   {graphData.weekday.map((match, i) => {
-                    const scorelineText = match.scoreline && Object.keys(match.scoreline).length > 0
-                      ? Object.entries(match.scoreline).map(([team, score]) => `${team}: ${score}`).join(' vs ')
-                      : '';
+                    const cx = xScale(i + 1);
+                    const cy = yScale(match.goals);
                     return (
                       <g key={`weekday-${i}`} className="data-point-group">
                         <circle
-                          cx={xScale(i + 1)}
-                          cy={yScale(match.goals)}
-                          r="6"
+                          cx={cx}
+                          cy={cy}
+                          r="8"
                           fill="#3b82f6"
                           stroke="var(--bg-card)"
                           strokeWidth="2"
                           className="data-point weekday-point"
+                          style={{ cursor: 'pointer' }}
+                          onMouseEnter={() => {
+                            const rect = svgRef.current?.getBoundingClientRect();
+                            if (rect) {
+                              const svgX = (cx / svgWidth) * rect.width;
+                              const svgY = (cy / svgHeight) * rect.height;
+                              setTooltip({
+                                visible: true,
+                                x: svgX,
+                                y: svgY - 10,
+                                content: {
+                                  date: match.date,
+                                  scoreline: match.scoreline,
+                                  goals: match.goals,
+                                  type: 'weekday'
+                                }
+                              });
+                            }
+                          }}
+                          onMouseLeave={() => setTooltip({ visible: false, x: 0, y: 0, content: null })}
                         />
-                        <title>{`${match.date}\n${scorelineText}\nTotal: ${match.goals} goals`}</title>
                       </g>
                     );
                   })}
                 </>
               )}
             </svg>
+            
+            {/* Custom Tooltip */}
+            {tooltip.visible && tooltip.content && (
+              <div 
+                className="graph-tooltip"
+                style={{
+                  left: tooltip.x,
+                  top: tooltip.y,
+                  transform: 'translate(-50%, -100%)'
+                }}
+              >
+                <div className="tooltip-date">{tooltip.content.date}</div>
+                {tooltip.content.scoreline && Object.keys(tooltip.content.scoreline).length > 0 && (
+                  <div className="tooltip-scoreline">
+                    {Object.entries(tooltip.content.scoreline).map(([team, score], idx, arr) => (
+                      <span key={team}>
+                        <span className={`tooltip-team team-${team.toLowerCase()}`}>{score}</span>
+                        {idx < arr.length - 1 && <span className="tooltip-separator">-</span>}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className={`tooltip-total ${tooltip.content.type}`}>
+                  {tooltip.content.goals} goals
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Legend */}
@@ -675,6 +843,424 @@ export const ScoringTrends = () => {
           </div>
         </div>
       )}
+
+      {/* Scoring Diffs View */}
+      {activeSubTab === "scoring-diffs" && (() => {
+        // Prepare graph data for diffs
+        const weekdayDiffsData = weeklyDiffs
+          .filter(w => w.weekdayMatch)
+          .map(w => ({
+            date: w.weekdayMatch.date,
+            diff: w.weekdayDiff,
+            scoreline: w.weekdayMatch.scoreline,
+            weekNum: w.weekNum
+          }));
+        const weekendDiffsData = weeklyDiffs
+          .filter(w => w.weekendMatch)
+          .map(w => ({
+            date: w.weekendMatch.date,
+            diff: w.weekendDiff,
+            scoreline: w.weekendMatch.scoreline,
+            weekNum: w.weekNum
+          }));
+        const maxDiffMatches = Math.max(weekdayDiffsData.length, weekendDiffsData.length, 1);
+        const maxDiff = Math.max(
+          ...weekdayDiffsData.map(d => d.diff || 0),
+          ...weekendDiffsData.map(d => d.diff || 0),
+          5
+        );
+        
+        const diffXScale = (index) => {
+          if (maxDiffMatches === 1) return padding.left;
+          return padding.left + ((index - 1) / (maxDiffMatches - 1)) * chartWidth;
+        };
+        const diffYScale = (diff) => padding.top + chartHeight - (diff / maxDiff) * chartHeight;
+        
+        const generateDiffPath = (matches) => {
+          if (matches.length === 0) return "";
+          const points = matches.map((m, i) => `${diffXScale(i + 1)},${diffYScale(m.diff)}`);
+          return `M ${points.join(" L ")}`;
+        };
+        
+        const diffYGridLines = [];
+        for (let i = 0; i <= maxDiff; i++) {
+          diffYGridLines.push(i);
+        }
+        
+        return (
+        <div className="scoring-diffs-section">
+          <div className="scoring-diffs-summary">
+            <div className="diff-stat-card">
+              <span className="diff-stat-label">Avg Weekday Diff</span>
+              <span className="diff-stat-value weekday">
+                {weeklyDiffs.filter(w => w.weekdayDiff !== null).length > 0
+                  ? (weeklyDiffs.filter(w => w.weekdayDiff !== null).reduce((sum, w) => sum + w.weekdayDiff, 0) / 
+                     weeklyDiffs.filter(w => w.weekdayDiff !== null).length).toFixed(1)
+                  : 0}
+              </span>
+            </div>
+            <div className="diff-stat-card">
+              <span className="diff-stat-label">Avg Weekend Diff</span>
+              <span className="diff-stat-value weekend">
+                {weeklyDiffs.filter(w => w.weekendDiff !== null).length > 0
+                  ? (weeklyDiffs.filter(w => w.weekendDiff !== null).reduce((sum, w) => sum + w.weekendDiff, 0) / 
+                     weeklyDiffs.filter(w => w.weekendDiff !== null).length).toFixed(1)
+                  : 0}
+              </span>
+            </div>
+          </div>
+
+          {/* Diffs Graph */}
+          <div className="scoring-diffs-graph-container" ref={diffSvgRef}>
+            <svg
+              viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+              className="scoring-diffs-svg"
+              preserveAspectRatio="xMidYMid meet"
+              onMouseLeave={() => setDiffTooltip({ visible: false, x: 0, y: 0, content: null })}
+            >
+              {/* Background */}
+              <rect
+                x={padding.left}
+                y={padding.top}
+                width={chartWidth}
+                height={chartHeight}
+                fill="var(--bg-secondary)"
+                rx="8"
+              />
+
+              {/* Grid Lines */}
+              {diffYGridLines.map((value) => (
+                <g key={value}>
+                  <line
+                    x1={padding.left}
+                    y1={diffYScale(value)}
+                    x2={svgWidth - padding.right}
+                    y2={diffYScale(value)}
+                    stroke="var(--border-color)"
+                    strokeDasharray="4,4"
+                    opacity="0.5"
+                  />
+                  <text
+                    x={padding.left - 10}
+                    y={diffYScale(value)}
+                    textAnchor="end"
+                    dominantBaseline="middle"
+                    fill="var(--text-muted)"
+                    fontSize="12"
+                    fontFamily="Outfit, sans-serif"
+                  >
+                    {value}
+                  </text>
+                </g>
+              ))}
+
+              {/* X-axis labels */}
+              {Array.from({ length: maxDiffMatches }, (_, i) => {
+                const matchNum = i + 1;
+                if (maxDiffMatches > 10 && matchNum % Math.ceil(maxDiffMatches / 10) !== 0 && matchNum !== 1 && matchNum !== maxDiffMatches) {
+                  return null;
+                }
+                return (
+                  <text
+                    key={i}
+                    x={diffXScale(matchNum)}
+                    y={svgHeight - padding.bottom + 20}
+                    textAnchor="middle"
+                    fill="var(--text-muted)"
+                    fontSize="12"
+                    fontFamily="Outfit, sans-serif"
+                  >
+                    M{matchNum}
+                  </text>
+                );
+              })}
+
+              {/* Axis Labels */}
+              <text
+                x={svgWidth / 2}
+                y={svgHeight - 10}
+                textAnchor="middle"
+                fill="var(--text-secondary)"
+                fontSize="14"
+                fontWeight="600"
+                fontFamily="Outfit, sans-serif"
+              >
+                Match Day
+              </text>
+              <text
+                x={15}
+                y={svgHeight / 2}
+                textAnchor="middle"
+                fill="var(--text-secondary)"
+                fontSize="14"
+                fontWeight="600"
+                fontFamily="Outfit, sans-serif"
+                transform={`rotate(-90, 15, ${svgHeight / 2})`}
+              >
+                Goal Difference
+              </text>
+
+              {/* Weekend Line */}
+              {weekendDiffsData.length > 0 && (
+                <>
+                  <path
+                    d={generateDiffPath(weekendDiffsData)}
+                    fill="none"
+                    stroke="#f59e0b"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="trend-line weekend-line"
+                  />
+                  {weekendDiffsData.map((match, i) => {
+                    const cx = diffXScale(i + 1);
+                    const cy = diffYScale(match.diff);
+                    return (
+                      <g key={`diff-weekend-${i}`} className="data-point-group">
+                        <circle
+                          cx={cx}
+                          cy={cy}
+                          r="8"
+                          fill="#f59e0b"
+                          stroke="var(--bg-card)"
+                          strokeWidth="2"
+                          className="data-point weekend-point"
+                          style={{ cursor: 'pointer' }}
+                          onMouseEnter={() => {
+                            const rect = diffSvgRef.current?.getBoundingClientRect();
+                            if (rect) {
+                              const svgX = (cx / svgWidth) * rect.width;
+                              const svgY = (cy / svgHeight) * rect.height;
+                              setDiffTooltip({
+                                visible: true,
+                                x: svgX,
+                                y: svgY - 10,
+                                content: {
+                                  date: match.date,
+                                  scoreline: match.scoreline,
+                                  diff: match.diff,
+                                  type: 'weekend'
+                                }
+                              });
+                            }
+                          }}
+                          onMouseLeave={() => setDiffTooltip({ visible: false, x: 0, y: 0, content: null })}
+                        />
+                      </g>
+                    );
+                  })}
+                </>
+              )}
+
+              {/* Weekday Line */}
+              {weekdayDiffsData.length > 0 && (
+                <>
+                  <path
+                    d={generateDiffPath(weekdayDiffsData)}
+                    fill="none"
+                    stroke="#3b82f6"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="trend-line weekday-line"
+                  />
+                  {weekdayDiffsData.map((match, i) => {
+                    const cx = diffXScale(i + 1);
+                    const cy = diffYScale(match.diff);
+                    return (
+                      <g key={`diff-weekday-${i}`} className="data-point-group">
+                        <circle
+                          cx={cx}
+                          cy={cy}
+                          r="8"
+                          fill="#3b82f6"
+                          stroke="var(--bg-card)"
+                          strokeWidth="2"
+                          className="data-point weekday-point"
+                          style={{ cursor: 'pointer' }}
+                          onMouseEnter={() => {
+                            const rect = diffSvgRef.current?.getBoundingClientRect();
+                            if (rect) {
+                              const svgX = (cx / svgWidth) * rect.width;
+                              const svgY = (cy / svgHeight) * rect.height;
+                              setDiffTooltip({
+                                visible: true,
+                                x: svgX,
+                                y: svgY - 10,
+                                content: {
+                                  date: match.date,
+                                  scoreline: match.scoreline,
+                                  diff: match.diff,
+                                  type: 'weekday'
+                                }
+                              });
+                            }
+                          }}
+                          onMouseLeave={() => setDiffTooltip({ visible: false, x: 0, y: 0, content: null })}
+                        />
+                      </g>
+                    );
+                  })}
+                </>
+              )}
+            </svg>
+            
+            {/* Custom Tooltip for Diffs */}
+            {diffTooltip.visible && diffTooltip.content && (
+              <div 
+                className="graph-tooltip"
+                style={{
+                  left: diffTooltip.x,
+                  top: diffTooltip.y,
+                  transform: 'translate(-50%, -100%)'
+                }}
+              >
+                <div className="tooltip-date">{diffTooltip.content.date}</div>
+                {diffTooltip.content.scoreline && Object.keys(diffTooltip.content.scoreline).length > 0 && (
+                  <div className="tooltip-scoreline">
+                    {Object.entries(diffTooltip.content.scoreline).map(([team, score], idx, arr) => (
+                      <span key={team}>
+                        <span className={`tooltip-team team-${team.toLowerCase()}`}>{score}</span>
+                        {idx < arr.length - 1 && <span className="tooltip-separator">-</span>}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className={`tooltip-total ${diffTooltip.content.type}`}>
+                  Diff: {diffTooltip.content.diff}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Legend */}
+          <div className="scoring-trends-legend">
+            <div className="legend-item">
+              <span className="legend-color weekday-color"></span>
+              <span className="legend-text">Weekday Matches</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-color weekend-color"></span>
+              <span className="legend-text">Weekend Matches</span>
+            </div>
+          </div>
+
+          <div className="scoring-diffs-table-container">
+            <table className="scoring-diffs-table">
+              <thead>
+                <tr>
+                  <th>Week</th>
+                  <th>
+                    <span className="th-icon weekday-icon">📅</span>
+                    Weekday
+                  </th>
+                  <th>
+                    <span className="th-icon weekday-icon">📅</span>
+                    Scoreline
+                  </th>
+                  <th>
+                    <span className="th-icon weekday-icon">📅</span>
+                    Diff
+                  </th>
+                  <th>
+                    <span className="th-icon weekend-icon">🌅</span>
+                    Weekend
+                  </th>
+                  <th>
+                    <span className="th-icon weekend-icon">🌅</span>
+                    Scoreline
+                  </th>
+                  <th>
+                    <span className="th-icon weekend-icon">🌅</span>
+                    Diff
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {weeklyDiffs.map((week, i) => (
+                  <tr key={week.weekKey} className={i % 2 === 0 ? "even" : "odd"}>
+                    <td className="week-cell">
+                      <span className="week-number">W{week.weekNum}</span>
+                    </td>
+                    {/* Weekday */}
+                    <td className="date-cell">
+                      {week.weekdayMatch ? week.weekdayMatch.date : "—"}
+                    </td>
+                    <td className="scoreline-cell">
+                      {week.weekdayMatch?.scoreline ? (
+                        <div className="scoreline-display">
+                          {Object.entries(week.weekdayMatch.scoreline).map(([team, score], idx, arr) => (
+                            <span key={team}>
+                              <span className={`team-score team-${team.toLowerCase()}`} title={team}>
+                                {score}
+                              </span>
+                              {idx < arr.length - 1 && <span className="score-separator">-</span>}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className={`diff-cell ${week.weekdayDiff !== null ? (week.weekdayDiff === 0 ? "draw" : week.weekdayDiff >= 3 ? "high" : "") : ""}`}>
+                      {week.weekdayDiff !== null ? (
+                        <span className="diff-value">{week.weekdayDiff}</span>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    {/* Weekend */}
+                    <td className="date-cell">
+                      {week.weekendMatch ? week.weekendMatch.date : "—"}
+                    </td>
+                    <td className="scoreline-cell">
+                      {week.weekendMatch?.scoreline ? (
+                        <div className="scoreline-display">
+                          {Object.entries(week.weekendMatch.scoreline).map(([team, score], idx, arr) => (
+                            <span key={team}>
+                              <span className={`team-score team-${team.toLowerCase()}`} title={team}>
+                                {score}
+                              </span>
+                              {idx < arr.length - 1 && <span className="score-separator">-</span>}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className={`diff-cell ${week.weekendDiff !== null ? (week.weekendDiff === 0 ? "draw" : week.weekendDiff >= 3 ? "high" : "") : ""}`}>
+                      {week.weekendDiff !== null ? (
+                        <span className="diff-value">{week.weekendDiff}</span>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                  </tr>
+                ))}
+                {weeklyDiffs.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="no-data">No match data available</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Legend for Scoring Diffs */}
+          <div className="scoring-diffs-legend">
+            <div className="legend-item">
+              <span className="legend-color draw"></span>
+              <span>Draw (0 diff)</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-color high-diff"></span>
+              <span>High diff (3+)</span>
+            </div>
+          </div>
+        </div>
+        );
+      })()}
     </div>
   );
 };

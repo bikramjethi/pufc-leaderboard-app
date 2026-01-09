@@ -3409,7 +3409,9 @@ body::before {
 }
 
 /* Graph Container */
-.scoring-trends-graph-container {
+.scoring-trends-graph-container,
+.scoring-diffs-graph-container {
+  position: relative;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 12px;
@@ -3418,11 +3420,98 @@ body::before {
   overflow-x: auto;
 }
 
-.scoring-trends-svg {
+.scoring-trends-svg,
+.scoring-diffs-svg {
   width: 100%;
   height: auto;
   min-height: 300px;
   max-height: 450px;
+}
+
+/* Graph Tooltip */
+.graph-tooltip {
+  position: absolute;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 100;
+  min-width: 120px;
+  text-align: center;
+}
+
+.tooltip-date {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.tooltip-scoreline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.tooltip-team {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.tooltip-team.team-black {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.tooltip-team.team-white {
+  background: #f8fafc;
+  color: #1a1a2e;
+  border: 1px solid #cbd5e1;
+}
+
+.tooltip-team.team-red {
+  background: #ef4444;
+  color: #fff;
+}
+
+.tooltip-team.team-blue {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.tooltip-team.team-yellow {
+  background: #facc15;
+  color: #1a1a2e;
+}
+
+.tooltip-separator {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin: 0 0.25rem;
+}
+
+.tooltip-total {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+
+.tooltip-total.weekday {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.tooltip-total.weekend {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
 }
 
 /* Trend Lines */
@@ -3953,5 +4042,195 @@ body::before {
 
   .scorer-cell {
     min-width: 100px;
+  }
+}
+
+/* ==================== Scoring Diffs Section ==================== */
+.scoring-diffs-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.scoring-diffs-summary {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.diff-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  min-width: 140px;
+}
+
+.diff-stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.diff-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.diff-stat-value.weekday {
+  color: #3b82f6;
+}
+
+.diff-stat-value.weekend {
+  color: #f59e0b;
+}
+
+.scoring-diffs-table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+}
+
+.scoring-diffs-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+.scoring-diffs-table th {
+  padding: 0.875rem 0.75rem;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--border-color);
+  text-align: center;
+}
+
+.scoring-diffs-table td {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.scoring-diffs-table tbody tr.even {
+  background: var(--bg-card);
+}
+
+.scoring-diffs-table tbody tr.odd {
+  background: var(--bg-secondary);
+}
+
+.scoring-diffs-table tbody tr:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.scoring-diffs-table .date-cell {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.scoring-diffs-table .diff-cell {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.scoring-diffs-table .diff-cell .diff-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+}
+
+.scoring-diffs-table .diff-cell.draw .diff-value {
+  background: rgba(234, 179, 8, 0.15);
+  border-color: #eab308;
+  color: #eab308;
+}
+
+.scoring-diffs-table .diff-cell.high .diff-value {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* Scoring Diffs Legend */
+.scoring-diffs-legend {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.scoring-diffs-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.scoring-diffs-legend .legend-color {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid;
+}
+
+.scoring-diffs-legend .legend-color.draw {
+  background: rgba(234, 179, 8, 0.15);
+  border-color: #eab308;
+}
+
+.scoring-diffs-legend .legend-color.high-diff {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+}
+
+/* Responsive for Scoring Diffs */
+@media (max-width: 768px) {
+  .scoring-diffs-table {
+    min-width: 600px;
+  }
+  
+  .scoring-diffs-table th,
+  .scoring-diffs-table td {
+    padding: 0.5rem 0.4rem;
+    font-size: 0.75rem;
+  }
+  
+  .scoring-diffs-table .diff-cell .diff-value {
+    width: 26px;
+    height: 26px;
+    font-size: 0.9rem;
+  }
+  
+  .diff-stat-card {
+    padding: 0.75rem 1.25rem;
+    min-width: 120px;
+  }
+  
+  .diff-stat-value {
+    font-size: 1.5rem;
   }
 }
