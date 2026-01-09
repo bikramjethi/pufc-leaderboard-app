@@ -1,9 +1,11 @@
 import { useState, useMemo } from "react";
 import { config } from "./leaderboard-config.js";
 import matchData2026 from "./data/attendance-data/2026.json";
+import matchData2025 from "./data/attendance-data/2025.json";
 
 const matchDataByYear = {
   2026: matchData2026,
+  2025: matchData2025,
 };
 
 const availableSeasons = config.SCORING_TRENDS?.seasons || ["2026"];
