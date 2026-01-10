@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { config } from "./leaderboard-config.js";
 import matchData2026 from "./data/attendance-data/2026.json";
 import matchData2025 from "./data/attendance-data/2025.json";
@@ -54,11 +54,44 @@ const getScorersFromAttendance = (attendance) => {
 export const ScoringTrends = () => {
   const defaultSeason = config.SCORING_TRENDS?.defaultSeason || "2026";
   const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
-  const [activeSubTab, setActiveSubTab] = useState("scoring-trends");
+  
+  // Get sub-tab flags from config
+  const enableScoringTrends = config.SCORING_TRENDS?.enableScoringTrends !== false;
+  const enableScorersTrend = config.SCORING_TRENDS?.enableScorersTrend !== false;
+  const enableScoringDiffs = config.SCORING_TRENDS?.enableScoringDiffs !== false;
+  
+  // Determine default active sub-tab (first enabled one)
+  const getDefaultSubTab = () => {
+    if (enableScoringTrends) return "scoring-trends";
+    if (enableScorersTrend) return "scorers-trend";
+    if (enableScoringDiffs) return "scoring-diffs";
+    return "scoring-trends"; // fallback
+  };
+  
+  const [activeSubTab, setActiveSubTab] = useState(getDefaultSubTab());
   const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, content: null });
   const [diffTooltip, setDiffTooltip] = useState({ visible: false, x: 0, y: 0, content: null });
   const svgRef = useRef(null);
   const diffSvgRef = useRef(null);
+
+  // Ensure activeSubTab is always one of the enabled tabs
+  useEffect(() => {
+    const isActiveTabEnabled = 
+      (activeSubTab === "scoring-trends" && enableScoringTrends) ||
+      (activeSubTab === "scorers-trend" && enableScorersTrend) ||
+      (activeSubTab === "scoring-diffs" && enableScoringDiffs);
+    
+    if (!isActiveTabEnabled) {
+      // Find first enabled tab
+      if (enableScoringTrends) {
+        setActiveSubTab("scoring-trends");
+      } else if (enableScorersTrend) {
+        setActiveSubTab("scorers-trend");
+      } else if (enableScoringDiffs) {
+        setActiveSubTab("scoring-diffs");
+      }
+    }
+  }, [enableScoringTrends, enableScorersTrend, enableScoringDiffs, activeSubTab]);
 
   // Process match data for the graph
   const graphData = useMemo(() => {
@@ -379,28 +412,34 @@ export const ScoringTrends = () => {
 
       {/* Sub-Navigation */}
       <div className="trends-sub-nav">
-        <button
-          className={`trends-sub-tab ${activeSubTab === "scoring-trends" ? "active" : ""}`}
-          onClick={() => setActiveSubTab("scoring-trends")}
-        >
-          📈 Scoring Trends
-        </button>
-        <button
-          className={`trends-sub-tab ${activeSubTab === "scorers-trend" ? "active" : ""}`}
-          onClick={() => setActiveSubTab("scorers-trend")}
-        >
-          🏆 Scorers Trend
-        </button>
-        <button
-          className={`trends-sub-tab ${activeSubTab === "scoring-diffs" ? "active" : ""}`}
-          onClick={() => setActiveSubTab("scoring-diffs")}
-        >
-          ⚖️ Scoring Diffs
-        </button>
+        {enableScoringTrends && (
+          <button
+            className={`trends-sub-tab ${activeSubTab === "scoring-trends" ? "active" : ""}`}
+            onClick={() => setActiveSubTab("scoring-trends")}
+          >
+            📈 Scoring Trends
+          </button>
+        )}
+        {enableScorersTrend && (
+          <button
+            className={`trends-sub-tab ${activeSubTab === "scorers-trend" ? "active" : ""}`}
+            onClick={() => setActiveSubTab("scorers-trend")}
+          >
+            🏆 Scorers Trend
+          </button>
+        )}
+        {enableScoringDiffs && (
+          <button
+            className={`trends-sub-tab ${activeSubTab === "scoring-diffs" ? "active" : ""}`}
+            onClick={() => setActiveSubTab("scoring-diffs")}
+          >
+            ⚖️ Scoring Diffs
+          </button>
+        )}
       </div>
 
       {/* Scoring Trends View */}
-      {activeSubTab === "scoring-trends" && (
+      {enableScoringTrends && activeSubTab === "scoring-trends" && (
         <>
           {/* Stats Summary */}
           <div className="scoring-trends-stats">
@@ -760,7 +799,7 @@ export const ScoringTrends = () => {
       )}
 
       {/* Scorers Trend View */}
-      {activeSubTab === "scorers-trend" && (
+      {enableScorersTrend && activeSubTab === "scorers-trend" && (
         <div className="scorers-trend-section">
           <div className="scorers-trend-table-container">
             <table className="scorers-trend-table">
@@ -851,7 +890,7 @@ export const ScoringTrends = () => {
       )}
 
       {/* Scoring Diffs View */}
-      {activeSubTab === "scoring-diffs" && (() => {
+      {enableScoringDiffs && activeSubTab === "scoring-diffs" && (() => {
         // Prepare graph data for diffs
         const weekdayDiffsData = weeklyDiffs
           .filter(w => w.weekdayMatch)
