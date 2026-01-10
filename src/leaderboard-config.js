@@ -19,7 +19,33 @@ export const config = {
 
   // Comparison Settings
   MAX_COMPARE_PLAYERS: 3,        // Maximum players that can be compared
-  ENABLE_ATTENDANCE: true,      // Show attendance data for each player
+
+  // Stats Leaderboard Settings (Main leaderboard tab)
+  STATS_LEADERBOARD: {
+    enabled: true,                      // Show/hide the Stats Leaderboard tab
+    seasons: ["2024", "2025", "2026"],  // Available seasons
+    defaultSeason: "2026",              // Default season to load
+  },
+
+  // Attendance Settings (Attendance tab)
+  ATTENDANCE: {
+    enabled: true,                      // Show/hide the Attendance tab
+    
+    // Attendance Leaderboard sub-tab settings
+    LEADERBOARD: {
+      enabled: true,                    // Show/hide the Leaderboard sub-tab
+      seasons: ["2025", "2026"],        // Available seasons
+      defaultSeason: "2026",            // Default season to load
+    },
+    
+    // Attendance Tracker sub-tab settings
+    TRACKER: {
+      enabled: true,                    // Show/hide the Tracker sub-tab
+      seasons: ["2026"],                // Available seasons (per-match data starts from 2026)
+      defaultSeason: "2026",            // Default season to load
+      enableFieldViewModal: false,      // Show field view modal when clicking match headers
+    },
+  },
 
   // Insights Settings
   INSIGHTS: {
@@ -36,11 +62,6 @@ export const config = {
     enableScoringTrends: false,   // Show/hide the "Scoring Trends" sub-tab (graph view)
     enableScorersTrend: false,   // Show/hide the "Scorers Trend" sub-tab (weekly top scorers table)
     enableScoringDiffs: false,   // Show/hide the "Scoring Diffs" sub-tab (goal differences view)
-  },
-
-  // Tracker Settings
-  TRACKER: {
-    enableFieldViewModal: false,  // Show field view modal when clicking match headers
   },
 };
 

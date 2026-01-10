@@ -10,15 +10,17 @@ import { isSmallScreen } from "./utils/isSmallScreen.js";
 import { aggregateAllTimeStats } from "./utils/leaderboard-calculations.js";
 import { leaderboardData } from "./utils/get-data.js";
 
-const availableYears = Object.keys(leaderboardData).sort((a, b) => b - a);
+// Get available years from config, falling back to data keys
+const availableYears = config.STATS_LEADERBOARD?.seasons || Object.keys(leaderboardData).sort((a, b) => b - a);
 
 function App() {
   const [activeTab, setActiveTab] = useState("leaderboard");
-  // Default to 2025 if available, otherwise fall back to all-time
-  const defaultYear = availableYears.includes("2025") ? "2025" : "all-time";
+  // Default year from config, otherwise fall back to first available or all-time
+  const defaultYear = config.STATS_LEADERBOARD?.defaultSeason || 
+    (availableYears.includes("2026") ? "2026" : "all-time");
   const [selectedYear, setSelectedYear] = useState(defaultYear);
   const [players, setPlayers] = useState(() => {
-    return defaultYear === "2025" ? leaderboardData["2025"] : aggregateAllTimeStats();
+    return leaderboardData[defaultYear] || aggregateAllTimeStats();
   });
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("pufc-theme") || "dark";
@@ -128,15 +130,15 @@ function App() {
                 setActiveTab("leaderboard");
                 setMobileMenuOpen(false);
                 setRosterDropdownOpen(false);
-                // Reset to 2025 view when switching back to leaderboard (if available)
-                const resetYear = availableYears.includes("2025") ? "2025" : "all-time";
+                // Reset to default year from config when switching back to leaderboard
+                const resetYear = config.STATS_LEADERBOARD?.defaultSeason || "2026";
                 setSelectedYear(resetYear);
-                setPlayers(resetYear === "2025" ? leaderboardData["2025"] : aggregateAllTimeStats());
+                setPlayers(leaderboardData[resetYear] || aggregateAllTimeStats());
               }}
             >
               📊 {isSmall ? "Board" : "Leaderboard"}
             </button>
-            {config.ENABLE_ATTENDANCE && (
+            {config.ATTENDANCE?.enabled && (
               <button
                 className={`tab-btn ${activeTab === "attendance" ? "active" : ""
                   }`}

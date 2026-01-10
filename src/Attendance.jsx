@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import matchData2026 from "./data/attendance-data/2026.json";
 import { AttendanceLeaderboard } from "./AttendanceLeaderboard.jsx";
 import { config } from "./leaderboard-config.js";
@@ -8,11 +8,10 @@ const matchDataByYear = {
   2026: matchData2026,
 };
 
-// Available years for tracker (game-by-game data) - starts from 2026
-const trackerYears = ["2026"];
-
-// Available years for leaderboard (summary data) - starts from 2025
-const leaderboardYears = ["2025", "2026"];
+// Get available years from config
+// Get available years from config (nested under ATTENDANCE)
+const trackerYears = config.ATTENDANCE?.TRACKER?.seasons || ["2026"];
+const leaderboardYears = config.ATTENDANCE?.LEADERBOARD?.seasons || ["2025", "2026"];
 
 // Format date like "4th Jan", "21st Feb", etc.
 const formatDate = (dateStr) => {
@@ -155,14 +154,38 @@ const renderScoreline = (scoreline) => {
 };
 
 export const Attendance = () => {
+  // Check which sub-tabs are enabled
+  const isLeaderboardEnabled = config.ATTENDANCE?.LEADERBOARD?.enabled !== false;
+  const isTrackerEnabled = config.ATTENDANCE?.TRACKER?.enabled !== false;
+  
+  // Determine default active sub-tab (first enabled one)
+  const getDefaultSubTab = () => {
+    if (isLeaderboardEnabled) return "leaderboard";
+    if (isTrackerEnabled) return "tracker";
+    return "leaderboard"; // Fallback
+  };
+  
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeSubTab, setActiveSubTab] = useState("leaderboard");
-  // Separate year states for leaderboard and tracker
-  const [leaderboardYear, setLeaderboardYear] = useState("2026");
-  const [trackerYear, setTrackerYear] = useState("2026");
+  const [activeSubTab, setActiveSubTab] = useState(getDefaultSubTab());
+  // Separate year states for leaderboard and tracker (from config)
+  const [leaderboardYear, setLeaderboardYear] = useState(
+    config.ATTENDANCE?.LEADERBOARD?.defaultSeason || "2026"
+  );
+  const [trackerYear, setTrackerYear] = useState(
+    config.ATTENDANCE?.TRACKER?.defaultSeason || "2026"
+  );
   // Field view modal state
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [showFieldViewModal, setShowFieldViewModal] = useState(false);
+
+  // Ensure active sub-tab is enabled, switch to first enabled if current is disabled
+  useEffect(() => {
+    if (activeSubTab === "leaderboard" && !isLeaderboardEnabled) {
+      setActiveSubTab(isTrackerEnabled ? "tracker" : "leaderboard");
+    } else if (activeSubTab === "tracker" && !isTrackerEnabled) {
+      setActiveSubTab(isLeaderboardEnabled ? "leaderboard" : "tracker");
+    }
+  }, [activeSubTab, isLeaderboardEnabled, isTrackerEnabled]);
 
   // Get current year based on active sub-tab
   const currentYear = activeSubTab === "leaderboard" ? leaderboardYear : trackerYear;
@@ -323,18 +346,22 @@ export const Attendance = () => {
     <div className="attendance">
       {/* Sub-tab Navigation with Year Selectors */}
       <div className="sub-tab-nav">
-        <button
-          className={`sub-tab-btn ${activeSubTab === "leaderboard" ? "active" : ""}`}
-          onClick={() => setActiveSubTab("leaderboard")}
-        >
-          🏆 Leaderboard
-        </button>
-        <button
-          className={`sub-tab-btn ${activeSubTab === "tracker" ? "active" : ""}`}
-          onClick={() => setActiveSubTab("tracker")}
-        >
-          📊 Tracker
-        </button>
+        {isLeaderboardEnabled && (
+          <button
+            className={`sub-tab-btn ${activeSubTab === "leaderboard" ? "active" : ""}`}
+            onClick={() => setActiveSubTab("leaderboard")}
+          >
+            🏆 Leaderboard
+          </button>
+        )}
+        {isTrackerEnabled && (
+          <button
+            className={`sub-tab-btn ${activeSubTab === "tracker" ? "active" : ""}`}
+            onClick={() => setActiveSubTab("tracker")}
+          >
+            📊 Tracker
+          </button>
+        )}
         
         {/* Year Selector - Different options for leaderboard vs tracker */}
         <div className="attendance-year-selector">
@@ -364,7 +391,7 @@ export const Attendance = () => {
       </div>
 
       {/* Tracker Content */}
-      {activeSubTab === "tracker" && matchData && (
+      {isTrackerEnabled && activeSubTab === "tracker" && matchData && (
         <>
           {/* Search and Download */}
           <div className="tracker-actions">
@@ -471,7 +498,7 @@ export const Attendance = () => {
               <th className="stat-col attendance-stat">%</th>
               {matches.map((match) => {
                 const isFullHouse = parseInt(currentYear) >= 2026 && match.isFullHouse;
-                const isClickable = config.TRACKER?.enableFieldViewModal && match.matchPlayed && !match.matchCancelled;
+                const isClickable = config.ATTENDANCE?.TRACKER?.enableFieldViewModal && match.matchPlayed && !match.matchCancelled;
                 return (
                   <th
                     key={match.id}
@@ -572,19 +599,19 @@ export const Attendance = () => {
       )}
 
       {/* Leaderboard Content */}
-      {activeSubTab === "leaderboard" && (
+      {isLeaderboardEnabled && activeSubTab === "leaderboard" && (
         <AttendanceLeaderboard year={leaderboardYear} />
       )}
       
       {/* Tracker - No data message */}
-      {activeSubTab === "tracker" && !matchData && (
+      {isTrackerEnabled && activeSubTab === "tracker" && !matchData && (
         <div className="attendance-no-data">
           <p>No tracker data available for {trackerYear}</p>
         </div>
       )}
 
       {/* Field View Modal */}
-      {config.TRACKER?.enableFieldViewModal && showFieldViewModal && selectedMatch && (
+      {config.ATTENDANCE?.TRACKER?.enableFieldViewModal && showFieldViewModal && selectedMatch && (
         <FieldViewModal
           match={selectedMatch}
           onClose={() => {
