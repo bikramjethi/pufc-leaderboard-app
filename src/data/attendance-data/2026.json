@@ -230,7 +230,7 @@
             "name": "Rishav",
             "goals": 1,
             "ownGoals": 0,
-            "cleanSheet": true,
+            "cleanSheet": false,
             "groupStatus": "REGULAR",
             "position": "ST"
           },
