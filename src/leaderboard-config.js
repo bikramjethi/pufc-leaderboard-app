@@ -34,8 +34,13 @@ export const config = {
     seasons: ["2026", "2025"],   // Seasons with per-match data available
     defaultSeason: "2026",       // Default season shown on Scoring Trends tab
     enableScoringTrends: false,   // Show/hide the "Scoring Trends" sub-tab (graph view)
-    enableScorersTrend: true,   // Show/hide the "Scorers Trend" sub-tab (weekly top scorers table)
+    enableScorersTrend: false,   // Show/hide the "Scorers Trend" sub-tab (weekly top scorers table)
     enableScoringDiffs: false,   // Show/hide the "Scoring Diffs" sub-tab (goal differences view)
+  },
+
+  // Tracker Settings
+  TRACKER: {
+    enableFieldViewModal: false,  // Show field view modal when clicking match headers
   },
 };
 
