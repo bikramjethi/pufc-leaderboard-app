@@ -1861,9 +1861,9 @@ body::before {
 }
 
 /* Full House Match Styling (Celebratory) - Only for 2026+ */
-/* Using a subtle background tint - NO position: relative to avoid breaking sticky scroll */
-.match-col.match-fullhouse {
-  background: linear-gradient(180deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%);
+/* Header cells need OPAQUE background to prevent content showing through on scroll */
+th.match-col.match-fullhouse {
+  background: #1e3a29 !important; /* Solid dark green for header - must be opaque */
 }
 
 .match-col.match-fullhouse .match-header {
@@ -1873,16 +1873,16 @@ body::before {
 /* Inline full house badge shown via React, not CSS pseudo-element */
 .fullhouse-badge {
   font-size: 0.6rem;
-  opacity: 0.9;
+  color: #22c55e;
 }
 
 /* Cell styling - subtle green left border (doesn't conflict with yellow On Loan border) */
-.match-cell.fullhouse-match {
+td.match-cell.fullhouse-match {
   box-shadow: inset 3px 0 0 #22c55e;
 }
 
 /* Combined On Loan + Full House - show both indicators */
-.match-cell.fullhouse-match.onloan {
+td.match-cell.fullhouse-match.onloan {
   border: 2px solid #facc15;
   box-shadow: inset 3px 0 0 #22c55e;
 }
