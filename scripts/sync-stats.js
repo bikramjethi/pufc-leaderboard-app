@@ -12,6 +12,25 @@ if (!year) {
   process.exit(1);
 }
 
+// Only allow 2026 and beyond
+const yearNum = parseInt(year);
+if (yearNum < 2026) {
+  console.error('');
+  console.error('⚠️  WARNING: sync-stats is only configured for 2026 and beyond.');
+  console.error('');
+  console.error('   The data for previous years (2024, 2025) was collected before we');
+  console.error('   implemented per-match tracking with the new attendance structure.');
+  console.error('   Running sync-stats on these years would produce incomplete or');
+  console.error('   incorrect statistics as the source data is not fully populated.');
+  console.error('');
+  console.error('   To update leaderboard data for 2024 or 2025, please edit the');
+  console.error('   leaderboard JSON files directly:');
+  console.error('     - src/data/leaderboard-data/2024.json');
+  console.error('     - src/data/leaderboard-data/2025.json');
+  console.error('');
+  process.exit(1);
+}
+
 // File paths
 const trackerPath = path.join(__dirname, `../src/data/attendance-data/${year}.json`);
 const attendanceLeaderboardPath = path.join(__dirname, `../src/data/attendance-data/leaderboard/${year}.json`);
