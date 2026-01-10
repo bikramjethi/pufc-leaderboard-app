@@ -49,6 +49,22 @@ const getPlayerGroupStatus = (playerName, profiles) => {
   return 'REGULAR';
 };
 
+// Position order for 8v8 formation: 1 GK, 3 DEF, 3 MID, 1 ST
+// NOTE: These are MATCH-SPECIFIC positions, NOT leaderboard positions.
+// Leaderboard positions are fixed player roles, while these positions
+// track where each player played in a specific match (changes every week).
+// This data will be used for position graphs/analytics, not leaderboard updates.
+const POSITIONS = [
+  { code: 'GK', name: 'Goalkeeper', isGK: true },
+  { code: 'RB', name: 'Right Back', isGK: false },
+  { code: 'CB', name: 'Center Back', isGK: false },
+  { code: 'LB', name: 'Left Back', isGK: false },
+  { code: 'RM', name: 'Right Midfield', isGK: false },
+  { code: 'CM', name: 'Center Midfield', isGK: false },
+  { code: 'LM', name: 'Left Midfield', isGK: false },
+  { code: 'ST', name: 'Striker', isGK: false },
+];
+
 // Main function
 async function main() {
   console.log('\n🏟️  PUFC Match Update Script');
@@ -120,34 +136,43 @@ async function main() {
 
   console.log(`\n📊 Score: ${team1Color} ${team1Score} - ${team2Score} ${team2Color}`);
 
-  // Step 4: Get players for each team
-  const getTeamPlayers = async (teamColor) => {
-    console.log(`\n👥 ${teamColor} Team Players`);
-    console.log('─'.repeat(30));
-    console.log('Enter player names one by one. Type "done" when finished.\n');
+  // Step 3.5: Get full house status
+  const isFullHouse = await getYesNo('\n🏠 Is this match full house? (y/n): ');
+
+  // Step 4: Get players for each team by position
+  // Pass opposition score to auto-calculate cleanSheet for GK
+  const getTeamPlayers = async (teamColor, oppositionScore) => {
+    console.log(`\n👥 ${teamColor} Team Players (by position)`);
+    console.log('─'.repeat(40));
+    console.log('Enter player name for each position.');
+    console.log('Enter "-" if no player played that position (e.g., 7v8 game).\n');
 
     const players = [];
-    let playerNum = 1;
 
-    while (true) {
-      const name = await question(`  Player ${playerNum} name (or "done"): `);
+    for (const pos of POSITIONS) {
+      const name = await question(`  ${pos.code} (${pos.name}): `);
       
-      if (name.toLowerCase() === 'done') {
-        if (players.length === 0) {
-          console.log('  ⚠️  You need at least one player!');
-          continue;
+      // Skip if no player for this position
+      if (name.trim() === '-' || !name.trim()) {
+        if (name.trim() === '-') {
+          console.log(`    ⏭️  Skipping ${pos.code} position\n`);
         }
-        break;
-      }
-
-      if (!name.trim()) {
         continue;
       }
 
       // Get player stats
       const goals = await getNumber(`    Goals scored by ${name}? (default: 0): `, 0);
       const ownGoals = await getNumber(`    Own goals by ${name}? (default: 0): `, 0);
-      const cleanSheet = await getYesNo(`    Did ${name} keep a clean sheet? (y/n): `);
+      
+      // Auto-calculate clean sheet for GK based on opposition score
+      let cleanSheet = false;
+      if (pos.isGK) {
+        // If opposition scored 0 goals, the GK gets a clean sheet
+        cleanSheet = oppositionScore === 0;
+        if (cleanSheet) {
+          console.log(`    🧤 Auto-assigned clean sheet (opposition scored 0 goals)`);
+        }
+      }
       
       // Get group status (default based on profile or known status)
       const defaultStatus = getPlayerGroupStatus(name.trim(), playerProfiles);
@@ -171,18 +196,23 @@ async function main() {
         goals,
         ownGoals,
         cleanSheet,
-        groupStatus
+        groupStatus,
+        position: pos.code  // Track position for this match (not leaderboard position)
       });
 
-      playerNum++;
-      console.log(`    ✓ Added ${name}\n`);
+      console.log(`    ✓ Added ${name} as ${pos.code}\n`);
+    }
+
+    if (players.length === 0) {
+      console.log('  ⚠️  No players added for this team!');
     }
 
     return players;
   };
 
-  const team1Players = await getTeamPlayers(team1Color);
-  const team2Players = await getTeamPlayers(team2Color);
+  // Pass opposition score to auto-calculate GK clean sheets
+  const team1Players = await getTeamPlayers(team1Color, team2Score);
+  const team2Players = await getTeamPlayers(team2Color, team1Score);
 
   // Calculate total goals (regular + own goals)
   const totalRegularGoals = [...team1Players, ...team2Players].reduce((sum, p) => sum + p.goals, 0);
@@ -207,6 +237,7 @@ async function main() {
     ...match,
     matchPlayed: true,
     matchCancelled: false,
+    isFullHouse: isFullHouse,
     attendance: {
       [team1Color]: team1Players,
       [team2Color]: team2Players
@@ -231,7 +262,8 @@ async function main() {
     if (p.ownGoals > 0) stats.push(`${p.ownGoals} OG`);
     if (p.cleanSheet) stats.push('CS');
     if (p.groupStatus === 'ONLOAN') stats.push('📋 On Loan');
-    console.log(`  • ${p.name}${stats.length ? ` (${stats.join(', ')})` : ''}`);
+    const posLabel = p.position ? `[${p.position}]` : '';
+    console.log(`  • ${posLabel.padEnd(5)} ${p.name}${stats.length ? ` (${stats.join(', ')})` : ''}`);
   });
   console.log(`\n${team2Color} Team (${team2Players.length} players):`);
   team2Players.forEach(p => {
@@ -240,7 +272,8 @@ async function main() {
     if (p.ownGoals > 0) stats.push(`${p.ownGoals} OG`);
     if (p.cleanSheet) stats.push('CS');
     if (p.groupStatus === 'ONLOAN') stats.push('📋 On Loan');
-    console.log(`  • ${p.name}${stats.length ? ` (${stats.join(', ')})` : ''}`);
+    const posLabel = p.position ? `[${p.position}]` : '';
+    console.log(`  • ${posLabel.padEnd(5)} ${p.name}${stats.length ? ` (${stats.join(', ')})` : ''}`);
   });
   console.log('═'.repeat(50));
 
