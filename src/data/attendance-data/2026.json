@@ -17,56 +17,64 @@
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "ST"
           },
           {
             "name": "Ashish",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CB"
           },
           {
             "name": "Pandey",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR", 
+            "position": "LB"
           },
           {
             "name": "Rohit Gautam",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LM"
           },
           {
             "name": "Vivek",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RB"
           },
           {
             "name": "Ammar",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CM"
           },
           {
             "name": "Vinay",
             "goals": 2,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RM"
           },
           {
             "name": "Joe",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "GK"
           }
         ],
         "RED": [
@@ -75,56 +83,64 @@
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "GK"
           },
           {
             "name": "Rishav",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "ST"
           },
           {
             "name": "Rishabh",
             "goals": 2,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LM"
           },
           {
             "name": "Vedant",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CM"
           },
           {
             "name": "Animesh",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR", 
+            "position": "LB"
           },
           {
             "name": "Prateek",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CB"
           },
           {
             "name": "Suyash",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "ONLOAN"
+            "groupStatus": "ONLOAN",
+            "position": "RM"
           },
           {
             "name": "Tejas",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "ONLOAN"
+            "groupStatus": "ONLOAN", 
+            "position": "RB"
           }
         ]
       },
@@ -147,56 +163,64 @@
             "goals": 2,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LM"
           },
           {
             "name": "Pandey",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR", 
+            "position": "CM"
           },
           {
             "name": "Animesh",
             "goals": 2,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LB"
           },
           {
             "name": "Vinit",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CB"
           },
           {
             "name": "John",
             "goals": 0,
             "ownGoals": 1,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RB"
           },
           {
             "name": "Vikas",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "GK"
           },
           {
             "name": "Subarna",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RM"
           },
           {
             "name": "Vinoth",
             "goals": 4,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "ST"
           }
         ],
         "WHITE": [
@@ -205,56 +229,64 @@
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": true,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "ST"
           },
           {
             "name": "Jethi",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LM"
           },
           {
             "name": "Ashish",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CB"
           },
           {
             "name": "Sourabh",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LB"
           },
           {
             "name": "Rishabh",
             "goals": 2,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RM"
           },
           {
             "name": "Akshat",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CM"
           },
           {
             "name": "Aayush",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RB"
           },
           {
             "name": "Joe",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "GK"
           }
         ]
       },
@@ -277,56 +309,64 @@
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LM"
           },
           {
             "name": "Vedant",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CM"
           },
           {
             "name": "Sudeep",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "ST"
           },
           {
             "name": "Mani",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RM"
           },
           {
             "name": "Animesh",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LB"
           },
           {
             "name": "Vinit",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CB"
           },
           {
             "name": "Vikalp",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "GK"
           },
           {
             "name": "Rohit Gautam",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RB"
           }
         ],
         "RED": [
@@ -335,56 +375,64 @@
             "goals": 3,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RM"
           },
           {
             "name": "Vinay",
             "goals": 2,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CM"
           },
           {
             "name": "Subarna",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LM"
           },
           {
             "name": "Joe",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "GK"
           },
           {
             "name": "Rajat",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LB"
           },
           {
             "name": "Ashish",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CB"
           },
           {
             "name": "Vivek",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RB"
           },
           {
             "name": "Rishav",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "ST"
           }
         ]
       },
