@@ -8,11 +8,21 @@ import rahulDhekImage from '../assets/player-profiles/rahuldhek.jpg';
 import sudeep from '../assets/player-profiles/sudeep.jpg';
 import prateek from "../assets/player-profiles/prateek.jpeg";
 import pandey from "../assets/player-profiles/pandey.jpeg";
-import joe from "../assets/player-profiles/joe.jpeg";
-import rishav from "../assets/player-profiles/rishav.jpeg";
-import vikalp from "../assets/player-profiles/vikalp.jpeg";
-import animesh from "../assets/player-profiles/animesh.jpg";
+import joe from "../assets/player-profiles/joe2.jpeg";
+import rishav from "../assets/player-profiles/rishav2.jpeg";
+import vikalp from "../assets/player-profiles/vikalp2.jpeg";
+import animesh from "../assets/player-profiles/animesh.jpeg";
 import ashish from "../assets/player-profiles/ashish.jpeg";
+import vedant from "../assets/player-profiles/vedant.jpeg";
+import rohitGautam from "../assets/player-profiles/rohitgautam.jpeg";
+import mani from "../assets/player-profiles/mani.jpeg";
+import rajat from "../assets/player-profiles/rajat.jpeg";
+import rishabh from "../assets/player-profiles/rishabh.jpeg";
+import subarna from "../assets/player-profiles/subarna.jpeg";
+import vinay from "../assets/player-profiles/vinay.jpeg";
+import vinoth from "../assets/player-profiles/vinoth.jpeg";
+import vivek from "../assets/player-profiles/vivek.jpeg";
+
 
 // Map player names (lowercase) to their profile images
 const playerImageMap = {
@@ -26,7 +36,16 @@ const playerImageMap = {
   rishav,
   vikalp,
   animesh,
-  ashish
+  ashish,
+  vedant,
+  "rohit gautam": rohitGautam,
+  mani,
+  rajat,
+  rishabh,
+  subarna,
+  vinay,
+  vinoth,
+  vivek
   // Add more player images here as they become available
   // 'ashish': ashishImage,
   // 'vinay': vinayImage,
