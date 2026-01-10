@@ -1,6 +1,8 @@
 import { useState, useMemo } from "react";
 import matchData2026 from "./data/attendance-data/2026.json";
 import { AttendanceLeaderboard } from "./AttendanceLeaderboard.jsx";
+import { config } from "./leaderboard-config.js";
+import { FieldViewModal } from "./FieldViewModal.jsx";
 
 const matchDataByYear = {
   2026: matchData2026,
@@ -158,6 +160,9 @@ export const Attendance = () => {
   // Separate year states for leaderboard and tracker
   const [leaderboardYear, setLeaderboardYear] = useState("2026");
   const [trackerYear, setTrackerYear] = useState("2026");
+  // Field view modal state
+  const [selectedMatch, setSelectedMatch] = useState(null);
+  const [showFieldViewModal, setShowFieldViewModal] = useState(false);
 
   // Get current year based on active sub-tab
   const currentYear = activeSubTab === "leaderboard" ? leaderboardYear : trackerYear;
@@ -211,7 +216,12 @@ export const Attendance = () => {
   const getMatchHeaderClass = (match) => {
     if (match.matchCancelled) return "match-cancelled";
     if (!match.matchPlayed) return "match-pending";
-    return "match-played";
+    let classes = "match-played";
+    // Add full house styling only for 2026+ seasons
+    if (parseInt(currentYear) >= 2026 && match.isFullHouse) {
+      classes += " match-fullhouse";
+    }
+    return classes;
   };
 
   // Render cell content based on match status
@@ -459,24 +469,38 @@ export const Attendance = () => {
             <tr>
               <th className="player-col sticky-col">Player</th>
               <th className="stat-col attendance-stat">%</th>
-              {matches.map((match) => (
-                <th
-                  key={match.id}
-                  className={`match-col ${getMatchHeaderClass(match)}`}
-                  title={`${match.day} - ${match.date}${match.matchCancelled
-                    ? " (Cancelled)"
-                    : !match.matchPlayed
-                      ? " (Not Yet Played)"
-                      : ""
-                    }`}
-                >
-                  <div className="match-header">
-                    {match.matchPlayed && match.scoreline && renderScoreline(match.scoreline)}
-                    <span className="match-day">{match.day.slice(0, 3)}</span>
-                    <span className="match-date">{formatDate(match.date)}</span>
-                  </div>
-                </th>
-              ))}
+              {matches.map((match) => {
+                const isFullHouse = parseInt(currentYear) >= 2026 && match.isFullHouse;
+                const isClickable = config.TRACKER?.enableFieldViewModal && match.matchPlayed && !match.matchCancelled;
+                return (
+                  <th
+                    key={match.id}
+                    className={`match-col ${getMatchHeaderClass(match)}${isClickable ? ' clickable' : ''}`}
+                    title={`${match.day} - ${match.date}${match.matchCancelled
+                      ? " (Cancelled)"
+                      : !match.matchPlayed
+                        ? " (Not Yet Played)"
+                        : isFullHouse
+                          ? " (Full House 🏠) - Click to view field"
+                          : isClickable
+                            ? " - Click to view field"
+                            : ""
+                      }`}
+                    onClick={isClickable ? () => {
+                      setSelectedMatch(match);
+                      setShowFieldViewModal(true);
+                    } : undefined}
+                    style={isClickable ? { cursor: 'pointer' } : undefined}
+                  >
+                    <div className="match-header">
+                      {match.matchPlayed && match.scoreline && renderScoreline(match.scoreline)}
+                      <span className="match-day">{match.day.slice(0, 3)}</span>
+                      <span className="match-date">{formatDate(match.date)}</span>
+                      {isFullHouse && <span className="fullhouse-badge">🏠</span>}
+                    </div>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
@@ -538,6 +562,11 @@ export const Attendance = () => {
             <span>
               <span className="onloan-indicator"></span> On Loan
             </span>
+            {parseInt(currentYear) >= 2026 && (
+              <span>
+                <span className="fullhouse-indicator">🏠</span> Full House
+              </span>
+            )}
           </div>
         </>
       )}
@@ -552,6 +581,17 @@ export const Attendance = () => {
         <div className="attendance-no-data">
           <p>No tracker data available for {trackerYear}</p>
         </div>
+      )}
+
+      {/* Field View Modal */}
+      {config.TRACKER?.enableFieldViewModal && showFieldViewModal && selectedMatch && (
+        <FieldViewModal
+          match={selectedMatch}
+          onClose={() => {
+            setShowFieldViewModal(false);
+            setSelectedMatch(null);
+          }}
+        />
       )}
     </div>
   );

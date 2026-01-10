@@ -1720,6 +1720,20 @@ body::before {
   gap: 0.1rem;
 }
 
+/* Clickable match headers (for field view modal) */
+.match-col.clickable {
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.match-col.clickable:hover {
+  background-color: rgba(34, 197, 94, 0.15);
+}
+
+.match-col.clickable:hover .match-header {
+  transform: scale(1.02);
+}
+
 .match-scoreline {
   font-size: 0.75rem;
   font-weight: 700;
@@ -1844,6 +1858,51 @@ body::before {
 
 .match-col.match-cancelled .match-date {
   text-decoration: line-through;
+}
+
+/* Full House Match Styling (Celebratory) - Only for 2026+ */
+/* Using a subtle background tint - NO position: relative to avoid breaking sticky scroll */
+.match-col.match-fullhouse {
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%);
+}
+
+.match-col.match-fullhouse .match-header {
+  border-bottom: 2px solid #22c55e;
+}
+
+/* Inline full house badge shown via React, not CSS pseudo-element */
+.fullhouse-badge {
+  font-size: 0.6rem;
+  opacity: 0.9;
+}
+
+/* Cell styling - subtle green left border (doesn't conflict with yellow On Loan border) */
+.match-cell.fullhouse-match {
+  box-shadow: inset 3px 0 0 #22c55e;
+}
+
+/* Combined On Loan + Full House - show both indicators */
+.match-cell.fullhouse-match.onloan {
+  border: 2px solid #facc15;
+  box-shadow: inset 3px 0 0 #22c55e;
+}
+
+.fullhouse-indicator {
+  display: inline-block;
+  font-size: 1rem;
+  margin-right: 4px;
+  color: #22c55e;
+}
+
+/* Full House Card in Insights */
+.insight-card.fullhouse-card {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+  border: 2px solid #22c55e;
+}
+
+.insight-card.fullhouse-card .insight-value {
+  color: #22c55e;
+  font-weight: 700;
 }
 
 .check {

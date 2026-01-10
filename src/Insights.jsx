@@ -91,7 +91,7 @@ const getCleanSheetsFromAttendance = (attendance) => {
 };
 
 // Calculate overall season insights
-const calculateOverallInsights = (leaderboardData, attendanceData) => {
+const calculateOverallInsights = (leaderboardData, attendanceData, trackerData = null) => {
   if (!leaderboardData || leaderboardData.length === 0) return null;
 
   const insights = {
@@ -105,6 +105,7 @@ const calculateOverallInsights = (leaderboardData, attendanceData) => {
     lowestLossPct: null,
     highestHatTricks: null,
     cleanSheets: [],
+    totalFullHouse: 0, // Only tracked from 2026 onwards
   };
 
   // Find top scorer
@@ -188,6 +189,14 @@ const calculateOverallInsights = (leaderboardData, attendanceData) => {
     }
   }
 
+  // Calculate full house matches (only for 2026+)
+  if (trackerData && parseInt(trackerData.season) >= 2026) {
+    const fullHouseMatches = trackerData.matches.filter(
+      (m) => m.matchPlayed && !m.matchCancelled && m.isFullHouse === true
+    );
+    insights.totalFullHouse = fullHouseMatches.length;
+  }
+
   return insights;
 };
 
@@ -217,6 +226,7 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     topScorers: [],
     mostAttended: null,
     cleanSheets: [],
+    fullHouseMatches: 0, // Only tracked from 2026 onwards
   };
 
   // Calculate top scorers for the quarter - get scorers from attendance object
@@ -265,6 +275,11 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     .sort((a, b) => b.cleanSheets - a.cleanSheets);
   insights.cleanSheets = cleanSheets;
 
+  // Calculate full house matches (only for 2026+)
+  if (parseInt(trackerData.season) >= 2026) {
+    insights.fullHouseMatches = quarterMatches.filter((m) => m.isFullHouse === true).length;
+  }
+
   return insights;
 };
 
@@ -293,9 +308,10 @@ export const Insights = () => {
   const overallInsights = useMemo(() => {
     return calculateOverallInsights(
       leaderboardDataForSeason,
-      attendanceDataForSeason
+      attendanceDataForSeason,
+      trackerDataForSeason
     );
-  }, [leaderboardDataForSeason, attendanceDataForSeason]);
+  }, [leaderboardDataForSeason, attendanceDataForSeason, trackerDataForSeason]);
 
   // Calculate quarterly insights (only for 2026)
   const quarterlyInsights = useMemo(() => {
@@ -377,6 +393,12 @@ export const Insights = () => {
                 <div className="insight-label">Weekend Games</div>
                 <div className="insight-value">{overallInsights.weekendGames}</div>
               </div>
+              {parseInt(selectedSeason) >= 2026 && overallInsights.totalFullHouse !== undefined && (
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Full House Matches</div>
+                  <div className="insight-value">{overallInsights.totalFullHouse}</div>
+                </div>
+              )}
             </>
           )}
         </div>
@@ -513,6 +535,10 @@ export const Insights = () => {
                   <div className="insight-label">Weekday Goals</div>
                   <div className="insight-value">{quarterlyInsights.q1.weekdayGoals}</div>
                 </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q1.fullHouseMatches}</div>
+                </div>
               </div>
               {quarterlyInsights.q1.topScorers.length > 0 && (
                 <div className="insights-highlights">
@@ -556,6 +582,10 @@ export const Insights = () => {
                 <div className="insight-card">
                   <div className="insight-label">Weekday Goals</div>
                   <div className="insight-value">{quarterlyInsights.q2.weekdayGoals}</div>
+                </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q2.fullHouseMatches}</div>
                 </div>
               </div>
               {quarterlyInsights.q2.topScorers.length > 0 && (
@@ -614,6 +644,10 @@ export const Insights = () => {
                   <div className="insight-label">Weekday Goals</div>
                   <div className="insight-value">{quarterlyInsights.q3.weekdayGoals}</div>
                 </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q3.fullHouseMatches}</div>
+                </div>
               </div>
               {quarterlyInsights.q3.topScorers.length > 0 && (
                 <div className="insights-highlights">
@@ -670,6 +704,10 @@ export const Insights = () => {
                 <div className="insight-card">
                   <div className="insight-label">Weekday Goals</div>
                   <div className="insight-value">{quarterlyInsights.q4.weekdayGoals}</div>
+                </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q4.fullHouseMatches}</div>
                 </div>
               </div>
               {quarterlyInsights.q4.topScorers.length > 0 && (
