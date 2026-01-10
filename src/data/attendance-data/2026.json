@@ -10,6 +10,7 @@
       "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
+      "isFullHouse": false,
       "attendance": {
         "BLUE": [
           {
@@ -156,6 +157,7 @@
       "day": "Midweek",
       "matchPlayed": true,
       "matchCancelled": false,
+      "isFullHouse": true,
       "attendance": {
         "BLACK": [
           {
@@ -302,6 +304,7 @@
       "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
+      "isFullHouse": true,
       "attendance": {
         "BLUE": [
           {
