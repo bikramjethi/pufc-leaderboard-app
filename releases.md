@@ -28,13 +28,12 @@ Release 6.0 - Minor features and Scheduled Updates
 - Also add a separate tab to show on loan players to the rosters tab
 - Profile images have been updated for most of the players
 
-
-Future planned releases:
-
 Release 7.0 - The weekly Trends tab
 - Added a new trends tab that captures week on week top goal scorers
 - Backfilled the data for 2025 season
 - Full House tracking is now enabled
+
+Future planned releases:
 
 Release XX - Insights 2026
 - Insights for 2026 is now enabled

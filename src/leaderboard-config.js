@@ -30,14 +30,14 @@ export const config = {
   // Attendance Settings (Attendance tab)
   ATTENDANCE: {
     enabled: true,                      // Show/hide the Attendance tab
-    
+
     // Attendance Leaderboard sub-tab settings
     LEADERBOARD: {
       enabled: true,                    // Show/hide the Leaderboard sub-tab
       seasons: ["2025", "2026"],        // Available seasons
       defaultSeason: "2026",            // Default season to load
     },
-    
+
     // Attendance Tracker sub-tab settings
     TRACKER: {
       enabled: true,                    // Show/hide the Tracker sub-tab
@@ -56,11 +56,11 @@ export const config = {
 
   // Scoring Trends Settings
   SCORING_TRENDS: {
-    enabled: false,               // Show/hide the Scoring Trends tab
+    enabled: true,               // Show/hide the Scoring Trends tab
     seasons: ["2026", "2025"],   // Seasons with per-match data available
     defaultSeason: "2026",       // Default season shown on Scoring Trends tab
     enableScoringTrends: false,   // Show/hide the "Scoring Trends" sub-tab (graph view)
-    enableScorersTrend: false,   // Show/hide the "Scorers Trend" sub-tab (weekly top scorers table)
+    enableScorersTrend: true,   // Show/hide the "Scorers Trend" sub-tab (weekly top scorers table)
     enableScoringDiffs: false,   // Show/hide the "Scoring Diffs" sub-tab (goal differences view)
   },
 };

@@ -22,6 +22,9 @@ import subarna from "../assets/player-profiles/subarna.jpeg";
 import vinay from "../assets/player-profiles/vinay.jpeg";
 import vinoth from "../assets/player-profiles/vinoth.jpeg";
 import vivek from "../assets/player-profiles/vivek.jpeg";
+import tushar from "../assets/player-profiles/tushar.jpeg";
+import deepak from "../assets/player-profiles/deepak.jpeg";
+import rohitHyd from "../assets/player-profiles/rohit-hyd.jpeg";
 
 
 // Map player names (lowercase) to their profile images
@@ -45,10 +48,10 @@ const playerImageMap = {
   subarna,
   vinay,
   vinoth,
-  vivek
-  // Add more player images here as they become available
-  // 'ashish': ashishImage,
-  // 'vinay': vinayImage,
+  vivek,
+  tushar,
+  deepak,
+  "rohit hyd": rohitHyd,
 };
 
 /**
