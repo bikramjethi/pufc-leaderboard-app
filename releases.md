@@ -31,11 +31,13 @@ Release 6.0 - Minor features and Scheduled Updates
 
 Future planned releases:
 
-Release 7.0 - Insights & Trends
-- Insights for 2026 is now enabled
+Release 7.0 - The weekly Trends tab
+- Added a new trends tab that captures week on week top goal scorers
+- Backfilled the data for 2025 season
 - Full House tracking is now enabled
-- Added a new trends tab that captures week on week top goal scorers for now
-- Backfill the data for 2025 season
+
+Release XX - Insights 2026
+- Insights for 2026 is now enabled
 
 Release 8.0 - Trends Graphs
 - Show a graphical comparative view for overall scoring trends for weekend and weekdays
