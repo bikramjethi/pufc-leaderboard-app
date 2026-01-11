@@ -90,6 +90,29 @@ const getCleanSheetsFromAttendance = (attendance) => {
   return cleanSheets;
 };
 
+// Helper function to get top N players, but include all tied first place players if more than N
+const getTopNWithTies = (players, getValue, n = 3) => {
+  if (!players || players.length === 0) return [];
+  
+  // Sort by value (descending)
+  const sorted = [...players].sort((a, b) => getValue(b) - getValue(a));
+  
+  if (sorted.length === 0) return [];
+  
+  const firstValue = getValue(sorted[0]);
+  
+  // Find all players tied for first place
+  const firstPlacePlayers = sorted.filter(p => getValue(p) === firstValue);
+  
+  // If first place has more than N players, return all of them
+  if (firstPlacePlayers.length > n) {
+    return firstPlacePlayers;
+  }
+  
+  // Otherwise, return top N
+  return sorted.slice(0, n);
+};
+
 // Calculate overall season insights
 const calculateOverallInsights = (leaderboardData, attendanceData, trackerData = null) => {
   if (!leaderboardData || leaderboardData.length === 0) return null;
@@ -98,67 +121,79 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
     totalPlayers: leaderboardData.length,
     totalGoals: leaderboardData.reduce((sum, p) => sum + (p.goals || 0), 0),
     totalHatTricks: leaderboardData.reduce((sum, p) => sum + (p.hatTricks || 0), 0),
-    topScorer: null,
-    bestWinRate: null,
-    lowestWinRate: null,
-    highestLossPct: null,
-    lowestLossPct: null,
-    highestHatTricks: null,
+    topScorers: [],
+    bestWinRate: [],
+    lowestWinRate: [],
+    highestLossPct: [],
+    lowestLossPct: [],
+    highestHatTricks: [],
     cleanSheets: [],
     totalFullHouse: 0, // Only tracked from 2026 onwards
   };
 
-  // Find top scorer
-  const topScorer = leaderboardData
-    .filter((p) => p.name !== "Others")
-    .reduce((max, p) => (p.goals > (max?.goals || 0) ? p : max), null);
-  insights.topScorer = topScorer;
+  // Find top scorers (top 3, or all tied first place if more than 3)
+  const eligibleScorers = leaderboardData.filter((p) => p.name !== "Others" && (p.goals || 0) > 0);
+  insights.topScorers = getTopNWithTies(eligibleScorers, (p) => p.goals || 0, 3);
 
-  // Find best win rate (minimum 10 matches)
-  const bestWinRate = leaderboardData
+  // Find best win rate (minimum 10 matches) - top 3
+  const eligibleForWinRate = leaderboardData
     .filter((p) => p.name !== "Others" && p.matches >= 10)
-    .reduce((max, p) => {
-      const winRate = p.matches > 0 ? (p.wins / p.matches) * 100 : 0;
-      const maxWinRate = max?.matches > 0 ? (max.wins / max.matches) * 100 : 0;
-      return winRate > maxWinRate ? p : max;
-    }, null);
-  insights.bestWinRate = bestWinRate;
+    .map((p) => ({
+      ...p,
+      winRate: p.matches > 0 ? (p.wins / p.matches) * 100 : 0,
+    }));
+  insights.bestWinRate = getTopNWithTies(eligibleForWinRate, (p) => p.winRate, 3);
 
-  // Find lowest win rate (minimum 10 matches)
-  const lowestWinRate = leaderboardData
+  // Find lowest win rate (minimum 10 matches) - top 3
+  const eligibleForLowestWinRate = leaderboardData
     .filter((p) => p.name !== "Others" && p.matches >= 10)
-    .reduce((min, p) => {
-      const winRate = p.matches > 0 ? (p.wins / p.matches) * 100 : 0;
-      const minWinRate = min?.matches > 0 ? (min.wins / min.matches) * 100 : 100;
-      return winRate < minWinRate ? p : min;
-    }, null);
-  insights.lowestWinRate = lowestWinRate;
+    .map((p) => ({
+      ...p,
+      winRate: p.matches > 0 ? (p.wins / p.matches) * 100 : 0,
+    }));
+  // For lowest, we need to reverse the sort
+  const sortedLowestWinRate = [...eligibleForLowestWinRate].sort((a, b) => a.winRate - b.winRate);
+  if (sortedLowestWinRate.length > 0) {
+    const lowestValue = sortedLowestWinRate[0].winRate;
+    const tiedLowest = sortedLowestWinRate.filter((p) => p.winRate === lowestValue);
+    if (tiedLowest.length > 3) {
+      insights.lowestWinRate = tiedLowest;
+    } else {
+      insights.lowestWinRate = sortedLowestWinRate.slice(0, 3);
+    }
+  }
 
-  // Find highest loss percentage (minimum 10 matches)
-  const highestLossPct = leaderboardData
+  // Find highest loss percentage (minimum 10 matches) - top 3
+  const eligibleForLossPct = leaderboardData
     .filter((p) => p.name !== "Others" && p.matches >= 10)
-    .reduce((max, p) => {
-      const lossPct = p.matches > 0 ? (p.losses / p.matches) * 100 : 0;
-      const maxLossPct = max?.matches > 0 ? (max.losses / max.matches) * 100 : 0;
-      return lossPct > maxLossPct ? p : max;
-    }, null);
-  insights.highestLossPct = highestLossPct;
+    .map((p) => ({
+      ...p,
+      lossPct: p.matches > 0 ? (p.losses / p.matches) * 100 : 0,
+    }));
+  insights.highestLossPct = getTopNWithTies(eligibleForLossPct, (p) => p.lossPct, 3);
 
-  // Find lowest loss percentage (minimum 10 matches)
-  const lowestLossPct = leaderboardData
+  // Find lowest loss percentage (minimum 10 matches) - top 3
+  const eligibleForLowestLossPct = leaderboardData
     .filter((p) => p.name !== "Others" && p.matches >= 10)
-    .reduce((min, p) => {
-      const lossPct = p.matches > 0 ? (p.losses / p.matches) * 100 : 0;
-      const minLossPct = min?.matches > 0 ? (min.losses / min.matches) * 100 : 100;
-      return lossPct < minLossPct ? p : min;
-    }, null);
-  insights.lowestLossPct = lowestLossPct;
+    .map((p) => ({
+      ...p,
+      lossPct: p.matches > 0 ? (p.losses / p.matches) * 100 : 0,
+    }));
+  // For lowest, we need to reverse the sort
+  const sortedLowestLossPct = [...eligibleForLowestLossPct].sort((a, b) => a.lossPct - b.lossPct);
+  if (sortedLowestLossPct.length > 0) {
+    const lowestValue = sortedLowestLossPct[0].lossPct;
+    const tiedLowest = sortedLowestLossPct.filter((p) => p.lossPct === lowestValue);
+    if (tiedLowest.length > 3) {
+      insights.lowestLossPct = tiedLowest;
+    } else {
+      insights.lowestLossPct = sortedLowestLossPct.slice(0, 3);
+    }
+  }
 
-  // Find highest hat tricks
-  const highestHatTricks = leaderboardData
-    .filter((p) => p.name !== "Others")
-    .reduce((max, p) => (p.hatTricks > (max?.hatTricks || 0) ? p : max), null);
-  insights.highestHatTricks = highestHatTricks;
+  // Find highest hat tricks - top 3
+  const eligibleForHatTricks = leaderboardData.filter((p) => p.name !== "Others" && (p.hatTricks || 0) > 0);
+  insights.highestHatTricks = getTopNWithTies(eligibleForHatTricks, (p) => p.hatTricks || 0, 3);
 
   // Get all players with clean sheets
   const cleanSheets = leaderboardData
@@ -172,21 +207,20 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
     insights.totalGames = attendanceData.summary?.totalGames || 0;
     insights.midweekGames = attendanceData.summary?.midweekGames || 0;
     insights.weekendGames = attendanceData.summary?.weekendGames || 0;
-    insights.mostAttended = attendanceData.players
-      ?.filter((p) => p.name !== "Others")
-      .reduce((max, p) => (p.totalGames > (max?.totalGames || 0) ? p : max), null);
+    const eligibleForAttendance = attendanceData.players?.filter((p) => p.name !== "Others") || [];
+    const topAttended = getTopNWithTies(eligibleForAttendance, (p) => p.totalGames || 0, 3);
+    insights.mostAttended = topAttended.map((p) => ({
+      name: p.name,
+      totalGames: p.totalGames || 0,
+    }));
   } else {
     // If no attendance data, calculate most attended from leaderboard data (matches played)
-    const mostAttendedFromLeaderboard = leaderboardData
-      .filter((p) => p.name !== "Others")
-      .reduce((max, p) => (p.matches > (max?.matches || 0) ? p : max), null);
-    
-    if (mostAttendedFromLeaderboard) {
-      insights.mostAttended = {
-        name: mostAttendedFromLeaderboard.name,
-        totalGames: mostAttendedFromLeaderboard.matches,
-      };
-    }
+    const eligibleForAttendance = leaderboardData.filter((p) => p.name !== "Others");
+    const topAttended = getTopNWithTies(eligibleForAttendance, (p) => p.matches || 0, 3);
+    insights.mostAttended = topAttended.map((p) => ({
+      name: p.name,
+      totalGames: p.matches || 0,
+    }));
   }
 
   // Calculate full house matches (only for 2026+)
@@ -224,7 +258,7 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     weekendMatches: quarterMatches.filter((m) => m.day === "Weekend").length,
     weekdayMatches: quarterMatches.filter((m) => m.day === "Midweek").length,
     topScorers: [],
-    mostAttended: null,
+    mostAttended: [],
     cleanSheets: [],
     fullHouseMatches: 0, // Only tracked from 2026 onwards
   };
@@ -255,10 +289,11 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     });
   });
 
-  const mostAttended = Array.from(attendanceMap.entries())
+  const mostAttendedList = Array.from(attendanceMap.entries())
     .map(([name, games]) => ({ name, games }))
-    .sort((a, b) => b.games - a.games)[0];
-  insights.mostAttended = mostAttended;
+    .sort((a, b) => b.games - a.games);
+  const topAttended = getTopNWithTies(mostAttendedList, (p) => p.games, 3);
+  insights.mostAttended = topAttended;
 
   // Calculate clean sheets for the quarter - get from attendance object
   const cleanSheetsMap = new Map();
@@ -405,75 +440,73 @@ export const Insights = () => {
 
         {/* Top Performers */}
         <div className="insights-highlights">
-          {overallInsights.topScorer && (
+          {overallInsights.topScorers && overallInsights.topScorers.length > 0 && (
             <div className="highlight-item">
-              <span className="highlight-label">🏆 Top Scorer:</span>
+              <span className="highlight-label">🏆 Top Scorers:</span>
               <span className="highlight-value">
-                {overallInsights.topScorer.name} ({overallInsights.topScorer.goals} goals)
+                {overallInsights.topScorers
+                  .map((p) => `${p.name} (${p.goals || 0} goals)`)
+                  .join(", ")}
               </span>
             </div>
           )}
-          {overallInsights.highestHatTricks && overallInsights.highestHatTricks.hatTricks > 0 && (
+          {overallInsights.highestHatTricks && overallInsights.highestHatTricks.length > 0 && (
             <div className="highlight-item">
               <span className="highlight-label">🎩 Most Hat Tricks:</span>
               <span className="highlight-value">
-                {overallInsights.highestHatTricks.name} ({overallInsights.highestHatTricks.hatTricks} hat tricks)
+                {overallInsights.highestHatTricks
+                  .map((p) => `${p.name} (${p.hatTricks || 0} hat tricks)`)
+                  .join(", ")}
               </span>
             </div>
           )}
-          {overallInsights.bestWinRate && (
+          {overallInsights.bestWinRate && overallInsights.bestWinRate.length > 0 && (
             <div className="highlight-item">
               <span className="highlight-label">✅ Best Win Rate:</span>
               <span className="highlight-value">
-                {overallInsights.bestWinRate.name} (
-                {overallInsights.bestWinRate.matches > 0
-                  ? Math.round((overallInsights.bestWinRate.wins / overallInsights.bestWinRate.matches) * 100)
-                  : 0}
-                %)
+                {overallInsights.bestWinRate
+                  .map((p) => `${p.name} (${Math.round(p.winRate)}%)`)
+                  .join(", ")}
               </span>
             </div>
           )}
-          {overallInsights.lowestWinRate && (
+          {overallInsights.lowestWinRate && overallInsights.lowestWinRate.length > 0 && (
             <div className="highlight-item">
               <span className="highlight-label">📉 Lowest Win Rate:</span>
               <span className="highlight-value">
-                {overallInsights.lowestWinRate.name} (
-                {overallInsights.lowestWinRate.matches > 0
-                  ? Math.round((overallInsights.lowestWinRate.wins / overallInsights.lowestWinRate.matches) * 100)
-                  : 0}
-                %)
+                {overallInsights.lowestWinRate
+                  .map((p) => `${p.name} (${Math.round(p.winRate)}%)`)
+                  .join(", ")}
               </span>
             </div>
           )}
-          {overallInsights.highestLossPct && (
+          {overallInsights.highestLossPct && overallInsights.highestLossPct.length > 0 && (
             <div className="highlight-item">
               <span className="highlight-label">📈 Highest Loss %:</span>
               <span className="highlight-value">
-                {overallInsights.highestLossPct.name} (
-                {overallInsights.highestLossPct.matches > 0
-                  ? Math.round((overallInsights.highestLossPct.losses / overallInsights.highestLossPct.matches) * 100)
-                  : 0}
-                %)
+                {overallInsights.highestLossPct
+                  .map((p) => `${p.name} (${Math.round(p.lossPct)}%)`)
+                  .join(", ")}
               </span>
             </div>
           )}
-          {overallInsights.lowestLossPct && (
+          {overallInsights.lowestLossPct && overallInsights.lowestLossPct.length > 0 && (
             <div className="highlight-item">
               <span className="highlight-label">📉 Lowest Loss %:</span>
               <span className="highlight-value">
-                {overallInsights.lowestLossPct.name} (
-                {overallInsights.lowestLossPct.matches > 0
-                  ? Math.round((overallInsights.lowestLossPct.losses / overallInsights.lowestLossPct.matches) * 100)
-                  : 0}
-                %)
+                {overallInsights.lowestLossPct
+                  .map((p) => `${p.name} (${Math.round(p.lossPct)}%)`)
+                  .join(", ")}
               </span>
             </div>
           )}
-          {overallInsights.mostAttended && (
+          {overallInsights.mostAttended && overallInsights.mostAttended.length > 0 && (
             <div className="highlight-item">
               <span className="highlight-label">📅 Most Attended:</span>
               <span className="highlight-value">
-                {overallInsights.mostAttended.name} ({overallInsights.mostAttended.totalGames} games)
+                {overallInsights.mostAttended
+                  .map((p) => `${p.name} (${p.totalGames} games)`)
+                  .join(", ")}
               </span>
             </div>
           )}
@@ -550,11 +583,13 @@ export const Insights = () => {
                         .join(", ")}
                     </span>
                   </div>
-                  {quarterlyInsights.q1.mostAttended && (
+                  {quarterlyInsights.q1.mostAttended && Array.isArray(quarterlyInsights.q1.mostAttended) && quarterlyInsights.q1.mostAttended.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">📅 Most Attended:</span>
                       <span className="highlight-value">
-                        {quarterlyInsights.q1.mostAttended.name} ({quarterlyInsights.q1.mostAttended.games} games)
+                        {quarterlyInsights.q1.mostAttended
+                          .map((p) => `${p.name} (${p.games} games)`)
+                          .join(", ")}
                       </span>
                     </div>
                   )}
@@ -598,11 +633,13 @@ export const Insights = () => {
                         .join(", ")}
                     </span>
                   </div>
-                  {quarterlyInsights.q2.mostAttended && (
+                  {quarterlyInsights.q2.mostAttended && Array.isArray(quarterlyInsights.q2.mostAttended) && quarterlyInsights.q2.mostAttended.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">📅 Most Attended:</span>
                       <span className="highlight-value">
-                        {quarterlyInsights.q2.mostAttended.name} ({quarterlyInsights.q2.mostAttended.games} games)
+                        {quarterlyInsights.q2.mostAttended
+                          .map((p) => `${p.name} (${p.games} games)`)
+                          .join(", ")}
                       </span>
                     </div>
                   )}
@@ -659,11 +696,13 @@ export const Insights = () => {
                         .join(", ")}
                     </span>
                   </div>
-                  {quarterlyInsights.q3.mostAttended && (
+                  {quarterlyInsights.q3.mostAttended && Array.isArray(quarterlyInsights.q3.mostAttended) && quarterlyInsights.q3.mostAttended.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">📅 Most Attended:</span>
                       <span className="highlight-value">
-                        {quarterlyInsights.q3.mostAttended.name} ({quarterlyInsights.q3.mostAttended.games} games)
+                        {quarterlyInsights.q3.mostAttended
+                          .map((p) => `${p.name} (${p.games} games)`)
+                          .join(", ")}
                       </span>
                     </div>
                   )}
@@ -720,11 +759,13 @@ export const Insights = () => {
                         .join(", ")}
                     </span>
                   </div>
-                  {quarterlyInsights.q4.mostAttended && (
+                  {quarterlyInsights.q4.mostAttended && Array.isArray(quarterlyInsights.q4.mostAttended) && quarterlyInsights.q4.mostAttended.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">📅 Most Attended:</span>
                       <span className="highlight-value">
-                        {quarterlyInsights.q4.mostAttended.name} ({quarterlyInsights.q4.mostAttended.games} games)
+                        {quarterlyInsights.q4.mostAttended
+                          .map((p) => `${p.name} (${p.games} games)`)
+                          .join(", ")}
                       </span>
                     </div>
                   )}
