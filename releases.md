@@ -51,6 +51,9 @@ Release 10.0 - Weekly formation visualizer
     - We can now see per game formation for our games
     - Graphical representation also includes scoreline, scorers, OGS and Clean sheets
 
+Release 11.0 - Lord Zu's Archive
+- A memory board that captures a photo after every game
+
 
 
 
