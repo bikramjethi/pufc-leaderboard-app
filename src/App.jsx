@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Leaderboard } from "./Leaderboard.jsx";
 import { Attendance } from "./Attendance.jsx";
+import { WeeklyTracker } from "./WeeklyTracker.jsx";
 import { Roster } from "./Roster.jsx";
 import { Insights } from "./Insights.jsx";
 import { ScoringTrends } from "./ScoringTrends.jsx";
@@ -79,21 +80,23 @@ function App() {
             <p className="subtitle">
               {activeTab === "attendance"
                 ? "Match Attendance"
-                : activeTab === "insights"
-                  ? "Season Insights"
-                  : activeTab === "scoring-trends"
-                    ? "Scoring Trends"
-                    : activeTab === "midweek-roster"
-                      ? "Midweek Roster"
-                      : activeTab === "weekend-roster"
-                        ? "Weekend Roster"
-                        : activeTab === "inactive-players"
-                          ? "Inactive Players"
-                          : activeTab === "onloan-roster"
-                            ? "On Loan Players"
-                            : selectedYear === "all-time"
-                            ? "All-Time Career Stats"
-                            : "Player Statistics"}
+                : activeTab === "weekly-tracker"
+                  ? "Weekly Tracker"
+                  : activeTab === "insights"
+                    ? "Season Insights"
+                    : activeTab === "scoring-trends"
+                      ? "Scoring Trends"
+                      : activeTab === "midweek-roster"
+                        ? "Midweek Roster"
+                        : activeTab === "weekend-roster"
+                          ? "Weekend Roster"
+                          : activeTab === "inactive-players"
+                            ? "Inactive Players"
+                            : activeTab === "onloan-roster"
+                              ? "On Loan Players"
+                              : selectedYear === "all-time"
+                              ? "All-Time Career Stats"
+                              : "Player Statistics"}
             </p>
           </div>
           <button
@@ -149,6 +152,18 @@ function App() {
                 }}
               >
                 📅 Attendance
+              </button>
+            )}
+            {config.ATTENDANCE?.TRACKER?.enabled && (
+              <button
+                className={`tab-btn ${activeTab === "weekly-tracker" ? "active" : ""}`}
+                onClick={() => {
+                  setActiveTab("weekly-tracker");
+                  setMobileMenuOpen(false);
+                  setRosterDropdownOpen(false);
+                }}
+              >
+                📊 Weekly Tracker
               </button>
             )}
             {config.INSIGHTS?.enabled && (
@@ -309,6 +324,8 @@ function App() {
           />
         ) : activeTab === "attendance" ? (
           <Attendance />
+        ) : activeTab === "weekly-tracker" ? (
+          <WeeklyTracker />
         ) : activeTab === "insights" ? (
           <Insights />
         ) : activeTab === "scoring-trends" ? (

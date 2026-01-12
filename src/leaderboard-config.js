@@ -38,7 +38,7 @@ export const config = {
       defaultSeason: "2026",            // Default season to load
     },
 
-    // Attendance Tracker sub-tab settings
+    // Attendance Weekly Tracker settings
     TRACKER: {
       enabled: true,                    // Show/hide the Tracker sub-tab
       seasons: ["2026"],                // Available seasons (per-match data starts from 2026)
