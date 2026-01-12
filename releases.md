@@ -40,7 +40,13 @@ Release XX - Insights 2026
 
 Release 8.0 - Trends Graphs
 - Show a graphical comparative view for overall scoring trends for weekend and weekdays
-- Added profile images for a few more players
+    -  Graph shows weekend v/s weekday games scoring numbers and you can hover over each match to view the scorelines
+    - Also has a tabular view at the bottom that captures match dates and scorelines
+- Show a score differential graph
+    - Graph shows the score difference trends for all games
+    - We can also see a tabular view that shows the match differentials for all our games
+
+It's clear from the graph view that while tuesday games may have higher intensity the weekend games actually are more closely fought
 
 Release 9.0 - Hall of Fame & Awards
 - Add a hall of fame page to the app
