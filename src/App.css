@@ -3471,14 +3471,15 @@ td.match-cell.fullhouse-match.onloan {
 .scoring-trends-graph-container,
 .scoring-diffs-graph-container {
   position: relative;
-  background: var(--bg-card);
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1rem;
-  padding-top: 2rem;
+  border-radius: 16px;
+  padding: 1.25rem;
+  padding-top: 2.25rem;
   margin-bottom: 1.5rem;
   overflow-x: auto;
   overflow-y: visible;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .scoring-trends-svg,
@@ -3494,13 +3495,14 @@ td.match-cell.fullhouse-match.onloan {
   position: absolute;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 0.75rem 1rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
   pointer-events: none;
   z-index: 100;
   min-width: 120px;
   text-align: center;
+  backdrop-filter: blur(8px);
 }
 
 .tooltip-date {
@@ -3575,9 +3577,81 @@ td.match-cell.fullhouse-match.onloan {
   background: rgba(245, 158, 11, 0.1);
 }
 
+/* Cancelled match tooltip */
+.graph-tooltip.cancelled {
+  border-color: #ef4444;
+}
+
+.tooltip-cancelled {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ef4444;
+  padding: 0.25rem 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 6px;
+}
+
+/* Cancelled match indicators */
+.cancelled-marker {
+  opacity: 0.9;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.data-point-group.cancelled:hover .cancelled-marker {
+  opacity: 1;
+}
+
+/* Cancelled stats count */
+.cancelled-count {
+  font-size: 0.85em;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* Legend cancelled marker */
+.legend-marker.cancelled-legend {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: #ef4444;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Cancelled badge in tables */
+.cancelled-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+}
+
+/* Cancelled row in table */
+.cancelled-row {
+  background: rgba(239, 68, 68, 0.05) !important;
+}
+
+.cancelled-row td {
+  color: var(--text-muted);
+}
+
+/* Cancelled cell in diff table */
+.cancelled-cell {
+  background: rgba(239, 68, 68, 0.05);
+  color: var(--text-muted);
+}
+
 /* Trend Lines */
 .trend-line {
-  transition: stroke-width 0.2s;
+  transition: stroke-width 0.3s ease-out, filter 0.3s ease-out;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .trend-line:hover {
@@ -3585,26 +3659,37 @@ td.match-cell.fullhouse-match.onloan {
 }
 
 .weekday-line {
-  filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
+  filter: drop-shadow(0 2px 6px rgba(59, 130, 246, 0.4));
 }
 
 .weekend-line {
-  filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3));
+  filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.4));
+}
+
+.weekday-line:hover {
+  filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.5));
+}
+
+.weekend-line:hover {
+  filter: drop-shadow(0 4px 12px rgba(245, 158, 11, 0.5));
 }
 
 /* Data Points */
 .data-point {
-  transition: r 0.2s, filter 0.2s;
+  transition: filter 0.2s ease-out;
   cursor: pointer;
 }
 
 .data-point:hover {
-  r: 8;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
 }
 
-.data-point-group:hover .data-point {
-  r: 8;
+.data-point.weekday-point:hover {
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+}
+
+.data-point.weekend-point:hover {
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
 }
 
 /* Legend */
