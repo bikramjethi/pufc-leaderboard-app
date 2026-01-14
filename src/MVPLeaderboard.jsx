@@ -104,8 +104,9 @@ export const MVPLeaderboard = () => {
       .map(data => {
         const attendancePct = (data.matches / maxMatches) * 100;
         
-        // Normalize weighted goals per match (assume 2.0 is exceptional, scale to 0-100)
-        const normalizedGoals = Math.min(data.weightedGoalsPerMatch / 2.0 * 100, 100);
+        // Normalize weighted goals per match (assume 4.0 is exceptional, scale to 0-100)
+        // Using 4.0 instead of 2.0 to prevent high-scoring players from being capped
+        const normalizedGoals = Math.min(data.weightedGoalsPerMatch / 4.0 * 100, 100);
         
         // Calculate MVP score with updated weights
         const mvpScore = (

@@ -172,7 +172,8 @@
     "id": 13,
     "name": "Jethi",
     "position": [
-      "ALL"
+      "FWD",
+      "MID"
     ],
     "matches": 48,
     "wins": 32,
