@@ -32,6 +32,10 @@ export const MatchEntry = () => {
   const [team1Players, setTeam1Players] = useState([createPlayer()]);
   const [team2Players, setTeam2Players] = useState([createPlayer()]);
   
+  // Others goals (unattributed goals for each team)
+  const [team1OthersGoals, setTeam1OthersGoals] = useState(0);
+  const [team2OthersGoals, setTeam2OthersGoals] = useState(0);
+  
   // Output state
   const [generatedJson, setGeneratedJson] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
@@ -104,9 +108,9 @@ export const MatchEntry = () => {
     }
   };
 
-  // Calculate totals
-  const team1GoalsTotal = team1Players.reduce((sum, p) => sum + (p.goals || 0), 0);
-  const team2GoalsTotal = team2Players.reduce((sum, p) => sum + (p.goals || 0), 0);
+  // Calculate totals (including Others goals)
+  const team1GoalsTotal = team1Players.reduce((sum, p) => sum + (p.goals || 0), 0) + team1OthersGoals;
+  const team2GoalsTotal = team2Players.reduce((sum, p) => sum + (p.goals || 0), 0) + team2OthersGoals;
   const team1OwnGoals = team1Players.reduce((sum, p) => sum + (p.ownGoals || 0), 0);
   const team2OwnGoals = team2Players.reduce((sum, p) => sum + (p.ownGoals || 0), 0);
   
@@ -144,6 +148,54 @@ export const MatchEntry = () => {
     
     setError("");
 
+    // Build team 1 players array (including Others if there are unattributed goals)
+    const team1Attendance = team1Players
+      .filter(p => p.name.trim())
+      .map(p => ({
+        name: p.name.trim(),
+        goals: p.goals || 0,
+        ownGoals: p.ownGoals || 0,
+        cleanSheet: p.cleanSheet || false,
+        groupStatus: p.groupStatus,
+        position: p.position,
+      }));
+    
+    // Add "Others" entry if there are unattributed goals
+    if (team1OthersGoals > 0) {
+      team1Attendance.push({
+        name: "Others",
+        goals: team1OthersGoals,
+        ownGoals: 0,
+        cleanSheet: false,
+        groupStatus: "REGULAR",
+        position: "ST",
+      });
+    }
+
+    // Build team 2 players array (including Others if there are unattributed goals)
+    const team2Attendance = team2Players
+      .filter(p => p.name.trim())
+      .map(p => ({
+        name: p.name.trim(),
+        goals: p.goals || 0,
+        ownGoals: p.ownGoals || 0,
+        cleanSheet: p.cleanSheet || false,
+        groupStatus: p.groupStatus,
+        position: p.position,
+      }));
+    
+    // Add "Others" entry if there are unattributed goals
+    if (team2OthersGoals > 0) {
+      team2Attendance.push({
+        name: "Others",
+        goals: team2OthersGoals,
+        ownGoals: 0,
+        cleanSheet: false,
+        groupStatus: "REGULAR",
+        position: "ST",
+      });
+    }
+
     const matchData = {
       id: matchId.trim(),
       date: dateStr,
@@ -153,26 +205,8 @@ export const MatchEntry = () => {
       isFullHouse,
       ...(isBackfill && { isBackfilled: true }),
       attendance: {
-        [team1Color]: team1Players
-          .filter(p => p.name.trim())
-          .map(p => ({
-            name: p.name.trim(),
-            goals: p.goals || 0,
-            ownGoals: p.ownGoals || 0,
-            cleanSheet: p.cleanSheet || false,
-            groupStatus: p.groupStatus,
-            position: p.position,
-          })),
-        [team2Color]: team2Players
-          .filter(p => p.name.trim())
-          .map(p => ({
-            name: p.name.trim(),
-            goals: p.goals || 0,
-            ownGoals: p.ownGoals || 0,
-            cleanSheet: p.cleanSheet || false,
-            groupStatus: p.groupStatus,
-            position: p.position,
-          })),
+        [team1Color]: team1Attendance,
+        [team2Color]: team2Attendance,
       },
       scoreline: {
         [team1Color]: team1Score,
@@ -243,6 +277,8 @@ export const MatchEntry = () => {
     setIsFullHouse(false);
     setTeam1Players([createPlayer()]);
     setTeam2Players([createPlayer()]);
+    setTeam1OthersGoals(0);
+    setTeam2OthersGoals(0);
     setGeneratedJson("");
     setError("");
   };
@@ -417,6 +453,19 @@ export const MatchEntry = () => {
               <button className="add-player-btn" onClick={() => addPlayer(1)}>
                 + Add Player
               </button>
+              
+              {/* Others/Unattributed Goals */}
+              <div className="others-goals-row">
+                <label>Unattributed Goals ("Others")</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={team1OthersGoals}
+                  onChange={(e) => setTeam1OthersGoals(parseInt(e.target.value) || 0)}
+                  placeholder="0"
+                />
+                <span className="others-hint">Goals with unknown scorer</span>
+              </div>
             </div>
           </div>
 
@@ -493,6 +542,19 @@ export const MatchEntry = () => {
               <button className="add-player-btn" onClick={() => addPlayer(2)}>
                 + Add Player
               </button>
+              
+              {/* Others/Unattributed Goals */}
+              <div className="others-goals-row">
+                <label>Unattributed Goals ("Others")</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={team2OthersGoals}
+                  onChange={(e) => setTeam2OthersGoals(parseInt(e.target.value) || 0)}
+                  placeholder="0"
+                />
+                <span className="others-hint">Goals with unknown scorer</span>
+              </div>
             </div>
           </div>
         </div>

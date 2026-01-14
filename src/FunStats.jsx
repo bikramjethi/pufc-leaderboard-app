@@ -23,17 +23,26 @@ const getSelectableSeasons = () => {
 };
 
 // Helper to get valid matches from a year's data
-// For 2025, only include matches with isBackfilled: true
-const getValidMatches = (year) => {
+// requiresBackfill: if true, 2025 data must have isBackfilled: true
+const getValidMatches = (year, requiresBackfill = true) => {
   const data = matchDataByYear[year];
   if (!data?.matches) return [];
   
   return data.matches.filter(m => {
     if (!m.matchPlayed || m.matchCancelled) return false;
-    // For 2025, only include backfilled matches
-    if (year === "2025" && !m.isBackfilled) return false;
+    // For 2025, check if backfill is required
+    if (year === "2025" && requiresBackfill && !m.isBackfilled) return false;
     return true;
   });
+};
+
+// Helper to check if a player name is trackable (not "Others" or patterns like "David+1")
+const isTrackablePlayer = (name) => {
+  if (!name) return false;
+  if (name === 'Others') return false;
+  // Skip patterns like "David+1", "Ashish+2" etc.
+  if (/\+\d+$/.test(name)) return false;
+  return true;
 };
 
 // Helper to get winning team from scoreline
@@ -75,13 +84,13 @@ const getPlayersFromAttendance = (attendance) => {
   return players;
 };
 
-// Helper to get unique player names across all matches (excluding "Others")
+// Helper to get unique player names across all matches (excluding "Others" and patterns like "David+1")
 const getAllPlayerNames = (matches) => {
   const names = new Set();
   matches.forEach(match => {
     if (match.attendance) {
       getPlayersFromAttendance(match.attendance).forEach(p => {
-        if (p.name && p.name !== 'Others') {
+        if (isTrackablePlayer(p.name)) {
           names.add(p.name);
         }
       });
@@ -118,25 +127,88 @@ export const FunStats = () => {
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
 
-  // Get matches based on selected season (respects isBackfilled for 2025)
-  const selectedMatches = useMemo(() => {
-    if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year));
-    }
-    return getValidMatches(selectedSeason);
-  }, [selectedSeason, selectableSeasons]);
+  // Get backfill requirements from config
+  const backfillReqs = config.FUN_STATS?.requiresBackfill || {};
 
-  // Get all unique players for H2H selection (excluding "Others")
-  const allPlayers = useMemo(() => getAllPlayerNames(selectedMatches), [selectedMatches]);
+  // Matches for different features based on their backfill requirements
+  const colorStatsMatches = useMemo(() => {
+    const req = backfillReqs.colorStats ?? false;
+    if (selectedSeason === "all") {
+      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+    }
+    return getValidMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.colorStats]);
   
-  // Get match count label
-  const matchCountLabel = `${selectedMatches.length} matches`;
+  const h2hMatches = useMemo(() => {
+    const req = backfillReqs.headToHead ?? true;
+    if (selectedSeason === "all") {
+      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+    }
+    return getValidMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.headToHead]);
+  
+  const streakMatches = useMemo(() => {
+    const req = backfillReqs.hotStreaks ?? true;
+    if (selectedSeason === "all") {
+      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+    }
+    return getValidMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.hotStreaks]);
+  
+  const clutchMatches = useMemo(() => {
+    const req = backfillReqs.clutchFactor ?? false;
+    if (selectedSeason === "all") {
+      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+    }
+    return getValidMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.clutchFactor]);
+
+  // Duos have different requirements per metric
+  const duosWinRateMatches = useMemo(() => {
+    const req = backfillReqs.duosWinRate ?? true;
+    if (selectedSeason === "all") {
+      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+    }
+    return getValidMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.duosWinRate]);
+  
+  const duosScoringMatches = useMemo(() => {
+    const req = backfillReqs.duosTopScoring ?? false;
+    if (selectedSeason === "all") {
+      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+    }
+    return getValidMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.duosTopScoring]);
+  
+  const duosGamesMatches = useMemo(() => {
+    const req = backfillReqs.duosMostGames ?? true;
+    if (selectedSeason === "all") {
+      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+    }
+    return getValidMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.duosMostGames]);
+
+  // For player selection in H2H, use h2h matches
+  const allPlayers = useMemo(() => getAllPlayerNames(h2hMatches), [h2hMatches]);
+  
+  // Get match count label based on active tab
+  const getMatchCountLabel = () => {
+    switch (activeSubTab) {
+      case "color-stats": return `${colorStatsMatches.length} matches`;
+      case "head-to-head": return `${h2hMatches.length} matches`;
+      case "hot-streaks": return `${streakMatches.length} matches`;
+      case "dream-duos": return "various data sources";
+      case "clutch-factor": return `${clutchMatches.length} matches`;
+      default: return "";
+    }
+  };
+  const matchCountLabel = getMatchCountLabel();
 
   // Calculate color statistics based on selected season
   const colorStats = useMemo(() => {
     const stats = {};
     
-    selectedMatches.forEach(match => {
+    colorStatsMatches.forEach(match => {
       if (!match.scoreline) return;
       
       const teams = Object.keys(match.scoreline);
@@ -179,7 +251,7 @@ export const FunStats = () => {
         };
       })
       .sort((a, b) => b.winPct - a.winPct);
-  }, [selectedMatches]);
+  }, [colorStatsMatches]);
 
   // Calculate head-to-head stats between two players based on selected season
   const h2hStats = useMemo(() => {
@@ -194,7 +266,7 @@ export const FunStats = () => {
       matchDetails: [],
     };
 
-    selectedMatches.forEach(match => {
+    h2hMatches.forEach(match => {
       const players = getPlayersFromAttendance(match.attendance);
       const p1Data = players.find(p => p.name === player1);
       const p2Data = players.find(p => p.name === player2);
@@ -255,7 +327,7 @@ export const FunStats = () => {
     });
 
     return stats;
-  }, [player1, player2, selectedMatches]);
+  }, [player1, player2, h2hMatches]);
 
   // ================== HOT STREAKS (based on selected season) ==================
   const hotStreaks = useMemo(() => {
@@ -264,7 +336,7 @@ export const FunStats = () => {
     const playerStreaks = {};
     
     // Sort matches by date for chronological order
-    const sortedMatches = [...selectedMatches].sort((a, b) => 
+    const sortedMatches = [...streakMatches].sort((a, b) => 
       new Date(a.date.split('/').reverse().join('-')) - new Date(b.date.split('/').reverse().join('-'))
     );
     
@@ -273,8 +345,8 @@ export const FunStats = () => {
       const winningTeam = getWinningTeam(match.scoreline);
       
       players.forEach(player => {
-        // Skip "Others"
-        if (player.name === 'Others') return;
+        // Skip non-trackable players (Others, David+1 patterns, etc.)
+        if (!isTrackablePlayer(player.name)) return;
         
         if (!playerStreaks[player.name]) {
           playerStreaks[player.name] = {
@@ -336,62 +408,70 @@ export const FunStats = () => {
       byCurrentGoal: [...results].filter(p => p.currentGoalStreak > 0).sort((a, b) => b.currentGoalStreak - a.currentGoalStreak).slice(0, 10),
       byMaxGoal: [...results].sort((a, b) => b.maxGoalStreak - a.maxGoalStreak).slice(0, 10),
       byUnbeaten: [...results].sort((a, b) => b.currentUnbeatenStreak - a.currentUnbeatenStreak).slice(0, 10),
-      totalMatches: selectedMatches.length,
+      totalMatches: streakMatches.length,
     };
-  }, [selectedMatches]);
+  }, [streakMatches]);
 
-  // ================== DREAM TEAM DUOS (based on selected season) ==================
+  // ================== DREAM TEAM DUOS (different data sources per metric) ==================
   const dreamTeamDuos = useMemo(() => {
     if (!config.FUN_STATS?.enableDreamTeamDuos) return null;
     
-    // Calculate duo stats from selected matches
-    const duoStats = {};
-    selectedMatches.forEach(match => {
-      const players = getPlayersFromAttendance(match.attendance).filter(p => p.name !== 'Others');
-      const winningTeam = getWinningTeam(match.scoreline);
-      
-      const teams = {};
-      players.forEach(p => {
-        if (!teams[p.team]) teams[p.team] = [];
-        teams[p.team].push(p);
-      });
-      
-      Object.values(teams).forEach(teamPlayers => {
-        for (let i = 0; i < teamPlayers.length; i++) {
-          for (let j = i + 1; j < teamPlayers.length; j++) {
-            const p1 = teamPlayers[i];
-            const p2 = teamPlayers[j];
-            const key = [p1.name, p2.name].sort().join('|');
-            
-            if (!duoStats[key]) {
-              duoStats[key] = {
-                player1: [p1.name, p2.name].sort()[0],
-                player2: [p1.name, p2.name].sort()[1],
-                matches: 0,
-                wins: 0,
-                draws: 0,
-                losses: 0,
-                combinedGoals: 0,
-              };
-            }
-            
-            duoStats[key].matches += 1;
-            duoStats[key].combinedGoals += (p1.goals || 0) + (p2.goals || 0);
-            
-            if (winningTeam === p1.team) {
-              duoStats[key].wins += 1;
-            } else if (winningTeam === 'DRAW') {
-              duoStats[key].draws += 1;
-            } else {
-              duoStats[key].losses += 1;
+    // Helper to calculate duo stats from matches
+    const calcDuoStats = (matches) => {
+      const duoStats = {};
+      matches.forEach(match => {
+        const players = getPlayersFromAttendance(match.attendance).filter(p => isTrackablePlayer(p.name));
+        const winningTeam = getWinningTeam(match.scoreline);
+        
+        const teams = {};
+        players.forEach(p => {
+          if (!teams[p.team]) teams[p.team] = [];
+          teams[p.team].push(p);
+        });
+        
+        Object.values(teams).forEach(teamPlayers => {
+          for (let i = 0; i < teamPlayers.length; i++) {
+            for (let j = i + 1; j < teamPlayers.length; j++) {
+              const p1 = teamPlayers[i];
+              const p2 = teamPlayers[j];
+              const key = [p1.name, p2.name].sort().join('|');
+              
+              if (!duoStats[key]) {
+                duoStats[key] = {
+                  player1: [p1.name, p2.name].sort()[0],
+                  player2: [p1.name, p2.name].sort()[1],
+                  matches: 0,
+                  wins: 0,
+                  draws: 0,
+                  losses: 0,
+                  combinedGoals: 0,
+                };
+              }
+              
+              duoStats[key].matches += 1;
+              duoStats[key].combinedGoals += (p1.goals || 0) + (p2.goals || 0);
+              
+              if (winningTeam === p1.team) {
+                duoStats[key].wins += 1;
+              } else if (winningTeam === 'DRAW') {
+                duoStats[key].draws += 1;
+              } else {
+                duoStats[key].losses += 1;
+              }
             }
           }
-        }
+        });
       });
-    });
+      return duoStats;
+    };
     
-    // Win rate results (min 3 matches)
-    const winRateResults = Object.values(duoStats)
+    // Calculate duo stats with different data sources
+    const winRateDuoStats = calcDuoStats(duosWinRateMatches);
+    const scoringDuoStats = calcDuoStats(duosScoringMatches);
+    const gamesDuoStats = calcDuoStats(duosGamesMatches);
+    
+    // Win rate results (min 3 matches) - uses backfill-required data
+    const winRateResults = Object.values(winRateDuoStats)
       .filter(d => d.matches >= 3)
       .map(d => ({
         ...d,
@@ -400,8 +480,8 @@ export const FunStats = () => {
       }))
       .sort((a, b) => parseFloat(b.winRate) - parseFloat(a.winRate));
     
-    // Top scoring results (min 3 matches)
-    const scoringResults = Object.values(duoStats)
+    // Top scoring results (min 3 matches) - doesn't require backfill
+    const scoringResults = Object.values(scoringDuoStats)
       .filter(d => d.matches >= 3)
       .map(d => ({
         ...d,
@@ -409,8 +489,8 @@ export const FunStats = () => {
       }))
       .sort((a, b) => b.combinedGoals - a.combinedGoals);
     
-    // Most matches results (min 3 matches)
-    const matchesResults = Object.values(duoStats)
+    // Most matches results (min 3 matches) - uses backfill-required data
+    const matchesResults = Object.values(gamesDuoStats)
       .filter(d => d.matches >= 3)
       .map(d => ({
         ...d,
@@ -423,7 +503,7 @@ export const FunStats = () => {
       topGoalScoring: scoringResults.slice(0, 10),
       mostMatches: matchesResults.slice(0, 10),
     };
-  }, [selectedMatches]);
+  }, [duosWinRateMatches, duosScoringMatches, duosGamesMatches]);
 
   // ================== CLUTCH FACTOR (Decisive Scorers only, based on selected season) ==================
   const clutchFactor = useMemo(() => {
@@ -431,15 +511,15 @@ export const FunStats = () => {
     
     const playerClutch = {};
     
-    selectedMatches.forEach(match => {
+    clutchMatches.forEach(match => {
       if (!isCloseMatch(match.scoreline)) return;
       
       const players = getPlayersFromAttendance(match.attendance);
       const winningTeam = getWinningTeam(match.scoreline);
       
       players.forEach(player => {
-        // Skip "Others"
-        if (player.name === 'Others') return;
+        // Skip non-trackable players (Others, David+1 patterns, etc.)
+        if (!isTrackablePlayer(player.name)) return;
         
         if (!playerClutch[player.name]) {
           playerClutch[player.name] = {
@@ -459,7 +539,7 @@ export const FunStats = () => {
       });
     });
     
-    const closeMatchCount = selectedMatches.filter(m => isCloseMatch(m.scoreline)).length;
+    const closeMatchCount = clutchMatches.filter(m => isCloseMatch(m.scoreline)).length;
     
     const results = Object.entries(playerClutch)
       .filter(([, data]) => data.goalsInCloseGames > 0)
@@ -473,7 +553,7 @@ export const FunStats = () => {
       totalCloseMatches: closeMatchCount,
       topDecisiveScorers: results.slice(0, 15),
     };
-  }, [selectedMatches]);
+  }, [clutchMatches]);
 
   // Feature flags
   const enableColorStats = config.FUN_STATS?.enableColorStats !== false;
