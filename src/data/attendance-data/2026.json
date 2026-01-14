@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "totalGoals": 30,
+  "totalGoals": 38,
   "weekendGoals": 15,
-  "weekdayGoals": 15,
+  "weekdayGoals": 23,
   "matches": [
     {
       "id": "03-01-2026",
@@ -34,7 +34,7 @@
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR", 
+            "groupStatus": "REGULAR",
             "position": "LB"
           },
           {
@@ -116,7 +116,7 @@
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR", 
+            "groupStatus": "REGULAR",
             "position": "LB"
           },
           {
@@ -140,7 +140,7 @@
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "ONLOAN", 
+            "groupStatus": "ONLOAN",
             "position": "RB"
           }
         ]
@@ -173,7 +173,7 @@
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR", 
+            "groupStatus": "REGULAR",
             "position": "CM"
           },
           {
@@ -449,11 +449,148 @@
       "id": "13-01-2026",
       "date": "13/01/2026",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "attendance": {
+        "RED": [
+          {
+            "name": "Rohit Hyd",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Vikas",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Vinit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Pandey",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Matthew",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Vinay",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Joe",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Ashish",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "John",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "David",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Akshat",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 4,
+        "BLUE": 4
+      },
+      "totalGoals": 8,
+      "isFullHouse": true
     },
     {
       "id": "17-01-2026",
