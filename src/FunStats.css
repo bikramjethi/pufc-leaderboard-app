@@ -664,6 +664,7 @@
   border-radius: 8px;
   border: 1px solid transparent;
   transition: all 0.2s ease;
+  min-width: 0; /* Allow flex items to shrink */
 }
 
 .streak-item:hover,
@@ -701,33 +702,46 @@
   font-weight: 600;
   color: var(--text-primary);
   font-size: 0.9rem;
+  min-width: 0; /* Allow text truncation */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .streak-value {
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--text-primary);
-  min-width: 32px;
-  text-align: right;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .streak-value.fire {
   color: #f97316;
+  background: rgba(249, 115, 22, 0.15);
 }
 
-.streak-value.goal {
+.streak-value.goal-streak {
   color: var(--accent-primary);
+  background: rgba(34, 197, 94, 0.15);
 }
 
 .streak-value.unbeaten {
   color: #3b82f6;
+  background: rgba(59, 130, 246, 0.15);
 }
 
 .no-streak {
   text-align: center;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   color: var(--text-muted);
   font-style: italic;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border: 1px dashed var(--border-color);
   font-size: 0.85rem;
 }
 
@@ -1090,6 +1104,26 @@
   color: #22c55e;
 }
 
+.formula-metric.weighted {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%);
+  border-color: #f97316;
+}
+
+.formula-metric.weighted .metric-weight {
+  color: #f97316;
+}
+
+.formula-note {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  border-left: 3px solid #f97316;
+}
+
 /* MVP Header Row */
 .mvp-header-row {
   display: flex;
@@ -1201,6 +1235,18 @@
   margin-bottom: 0.25rem;
 }
 
+.podium-position-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .podium-score {
   font-size: 1.75rem;
   font-weight: 800;
@@ -1226,11 +1272,11 @@
 
 .mvp-header {
   display: grid;
-  grid-template-columns: 40px 1fr 60px 40px 40px 40px 35px 55px;
+  grid-template-columns: 35px 1fr 50px 55px 35px 35px 35px 50px;
   padding: 0.75rem 1rem;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border-color);
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -1239,10 +1285,10 @@
 
 .mvp-row {
   display: grid;
-  grid-template-columns: 40px 1fr 60px 40px 40px 40px 35px 55px;
+  grid-template-columns: 35px 1fr 50px 55px 35px 35px 35px 50px;
   padding: 0.6rem 1rem;
   border-bottom: 1px solid var(--border-color);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   transition: background 0.2s ease;
 }
 
@@ -1281,6 +1327,19 @@
 .col-hattricks {
   color: #f97316;
   font-weight: 600;
+}
+
+.col-pos {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.col-mult {
+  text-align: center;
+  color: #f97316;
+  font-weight: 600;
+  font-size: 0.75rem;
 }
 
 /* ==================== GOALKEEPER STATS ==================== */
@@ -1458,20 +1517,23 @@
 
   .mvp-header,
   .mvp-row {
-    grid-template-columns: 30px 1fr 55px;
+    grid-template-columns: 30px 1fr 50px 55px;
   }
 
   .mvp-header .col-matches,
-  .mvp-header .col-wins,
   .mvp-header .col-goals,
-  .mvp-header .col-hattricks,
+  .mvp-header .col-mult,
   .mvp-header .col-winrate,
   .mvp-row .col-matches,
-  .mvp-row .col-wins,
   .mvp-row .col-goals,
-  .mvp-row .col-hattricks,
+  .mvp-row .col-mult,
   .mvp-row .col-winrate {
     display: none;
+  }
+
+  .formula-note {
+    font-size: 0.7rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .mvp-header-row {
