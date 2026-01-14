@@ -5592,58 +5592,139 @@
       "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
+      "isFullHouse": true,
+      "isBackfilled": true,
       "attendance": {
         "WHITE": [
           {
-            "name": "Rishabh",
-            "goals": 1,
+            "name": "Ashish",
+            "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "GK"
           },
           {
             "name": "Rajat",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Prateek",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
           },
           {
             "name": "Vedant",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Rohit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Rishav",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
           }
         ],
         "BLACK": [
           {
-            "name": "Vinoth",
-            "goals": 5,
+            "name": "Gagan",
+            "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "GK"
           },
           {
-            "name": "Pandey",
-            "goals": 1,
+            "name": "Aayush",
+            "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "RB"
           },
           {
-            "name": "Subarna",
-            "goals": 1,
+            "name": "Vinit",
+            "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "CB"
           },
           {
             "name": "Animesh",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR"
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Pandey",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Ammar",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 5,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
           }
         ]
       },
@@ -5833,6 +5914,7 @@
     "Deepak",
     "Divyansh",
     "Ehtesham",
+    "Gagan",
     "George",
     "Ishan",
     "Jay",
