@@ -15,7 +15,7 @@ export const tickerMessages = [
   "Vinit's motto: Win or lose, at least we vibed 🎶",
   "Rohit Hyd's pre-match warmup: stretches, sprints, and selecting today's argument 🥊",
   "Lalit got shouted at again... must be a Tuesday 😅",
-  "Breaking: Matthew's signature move now has its own Wikipedia page 🕺",
+  "Breaking: Mathew's signature move now has its own Wikipedia page 🕺",
   "Vinay: 10/10 performance, 0/10 luck 🍀",
   "Vinit picking teams like it's someone else's problem 🤷",
   "CEO Prateek will join next game — pending board approval 💼",

@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { config } from "./leaderboard-config.js";
+import "./FunStats.css";
 
 // Dynamically import all available match data files
 // This pattern allows automatic pickup of new season files (2027, 2028, etc.)
@@ -18,8 +19,14 @@ Object.entries(matchDataModules).forEach(([path, module]) => {
 const getAvailableSeasons = () => {
   const configSeasons = config.FUN_STATS?.seasons || [];
   const discoveredSeasons = Object.keys(matchDataByYear).sort((a, b) => b - a);
-  // Use config seasons if specified, otherwise use discovered
   return configSeasons.length > 0 ? configSeasons : discoveredSeasons;
+};
+
+// Get seasons from 2026 onwards (for features requiring complete tracker data)
+const getTrackerSeasons = () => {
+  return Object.keys(matchDataByYear)
+    .filter(year => parseInt(year) >= 2026)
+    .sort((a, b) => b - a);
 };
 
 // Get H2H seasons (detailed per-match data from 2026+)
@@ -43,6 +50,14 @@ const getWinningTeam = (scoreline) => {
   return 'DRAW';
 };
 
+// Helper to check if match is close (≤2 goal margin, including draws)
+const isCloseMatch = (scoreline) => {
+  if (!scoreline || typeof scoreline !== 'object') return false;
+  const scores = Object.values(scoreline);
+  if (scores.length !== 2) return false;
+  return Math.abs(scores[0] - scores[1]) <= 2;
+};
+
 // Helper to get all players from a match's attendance
 const getPlayersFromAttendance = (attendance) => {
   if (!attendance || typeof attendance !== 'object') return [];
@@ -59,12 +74,16 @@ const getPlayersFromAttendance = (attendance) => {
   return players;
 };
 
-// Helper to get unique player names across all matches
+// Helper to get unique player names across all matches (excluding "Others")
 const getAllPlayerNames = (matches) => {
   const names = new Set();
   matches.forEach(match => {
     if (match.attendance) {
-      getPlayersFromAttendance(match.attendance).forEach(p => names.add(p.name));
+      getPlayersFromAttendance(match.attendance).forEach(p => {
+        if (p.name && p.name !== 'Others') {
+          names.add(p.name);
+        }
+      });
     }
   });
   return Array.from(names).sort();
@@ -81,18 +100,29 @@ const colorConfig = {
 
 export const FunStats = () => {
   const availableSeasons = getAvailableSeasons();
+  const trackerSeasons = getTrackerSeasons();
   const h2hSeasons = getH2HSeasons();
   
   const [selectedSeason, setSelectedSeason] = useState(
     config.FUN_STATS?.defaultSeason || "all"
   );
-  const [activeSubTab, setActiveSubTab] = useState(
-    config.FUN_STATS?.enableColorStats ? "color-stats" : "head-to-head"
-  );
+  
+  // Determine first enabled tab
+  const getDefaultTab = () => {
+    if (config.FUN_STATS?.enableColorStats) return "color-stats";
+    if (config.FUN_STATS?.enableHeadToHead) return "head-to-head";
+    if (config.FUN_STATS?.enableHotStreaks) return "hot-streaks";
+    if (config.FUN_STATS?.enableDreamTeamDuos) return "dream-duos";
+    if (config.FUN_STATS?.enableClutchFactor) return "clutch-factor";
+    if (config.FUN_STATS?.enableMVPIndex) return "mvp-index";
+    return "color-stats";
+  };
+  
+  const [activeSubTab, setActiveSubTab] = useState(getDefaultTab());
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
 
-  // Get all matches for selected season(s)
+  // Get all matches for selected season(s) - for color stats
   const allMatches = useMemo(() => {
     if (selectedSeason === "all") {
       return availableSeasons.flatMap(year => 
@@ -102,6 +132,21 @@ export const FunStats = () => {
     return (matchDataByYear[selectedSeason]?.matches || []).filter(m => m.matchPlayed && !m.matchCancelled);
   }, [selectedSeason, availableSeasons]);
 
+  // Get matches from 2026+ only (for streaks, duos win rate, most games together)
+  const trackerMatches = useMemo(() => {
+    return trackerSeasons.flatMap(year => 
+      (matchDataByYear[year]?.matches || []).filter(m => m.matchPlayed && !m.matchCancelled)
+    );
+  }, [trackerSeasons]);
+
+  // Get matches from 2025+ (for top scoring duos - scorer data is accurate)
+  const scorerMatches = useMemo(() => {
+    const scorerSeasons = Object.keys(matchDataByYear).filter(year => parseInt(year) >= 2025);
+    return scorerSeasons.flatMap(year => 
+      (matchDataByYear[year]?.matches || []).filter(m => m.matchPlayed && !m.matchCancelled)
+    );
+  }, []);
+
   // Get H2H matches (only from detailed seasons)
   const h2hMatches = useMemo(() => {
     return h2hSeasons.flatMap(year => 
@@ -109,7 +154,7 @@ export const FunStats = () => {
     );
   }, [h2hSeasons]);
 
-  // Get all unique players for H2H selection
+  // Get all unique players for H2H selection (excluding "Others")
   const allPlayers = useMemo(() => getAllPlayerNames(h2hMatches), [h2hMatches]);
 
   // Calculate color statistics
@@ -144,7 +189,6 @@ export const FunStats = () => {
       });
     });
     
-    // Calculate percentages and sort by win rate
     return Object.entries(stats)
       .map(([color, data]) => {
         const total = data.wins + data.losses + data.draws;
@@ -180,7 +224,6 @@ export const FunStats = () => {
       const p1Data = players.find(p => p.name === player1);
       const p2Data = players.find(p => p.name === player2);
       
-      // Both players must be in the match
       if (!p1Data || !p2Data) return;
       
       const winningTeam = getWinningTeam(match.scoreline);
@@ -199,7 +242,6 @@ export const FunStats = () => {
       };
       
       if (sameTeam) {
-        // They played together
         stats.together.matches += 1;
         stats.together.goals += (p1Data.goals || 0) + (p2Data.goals || 0);
         
@@ -214,7 +256,6 @@ export const FunStats = () => {
           matchDetail.result = 'loss';
         }
       } else {
-        // They played against each other
         stats.player1.matches += 1;
         stats.player2.matches += 1;
         stats.player1.goals += p1Data.goals || 0;
@@ -241,36 +282,382 @@ export const FunStats = () => {
     return stats;
   }, [player1, player2, h2hMatches]);
 
+  // ================== HOT STREAKS (2026+ data only) ==================
+  const hotStreaks = useMemo(() => {
+    if (!config.FUN_STATS?.enableHotStreaks) return null;
+    
+    const playerStreaks = {};
+    
+    // Sort matches by date for chronological order
+    const sortedMatches = [...trackerMatches].sort((a, b) => 
+      new Date(a.date.split('/').reverse().join('-')) - new Date(b.date.split('/').reverse().join('-'))
+    );
+    
+    sortedMatches.forEach(match => {
+      const players = getPlayersFromAttendance(match.attendance);
+      const winningTeam = getWinningTeam(match.scoreline);
+      
+      players.forEach(player => {
+        // Skip "Others"
+        if (player.name === 'Others') return;
+        
+        if (!playerStreaks[player.name]) {
+          playerStreaks[player.name] = {
+            currentWinStreak: 0,
+            maxWinStreak: 0,
+            currentGoalStreak: 0,
+            maxGoalStreak: 0,
+            currentUnbeatenStreak: 0,
+            maxUnbeatenStreak: 0,
+            totalMatches: 0,
+            totalGoals: 0,
+            totalWins: 0,
+          };
+        }
+        
+        const ps = playerStreaks[player.name];
+        ps.totalMatches += 1;
+        ps.totalGoals += player.goals || 0;
+        
+        const isWin = winningTeam === player.team;
+        const isDraw = winningTeam === 'DRAW';
+        const hasGoal = (player.goals || 0) > 0;
+        
+        // Win streak
+        if (isWin) {
+          ps.currentWinStreak += 1;
+          ps.totalWins += 1;
+          ps.maxWinStreak = Math.max(ps.maxWinStreak, ps.currentWinStreak);
+        } else {
+          ps.currentWinStreak = 0;
+        }
+        
+        // Goal streak
+        if (hasGoal) {
+          ps.currentGoalStreak += 1;
+          ps.maxGoalStreak = Math.max(ps.maxGoalStreak, ps.currentGoalStreak);
+        } else {
+          ps.currentGoalStreak = 0;
+        }
+        
+        // Unbeaten streak
+        if (isWin || isDraw) {
+          ps.currentUnbeatenStreak += 1;
+          ps.maxUnbeatenStreak = Math.max(ps.maxUnbeatenStreak, ps.currentUnbeatenStreak);
+        } else {
+          ps.currentUnbeatenStreak = 0;
+        }
+      });
+    });
+    
+    // Filter players with at least 3 matches
+    const results = Object.entries(playerStreaks)
+      .filter(([, data]) => data.totalMatches >= 3)
+      .map(([name, data]) => ({ name, ...data }));
+    
+    return {
+      byCurrentWin: [...results].sort((a, b) => b.currentWinStreak - a.currentWinStreak).slice(0, 10),
+      byMaxWin: [...results].sort((a, b) => b.maxWinStreak - a.maxWinStreak).slice(0, 10),
+      byCurrentGoal: [...results].filter(p => p.currentGoalStreak > 0).sort((a, b) => b.currentGoalStreak - a.currentGoalStreak).slice(0, 10),
+      byMaxGoal: [...results].sort((a, b) => b.maxGoalStreak - a.maxGoalStreak).slice(0, 10),
+      byUnbeaten: [...results].sort((a, b) => b.currentUnbeatenStreak - a.currentUnbeatenStreak).slice(0, 10),
+      totalMatches: trackerMatches.length,
+    };
+  }, [trackerMatches]);
+
+  // ================== DREAM TEAM DUOS ==================
+  // Different data sources for different metrics:
+  // - Win Rate: 2026+ (complete tracker data)
+  // - Top Scoring: 2025+ (scorer info is accurate)
+  // - Most Games: 2026+ (attendance data is complete)
+  const dreamTeamDuos = useMemo(() => {
+    if (!config.FUN_STATS?.enableDreamTeamDuos) return null;
+    
+    // Calculate duo stats for 2026+ (for win rate and most games)
+    const duoStatsTracker = {};
+    trackerMatches.forEach(match => {
+      const players = getPlayersFromAttendance(match.attendance).filter(p => p.name !== 'Others');
+      const winningTeam = getWinningTeam(match.scoreline);
+      
+      const teams = {};
+      players.forEach(p => {
+        if (!teams[p.team]) teams[p.team] = [];
+        teams[p.team].push(p);
+      });
+      
+      Object.values(teams).forEach(teamPlayers => {
+        for (let i = 0; i < teamPlayers.length; i++) {
+          for (let j = i + 1; j < teamPlayers.length; j++) {
+            const p1 = teamPlayers[i];
+            const p2 = teamPlayers[j];
+            const key = [p1.name, p2.name].sort().join('|');
+            
+            if (!duoStatsTracker[key]) {
+              duoStatsTracker[key] = {
+                player1: [p1.name, p2.name].sort()[0],
+                player2: [p1.name, p2.name].sort()[1],
+                matches: 0,
+                wins: 0,
+                draws: 0,
+                losses: 0,
+                combinedGoals: 0,
+              };
+            }
+            
+            duoStatsTracker[key].matches += 1;
+            duoStatsTracker[key].combinedGoals += (p1.goals || 0) + (p2.goals || 0);
+            
+            if (winningTeam === p1.team) {
+              duoStatsTracker[key].wins += 1;
+            } else if (winningTeam === 'DRAW') {
+              duoStatsTracker[key].draws += 1;
+            } else {
+              duoStatsTracker[key].losses += 1;
+            }
+          }
+        }
+      });
+    });
+    
+    // Calculate duo scoring stats for 2025+ (for top scoring duos)
+    const duoStatsScorer = {};
+    scorerMatches.forEach(match => {
+      const players = getPlayersFromAttendance(match.attendance).filter(p => p.name !== 'Others');
+      
+      const teams = {};
+      players.forEach(p => {
+        if (!teams[p.team]) teams[p.team] = [];
+        teams[p.team].push(p);
+      });
+      
+      Object.values(teams).forEach(teamPlayers => {
+        for (let i = 0; i < teamPlayers.length; i++) {
+          for (let j = i + 1; j < teamPlayers.length; j++) {
+            const p1 = teamPlayers[i];
+            const p2 = teamPlayers[j];
+            const key = [p1.name, p2.name].sort().join('|');
+            
+            if (!duoStatsScorer[key]) {
+              duoStatsScorer[key] = {
+                player1: [p1.name, p2.name].sort()[0],
+                player2: [p1.name, p2.name].sort()[1],
+                matches: 0,
+                combinedGoals: 0,
+              };
+            }
+            
+            duoStatsScorer[key].matches += 1;
+            duoStatsScorer[key].combinedGoals += (p1.goals || 0) + (p2.goals || 0);
+          }
+        }
+      });
+    });
+    
+    // Win rate results (2026+ data, min 3 matches)
+    const winRateResults = Object.values(duoStatsTracker)
+      .filter(d => d.matches >= 3)
+      .map(d => ({
+        ...d,
+        winRate: ((d.wins / d.matches) * 100).toFixed(1),
+        goalsPerMatch: (d.combinedGoals / d.matches).toFixed(2),
+      }))
+      .sort((a, b) => parseFloat(b.winRate) - parseFloat(a.winRate));
+    
+    // Top scoring results (2025+ data, min 3 matches)
+    const scoringResults = Object.values(duoStatsScorer)
+      .filter(d => d.matches >= 3)
+      .map(d => ({
+        ...d,
+        goalsPerMatch: (d.combinedGoals / d.matches).toFixed(2),
+      }))
+      .sort((a, b) => b.combinedGoals - a.combinedGoals);
+    
+    // Most matches results (2026+ data, min 3 matches)
+    const matchesResults = Object.values(duoStatsTracker)
+      .filter(d => d.matches >= 3)
+      .map(d => ({
+        ...d,
+        winRate: ((d.wins / d.matches) * 100).toFixed(1),
+      }))
+      .sort((a, b) => b.matches - a.matches);
+    
+    return {
+      topWinRate: winRateResults.slice(0, 10),
+      topGoalScoring: scoringResults.slice(0, 10),
+      mostMatches: matchesResults.slice(0, 10),
+    };
+  }, [trackerMatches, scorerMatches]);
+
+  // ================== CLUTCH FACTOR (Decisive Scorers only) ==================
+  const clutchFactor = useMemo(() => {
+    if (!config.FUN_STATS?.enableClutchFactor) return null;
+    
+    const playerClutch = {};
+    
+    allMatches.forEach(match => {
+      if (!isCloseMatch(match.scoreline)) return;
+      
+      const players = getPlayersFromAttendance(match.attendance);
+      const winningTeam = getWinningTeam(match.scoreline);
+      
+      players.forEach(player => {
+        // Skip "Others"
+        if (player.name === 'Others') return;
+        
+        if (!playerClutch[player.name]) {
+          playerClutch[player.name] = {
+            closeMatches: 0,
+            closeWins: 0,
+            goalsInCloseGames: 0,
+          };
+        }
+        
+        const pc = playerClutch[player.name];
+        pc.closeMatches += 1;
+        pc.goalsInCloseGames += player.goals || 0;
+        
+        if (winningTeam === player.team) {
+          pc.closeWins += 1;
+        }
+      });
+    });
+    
+    const closeMatchCount = allMatches.filter(m => isCloseMatch(m.scoreline)).length;
+    
+    const results = Object.entries(playerClutch)
+      .filter(([, data]) => data.goalsInCloseGames > 0)
+      .map(([name, data]) => ({
+        name,
+        ...data,
+      }))
+      .sort((a, b) => b.goalsInCloseGames - a.goalsInCloseGames);
+    
+    return {
+      totalCloseMatches: closeMatchCount,
+      topDecisiveScorers: results.slice(0, 15),
+    };
+  }, [allMatches]);
+
+  // ================== MVP INDEX ==================
+  const mvpIndex = useMemo(() => {
+    if (!config.FUN_STATS?.enableMVPIndex) return null;
+    
+    const playerStats = {};
+    const totalMatches = allMatches.length;
+    
+    allMatches.forEach(match => {
+      const players = getPlayersFromAttendance(match.attendance);
+      const winningTeam = getWinningTeam(match.scoreline);
+      const isClose = isCloseMatch(match.scoreline);
+      
+      players.forEach(player => {
+        // Skip "Others"
+        if (player.name === 'Others') return;
+        
+        if (!playerStats[player.name]) {
+          playerStats[player.name] = {
+            matches: 0,
+            wins: 0,
+            draws: 0,
+            goals: 0,
+            cleanSheets: 0,
+            closeWins: 0,
+            closeMatches: 0,
+          };
+        }
+        
+        const ps = playerStats[player.name];
+        ps.matches += 1;
+        ps.goals += player.goals || 0;
+        if (player.cleanSheet) ps.cleanSheets += 1;
+        
+        if (isClose) {
+          ps.closeMatches += 1;
+          if (winningTeam === player.team) ps.closeWins += 1;
+        }
+        
+        if (winningTeam === player.team) {
+          ps.wins += 1;
+        } else if (winningTeam === 'DRAW') {
+          ps.draws += 1;
+        }
+      });
+    });
+    
+    // Calculate MVP score
+    // Formula: (Win% * 0.3) + (Goals/Match * 25) + (Attendance% * 0.2) + (Clutch Win% * 0.15) + (Clean Sheet% * 0.1)
+    const results = Object.entries(playerStats)
+      .filter(([, data]) => data.matches >= 3)
+      .map(([name, data]) => {
+        const winPct = (data.wins / data.matches) * 100;
+        const attendancePct = (data.matches / totalMatches) * 100;
+        const goalsPerMatch = data.goals / data.matches;
+        const clutchWinPct = data.closeMatches > 0 ? (data.closeWins / data.closeMatches) * 100 : 50;
+        const cleanSheetPct = (data.cleanSheets / data.matches) * 100;
+        
+        const mvpScore = (
+          (winPct * 0.30) +
+          (goalsPerMatch * 25) +
+          (attendancePct * 0.20) +
+          (clutchWinPct * 0.15) +
+          (cleanSheetPct * 0.10)
+        );
+        
+        return {
+          name,
+          ...data,
+          winPct: winPct.toFixed(1),
+          attendancePct: attendancePct.toFixed(1),
+          goalsPerMatch: goalsPerMatch.toFixed(2),
+          clutchWinPct: clutchWinPct.toFixed(1),
+          mvpScore: mvpScore.toFixed(1),
+        };
+      })
+      .sort((a, b) => parseFloat(b.mvpScore) - parseFloat(a.mvpScore));
+    
+    return results.slice(0, 20);
+  }, [allMatches]);
+
+  // Feature flags
   const enableColorStats = config.FUN_STATS?.enableColorStats !== false;
   const enableHeadToHead = config.FUN_STATS?.enableHeadToHead !== false;
+  const enableHotStreaks = config.FUN_STATS?.enableHotStreaks !== false;
+  const enableDreamDuos = config.FUN_STATS?.enableDreamTeamDuos !== false;
+  const enableClutch = config.FUN_STATS?.enableClutchFactor !== false;
+  const enableMVP = config.FUN_STATS?.enableMVPIndex !== false;
 
   if (!config.FUN_STATS?.enabled) {
     return null;
   }
 
+  // Build tabs list based on enabled features
+  const tabs = [
+    { id: "color-stats", label: "🎨 Colors", enabled: enableColorStats },
+    { id: "head-to-head", label: "⚔️ H2H", enabled: enableHeadToHead },
+    { id: "hot-streaks", label: "🔥 Streaks", enabled: enableHotStreaks },
+    { id: "dream-duos", label: "🤝 Duos", enabled: enableDreamDuos },
+    { id: "clutch-factor", label: "🎯 Clutch", enabled: enableClutch },
+    { id: "mvp-index", label: "🏆 MVP", enabled: enableMVP },
+  ].filter(t => t.enabled);
+
   return (
     <div className="fun-stats">
       {/* Sub-tab Navigation */}
       <div className="fun-stats-nav">
-        {enableColorStats && (
-          <button
-            className={`fun-stats-tab ${activeSubTab === "color-stats" ? "active" : ""}`}
-            onClick={() => setActiveSubTab("color-stats")}
-          >
-            🎨 Color Stats
-          </button>
-        )}
-        {enableHeadToHead && (
-          <button
-            className={`fun-stats-tab ${activeSubTab === "head-to-head" ? "active" : ""}`}
-            onClick={() => setActiveSubTab("head-to-head")}
-          >
-            ⚔️ Head to Head
-          </button>
-        )}
+        <div className="fun-stats-tabs">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              className={`fun-stats-tab ${activeSubTab === tab.id ? "active" : ""}`}
+              onClick={() => setActiveSubTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
         
-        {/* Season selector - only for color stats */}
-        {activeSubTab === "color-stats" && (
+        {/* Season selector - for color stats and MVP only */}
+        {(activeSubTab === "color-stats" || activeSubTab === "mvp-index") && (
           <div className="fun-stats-season-selector">
             <label htmlFor="fun-stats-season">Season</label>
             <div className="select-wrapper">
@@ -290,7 +677,7 @@ export const FunStats = () => {
         )}
       </div>
 
-      {/* Color Stats View */}
+      {/* ========== COLOR STATS ========== */}
       {activeSubTab === "color-stats" && enableColorStats && (
         <div className="color-stats-section">
           <div className="section-header">
@@ -302,21 +689,11 @@ export const FunStats = () => {
 
           <div className="color-stats-grid">
             {colorStats.map((stat, idx) => {
-              const colorCfg = colorConfig[stat.color] || { 
-                bg: '#6b7280', text: '#fff', name: stat.color 
-              };
+              const colorCfg = colorConfig[stat.color] || { bg: '#6b7280', text: '#fff', name: stat.color };
               const isTop = idx === 0;
               
               return (
-                <div 
-                  key={stat.color} 
-                  className={`color-stat-card ${isTop ? 'top-color' : ''}`}
-                  style={{
-                    '--color-bg': colorCfg.bg,
-                    '--color-text': colorCfg.text,
-                    '--color-border': colorCfg.border || colorCfg.bg,
-                  }}
-                >
+                <div key={stat.color} className={`color-stat-card ${isTop ? 'top-color' : ''}`}>
                   <div className="color-badge" style={{ 
                     backgroundColor: colorCfg.bg, 
                     color: colorCfg.text,
@@ -357,24 +734,18 @@ export const FunStats = () => {
               );
             })}
           </div>
-
-          {colorStats.length === 0 && (
-            <div className="no-data-message">
-              <p>No match data available for the selected season.</p>
-            </div>
-          )}
         </div>
       )}
 
-      {/* Head to Head View */}
+      {/* ========== HEAD TO HEAD ========== */}
       {activeSubTab === "head-to-head" && enableHeadToHead && (
         <div className="h2h-section">
           <div className="section-header">
             <h2>⚔️ Head to Head</h2>
             <p className="section-subtitle">
-              Select two players to compare their record when they face each other
+              Select two players to compare their record
               <br />
-              <small>(Using data from {h2hSeasons.join(', ')} • {h2hMatches.length} matches)</small>
+              <small>(Data from {h2hSeasons.join(', ')} • {h2hMatches.length} matches)</small>
             </p>
           </div>
 
@@ -382,11 +753,7 @@ export const FunStats = () => {
             <div className="player-selector">
               <label htmlFor="player1-select">Player 1</label>
               <div className="select-wrapper">
-                <select
-                  id="player1-select"
-                  value={player1}
-                  onChange={(e) => setPlayer1(e.target.value)}
-                >
+                <select id="player1-select" value={player1} onChange={(e) => setPlayer1(e.target.value)}>
                   <option value="">Select player...</option>
                   {allPlayers.filter(p => p !== player2).map(name => (
                     <option key={name} value={name}>{name}</option>
@@ -401,11 +768,7 @@ export const FunStats = () => {
             <div className="player-selector">
               <label htmlFor="player2-select">Player 2</label>
               <div className="select-wrapper">
-                <select
-                  id="player2-select"
-                  value={player2}
-                  onChange={(e) => setPlayer2(e.target.value)}
-                >
+                <select id="player2-select" value={player2} onChange={(e) => setPlayer2(e.target.value)}>
                   <option value="">Select player...</option>
                   {allPlayers.filter(p => p !== player1).map(name => (
                     <option key={name} value={name}>{name}</option>
@@ -418,7 +781,6 @@ export const FunStats = () => {
 
           {h2hStats && (
             <div className="h2h-results">
-              {/* Against Each Other */}
               {h2hStats.player1.matches > 0 && (
                 <div className="h2h-card versus">
                   <h3>⚔️ Against Each Other</h3>
@@ -441,7 +803,6 @@ export const FunStats = () => {
                 </div>
               )}
 
-              {/* Playing Together */}
               {h2hStats.together.matches > 0 && (
                 <div className="h2h-card together">
                   <h3>🤝 Playing Together</h3>
@@ -454,15 +815,12 @@ export const FunStats = () => {
                     <div className="together-details">
                       <span>{h2hStats.together.matches} matches</span>
                       <span>{h2hStats.together.goals} combined goals</span>
-                      <span>
-                        {((h2hStats.together.wins / h2hStats.together.matches) * 100).toFixed(0)}% win rate
-                      </span>
+                      <span>{((h2hStats.together.wins / h2hStats.together.matches) * 100).toFixed(0)}% win rate</span>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Match History */}
               {h2hStats.matchDetails.length > 0 && (
                 <div className="h2h-card history">
                   <h3>📜 Match History</h3>
@@ -475,36 +833,23 @@ export const FunStats = () => {
                         </div>
                         <div className="history-teams">
                           {match.sameTeam ? (
-                            <span className="same-team">
-                              {player1} & {player2} ({match.p1Team})
-                            </span>
+                            <span className="same-team">{player1} & {player2} ({match.p1Team})</span>
                           ) : (
                             <span className="versus-teams">
-                              <span className={match.result === 'p1win' ? 'winner' : ''}>
-                                {player1} ({match.p1Team})
-                              </span>
+                              <span className={match.result === 'p1win' ? 'winner' : ''}>{player1} ({match.p1Team})</span>
                               <span className="vs">vs</span>
-                              <span className={match.result === 'p2win' ? 'winner' : ''}>
-                                {player2} ({match.p2Team})
-                              </span>
+                              <span className={match.result === 'p2win' ? 'winner' : ''}>{player2} ({match.p2Team})</span>
                             </span>
                           )}
                         </div>
                         <div className="history-score">
                           {Object.entries(match.scoreline).map(([team, score], i) => (
-                            <span key={team}>
-                              {i > 0 && ' - '}
-                              <span className="team-score">{score}</span>
-                            </span>
+                            <span key={team}>{i > 0 && ' - '}<span className="team-score">{score}</span></span>
                           ))}
                         </div>
                         <div className="history-goals">
-                          {match.p1Goals > 0 && (
-                            <span className="goal-badge">{player1}: ⚽{match.p1Goals}</span>
-                          )}
-                          {match.p2Goals > 0 && (
-                            <span className="goal-badge">{player2}: ⚽{match.p2Goals}</span>
-                          )}
+                          {match.p1Goals > 0 && <span className="goal-badge">{player1}: ⚽{match.p1Goals}</span>}
+                          {match.p2Goals > 0 && <span className="goal-badge">{player2}: ⚽{match.p2Goals}</span>}
                         </div>
                       </div>
                     ))}
@@ -525,15 +870,250 @@ export const FunStats = () => {
               <p>Select two players to see their head-to-head record.</p>
             </div>
           )}
+        </div>
+      )}
 
-          {player1 && player2 && player1 === player2 && (
-            <div className="no-data-message">
-              <p>Please select two different players.</p>
+      {/* ========== HOT STREAKS (2026+ data) ========== */}
+      {activeSubTab === "hot-streaks" && enableHotStreaks && hotStreaks && (
+        <div className="hot-streaks-section">
+          <div className="section-header">
+            <h2>🔥 Hot Streaks</h2>
+            <p className="section-subtitle">
+              Who's riding the wave of momentum? ({hotStreaks.totalMatches} matches from 2026+)
+            </p>
+          </div>
+
+          <div className="streaks-grid">
+            <div className="streak-card">
+              <h3>🏆 Current Win Streak</h3>
+              <div className="streak-list">
+                {hotStreaks.byCurrentWin.slice(0, 5).map((p, idx) => (
+                  <div key={p.name} className={`streak-item ${idx === 0 ? 'top' : ''}`}>
+                    <span className="rank">#{idx + 1}</span>
+                    <span className="name">{p.name}</span>
+                    <span className="streak-value fire">{p.currentWinStreak}🔥</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
+
+            <div className="streak-card">
+              <h3>⚡ Best Ever Win Streak</h3>
+              <div className="streak-list">
+                {hotStreaks.byMaxWin.slice(0, 5).map((p, idx) => (
+                  <div key={p.name} className={`streak-item ${idx === 0 ? 'top' : ''}`}>
+                    <span className="rank">#{idx + 1}</span>
+                    <span className="name">{p.name}</span>
+                    <span className="streak-value">{p.maxWinStreak}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="streak-card">
+              <h3>⚽ Current Goal Streak</h3>
+              <div className="streak-list">
+                {hotStreaks.byCurrentGoal.length > 0 ? (
+                  hotStreaks.byCurrentGoal.slice(0, 5).map((p, idx) => (
+                    <div key={p.name} className={`streak-item ${idx === 0 ? 'top' : ''}`}>
+                      <span className="rank">#{idx + 1}</span>
+                      <span className="name">{p.name}</span>
+                      <span className="streak-value goal">{p.currentGoalStreak}⚽</span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-streak">No active scoring streaks</div>
+                )}
+              </div>
+            </div>
+
+            <div className="streak-card">
+              <h3>🛡️ Current Unbeaten Run</h3>
+              <div className="streak-list">
+                {hotStreaks.byUnbeaten.slice(0, 5).map((p, idx) => (
+                  <div key={p.name} className={`streak-item ${idx === 0 ? 'top' : ''}`}>
+                    <span className="rank">#{idx + 1}</span>
+                    <span className="name">{p.name}</span>
+                    <span className="streak-value unbeaten">{p.currentUnbeatenStreak}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========== DREAM TEAM DUOS ========== */}
+      {activeSubTab === "dream-duos" && enableDreamDuos && dreamTeamDuos && (
+        <div className="dream-duos-section">
+          <div className="section-header">
+            <h2>🤝 Dream Team Duos</h2>
+            <p className="section-subtitle">
+              Which player pairs dominate together? (Min 3 matches together)
+            </p>
+          </div>
+
+          <div className="duos-grid">
+            <div className="duo-card">
+              <h3>🏆 Highest Win Rate</h3>
+              <p className="card-subtitle">2026+ data</p>
+              <div className="duo-list">
+                {dreamTeamDuos.topWinRate.slice(0, 5).map((d, idx) => (
+                  <div key={`${d.player1}-${d.player2}`} className={`duo-item ${idx === 0 ? 'top' : ''}`}>
+                    <span className="rank">#{idx + 1}</span>
+                    <div className="duo-names">
+                      <span>{d.player1}</span>
+                      <span className="amp">&</span>
+                      <span>{d.player2}</span>
+                    </div>
+                    <div className="duo-stats">
+                      <span className="win-rate">{d.winRate}%</span>
+                      <span className="record">{d.wins}W-{d.draws}D-{d.losses}L</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="duo-card">
+              <h3>⚽ Top Scoring Duos</h3>
+              <p className="card-subtitle">2025+ data</p>
+              <div className="duo-list">
+                {dreamTeamDuos.topGoalScoring.slice(0, 5).map((d, idx) => (
+                  <div key={`${d.player1}-${d.player2}`} className={`duo-item ${idx === 0 ? 'top' : ''}`}>
+                    <span className="rank">#{idx + 1}</span>
+                    <div className="duo-names">
+                      <span>{d.player1}</span>
+                      <span className="amp">&</span>
+                      <span>{d.player2}</span>
+                    </div>
+                    <div className="duo-stats">
+                      <span className="goals">{d.combinedGoals} goals</span>
+                      <span className="gpm">{d.goalsPerMatch} GPM</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="duo-card">
+              <h3>🎮 Most Games Together</h3>
+              <p className="card-subtitle">2026+ data</p>
+              <div className="duo-list">
+                {dreamTeamDuos.mostMatches.slice(0, 5).map((d, idx) => (
+                  <div key={`${d.player1}-${d.player2}`} className={`duo-item ${idx === 0 ? 'top' : ''}`}>
+                    <span className="rank">#{idx + 1}</span>
+                    <div className="duo-names">
+                      <span>{d.player1}</span>
+                      <span className="amp">&</span>
+                      <span>{d.player2}</span>
+                    </div>
+                    <div className="duo-stats">
+                      <span className="matches">{d.matches} matches</span>
+                      <span className="win-rate">{d.winRate}% WR</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========== CLUTCH FACTOR (Decisive Scorers only) ========== */}
+      {activeSubTab === "clutch-factor" && enableClutch && clutchFactor && (
+        <div className="clutch-factor-section">
+          <div className="section-header">
+            <h2>🎯 Decisive Scorers</h2>
+            <p className="section-subtitle">
+              Who scores the most in close games? ({clutchFactor.totalCloseMatches} close matches with ≤2 goal margin)
+            </p>
+          </div>
+
+          <div className="clutch-grid">
+            <div className="clutch-card main full-width">
+              <h3>⚽ Goals in Close Games</h3>
+              <p className="card-subtitle">Players who score when it matters most</p>
+              <div className="clutch-list">
+                {clutchFactor.topDecisiveScorers.map((p, idx) => (
+                  <div key={p.name} className={`clutch-item ${idx === 0 ? 'top' : ''}`}>
+                    <span className="rank">#{idx + 1}</span>
+                    <span className="name">{p.name}</span>
+                    <div className="clutch-stats">
+                      <span className="decisive">{p.goalsInCloseGames} goals</span>
+                      <span className="total-close">{p.closeMatches} matches</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========== MVP INDEX ========== */}
+      {activeSubTab === "mvp-index" && enableMVP && mvpIndex && (
+        <div className="mvp-index-section">
+          <div className="section-header">
+            <h2>🏆 MVP Index</h2>
+            <p className="section-subtitle">
+              Composite ranking based on wins, goals, attendance, and clutch performance ({allMatches.length} matches)
+            </p>
+          </div>
+
+          <div className="mvp-formula">
+            <span className="formula-item">Win Rate (30%)</span>
+            <span className="plus">+</span>
+            <span className="formula-item">Goals/Match (25%)</span>
+            <span className="plus">+</span>
+            <span className="formula-item">Attendance (20%)</span>
+            <span className="plus">+</span>
+            <span className="formula-item">Clutch (15%)</span>
+            <span className="plus">+</span>
+            <span className="formula-item">Clean Sheets (10%)</span>
+          </div>
+
+          <div className="mvp-podium">
+            {mvpIndex.slice(0, 3).map((p, idx) => (
+              <div key={p.name} className={`podium-spot position-${idx + 1}`}>
+                <div className="podium-medal">
+                  {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
+                </div>
+                <div className="podium-name">{p.name}</div>
+                <div className="podium-score">{p.mvpScore}</div>
+                <div className="podium-breakdown">
+                  <span>{p.winPct}% WR</span>
+                  <span>{p.goalsPerMatch} GPM</span>
+                  <span>{p.matches} matches</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mvp-table">
+            <div className="mvp-header">
+              <span className="col-rank">#</span>
+              <span className="col-name">Player</span>
+              <span className="col-score">Score</span>
+              <span className="col-matches">M</span>
+              <span className="col-wins">W</span>
+              <span className="col-goals">G</span>
+              <span className="col-winrate">WR%</span>
+            </div>
+            {mvpIndex.slice(3).map((p, idx) => (
+              <div key={p.name} className="mvp-row">
+                <span className="col-rank">{idx + 4}</span>
+                <span className="col-name">{p.name}</span>
+                <span className="col-score">{p.mvpScore}</span>
+                <span className="col-matches">{p.matches}</span>
+                <span className="col-wins">{p.wins}</span>
+                <span className="col-goals">{p.goals}</span>
+                <span className="col-winrate">{p.winPct}%</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
   );
 };
-
