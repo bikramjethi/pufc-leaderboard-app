@@ -77,6 +77,19 @@ export const config = {
     enableHotStreaks: true,            // 🔥 Player winning/scoring streaks (2026+ data only)
     enableDreamTeamDuos: true,         // 🤝 Best performing player pairs
     enableClutchFactor: true,          // 🎯 Decisive scorers in close games (≤2 goal margin)
+    
+    // Which features require isBackfilled:true for 2025 data
+    // true = only include 2025 matches marked as backfilled (complete data required)
+    // false = include all 2025 matches (scoreline data is sufficient)
+    requiresBackfill: {
+      colorStats: false,               // Scoreline data is sufficient for color win rates
+      headToHead: true,                // Requires complete player attendance data
+      hotStreaks: true,                // Requires complete player attendance data
+      duosWinRate: true,               // Requires complete attendance for team composition
+      duosTopScoring: false,           // Scorer info is captured accurately
+      duosMostGames: true,             // Requires complete attendance data
+      clutchFactor: false,             // Scorer info + scoreline is sufficient
+    },
   },
 
   // MVP Leaderboard Settings
@@ -84,6 +97,12 @@ export const config = {
     enabled: false,                     // Show/hide the MVP Leaderboard tab
     seasons: ["2024", "2025", "2026"], // Available seasons for MVP calculation
     defaultSeason: "all",              // Default season ("all" for All Time, or specific year)
+  },
+
+  // Match Entry Admin Tool
+  MATCH_ENTRY: {
+    enabled: false,                     // Show/hide the Match Entry tab (admin tool)
+    backfillYear: 2026,                // Years before this are marked as backfilled
   },
 };
 
