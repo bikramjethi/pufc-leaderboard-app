@@ -6,6 +6,9 @@ import "./FunStats.css";
 // This pattern allows automatic pickup of new season files (2027, 2028, etc.)
 const matchDataModules = import.meta.glob('./data/attendance-data/20*.json', { eager: true });
 
+// Import leaderboard data for MVP calculations
+const leaderboardDataModules = import.meta.glob('./data/leaderboard-data/20*.json', { eager: true });
+
 // Build matchDataByYear object from imported modules
 const matchDataByYear = {};
 Object.entries(matchDataModules).forEach(([path, module]) => {
@@ -14,6 +17,20 @@ Object.entries(matchDataModules).forEach(([path, module]) => {
     matchDataByYear[yearMatch[1]] = module.default;
   }
 });
+
+// Build leaderboardDataByYear object from imported modules
+const leaderboardDataByYear = {};
+Object.entries(leaderboardDataModules).forEach(([path, module]) => {
+  const yearMatch = path.match(/(\d{4})\.json$/);
+  if (yearMatch) {
+    leaderboardDataByYear[yearMatch[1]] = module.default;
+  }
+});
+
+// Get available MVP seasons (from leaderboard data)
+const getMVPSeasons = () => {
+  return Object.keys(leaderboardDataByYear).sort((a, b) => b - a);
+};
 
 // Get available seasons from config or discovered files
 const getAvailableSeasons = () => {
@@ -102,10 +119,14 @@ export const FunStats = () => {
   const availableSeasons = getAvailableSeasons();
   const trackerSeasons = getTrackerSeasons();
   const h2hSeasons = getH2HSeasons();
+  const mvpSeasons = getMVPSeasons();
   
   const [selectedSeason, setSelectedSeason] = useState(
     config.FUN_STATS?.defaultSeason || "all"
   );
+  
+  // Separate season selector for MVP (defaults to "all" for All Time)
+  const [mvpSelectedSeason, setMvpSelectedSeason] = useState("all");
   
   // Determine first enabled tab
   const getDefaultTab = () => {
@@ -538,19 +559,20 @@ export const FunStats = () => {
     };
   }, [allMatches]);
 
-  // ================== MVP INDEX ==================
+  // ================== MVP INDEX (using leaderboard data) ==================
   const mvpIndex = useMemo(() => {
     if (!config.FUN_STATS?.enableMVPIndex) return null;
     
+    // Aggregate player stats from leaderboard data
     const playerStats = {};
-    const totalMatches = allMatches.length;
     
-    allMatches.forEach(match => {
-      const players = getPlayersFromAttendance(match.attendance);
-      const winningTeam = getWinningTeam(match.scoreline);
-      const isClose = isCloseMatch(match.scoreline);
+    const seasonsToUse = mvpSelectedSeason === "all" ? mvpSeasons : [mvpSelectedSeason];
+    
+    seasonsToUse.forEach(year => {
+      const yearData = leaderboardDataByYear[year];
+      if (!yearData) return;
       
-      players.forEach(player => {
+      yearData.forEach(player => {
         // Skip "Others"
         if (player.name === 'Others') return;
         
@@ -559,48 +581,48 @@ export const FunStats = () => {
             matches: 0,
             wins: 0,
             draws: 0,
+            losses: 0,
             goals: 0,
             cleanSheets: 0,
-            closeWins: 0,
-            closeMatches: 0,
+            hatTricks: 0,
+            ownGoals: 0,
           };
         }
         
         const ps = playerStats[player.name];
-        ps.matches += 1;
+        ps.matches += player.matches || 0;
+        ps.wins += player.wins || 0;
+        ps.draws += player.draws || 0;
+        ps.losses += player.losses || 0;
         ps.goals += player.goals || 0;
-        if (player.cleanSheet) ps.cleanSheets += 1;
-        
-        if (isClose) {
-          ps.closeMatches += 1;
-          if (winningTeam === player.team) ps.closeWins += 1;
-        }
-        
-        if (winningTeam === player.team) {
-          ps.wins += 1;
-        } else if (winningTeam === 'DRAW') {
-          ps.draws += 1;
-        }
+        ps.cleanSheets += player.cleanSheets || 0;
+        ps.hatTricks += player.hatTricks || 0;
+        ps.ownGoals += player.ownGoals || 0;
       });
     });
     
+    // Find max matches for attendance calculation
+    const maxMatches = Math.max(...Object.values(playerStats).map(p => p.matches), 1);
+    
     // Calculate MVP score
-    // Formula: (Win% * 0.3) + (Goals/Match * 25) + (Attendance% * 0.2) + (Clutch Win% * 0.15) + (Clean Sheet% * 0.1)
+    // Formula: (Win% * 0.35) + (Goals/Match * 30) + (Attendance% * 0.20) + (Hat Tricks bonus) + (Clean Sheet% * 0.10) - (Own Goals penalty)
     const results = Object.entries(playerStats)
-      .filter(([, data]) => data.matches >= 3)
+      .filter(([, data]) => data.matches >= 10) // Minimum 10 matches for MVP consideration
       .map(([name, data]) => {
         const winPct = (data.wins / data.matches) * 100;
-        const attendancePct = (data.matches / totalMatches) * 100;
+        const attendancePct = (data.matches / maxMatches) * 100;
         const goalsPerMatch = data.goals / data.matches;
-        const clutchWinPct = data.closeMatches > 0 ? (data.closeWins / data.closeMatches) * 100 : 50;
         const cleanSheetPct = (data.cleanSheets / data.matches) * 100;
+        const hatTrickBonus = data.hatTricks * 2; // 2 points per hat trick
+        const ownGoalPenalty = data.ownGoals * 1; // 1 point penalty per own goal
         
         const mvpScore = (
-          (winPct * 0.30) +
-          (goalsPerMatch * 25) +
+          (winPct * 0.35) +
+          (goalsPerMatch * 30) +
           (attendancePct * 0.20) +
-          (clutchWinPct * 0.15) +
-          (cleanSheetPct * 0.10)
+          (cleanSheetPct * 0.10) +
+          hatTrickBonus -
+          ownGoalPenalty
         );
         
         return {
@@ -609,14 +631,17 @@ export const FunStats = () => {
           winPct: winPct.toFixed(1),
           attendancePct: attendancePct.toFixed(1),
           goalsPerMatch: goalsPerMatch.toFixed(2),
-          clutchWinPct: clutchWinPct.toFixed(1),
           mvpScore: mvpScore.toFixed(1),
         };
       })
       .sort((a, b) => parseFloat(b.mvpScore) - parseFloat(a.mvpScore));
     
-    return results.slice(0, 20);
-  }, [allMatches]);
+    return {
+      players: results.slice(0, 20),
+      totalPlayers: Object.keys(playerStats).length,
+      seasonLabel: mvpSelectedSeason === "all" ? "All Time" : mvpSelectedSeason,
+    };
+  }, [mvpSelectedSeason, mvpSeasons]);
 
   // Feature flags
   const enableColorStats = config.FUN_STATS?.enableColorStats !== false;
@@ -1026,28 +1051,61 @@ export const FunStats = () => {
           <div className="section-header">
             <h2>🎯 Decisive Scorers</h2>
             <p className="section-subtitle">
-              Who scores the most in close games? ({clutchFactor.totalCloseMatches} close matches with ≤2 goal margin)
+              Who scores the most when games are tight? ({clutchFactor.totalCloseMatches} close matches with ≤2 goal margin)
             </p>
           </div>
 
-          <div className="clutch-grid">
-            <div className="clutch-card main full-width">
-              <h3>⚽ Goals in Close Games</h3>
-              <p className="card-subtitle">Players who score when it matters most</p>
-              <div className="clutch-list">
-                {clutchFactor.topDecisiveScorers.map((p, idx) => (
-                  <div key={p.name} className={`clutch-item ${idx === 0 ? 'top' : ''}`}>
-                    <span className="rank">#{idx + 1}</span>
-                    <span className="name">{p.name}</span>
-                    <div className="clutch-stats">
-                      <span className="decisive">{p.goalsInCloseGames} goals</span>
-                      <span className="total-close">{p.closeMatches} matches</span>
-                    </div>
+          {/* Top 3 Podium */}
+          {clutchFactor.topDecisiveScorers.length >= 3 && (
+            <div className="decisive-podium">
+              {clutchFactor.topDecisiveScorers.slice(0, 3).map((p, idx) => (
+                <div key={p.name} className={`decisive-spot position-${idx + 1}`}>
+                  <div className="decisive-medal">
+                    {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
                   </div>
-                ))}
-              </div>
+                  <div className="decisive-name">{p.name}</div>
+                  <div className="decisive-goals">
+                    <span className="goals-count">{p.goalsInCloseGames}</span>
+                    <span className="goals-label">goals</span>
+                  </div>
+                  <div className="decisive-matches">
+                    in {p.closeMatches} close games
+                  </div>
+                  <div className="decisive-avg">
+                    {(p.goalsInCloseGames / p.closeMatches).toFixed(2)} per match
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+          )}
+
+          {/* Rest of the list */}
+          {clutchFactor.topDecisiveScorers.length > 3 && (
+            <div className="decisive-table">
+              <div className="decisive-header">
+                <span className="col-rank">#</span>
+                <span className="col-name">Player</span>
+                <span className="col-goals">Goals</span>
+                <span className="col-matches">Matches</span>
+                <span className="col-avg">Avg</span>
+              </div>
+              {clutchFactor.topDecisiveScorers.slice(3).map((p, idx) => (
+                <div key={p.name} className="decisive-row">
+                  <span className="col-rank">{idx + 4}</span>
+                  <span className="col-name">{p.name}</span>
+                  <span className="col-goals">{p.goalsInCloseGames}</span>
+                  <span className="col-matches">{p.closeMatches}</span>
+                  <span className="col-avg">{(p.goalsInCloseGames / p.closeMatches).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {clutchFactor.topDecisiveScorers.length === 0 && (
+            <div className="no-data-message">
+              <p>No goals scored in close games yet.</p>
+            </div>
+          )}
         </div>
       )}
 
@@ -1055,63 +1113,115 @@ export const FunStats = () => {
       {activeSubTab === "mvp-index" && enableMVP && mvpIndex && (
         <div className="mvp-index-section">
           <div className="section-header">
-            <h2>🏆 MVP Index</h2>
-            <p className="section-subtitle">
-              Composite ranking based on wins, goals, attendance, and clutch performance ({allMatches.length} matches)
-            </p>
-          </div>
-
-          <div className="mvp-formula">
-            <span className="formula-item">Win Rate (30%)</span>
-            <span className="plus">+</span>
-            <span className="formula-item">Goals/Match (25%)</span>
-            <span className="plus">+</span>
-            <span className="formula-item">Attendance (20%)</span>
-            <span className="plus">+</span>
-            <span className="formula-item">Clutch (15%)</span>
-            <span className="plus">+</span>
-            <span className="formula-item">Clean Sheets (10%)</span>
-          </div>
-
-          <div className="mvp-podium">
-            {mvpIndex.slice(0, 3).map((p, idx) => (
-              <div key={p.name} className={`podium-spot position-${idx + 1}`}>
-                <div className="podium-medal">
-                  {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
-                </div>
-                <div className="podium-name">{p.name}</div>
-                <div className="podium-score">{p.mvpScore}</div>
-                <div className="podium-breakdown">
-                  <span>{p.winPct}% WR</span>
-                  <span>{p.goalsPerMatch} GPM</span>
-                  <span>{p.matches} matches</span>
+            <div className="mvp-header-row">
+              <div>
+                <h2>🏆 MVP Index</h2>
+                <p className="section-subtitle">
+                  {mvpIndex.seasonLabel} rankings for players with 10+ matches
+                </p>
+              </div>
+              <div className="mvp-season-selector">
+                <label htmlFor="mvp-season">Season</label>
+                <div className="select-wrapper">
+                  <select
+                    id="mvp-season"
+                    value={mvpSelectedSeason}
+                    onChange={(e) => setMvpSelectedSeason(e.target.value)}
+                  >
+                    <option value="all">All Time</option>
+                    {mvpSeasons.map(year => (
+                      <option key={year} value={year}>{year}</option>
+                    ))}
+                  </select>
+                  <span className="select-arrow">▼</span>
                 </div>
               </div>
-            ))}
-          </div>
-
-          <div className="mvp-table">
-            <div className="mvp-header">
-              <span className="col-rank">#</span>
-              <span className="col-name">Player</span>
-              <span className="col-score">Score</span>
-              <span className="col-matches">M</span>
-              <span className="col-wins">W</span>
-              <span className="col-goals">G</span>
-              <span className="col-winrate">WR%</span>
             </div>
-            {mvpIndex.slice(3).map((p, idx) => (
-              <div key={p.name} className="mvp-row">
-                <span className="col-rank">{idx + 4}</span>
-                <span className="col-name">{p.name}</span>
-                <span className="col-score">{p.mvpScore}</span>
-                <span className="col-matches">{p.matches}</span>
-                <span className="col-wins">{p.wins}</span>
-                <span className="col-goals">{p.goals}</span>
-                <span className="col-winrate">{p.winPct}%</span>
-              </div>
-            ))}
           </div>
+
+          <div className="mvp-formula-container">
+            <h3 className="formula-title">📊 How is MVP Score calculated?</h3>
+            <div className="mvp-formula-grid">
+              <div className="formula-metric">
+                <span className="metric-weight">35%</span>
+                <span className="metric-name">Win Rate</span>
+                <span className="metric-desc">% of matches won with your team</span>
+              </div>
+              <div className="formula-metric">
+                <span className="metric-weight">30%</span>
+                <span className="metric-name">Goals/Match</span>
+                <span className="metric-desc">Average goals scored per game</span>
+              </div>
+              <div className="formula-metric">
+                <span className="metric-weight">20%</span>
+                <span className="metric-name">Attendance</span>
+                <span className="metric-desc">% of max matches played</span>
+              </div>
+              <div className="formula-metric">
+                <span className="metric-weight">10%</span>
+                <span className="metric-name">Clean Sheets</span>
+                <span className="metric-desc">% of matches with zero conceded</span>
+              </div>
+              <div className="formula-metric bonus">
+                <span className="metric-weight">+2</span>
+                <span className="metric-name">Hat Tricks</span>
+                <span className="metric-desc">Bonus points per hat trick</span>
+              </div>
+            </div>
+          </div>
+
+          {mvpIndex.players.length >= 3 && (
+            <div className="mvp-podium">
+              {mvpIndex.players.slice(0, 3).map((p, idx) => (
+                <div key={p.name} className={`podium-spot position-${idx + 1}`}>
+                  <div className="podium-medal">
+                    {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
+                  </div>
+                  <div className="podium-name">{p.name}</div>
+                  <div className="podium-score">{p.mvpScore}</div>
+                  <div className="podium-breakdown">
+                    <span>{p.winPct}% WR</span>
+                    <span>{p.goalsPerMatch} GPM</span>
+                    <span>{p.matches} M</span>
+                    <span>{p.goals} G</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {mvpIndex.players.length > 3 && (
+            <div className="mvp-table">
+              <div className="mvp-header">
+                <span className="col-rank">#</span>
+                <span className="col-name">Player</span>
+                <span className="col-score">Score</span>
+                <span className="col-matches">M</span>
+                <span className="col-wins">W</span>
+                <span className="col-goals">G</span>
+                <span className="col-hattricks">HT</span>
+                <span className="col-winrate">WR%</span>
+              </div>
+              {mvpIndex.players.slice(3).map((p, idx) => (
+                <div key={p.name} className="mvp-row">
+                  <span className="col-rank">{idx + 4}</span>
+                  <span className="col-name">{p.name}</span>
+                  <span className="col-score">{p.mvpScore}</span>
+                  <span className="col-matches">{p.matches}</span>
+                  <span className="col-wins">{p.wins}</span>
+                  <span className="col-goals">{p.goals}</span>
+                  <span className="col-hattricks">{p.hatTricks}</span>
+                  <span className="col-winrate">{p.winPct}%</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {mvpIndex.players.length === 0 && (
+            <div className="no-data-message">
+              <p>No players with 10+ matches found for this season.</p>
+            </div>
+          )}
         </div>
       )}
     </div>

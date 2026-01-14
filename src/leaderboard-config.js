@@ -66,12 +66,18 @@ export const config = {
 
   // Fun Stats Settings
   FUN_STATS: {
-    enabled: false,                     // Show/hide the Fun Stats tab
+    enabled: true,                     // Show/hide the Fun Stats tab
     seasons: ["2025", "2026"],         // Seasons with per-match data available (auto-picks up new years)
     defaultSeason: "all",              // Default: "all" for combined, or specific year
     enableColorStats: true,            // Show/hide the Color Win Rates feature
     enableHeadToHead: true,            // Show/hide the Head-to-Head comparison feature
     headToHeadSeasons: ["2026"],       // Seasons with detailed per-match data for H2H (2026+)
+    
+    // Additional Fun Stats Features
+    enableHotStreaks: true,            // 🔥 Player winning/scoring streaks (2026+ data only)
+    enableDreamTeamDuos: true,         // 🤝 Best performing player pairs
+    enableClutchFactor: true,          // 🎯 Decisive scorers in close games (≤2 goal margin)
+    enableMVPIndex: true,              // 🏆 Composite player ranking
   },
 };
 

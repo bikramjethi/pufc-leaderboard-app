@@ -849,12 +849,277 @@
   color: var(--text-muted);
 }
 
+/* ==================== DECISIVE SCORERS PODIUM ==================== */
+
+.decisive-podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+}
+
+.decisive-spot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  border: 2px solid var(--border-color);
+  min-width: 150px;
+  transition: transform 0.2s ease;
+  text-align: center;
+}
+
+.decisive-spot:hover {
+  transform: translateY(-4px);
+}
+
+.decisive-spot.position-1 {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(251, 191, 36, 0.15) 100%);
+  order: 2;
+  padding-bottom: 2.5rem;
+  box-shadow: 0 8px 24px rgba(251, 191, 36, 0.2);
+}
+
+.decisive-spot.position-2 {
+  order: 1;
+  opacity: 0.95;
+}
+
+.decisive-spot.position-3 {
+  order: 3;
+  opacity: 0.9;
+}
+
+.decisive-medal {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.decisive-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.decisive-goals {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.decisive-goals .goals-count {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #f97316;
+  line-height: 1;
+}
+
+.decisive-goals .goals-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.decisive-matches {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.35rem;
+}
+
+.decisive-avg {
+  font-size: 0.75rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  background: rgba(34, 197, 94, 0.1);
+  border-radius: 12px;
+}
+
+/* Decisive Scorers Table */
+.decisive-table {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.decisive-header {
+  display: grid;
+  grid-template-columns: 50px 1fr 70px 80px 70px;
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.decisive-row {
+  display: grid;
+  grid-template-columns: 50px 1fr 70px 80px 70px;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.decisive-row:last-child {
+  border-bottom: none;
+}
+
+.decisive-row:hover {
+  background: var(--bg-card);
+}
+
+.decisive-row .col-rank {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.decisive-row .col-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.decisive-row .col-goals {
+  font-weight: 700;
+  color: #f97316;
+  text-align: center;
+}
+
+.decisive-row .col-matches {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.decisive-row .col-avg {
+  text-align: center;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.decisive-header .col-goals,
+.decisive-header .col-matches,
+.decisive-header .col-avg {
+  text-align: center;
+}
+
 /* ==================== MVP INDEX ==================== */
 
 .mvp-index-section {
   animation: fadeIn 0.3s ease;
 }
 
+.mvp-formula-container {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+
+.formula-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1.25rem;
+  text-align: center;
+}
+
+.mvp-formula-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.formula-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.formula-metric:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+}
+
+.metric-weight {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  margin-bottom: 0.35rem;
+}
+
+.metric-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.metric-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.formula-metric.bonus {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%);
+  border-color: var(--accent-primary);
+}
+
+.formula-metric.bonus .metric-weight {
+  color: #22c55e;
+}
+
+/* MVP Header Row */
+.mvp-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.mvp-header-row h2 {
+  margin: 0 0 0.25rem;
+}
+
+.mvp-header-row .section-subtitle {
+  margin: 0;
+}
+
+.mvp-season-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mvp-season-selector label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Old formula (kept for reference but not used) */
 .mvp-formula {
   display: flex;
   align-items: center;
@@ -961,7 +1226,7 @@
 
 .mvp-header {
   display: grid;
-  grid-template-columns: 40px 1fr 60px 40px 40px 40px 60px;
+  grid-template-columns: 40px 1fr 60px 40px 40px 40px 35px 55px;
   padding: 0.75rem 1rem;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border-color);
@@ -974,7 +1239,7 @@
 
 .mvp-row {
   display: grid;
-  grid-template-columns: 40px 1fr 60px 40px 40px 40px 60px;
+  grid-template-columns: 40px 1fr 60px 40px 40px 40px 35px 55px;
   padding: 0.6rem 1rem;
   border-bottom: 1px solid var(--border-color);
   font-size: 0.85rem;
@@ -1007,9 +1272,15 @@
 .col-matches,
 .col-wins,
 .col-goals,
+.col-hattricks,
 .col-winrate {
   text-align: center;
   color: var(--text-secondary);
+}
+
+.col-hattricks {
+  color: #f97316;
+  font-weight: 600;
 }
 
 /* ==================== GOALKEEPER STATS ==================== */
@@ -1193,12 +1464,23 @@
   .mvp-header .col-matches,
   .mvp-header .col-wins,
   .mvp-header .col-goals,
+  .mvp-header .col-hattricks,
   .mvp-header .col-winrate,
   .mvp-row .col-matches,
   .mvp-row .col-wins,
   .mvp-row .col-goals,
+  .mvp-row .col-hattricks,
   .mvp-row .col-winrate {
     display: none;
+  }
+
+  .mvp-header-row {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .mvp-season-selector {
+    justify-content: center;
   }
 
   .gk-grid {
@@ -1218,6 +1500,62 @@
   .formula-item {
     font-size: 0.65rem;
     padding: 0.25rem 0.5rem;
+  }
+
+  /* Decisive Scorers responsive */
+  .decisive-podium {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .decisive-spot {
+    order: unset !important;
+    min-width: 200px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .decisive-spot.position-1 {
+    padding-bottom: 1.5rem;
+  }
+
+  .decisive-medal {
+    font-size: 2rem;
+  }
+
+  .decisive-goals .goals-count {
+    font-size: 2rem;
+  }
+
+  .decisive-header,
+  .decisive-row {
+    grid-template-columns: 40px 1fr 55px 65px 55px;
+    font-size: 0.8rem;
+  }
+
+  /* MVP formula responsive */
+  .mvp-formula-container {
+    padding: 1rem;
+  }
+
+  .mvp-formula-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .formula-metric {
+    padding: 0.75rem;
+  }
+
+  .metric-weight {
+    font-size: 1.25rem;
+  }
+
+  .metric-name {
+    font-size: 0.8rem;
+  }
+
+  .metric-desc {
+    font-size: 0.65rem;
   }
 }
 
