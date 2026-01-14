@@ -5,7 +5,9 @@ import { WeeklyTracker } from "./WeeklyTracker.jsx";
 import { Roster } from "./Roster.jsx";
 import { Insights } from "./Insights.jsx";
 import { ScoringTrends } from "./ScoringTrends.jsx";
+import { FunStats } from "./FunStats.jsx";
 import "./App.css";
+import "./FunStats.css";
 import { config } from "./leaderboard-config.js";
 import { isSmallScreen } from "./utils/isSmallScreen.js";
 import { aggregateAllTimeStats } from "./utils/leaderboard-calculations.js";
@@ -22,6 +24,7 @@ const getNavItems = () => [
       { id: "leaderboard", label: "Leaderboard", icon: "📊", enabled: true },
       { id: "insights", label: "Insights", icon: "📈", enabled: config.INSIGHTS?.enabled },
       { id: "scoring-trends", label: "Trends", icon: "📉", enabled: config.SCORING_TRENDS?.enabled },
+      { id: "fun-stats", label: "Fun Stats", icon: "🎲", enabled: config.FUN_STATS?.enabled },
     ],
   },
   {
@@ -70,6 +73,7 @@ function App() {
       "weekly-tracker": "Weekly Tracker",
       "insights": "Season Insights",
       "scoring-trends": "Scoring Trends",
+      "fun-stats": "Fun Stats & Head-to-Head",
       "midweek-roster": "Midweek Roster",
       "weekend-roster": "Weekend Roster",
       "inactive-players": "Inactive Players",
@@ -284,9 +288,11 @@ function App() {
             <WeeklyTracker />
           ) : activeTab === "insights" ? (
             <Insights />
-          ) : activeTab === "scoring-trends" ? (
-            <ScoringTrends />
-          ) : activeTab === "midweek-roster" ? (
+        ) : activeTab === "scoring-trends" ? (
+          <ScoringTrends />
+        ) : activeTab === "fun-stats" ? (
+          <FunStats />
+        ) : activeTab === "midweek-roster" ? (
             <Roster type="midweek" />
           ) : activeTab === "weekend-roster" ? (
             <Roster type="weekend" />
