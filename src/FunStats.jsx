@@ -31,8 +31,12 @@ Object.entries(leaderboardDataModules).forEach(([path, module]) => {
   }
 });
 
-// Get available MVP seasons (from leaderboard data)
+// Get available MVP seasons (from config or discovered files)
 const getMVPSeasons = () => {
+  if (config.MVP_LEADERBOARD?.seasons) {
+    return config.MVP_LEADERBOARD.seasons;
+  }
+  // Fallback to discovered files
   return Object.keys(leaderboardDataByYear).sort((a, b) => b - a);
 };
 
@@ -129,8 +133,10 @@ export const FunStats = () => {
     config.FUN_STATS?.defaultSeason || "all"
   );
   
-  // Separate season selector for MVP (defaults to "all" for All Time)
-  const [mvpSelectedSeason, setMvpSelectedSeason] = useState("all");
+  // Separate season selector for MVP (uses config default)
+  const [mvpSelectedSeason, setMvpSelectedSeason] = useState(
+    config.MVP_LEADERBOARD?.defaultSeason || "all"
+  );
   
   // Determine first enabled tab
   const getDefaultTab = () => {
@@ -139,7 +145,7 @@ export const FunStats = () => {
     if (config.FUN_STATS?.enableHotStreaks) return "hot-streaks";
     if (config.FUN_STATS?.enableDreamTeamDuos) return "dream-duos";
     if (config.FUN_STATS?.enableClutchFactor) return "clutch-factor";
-    if (config.FUN_STATS?.enableMVPIndex) return "mvp-index";
+    if (config.MVP_LEADERBOARD?.enabled) return "mvp-index";
     return "color-stats";
   };
   
@@ -565,7 +571,7 @@ export const FunStats = () => {
 
   // ================== MVP INDEX (using leaderboard data with intelligent position weighting) ==================
   const mvpIndex = useMemo(() => {
-    if (!config.FUN_STATS?.enableMVPIndex) return null;
+    if (!config.MVP_LEADERBOARD?.enabled) return null;
     
     const seasonsToUse = mvpSelectedSeason === "all" ? mvpSeasons : [mvpSelectedSeason];
     
@@ -627,7 +633,7 @@ export const FunStats = () => {
     const maxMatches = Math.max(...Object.values(aggregatedStats).map(p => p.matches), 1);
     
     // Step 4: Calculate MVP scores using updated weights
-    // Weights: Win Rate (35%), Weighted Goals/Match (25%), Attendance (25%), Clean Sheets (10%)
+    // Weights: Win Rate (40%), Weighted Goals/Match (30%), Attendance (25%), Clean Sheets (+5 per CS)
     const results = Object.values(aggregatedStats)
       .map(data => {
         const attendancePct = (data.matches / maxMatches) * 100;
@@ -640,7 +646,7 @@ export const FunStats = () => {
           (data.winPct * MVP_WEIGHTS.WIN_RATE) +
           (normalizedGoals * MVP_WEIGHTS.WEIGHTED_GOALS) +
           (attendancePct * MVP_WEIGHTS.ATTENDANCE) +
-          (data.cleanSheetPct * MVP_WEIGHTS.CLEAN_SHEETS) +
+          (data.cleanSheets * MVP_WEIGHTS.CLEAN_SHEET_BONUS) +  // Bonus points per clean sheet
           (data.hatTricks * MVP_WEIGHTS.HAT_TRICK_BONUS) -
           (data.ownGoals * MVP_WEIGHTS.OWN_GOAL_PENALTY)
         );
@@ -698,7 +704,7 @@ export const FunStats = () => {
   const enableHotStreaks = config.FUN_STATS?.enableHotStreaks !== false;
   const enableDreamDuos = config.FUN_STATS?.enableDreamTeamDuos !== false;
   const enableClutch = config.FUN_STATS?.enableClutchFactor !== false;
-  const enableMVP = config.FUN_STATS?.enableMVPIndex !== false;
+  const enableMVP = config.MVP_LEADERBOARD?.enabled !== false;
 
   if (!config.FUN_STATS?.enabled) {
     return null;
@@ -1206,10 +1212,10 @@ export const FunStats = () => {
                 <span className="metric-name">Attendance</span>
                 <span className="metric-desc">% of max matches played</span>
               </div>
-              <div className="formula-metric">
-                <span className="metric-weight">{(MVP_WEIGHTS.CLEAN_SHEETS * 100).toFixed(0)}%</span>
+              <div className="formula-metric bonus">
+                <span className="metric-weight">+{MVP_WEIGHTS.CLEAN_SHEET_BONUS}</span>
                 <span className="metric-name">Clean Sheets</span>
-                <span className="metric-desc">% of matches with zero conceded</span>
+                <span className="metric-desc">Bonus points per clean sheet</span>
               </div>
               <div className="formula-metric bonus">
                 <span className="metric-weight">+{MVP_WEIGHTS.HAT_TRICK_BONUS}</span>

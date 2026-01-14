@@ -149,12 +149,12 @@ export function calculateMultiSeasonMVP(seasonStats) {
  * These can be adjusted to tune the MVP calculation
  */
 export const MVP_WEIGHTS = {
-  WIN_RATE: 0.35,        // 35% - Winning is crucial
-  WEIGHTED_GOALS: 0.25,  // 25% - Position-adjusted goal contribution
-  ATTENDANCE: 0.25,      // 25% - Being present matters
-  CLEAN_SHEETS: 0.10,    // 10% - Defensive contribution
-  HAT_TRICK_BONUS: 2,    // +2 points per hat trick
-  OWN_GOAL_PENALTY: 1,   // -1 point per own goal
+  WIN_RATE: 0.40,           // 40% - Winning is crucial
+  WEIGHTED_GOALS: 0.30,     // 30% - Position-adjusted goal contribution
+  ATTENDANCE: 0.25,         // 25% - Being present matters
+  CLEAN_SHEET_BONUS: 5,     // +5 points per clean sheet (bonus, not percentage)
+  HAT_TRICK_BONUS: 2,       // +2 points per hat trick
+  OWN_GOAL_PENALTY: 1,      // -1 point per own goal
 };
 
 /**
@@ -169,7 +169,7 @@ export function calculateMVPScore(stats, maxMatches) {
     winPct,
     weightedGoalsPerMatch,
     matches,
-    cleanSheetPct,
+    cleanSheets,
     hatTricks,
     ownGoals,
   } = stats;
@@ -185,7 +185,7 @@ export function calculateMVPScore(stats, maxMatches) {
     winPct * MVP_WEIGHTS.WIN_RATE +
     normalizedGoals * MVP_WEIGHTS.WEIGHTED_GOALS +
     attendancePct * MVP_WEIGHTS.ATTENDANCE +
-    cleanSheetPct * MVP_WEIGHTS.CLEAN_SHEETS +
+    (cleanSheets * MVP_WEIGHTS.CLEAN_SHEET_BONUS) +  // Bonus points per clean sheet
     (hatTricks * MVP_WEIGHTS.HAT_TRICK_BONUS) -
     (ownGoals * MVP_WEIGHTS.OWN_GOAL_PENALTY)
   );

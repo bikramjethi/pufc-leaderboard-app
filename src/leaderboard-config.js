@@ -77,7 +77,13 @@ export const config = {
     enableHotStreaks: true,            // 🔥 Player winning/scoring streaks (2026+ data only)
     enableDreamTeamDuos: true,         // 🤝 Best performing player pairs
     enableClutchFactor: true,          // 🎯 Decisive scorers in close games (≤2 goal margin)
-    enableMVPIndex: true,              // 🏆 Composite player ranking
+  },
+
+  // MVP Leaderboard Settings
+  MVP_LEADERBOARD: {
+    enabled: true,                     // Show/hide the MVP Leaderboard tab
+    seasons: ["2024", "2025", "2026"], // Available seasons for MVP calculation
+    defaultSeason: "all",              // Default season ("all" for All Time, or specific year)
   },
 };
 
