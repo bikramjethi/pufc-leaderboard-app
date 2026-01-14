@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import "./MatchEntry.css";
 
 // Available team colors
@@ -10,6 +10,21 @@ const POSITIONS = ["GK", "RB", "CB", "LB", "RM", "CM", "LM", "ST"];
 // Load player profiles dynamically
 import playerProfiles from "./data/player-profiles.json";
 
+// Dynamically import all available attendance data files
+const attendanceDataModules = import.meta.glob('./data/attendance-data/20*.json', { eager: true });
+
+// Build attendanceDataByYear object from imported modules
+const attendanceDataByYear = {};
+Object.entries(attendanceDataModules).forEach(([path, module]) => {
+  const yearMatch = path.match(/(\d{4})\.json$/);
+  if (yearMatch) {
+    attendanceDataByYear[yearMatch[1]] = module.default;
+  }
+});
+
+// Available years for dropdown (sorted descending)
+const AVAILABLE_YEARS = Object.keys(attendanceDataByYear).sort((a, b) => b - a);
+
 // Create a player template
 const createPlayer = () => ({
   name: "",
@@ -18,6 +33,16 @@ const createPlayer = () => ({
   ownGoals: 0,
   cleanSheet: false,
   groupStatus: "REGULAR",
+});
+
+// Create player from existing data
+const createPlayerFromData = (playerData) => ({
+  name: playerData.name || "",
+  position: playerData.position || "ST",
+  goals: playerData.goals || 0,
+  ownGoals: playerData.ownGoals || 0,
+  cleanSheet: playerData.cleanSheet || false,
+  groupStatus: playerData.groupStatus || "REGULAR",
 });
 
 export const MatchEntry = () => {
@@ -41,11 +66,143 @@ export const MatchEntry = () => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [loadedFromData, setLoadedFromData] = useState(false);
 
   // Get all known player names for autocomplete
   const knownPlayers = useMemo(() => {
     return playerProfiles.map(p => p.name).sort();
   }, []);
+
+  // Parse year from match ID (format: DD-MM-YYYY)
+  const parseYearFromMatchId = useCallback((id) => {
+    if (!id) return null;
+    const parts = id.trim().split("-");
+    if (parts.length === 3 && parts[2].length === 4) {
+      const yearStr = parts[2];
+      if (AVAILABLE_YEARS.includes(yearStr)) {
+        return yearStr;
+      }
+    }
+    return null;
+  }, []);
+
+  // Find match data by ID
+  const findMatchById = useCallback((id, yearToSearch) => {
+    if (!id || !yearToSearch) return null;
+    const yearData = attendanceDataByYear[yearToSearch];
+    if (!yearData?.matches) return null;
+    return yearData.matches.find(m => m.id === id.trim()) || null;
+  }, []);
+
+  // Populate form from existing match data
+  const populateFromMatchData = useCallback((matchData) => {
+    if (!matchData) return;
+
+    // Get team colors from attendance
+    const teamColors = Object.keys(matchData.attendance || {});
+    if (teamColors.length >= 2) {
+      const color1 = teamColors[0];
+      const color2 = teamColors[1];
+      setTeam1Color(color1);
+      setTeam2Color(color2);
+
+      // Get scoreline values for attribution calculation
+      const score1 = matchData.scoreline?.[color1] || 0;
+      const score2 = matchData.scoreline?.[color2] || 0;
+
+      // Process team 1 players
+      const team1Data = matchData.attendance[color1] || [];
+      let team1OthersCount = 0;
+      let team1PlayerGoals = 0;
+      let team2OwnGoals = 0;
+      const team1PlayersList = [];
+      
+      team1Data.forEach(p => {
+        if (p.name === "Others") {
+          team1OthersCount += p.goals || 0;
+        } else {
+          team1PlayersList.push(createPlayerFromData(p));
+          team1PlayerGoals += p.goals || 0;
+        }
+      });
+
+      // Process team 2 players
+      const team2Data = matchData.attendance[color2] || [];
+      let team2OthersCount = 0;
+      let team2PlayerGoals = 0;
+      let team1OwnGoals = 0;
+      const team2PlayersList = [];
+      
+      team2Data.forEach(p => {
+        if (p.name === "Others") {
+          team2OthersCount += p.goals || 0;
+        } else {
+          team2PlayersList.push(createPlayerFromData(p));
+          team2PlayerGoals += p.goals || 0;
+        }
+        team1OwnGoals += p.ownGoals || 0;
+      });
+
+      // Also get own goals from team 1 (which count for team 2)
+      team1Data.forEach(p => {
+        team2OwnGoals += p.ownGoals || 0;
+      });
+
+      // Calculate unattributed goals if player goals + others + opponent OG don't match scoreline
+      // Team score = team's goals + opponent's own goals
+      const expectedTeam1Goals = score1 - team2OwnGoals;
+      const expectedTeam2Goals = score2 - team1OwnGoals;
+      
+      const team1Attributed = team1PlayerGoals + team1OthersCount;
+      const team2Attributed = team2PlayerGoals + team2OthersCount;
+      
+      // If there's a gap, add to Others
+      if (expectedTeam1Goals > team1Attributed) {
+        team1OthersCount += (expectedTeam1Goals - team1Attributed);
+      }
+      if (expectedTeam2Goals > team2Attributed) {
+        team2OthersCount += (expectedTeam2Goals - team2Attributed);
+      }
+      
+      setTeam1Players(team1PlayersList.length > 0 ? team1PlayersList : [createPlayer()]);
+      setTeam1OthersGoals(team1OthersCount);
+      setTeam2Players(team2PlayersList.length > 0 ? team2PlayersList : [createPlayer()]);
+      setTeam2OthersGoals(team2OthersCount);
+
+      // Set scoreline
+      setTeam1Score(score1);
+      setTeam2Score(score2);
+    }
+
+    // Set other fields
+    setIsFullHouse(matchData.isFullHouse || false);
+    setLoadedFromData(true);
+    setError("");
+  }, []);
+
+  // Auto-detect year and load match data when match ID changes
+  useEffect(() => {
+    if (!matchId) {
+      setLoadedFromData(false);
+      return;
+    }
+
+    // Parse year from match ID
+    const detectedYear = parseYearFromMatchId(matchId);
+    if (detectedYear && detectedYear !== year) {
+      setYear(detectedYear);
+    }
+
+    // Try to find existing match data
+    const yearToSearch = detectedYear || year;
+    const existingMatch = findMatchById(matchId, yearToSearch);
+    
+    if (existingMatch && existingMatch.matchPlayed) {
+      populateFromMatchData(existingMatch);
+    } else {
+      setLoadedFromData(false);
+    }
+  }, [matchId, year, parseYearFromMatchId, findMatchById, populateFromMatchData]);
 
   // Update clean sheets when scores change
   useEffect(() => {
@@ -272,6 +429,9 @@ export const MatchEntry = () => {
   // Clear form
   const handleClear = () => {
     setMatchId("");
+    setYear("2026");
+    setTeam1Color("RED");
+    setTeam2Color("BLUE");
     setTeam1Score(0);
     setTeam2Score(0);
     setIsFullHouse(false);
@@ -281,6 +441,7 @@ export const MatchEntry = () => {
     setTeam2OthersGoals(0);
     setGeneratedJson("");
     setError("");
+    setLoadedFromData(false);
   };
 
   return (
@@ -288,11 +449,19 @@ export const MatchEntry = () => {
       <div className="match-entry-header">
         <h2>📝 Match Data Entry</h2>
         <p className="subtitle">
-          Enter match data in one go. {isBackfill && <span className="backfill-badge">📋 Backfill Mode</span>}
+          Enter match data in one go.{" "}
+          {isBackfill && <span className="backfill-badge">📋 Backfill Mode</span>}
+          {loadedFromData && <span className="loaded-badge">✓ Data Loaded</span>}
         </p>
       </div>
 
       {error && <div className="error-message">{error}</div>}
+      
+      {loadedFromData && (
+        <div className="info-message">
+          ℹ️ Existing match data loaded. Modify as needed and save to update.
+        </div>
+      )}
 
       <div className="form-section">
         {/* Basic Info Row */}
@@ -300,9 +469,11 @@ export const MatchEntry = () => {
           <div className="form-group">
             <label>Year</label>
             <select value={year} onChange={(e) => setYear(e.target.value)}>
-              <option value="2026">2026</option>
-              <option value="2025">2025 (Backfill)</option>
-              <option value="2024">2024 (Backfill)</option>
+              {AVAILABLE_YEARS.map(yr => (
+                <option key={yr} value={yr}>
+                  {yr}{parseInt(yr) < 2026 ? " (Backfill)" : ""}
+                </option>
+              ))}
             </select>
           </div>
           
