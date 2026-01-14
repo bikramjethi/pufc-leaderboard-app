@@ -299,6 +299,51 @@ body::before {
   margin-left: 68px;
 }
 
+/* Floating Expand Button - appears when sidebar is collapsed */
+.sidebar-expand-btn {
+  position: fixed;
+  top: 1rem;
+  left: calc(68px + 1rem); /* Position just to the right of collapsed sidebar (68px) */
+  z-index: 1000;
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-expand-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-expand-btn:active {
+  transform: scale(0.95);
+}
+
+.expand-icon {
+  display: block;
+  font-weight: 600;
+}
+
+/* Hide expand button on mobile */
+@media (max-width: 768px) {
+  .sidebar-expand-btn {
+    display: none !important;
+  }
+}
+
 /* Hide sidebar on mobile */
 @media (max-width: 768px) {
   .sidebar {

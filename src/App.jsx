@@ -190,6 +190,18 @@ function App() {
 
       {/* Main Content Area */}
       <div className="main-wrapper">
+        {/* Floating Expand Button - Desktop only, when sidebar is collapsed */}
+        {sidebarCollapsed && !isSmall && (
+          <button
+            className="sidebar-expand-btn"
+            onClick={() => setSidebarCollapsed(false)}
+            aria-label="Expand sidebar"
+            title="Expand sidebar"
+          >
+            <span className="expand-icon">☰</span>
+          </button>
+        )}
+
         <header className="header">
           <div className="header-content">
             {/* Mobile Hamburger */}
