@@ -66,7 +66,7 @@ export const config = {
 
   // Fun Stats Settings
   FUN_STATS: {
-    enabled: true,                     // Show/hide the Fun Stats tab
+    enabled: false,                     // Show/hide the Fun Stats tab
     seasons: ["2025", "2026"],         // Seasons with per-match data available (auto-picks up new years)
     defaultSeason: "all",              // Default: "all" for combined, or specific year
     enableColorStats: true,            // Show/hide the Color Win Rates feature
@@ -81,7 +81,7 @@ export const config = {
 
   // MVP Leaderboard Settings
   MVP_LEADERBOARD: {
-    enabled: true,                     // Show/hide the MVP Leaderboard tab
+    enabled: false,                     // Show/hide the MVP Leaderboard tab
     seasons: ["2024", "2025", "2026"], // Available seasons for MVP calculation
     defaultSeason: "all",              // Default season ("all" for All Time, or specific year)
   },
