@@ -1,5 +1,9 @@
 import { useState, useMemo } from "react";
 import { config } from "./leaderboard-config.js";
+import { 
+  calculateMultiSeasonMVP, 
+  MVP_WEIGHTS,
+} from "./utils/position-weights.js";
 import "./FunStats.css";
 
 // Dynamically import all available match data files
@@ -113,77 +117,6 @@ const colorConfig = {
   BLACK: { bg: '#1f2937', text: '#fff', name: 'Black' },
   WHITE: { bg: '#f8fafc', text: '#1f2937', name: 'White', border: '#cbd5e1' },
   YELLOW: { bg: '#eab308', text: '#1f2937', name: 'Yellow' },
-};
-
-// Position-based goal multiplier for MVP calculation
-// Attackers score more easily, so their goals are worth less in MVP calculation
-// Defenders/GKs rarely score, so their goals are worth more
-const getPositionGoalMultiplier = (positions) => {
-  if (!positions || !Array.isArray(positions) || positions.length === 0) {
-    return 1.0; // Default
-  }
-  
-  const positionWeights = {
-    // Goalkeepers - scoring is exceptional
-    'GK': 4.0,
-    // Defenders - scoring is uncommon
-    'DEF': 2.5,
-    'CB': 2.5,
-    'LB': 2.0,
-    'RB': 2.0,
-    // Midfielders - scoring is regular
-    'MID': 1.5,
-    'CM': 1.5,
-    'CDM': 1.8,
-    'CAM': 1.2,
-    'LM': 1.3,
-    'RM': 1.3,
-    // Forwards/Wingers - scoring is expected
-    'FWD': 1.0,
-    'ST': 1.0,
-    'LW': 1.1,
-    'RW': 1.1,
-    // Versatile - average of all
-    'ALL': 1.5,
-  };
-  
-  // Calculate average multiplier for all positions
-  let totalWeight = 0;
-  let count = 0;
-  
-  positions.forEach(pos => {
-    const upperPos = pos.toUpperCase();
-    const weight = positionWeights[pos] || positionWeights[upperPos] || 1.0;
-    totalWeight += weight;
-    count++;
-  });
-  
-  return count > 0 ? totalWeight / count : 1.0;
-};
-
-// Get position category for display
-const getPositionCategory = (positions) => {
-  if (!positions || !Array.isArray(positions) || positions.length === 0) {
-    return 'Unknown';
-  }
-  
-  const categories = {
-    'GK': 'GK',
-    'DEF': 'DEF', 'CB': 'DEF', 'LB': 'DEF', 'RB': 'DEF',
-    'MID': 'MID', 'CM': 'MID', 'CDM': 'MID', 'CAM': 'MID', 'LM': 'MID', 'RM': 'MID',
-    'FWD': 'FWD', 'ST': 'FWD', 'LW': 'FWD', 'RW': 'FWD', 'lw': 'FWD',
-    'ALL': 'ALL', 'all': 'ALL',
-  };
-  
-  // Return first matching category or join if mixed
-  const cats = new Set();
-  positions.forEach(pos => {
-    const upperPos = pos.toUpperCase();
-    const cat = categories[pos] || categories[upperPos] || pos;
-    cats.add(cat);
-  });
-  
-  return Array.from(cats).join('/');
 };
 
 export const FunStats = () => {
@@ -630,15 +563,15 @@ export const FunStats = () => {
     };
   }, [allMatches]);
 
-  // ================== MVP INDEX (using leaderboard data with position weighting) ==================
+  // ================== MVP INDEX (using leaderboard data with intelligent position weighting) ==================
   const mvpIndex = useMemo(() => {
     if (!config.FUN_STATS?.enableMVPIndex) return null;
     
-    // Aggregate player stats from leaderboard data
-    // Track weighted goals separately (based on position each season)
-    const playerStats = {};
-    
     const seasonsToUse = mvpSelectedSeason === "all" ? mvpSeasons : [mvpSelectedSeason];
+    
+    // Step 1: Collect per-season stats for each player
+    // This allows us to properly weight goals based on position in EACH season
+    const playerSeasonStats = {}; // { playerName: { season: seasonStats } }
     
     seasonsToUse.forEach(year => {
       const yearData = leaderboardDataByYear[year];
@@ -648,76 +581,84 @@ export const FunStats = () => {
         // Skip "Others"
         if (player.name === 'Others') return;
         
-        if (!playerStats[player.name]) {
-          playerStats[player.name] = {
-            matches: 0,
-            wins: 0,
-            draws: 0,
-            losses: 0,
-            goals: 0,
-            weightedGoals: 0, // Goals adjusted by position
-            cleanSheets: 0,
-            hatTricks: 0,
-            ownGoals: 0,
-            positions: new Set(), // Track all positions across seasons
-            positionsByYear: {}, // Track positions per year
-          };
+        if (!playerSeasonStats[player.name]) {
+          playerSeasonStats[player.name] = {};
         }
         
-        const ps = playerStats[player.name];
-        const posMultiplier = getPositionGoalMultiplier(player.position);
-        const playerGoals = player.goals || 0;
+        // Get position string from array
+        const positionStr = Array.isArray(player.position) 
+          ? player.position.join('/') 
+          : player.position || 'ALL';
         
-        ps.matches += player.matches || 0;
-        ps.wins += player.wins || 0;
-        ps.draws += player.draws || 0;
-        ps.losses += player.losses || 0;
-        ps.goals += playerGoals;
-        ps.weightedGoals += playerGoals * posMultiplier; // Apply position-based weight
-        ps.cleanSheets += player.cleanSheets || 0;
-        ps.hatTricks += player.hatTricks || 0;
-        ps.ownGoals += player.ownGoals || 0;
-        
-        // Track positions
-        if (player.position && Array.isArray(player.position)) {
-          player.position.forEach(pos => ps.positions.add(pos));
-          ps.positionsByYear[year] = player.position;
-        }
+        // Store this season's stats with position-specific weighting
+        playerSeasonStats[player.name][year] = {
+          season: year,
+          matches: player.matches || 0,
+          wins: player.wins || 0,
+          draws: player.draws || 0,
+          losses: player.losses || 0,
+          goals: player.goals || 0,
+          cleanSheets: player.cleanSheets || 0,
+          hatTricks: player.hatTricks || 0,
+          ownGoals: player.ownGoals || 0,
+          position: positionStr,
+        };
       });
     });
     
-    // Find max matches for attendance calculation
-    const maxMatches = Math.max(...Object.values(playerStats).map(p => p.matches), 1);
+    // Step 2: Aggregate per-season stats using the intelligent algorithm
+    const aggregatedStats = {};
     
-    // Calculate MVP score using WEIGHTED goals
-    // This balances the formula so defenders/GKs aren't penalized for scoring less
-    const results = Object.entries(playerStats)
-      .filter(([, data]) => data.matches >= 10) // Minimum 10 matches for MVP consideration
-      .map(([name, data]) => {
-        const winPct = (data.wins / data.matches) * 100;
+    Object.entries(playerSeasonStats).forEach(([playerName, seasons]) => {
+      const seasonStatsArray = Object.values(seasons);
+      
+      // Use the intelligent multi-season aggregation
+      const aggregated = calculateMultiSeasonMVP(seasonStatsArray);
+      
+      if (aggregated && aggregated.matches >= 10) { // Minimum 10 matches
+        aggregatedStats[playerName] = {
+          ...aggregated,
+          name: playerName,
+        };
+      }
+    });
+    
+    // Step 3: Find max matches for attendance normalization
+    const maxMatches = Math.max(...Object.values(aggregatedStats).map(p => p.matches), 1);
+    
+    // Step 4: Calculate MVP scores using updated weights
+    // Weights: Win Rate (35%), Weighted Goals/Match (25%), Attendance (25%), Clean Sheets (10%)
+    const results = Object.values(aggregatedStats)
+      .map(data => {
         const attendancePct = (data.matches / maxMatches) * 100;
-        const weightedGoalsPerMatch = data.weightedGoals / data.matches; // Use weighted goals
-        const goalsPerMatch = data.goals / data.matches; // Raw for display
-        const cleanSheetPct = (data.cleanSheets / data.matches) * 100;
-        const hatTrickBonus = data.hatTricks * 2; // 2 points per hat trick
-        const ownGoalPenalty = data.ownGoals * 1; // 1 point penalty per own goal
         
-        // Calculate position multiplier for display
-        const positionsArray = Array.from(data.positions);
-        const avgMultiplier = getPositionGoalMultiplier(positionsArray);
-        const positionCategory = getPositionCategory(positionsArray);
+        // Normalize weighted goals per match (assume 2.0 is exceptional, scale to 0-100)
+        const normalizedGoals = Math.min(data.weightedGoalsPerMatch / 2.0 * 100, 100);
         
+        // Calculate MVP score with updated weights
         const mvpScore = (
-          (winPct * 0.35) +
-          (weightedGoalsPerMatch * 25) + // Use weighted goals with slightly lower coefficient
-          (attendancePct * 0.20) +
-          (cleanSheetPct * 0.15) + // Increased clean sheet weight (helps GKs/DEFs)
-          hatTrickBonus -
-          ownGoalPenalty
+          (data.winPct * MVP_WEIGHTS.WIN_RATE) +
+          (normalizedGoals * MVP_WEIGHTS.WEIGHTED_GOALS) +
+          (attendancePct * MVP_WEIGHTS.ATTENDANCE) +
+          (data.cleanSheetPct * MVP_WEIGHTS.CLEAN_SHEETS) +
+          (data.hatTricks * MVP_WEIGHTS.HAT_TRICK_BONUS) -
+          (data.ownGoals * MVP_WEIGHTS.OWN_GOAL_PENALTY)
         );
         
+        // Build position breakdown string for multi-season players
+        let positionDisplay = data.displayPosition;
+        let positionDetails = null;
+        
+        if (data.isMultiPosition && data.seasonContributions) {
+          // Show breakdown of positions by season with games played
+          positionDetails = data.seasonContributions
+            .filter(s => s.matches > 0)
+            .map(s => `${s.season}: ${s.position} (${s.matches}G, ${s.posWeight.toFixed(1)}x)`)
+            .join(' | ');
+        }
+        
         return {
-          name,
+          name: data.name,
           matches: data.matches,
           wins: data.wins,
           draws: data.draws,
@@ -727,21 +668,27 @@ export const FunStats = () => {
           cleanSheets: data.cleanSheets,
           hatTricks: data.hatTricks,
           ownGoals: data.ownGoals,
-          position: positionCategory,
-          posMultiplier: avgMultiplier.toFixed(1),
-          winPct: winPct.toFixed(1),
+          position: positionDisplay,
+          positionDetails,
+          isMultiPosition: data.isMultiPosition,
+          effectiveMultiplier: data.effectiveMultiplier.toFixed(2),
+          winPct: data.winPct.toFixed(1),
           attendancePct: attendancePct.toFixed(1),
-          goalsPerMatch: goalsPerMatch.toFixed(2),
-          weightedGPM: weightedGoalsPerMatch.toFixed(2),
+          goalsPerMatch: data.goalsPerMatch.toFixed(2),
+          weightedGPM: data.weightedGoalsPerMatch.toFixed(2),
+          cleanSheetPct: data.cleanSheetPct.toFixed(1),
           mvpScore: mvpScore.toFixed(1),
+          // Season breakdown for tooltip/details
+          seasonBreakdown: data.seasonContributions,
         };
       })
       .sort((a, b) => parseFloat(b.mvpScore) - parseFloat(a.mvpScore));
     
     return {
       players: results.slice(0, 20),
-      totalPlayers: Object.keys(playerStats).length,
+      totalPlayers: Object.keys(playerSeasonStats).length,
       seasonLabel: mvpSelectedSeason === "all" ? "All Time" : mvpSelectedSeason,
+      weights: MVP_WEIGHTS, // Pass weights for display
     };
   }, [mvpSelectedSeason, mvpSeasons]);
 
@@ -1245,33 +1192,34 @@ export const FunStats = () => {
             <h3 className="formula-title">📊 How is MVP Score calculated?</h3>
             <div className="mvp-formula-grid">
               <div className="formula-metric">
-                <span className="metric-weight">35%</span>
+                <span className="metric-weight">{(MVP_WEIGHTS.WIN_RATE * 100).toFixed(0)}%</span>
                 <span className="metric-name">Win Rate</span>
                 <span className="metric-desc">% of matches won with your team</span>
               </div>
               <div className="formula-metric weighted">
-                <span className="metric-weight">25%</span>
+                <span className="metric-weight">{(MVP_WEIGHTS.WEIGHTED_GOALS * 100).toFixed(0)}%</span>
                 <span className="metric-name">Weighted Goals</span>
                 <span className="metric-desc">Goals × Position Multiplier (GK: 4x, DEF: 2.5x, MID: 1.5x, FWD: 1x)</span>
               </div>
               <div className="formula-metric">
-                <span className="metric-weight">20%</span>
+                <span className="metric-weight">{(MVP_WEIGHTS.ATTENDANCE * 100).toFixed(0)}%</span>
                 <span className="metric-name">Attendance</span>
                 <span className="metric-desc">% of max matches played</span>
               </div>
               <div className="formula-metric">
-                <span className="metric-weight">15%</span>
+                <span className="metric-weight">{(MVP_WEIGHTS.CLEAN_SHEETS * 100).toFixed(0)}%</span>
                 <span className="metric-name">Clean Sheets</span>
                 <span className="metric-desc">% of matches with zero conceded</span>
               </div>
               <div className="formula-metric bonus">
-                <span className="metric-weight">+2</span>
+                <span className="metric-weight">+{MVP_WEIGHTS.HAT_TRICK_BONUS}</span>
                 <span className="metric-name">Hat Tricks</span>
                 <span className="metric-desc">Bonus points per hat trick</span>
               </div>
             </div>
             <p className="formula-note">
-              💡 Position-based weighting ensures fair comparison: A defender's goal counts more than a striker's goal in the MVP calculation.
+              💡 Position-based weighting ensures fair comparison: A defender's goal counts more than a striker's goal.
+              {mvpSelectedSeason === "all" && " For All Time: position multipliers are calculated per-season based on games played."}
             </p>
           </div>
 
@@ -1283,12 +1231,19 @@ export const FunStats = () => {
                     {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
                   </div>
                   <div className="podium-name">{p.name}</div>
-                  <div className="podium-position-badge">{p.position}</div>
+                  <div className="podium-position-badge" title={p.positionDetails || p.position}>
+                    {p.position}
+                    {p.isMultiPosition && <span className="multi-pos-indicator">⚡</span>}
+                  </div>
+                  <div className="podium-multiplier">
+                    ×{p.effectiveMultiplier}
+                    {p.isMultiPosition && <span className="calc-note">dynamic</span>}
+                  </div>
                   <div className="podium-score">{p.mvpScore}</div>
                   <div className="podium-breakdown">
                     <span>{p.winPct}% WR</span>
-                    <span>{p.goals}G ({p.posMultiplier}x)</span>
-                    <span>{p.matches} M</span>
+                    <span>{p.goals}G → {p.weightedGoals}WG</span>
+                    <span>{p.matches}M</span>
                   </div>
                 </div>
               ))}
@@ -1304,18 +1259,23 @@ export const FunStats = () => {
                 <span className="col-score">Score</span>
                 <span className="col-matches">M</span>
                 <span className="col-goals">G</span>
+                <span className="col-wg">WG</span>
                 <span className="col-mult">×</span>
                 <span className="col-winrate">WR%</span>
               </div>
               {mvpIndex.players.slice(3).map((p, idx) => (
-                <div key={p.name} className="mvp-row">
+                <div key={p.name} className="mvp-row" title={p.positionDetails || ''}>
                   <span className="col-rank">{idx + 4}</span>
-                  <span className="col-name">{p.name}</span>
+                  <span className="col-name">
+                    {p.name}
+                    {p.isMultiPosition && <span className="multi-pos-dot" title={p.positionDetails}>⚡</span>}
+                  </span>
                   <span className="col-pos">{p.position}</span>
                   <span className="col-score">{p.mvpScore}</span>
                   <span className="col-matches">{p.matches}</span>
                   <span className="col-goals">{p.goals}</span>
-                  <span className="col-mult">{p.posMultiplier}</span>
+                  <span className="col-wg">{p.weightedGoals}</span>
+                  <span className="col-mult">{p.effectiveMultiplier}</span>
                   <span className="col-winrate">{p.winPct}%</span>
                 </div>
               ))}
