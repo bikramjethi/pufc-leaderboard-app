@@ -99,7 +99,7 @@ export const MVPLeaderboard = () => {
     const maxMatches = Math.max(...Object.values(aggregatedStats).map(p => p.matches), 1);
     
     // Step 4: Calculate MVP scores using updated weights
-    // Weights: Win Rate (40%), Weighted Goals/Match (30%), Attendance (25%), Clean Sheets (+5 per CS)
+    // Weights: Win Rate (40%), Weighted Goals/Match (30%), Attendance (30%), Clean Sheets (+5 per CS)
     const results = Object.values(aggregatedStats)
       .map(data => {
         const attendancePct = (data.matches / maxMatches) * 100;

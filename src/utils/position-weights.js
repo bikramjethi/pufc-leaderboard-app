@@ -151,7 +151,7 @@ export function calculateMultiSeasonMVP(seasonStats) {
 export const MVP_WEIGHTS = {
   WIN_RATE: 0.40,           // 40% - Winning is crucial
   WEIGHTED_GOALS: 0.30,     // 30% - Position-adjusted goal contribution
-  ATTENDANCE: 0.25,         // 25% - Being present matters
+  ATTENDANCE: 0.30,         // 30% - Being present matters (Total: 100%)
   CLEAN_SHEET_BONUS: 5,     // +5 points per clean sheet (bonus, not percentage)
   HAT_TRICK_BONUS: 2,       // +2 points per hat trick
   OWN_GOAL_PENALTY: 1,      // -1 point per own goal
