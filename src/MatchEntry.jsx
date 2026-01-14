@@ -68,10 +68,58 @@ export const MatchEntry = () => {
   const [error, setError] = useState("");
   const [loadedFromData, setLoadedFromData] = useState(false);
 
-  // Get all known player names for autocomplete
-  const knownPlayers = useMemo(() => {
+  // Get all known player names
+  const allKnownPlayers = useMemo(() => {
     return playerProfiles.map(p => p.name).sort();
   }, []);
+
+  // Get players already entered in both teams (for filtering autocomplete)
+  const usedPlayerNames = useMemo(() => {
+    const names = new Set();
+    team1Players.forEach(p => {
+      if (p.name.trim()) names.add(p.name.trim().toLowerCase());
+    });
+    team2Players.forEach(p => {
+      if (p.name.trim()) names.add(p.name.trim().toLowerCase());
+    });
+    return names;
+  }, [team1Players, team2Players]);
+
+  // Get available player names for autocomplete (excluding already used)
+  const getAvailablePlayersForInput = useCallback((currentPlayerName) => {
+    return allKnownPlayers.filter(name => {
+      // Always include the current player's name (so they can see it selected)
+      if (currentPlayerName && name.toLowerCase() === currentPlayerName.trim().toLowerCase()) {
+        return true;
+      }
+      // Exclude already used names
+      return !usedPlayerNames.has(name.toLowerCase());
+    });
+  }, [allKnownPlayers, usedPlayerNames]);
+
+  // Get positions already used by a team
+  const getUsedPositions = useCallback((teamPlayers, excludeIndex) => {
+    const used = new Set();
+    teamPlayers.forEach((p, idx) => {
+      if (idx !== excludeIndex && p.position) {
+        used.add(p.position);
+      }
+    });
+    return used;
+  }, []);
+
+  // Get available positions for a player on a team
+  const getAvailablePositions = useCallback((teamPlayers, playerIndex) => {
+    const usedPositions = getUsedPositions(teamPlayers, playerIndex);
+    const currentPosition = teamPlayers[playerIndex]?.position;
+    
+    return POSITIONS.filter(pos => {
+      // Always include the current position (so they can see it selected)
+      if (pos === currentPosition) return true;
+      // Exclude already used positions
+      return !usedPositions.has(pos);
+    });
+  }, [getUsedPositions]);
 
   // Parse year from match ID (format: DD-MM-YYYY)
   const parseYearFromMatchId = useCallback((id) => {
@@ -572,14 +620,19 @@ export const MatchEntry = () => {
                     placeholder="Player name"
                     value={player.name}
                     onChange={(e) => updatePlayer(1, idx, "name", e.target.value)}
-                    list="player-names"
+                    list={`team1-players-${idx}`}
                   />
+                  <datalist id={`team1-players-${idx}`}>
+                    {getAvailablePlayersForInput(player.name).map(name => (
+                      <option key={name} value={name} />
+                    ))}
+                  </datalist>
                   <select
                     className="col-pos"
                     value={player.position}
                     onChange={(e) => updatePlayer(1, idx, "position", e.target.value)}
                   >
-                    {POSITIONS.map(pos => (
+                    {getAvailablePositions(team1Players, idx).map(pos => (
                       <option key={pos} value={pos}>{pos}</option>
                     ))}
                   </select>
@@ -661,14 +714,19 @@ export const MatchEntry = () => {
                     placeholder="Player name"
                     value={player.name}
                     onChange={(e) => updatePlayer(2, idx, "name", e.target.value)}
-                    list="player-names"
+                    list={`team2-players-${idx}`}
                   />
+                  <datalist id={`team2-players-${idx}`}>
+                    {getAvailablePlayersForInput(player.name).map(name => (
+                      <option key={name} value={name} />
+                    ))}
+                  </datalist>
                   <select
                     className="col-pos"
                     value={player.position}
                     onChange={(e) => updatePlayer(2, idx, "position", e.target.value)}
                   >
-                    {POSITIONS.map(pos => (
+                    {getAvailablePositions(team2Players, idx).map(pos => (
                       <option key={pos} value={pos}>{pos}</option>
                     ))}
                   </select>
@@ -730,12 +788,7 @@ export const MatchEntry = () => {
           </div>
         </div>
 
-        {/* Datalist for player autocomplete */}
-        <datalist id="player-names">
-          {knownPlayers.map(name => (
-            <option key={name} value={name} />
-          ))}
-        </datalist>
+        {/* Note: Datalists for player autocomplete are now per-player for intelligent filtering */}
 
         {/* Action Buttons */}
         <div className="action-buttons">
