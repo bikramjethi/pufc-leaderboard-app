@@ -6,6 +6,7 @@ import { Roster } from "./Roster.jsx";
 import { Insights } from "./Insights.jsx";
 import { ScoringTrends } from "./ScoringTrends.jsx";
 import { FunStats } from "./FunStats.jsx";
+import { MVPLeaderboard } from "./MVPLeaderboard.jsx";
 import "./App.css";
 import "./FunStats.css";
 import { config } from "./leaderboard-config.js";
@@ -25,6 +26,7 @@ const getNavItems = () => [
       { id: "insights", label: "Insights", icon: "📈", enabled: config.INSIGHTS?.enabled },
       { id: "scoring-trends", label: "Trends", icon: "📉", enabled: config.SCORING_TRENDS?.enabled },
       { id: "fun-stats", label: "Fun Stats", icon: "🎲", enabled: config.FUN_STATS?.enabled },
+      { id: "mvp-leaderboard", label: "MVP Leaderboard", icon: "🏆", enabled: config.MVP_LEADERBOARD?.enabled },
     ],
   },
   {
@@ -74,6 +76,7 @@ function App() {
       "insights": "Season Insights",
       "scoring-trends": "Scoring Trends",
       "fun-stats": "Fun Stats & Head-to-Head",
+      "mvp-leaderboard": "MVP Leaderboard",
       "midweek-roster": "Midweek Roster",
       "weekend-roster": "Weekend Roster",
       "inactive-players": "Inactive Players",
@@ -304,6 +307,8 @@ function App() {
           <ScoringTrends />
         ) : activeTab === "fun-stats" ? (
           <FunStats />
+        ) : activeTab === "mvp-leaderboard" ? (
+          <MVPLeaderboard />
         ) : activeTab === "midweek-roster" ? (
             <Roster type="midweek" />
           ) : activeTab === "weekend-roster" ? (
