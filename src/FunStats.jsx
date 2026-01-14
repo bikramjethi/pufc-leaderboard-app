@@ -15,24 +15,25 @@ Object.entries(matchDataModules).forEach(([path, module]) => {
   }
 });
 
-// Get available seasons from config or discovered files
-const getAvailableSeasons = () => {
-  const configSeasons = config.FUN_STATS?.seasons || [];
-  const discoveredSeasons = Object.keys(matchDataByYear).sort((a, b) => b - a);
-  return configSeasons.length > 0 ? configSeasons : discoveredSeasons;
-};
-
-// Get seasons from 2026 onwards (for features requiring complete tracker data)
-const getTrackerSeasons = () => {
+// Get available seasons for the selector (2025+ that have data)
+const getSelectableSeasons = () => {
   return Object.keys(matchDataByYear)
-    .filter(year => parseInt(year) >= 2026)
+    .filter(year => parseInt(year) >= 2025)
     .sort((a, b) => b - a);
 };
 
-// Get H2H seasons (detailed per-match data from 2026+)
-const getH2HSeasons = () => {
-  const configSeasons = config.FUN_STATS?.headToHeadSeasons || ["2026"];
-  return configSeasons.filter(year => matchDataByYear[year]);
+// Helper to get valid matches from a year's data
+// For 2025, only include matches with isBackfilled: true
+const getValidMatches = (year) => {
+  const data = matchDataByYear[year];
+  if (!data?.matches) return [];
+  
+  return data.matches.filter(m => {
+    if (!m.matchPlayed || m.matchCancelled) return false;
+    // For 2025, only include backfilled matches
+    if (year === "2025" && !m.isBackfilled) return false;
+    return true;
+  });
 };
 
 // Helper to get winning team from scoreline
@@ -99,13 +100,9 @@ const colorConfig = {
 };
 
 export const FunStats = () => {
-  const availableSeasons = getAvailableSeasons();
-  const trackerSeasons = getTrackerSeasons();
-  const h2hSeasons = getH2HSeasons();
+  const selectableSeasons = getSelectableSeasons();
   
-  const [selectedSeason, setSelectedSeason] = useState(
-    config.FUN_STATS?.defaultSeason || "all"
-  );
+  const [selectedSeason, setSelectedSeason] = useState("all");
   
   // Determine first enabled tab
   const getDefaultTab = () => {
@@ -121,46 +118,25 @@ export const FunStats = () => {
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
 
-  // Get all matches for selected season(s) - for color stats
-  const allMatches = useMemo(() => {
+  // Get matches based on selected season (respects isBackfilled for 2025)
+  const selectedMatches = useMemo(() => {
     if (selectedSeason === "all") {
-      return availableSeasons.flatMap(year => 
-        (matchDataByYear[year]?.matches || []).filter(m => m.matchPlayed && !m.matchCancelled)
-      );
+      return selectableSeasons.flatMap(year => getValidMatches(year));
     }
-    return (matchDataByYear[selectedSeason]?.matches || []).filter(m => m.matchPlayed && !m.matchCancelled);
-  }, [selectedSeason, availableSeasons]);
-
-  // Get matches from 2026+ only (for streaks, duos win rate, most games together)
-  const trackerMatches = useMemo(() => {
-    return trackerSeasons.flatMap(year => 
-      (matchDataByYear[year]?.matches || []).filter(m => m.matchPlayed && !m.matchCancelled)
-    );
-  }, [trackerSeasons]);
-
-  // Get matches from 2025+ (for top scoring duos - scorer data is accurate)
-  const scorerMatches = useMemo(() => {
-    const scorerSeasons = Object.keys(matchDataByYear).filter(year => parseInt(year) >= 2025);
-    return scorerSeasons.flatMap(year => 
-      (matchDataByYear[year]?.matches || []).filter(m => m.matchPlayed && !m.matchCancelled)
-    );
-  }, []);
-
-  // Get H2H matches (only from detailed seasons)
-  const h2hMatches = useMemo(() => {
-    return h2hSeasons.flatMap(year => 
-      (matchDataByYear[year]?.matches || []).filter(m => m.matchPlayed && !m.matchCancelled)
-    );
-  }, [h2hSeasons]);
+    return getValidMatches(selectedSeason);
+  }, [selectedSeason, selectableSeasons]);
 
   // Get all unique players for H2H selection (excluding "Others")
-  const allPlayers = useMemo(() => getAllPlayerNames(h2hMatches), [h2hMatches]);
+  const allPlayers = useMemo(() => getAllPlayerNames(selectedMatches), [selectedMatches]);
+  
+  // Get match count label
+  const matchCountLabel = `${selectedMatches.length} matches`;
 
-  // Calculate color statistics
+  // Calculate color statistics based on selected season
   const colorStats = useMemo(() => {
     const stats = {};
     
-    allMatches.forEach(match => {
+    selectedMatches.forEach(match => {
       if (!match.scoreline) return;
       
       const teams = Object.keys(match.scoreline);
@@ -203,9 +179,9 @@ export const FunStats = () => {
         };
       })
       .sort((a, b) => b.winPct - a.winPct);
-  }, [allMatches]);
+  }, [selectedMatches]);
 
-  // Calculate head-to-head stats between two players
+  // Calculate head-to-head stats between two players based on selected season
   const h2hStats = useMemo(() => {
     if (!player1 || !player2 || player1 === player2) {
       return null;
@@ -218,7 +194,7 @@ export const FunStats = () => {
       matchDetails: [],
     };
 
-    h2hMatches.forEach(match => {
+    selectedMatches.forEach(match => {
       const players = getPlayersFromAttendance(match.attendance);
       const p1Data = players.find(p => p.name === player1);
       const p2Data = players.find(p => p.name === player2);
@@ -279,16 +255,16 @@ export const FunStats = () => {
     });
 
     return stats;
-  }, [player1, player2, h2hMatches]);
+  }, [player1, player2, selectedMatches]);
 
-  // ================== HOT STREAKS (2026+ data only) ==================
+  // ================== HOT STREAKS (based on selected season) ==================
   const hotStreaks = useMemo(() => {
     if (!config.FUN_STATS?.enableHotStreaks) return null;
     
     const playerStreaks = {};
     
     // Sort matches by date for chronological order
-    const sortedMatches = [...trackerMatches].sort((a, b) => 
+    const sortedMatches = [...selectedMatches].sort((a, b) => 
       new Date(a.date.split('/').reverse().join('-')) - new Date(b.date.split('/').reverse().join('-'))
     );
     
@@ -360,21 +336,17 @@ export const FunStats = () => {
       byCurrentGoal: [...results].filter(p => p.currentGoalStreak > 0).sort((a, b) => b.currentGoalStreak - a.currentGoalStreak).slice(0, 10),
       byMaxGoal: [...results].sort((a, b) => b.maxGoalStreak - a.maxGoalStreak).slice(0, 10),
       byUnbeaten: [...results].sort((a, b) => b.currentUnbeatenStreak - a.currentUnbeatenStreak).slice(0, 10),
-      totalMatches: trackerMatches.length,
+      totalMatches: selectedMatches.length,
     };
-  }, [trackerMatches]);
+  }, [selectedMatches]);
 
-  // ================== DREAM TEAM DUOS ==================
-  // Different data sources for different metrics:
-  // - Win Rate: 2026+ (complete tracker data)
-  // - Top Scoring: 2025+ (scorer info is accurate)
-  // - Most Games: 2026+ (attendance data is complete)
+  // ================== DREAM TEAM DUOS (based on selected season) ==================
   const dreamTeamDuos = useMemo(() => {
     if (!config.FUN_STATS?.enableDreamTeamDuos) return null;
     
-    // Calculate duo stats for 2026+ (for win rate and most games)
-    const duoStatsTracker = {};
-    trackerMatches.forEach(match => {
+    // Calculate duo stats from selected matches
+    const duoStats = {};
+    selectedMatches.forEach(match => {
       const players = getPlayersFromAttendance(match.attendance).filter(p => p.name !== 'Others');
       const winningTeam = getWinningTeam(match.scoreline);
       
@@ -391,8 +363,8 @@ export const FunStats = () => {
             const p2 = teamPlayers[j];
             const key = [p1.name, p2.name].sort().join('|');
             
-            if (!duoStatsTracker[key]) {
-              duoStatsTracker[key] = {
+            if (!duoStats[key]) {
+              duoStats[key] = {
                 player1: [p1.name, p2.name].sort()[0],
                 player2: [p1.name, p2.name].sort()[1],
                 matches: 0,
@@ -403,57 +375,23 @@ export const FunStats = () => {
               };
             }
             
-            duoStatsTracker[key].matches += 1;
-            duoStatsTracker[key].combinedGoals += (p1.goals || 0) + (p2.goals || 0);
+            duoStats[key].matches += 1;
+            duoStats[key].combinedGoals += (p1.goals || 0) + (p2.goals || 0);
             
             if (winningTeam === p1.team) {
-              duoStatsTracker[key].wins += 1;
+              duoStats[key].wins += 1;
             } else if (winningTeam === 'DRAW') {
-              duoStatsTracker[key].draws += 1;
+              duoStats[key].draws += 1;
             } else {
-              duoStatsTracker[key].losses += 1;
+              duoStats[key].losses += 1;
             }
           }
         }
       });
     });
     
-    // Calculate duo scoring stats for 2025+ (for top scoring duos)
-    const duoStatsScorer = {};
-    scorerMatches.forEach(match => {
-      const players = getPlayersFromAttendance(match.attendance).filter(p => p.name !== 'Others');
-      
-      const teams = {};
-      players.forEach(p => {
-        if (!teams[p.team]) teams[p.team] = [];
-        teams[p.team].push(p);
-      });
-      
-      Object.values(teams).forEach(teamPlayers => {
-        for (let i = 0; i < teamPlayers.length; i++) {
-          for (let j = i + 1; j < teamPlayers.length; j++) {
-            const p1 = teamPlayers[i];
-            const p2 = teamPlayers[j];
-            const key = [p1.name, p2.name].sort().join('|');
-            
-            if (!duoStatsScorer[key]) {
-              duoStatsScorer[key] = {
-                player1: [p1.name, p2.name].sort()[0],
-                player2: [p1.name, p2.name].sort()[1],
-                matches: 0,
-                combinedGoals: 0,
-              };
-            }
-            
-            duoStatsScorer[key].matches += 1;
-            duoStatsScorer[key].combinedGoals += (p1.goals || 0) + (p2.goals || 0);
-          }
-        }
-      });
-    });
-    
-    // Win rate results (2026+ data, min 3 matches)
-    const winRateResults = Object.values(duoStatsTracker)
+    // Win rate results (min 3 matches)
+    const winRateResults = Object.values(duoStats)
       .filter(d => d.matches >= 3)
       .map(d => ({
         ...d,
@@ -462,8 +400,8 @@ export const FunStats = () => {
       }))
       .sort((a, b) => parseFloat(b.winRate) - parseFloat(a.winRate));
     
-    // Top scoring results (2025+ data, min 3 matches)
-    const scoringResults = Object.values(duoStatsScorer)
+    // Top scoring results (min 3 matches)
+    const scoringResults = Object.values(duoStats)
       .filter(d => d.matches >= 3)
       .map(d => ({
         ...d,
@@ -471,8 +409,8 @@ export const FunStats = () => {
       }))
       .sort((a, b) => b.combinedGoals - a.combinedGoals);
     
-    // Most matches results (2026+ data, min 3 matches)
-    const matchesResults = Object.values(duoStatsTracker)
+    // Most matches results (min 3 matches)
+    const matchesResults = Object.values(duoStats)
       .filter(d => d.matches >= 3)
       .map(d => ({
         ...d,
@@ -485,15 +423,15 @@ export const FunStats = () => {
       topGoalScoring: scoringResults.slice(0, 10),
       mostMatches: matchesResults.slice(0, 10),
     };
-  }, [trackerMatches, scorerMatches]);
+  }, [selectedMatches]);
 
-  // ================== CLUTCH FACTOR (Decisive Scorers only) ==================
+  // ================== CLUTCH FACTOR (Decisive Scorers only, based on selected season) ==================
   const clutchFactor = useMemo(() => {
     if (!config.FUN_STATS?.enableClutchFactor) return null;
     
     const playerClutch = {};
     
-    allMatches.forEach(match => {
+    selectedMatches.forEach(match => {
       if (!isCloseMatch(match.scoreline)) return;
       
       const players = getPlayersFromAttendance(match.attendance);
@@ -521,7 +459,7 @@ export const FunStats = () => {
       });
     });
     
-    const closeMatchCount = allMatches.filter(m => isCloseMatch(m.scoreline)).length;
+    const closeMatchCount = selectedMatches.filter(m => isCloseMatch(m.scoreline)).length;
     
     const results = Object.entries(playerClutch)
       .filter(([, data]) => data.goalsInCloseGames > 0)
@@ -535,7 +473,7 @@ export const FunStats = () => {
       totalCloseMatches: closeMatchCount,
       topDecisiveScorers: results.slice(0, 15),
     };
-  }, [allMatches]);
+  }, [selectedMatches]);
 
   // Feature flags
   const enableColorStats = config.FUN_STATS?.enableColorStats !== false;
@@ -573,25 +511,23 @@ export const FunStats = () => {
           ))}
         </div>
         
-        {/* Season selector - for color stats only */}
-        {activeSubTab === "color-stats" && (
-          <div className="fun-stats-season-selector">
-            <label htmlFor="fun-stats-season">Season</label>
-            <div className="select-wrapper">
-              <select
-                id="fun-stats-season"
-                value={selectedSeason}
-                onChange={(e) => setSelectedSeason(e.target.value)}
-              >
-                <option value="all">All Seasons</option>
-                {availableSeasons.map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-              <span className="select-arrow">▼</span>
-            </div>
+        {/* Global Season selector - available on all tabs */}
+        <div className="fun-stats-season-selector">
+          <label htmlFor="fun-stats-season">Season</label>
+          <div className="select-wrapper">
+            <select
+              id="fun-stats-season"
+              value={selectedSeason}
+              onChange={(e) => setSelectedSeason(e.target.value)}
+            >
+              <option value="all">All Time</option>
+              {selectableSeasons.map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+            <span className="select-arrow">▼</span>
           </div>
-        )}
+        </div>
       </div>
 
       {/* ========== COLOR STATS ========== */}
@@ -600,7 +536,7 @@ export const FunStats = () => {
           <div className="section-header">
             <h2>🎨 Team Color Win Rates</h2>
             <p className="section-subtitle">
-              Which jersey color brings the best luck? ({allMatches.length} matches analyzed)
+              Which jersey color brings the best luck? ({matchCountLabel})
             </p>
           </div>
 
@@ -660,9 +596,7 @@ export const FunStats = () => {
           <div className="section-header">
             <h2>⚔️ Head to Head</h2>
             <p className="section-subtitle">
-              Select two players to compare their record
-              <br />
-              <small>(Data from {h2hSeasons.join(', ')} • {h2hMatches.length} matches)</small>
+              Select two players to compare their record ({matchCountLabel})
             </p>
           </div>
 
@@ -790,13 +724,13 @@ export const FunStats = () => {
         </div>
       )}
 
-      {/* ========== HOT STREAKS (2026+ data) ========== */}
+      {/* ========== HOT STREAKS ========== */}
       {activeSubTab === "hot-streaks" && enableHotStreaks && hotStreaks && (
         <div className="hot-streaks-section">
           <div className="section-header">
             <h2>🔥 Hot Streaks</h2>
             <p className="section-subtitle">
-              Who's riding the wave of momentum? ({hotStreaks.totalMatches} matches from 2026+)
+              Who's riding the wave of momentum? ({matchCountLabel})
             </p>
           </div>
 
@@ -866,14 +800,13 @@ export const FunStats = () => {
           <div className="section-header">
             <h2>🤝 Dream Team Duos</h2>
             <p className="section-subtitle">
-              Which player pairs dominate together? (Min 3 matches together)
+              Which player pairs dominate together? ({matchCountLabel}, min 3 matches)
             </p>
           </div>
 
           <div className="duos-grid">
             <div className="duo-card">
               <h3>🏆 Highest Win Rate</h3>
-              <p className="card-subtitle">2026+ data</p>
               <div className="duo-list">
                 {dreamTeamDuos.topWinRate.slice(0, 5).map((d, idx) => (
                   <div key={`${d.player1}-${d.player2}`} className={`duo-item ${idx === 0 ? 'top' : ''}`}>
@@ -894,7 +827,6 @@ export const FunStats = () => {
 
             <div className="duo-card">
               <h3>⚽ Top Scoring Duos</h3>
-              <p className="card-subtitle">2025+ data</p>
               <div className="duo-list">
                 {dreamTeamDuos.topGoalScoring.slice(0, 5).map((d, idx) => (
                   <div key={`${d.player1}-${d.player2}`} className={`duo-item ${idx === 0 ? 'top' : ''}`}>
@@ -915,7 +847,6 @@ export const FunStats = () => {
 
             <div className="duo-card">
               <h3>🎮 Most Games Together</h3>
-              <p className="card-subtitle">2026+ data</p>
               <div className="duo-list">
                 {dreamTeamDuos.mostMatches.slice(0, 5).map((d, idx) => (
                   <div key={`${d.player1}-${d.player2}`} className={`duo-item ${idx === 0 ? 'top' : ''}`}>
@@ -943,7 +874,7 @@ export const FunStats = () => {
           <div className="section-header">
             <h2>🎯 Decisive Scorers</h2>
             <p className="section-subtitle">
-              Who scores the most when games are tight? ({clutchFactor.totalCloseMatches} close matches with ≤2 goal margin)
+              Who scores the most when games are tight? ({clutchFactor.totalCloseMatches} close matches, ≤2 goal margin)
             </p>
           </div>
 

@@ -240,6 +240,46 @@
   color: var(--text-secondary);
 }
 
+.player-selector .select-wrapper {
+  position: relative;
+}
+
+.player-selector select {
+  width: 100%;
+  padding: 0.6rem 2.5rem 0.6rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: inherit;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: all 0.2s ease;
+}
+
+.player-selector select:hover {
+  border-color: var(--accent-primary);
+}
+
+.player-selector select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+.player-selector .select-arrow {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  pointer-events: none;
+}
+
 .vs-badge {
   font-size: 1.5rem;
   font-weight: 800;
@@ -541,15 +581,24 @@
   .h2h-selectors {
     flex-direction: column;
     align-items: stretch;
+    gap: 1rem;
   }
 
   .player-selector {
     min-width: 100%;
   }
 
+  .player-selector select {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
   .vs-badge {
     text-align: center;
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
+    padding: 0.35rem 0.75rem;
+    font-size: 1.25rem;
   }
 
   .h2h-versus-display {
