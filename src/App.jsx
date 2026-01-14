@@ -7,6 +7,7 @@ import { Insights } from "./Insights.jsx";
 import { ScoringTrends } from "./ScoringTrends.jsx";
 import { FunStats } from "./FunStats.jsx";
 import { MVPLeaderboard } from "./MVPLeaderboard.jsx";
+import { MatchEntry } from "./MatchEntry.jsx";
 import "./App.css";
 import "./FunStats.css";
 import { config } from "./leaderboard-config.js";
@@ -45,6 +46,12 @@ const getNavItems = () => [
       { id: "onloan-roster", label: "On Loan", icon: "🔄", enabled: true },
     ],
   },
+  {
+    group: "Admin",
+    items: [
+      { id: "match-entry", label: "Match Entry", icon: "📝", enabled: config.MATCH_ENTRY?.enabled },
+    ],
+  },
 ];
 
 function App() {
@@ -81,6 +88,7 @@ function App() {
       "weekend-roster": "Weekend Roster",
       "inactive-players": "Inactive Players",
       "onloan-roster": "On Loan Players",
+      "match-entry": "Match Data Entry Tool",
     };
     return subtitles[activeTab] || "Player Statistics";
   };
@@ -317,6 +325,8 @@ function App() {
             <Roster type="inactive" />
           ) : activeTab === "onloan-roster" ? (
             <Roster type="onloan" />
+          ) : activeTab === "match-entry" ? (
+            <MatchEntry />
           ) : null}
         </main>
 
