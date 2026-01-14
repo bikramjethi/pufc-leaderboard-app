@@ -2,9 +2,7 @@
   {
     "id": 1,
     "name": "Ashish",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 88,
     "wins": 42,
     "losses": 32,
@@ -16,9 +14,7 @@
   {
     "id": 2,
     "name": "Vinit",
-    "position": [
-      "CB"
-    ],
+    "position": ["DEF"],
     "matches": 81,
     "wins": 33,
     "losses": 38,
@@ -30,9 +26,7 @@
   {
     "id": 3,
     "name": "Subarna",
-    "position": [
-      "MID"
-    ],
+    "position": ["MID"],
     "matches": 76,
     "wins": 30,
     "losses": 34,
@@ -44,9 +38,7 @@
   {
     "id": 4,
     "name": "Prateek",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 74,
     "wins": 32,
     "losses": 30,
@@ -58,9 +50,7 @@
   {
     "id": 5,
     "name": "Rishav",
-    "position": [
-      "FWD"
-    ],
+    "position": ["FWD"],
     "matches": 72,
     "wins": 26,
     "losses": 35,
@@ -72,9 +62,7 @@
   {
     "id": 6,
     "name": "Jethi",
-    "position": [
-      "ALL"
-    ],
+    "position": ["MID"],
     "matches": 67,
     "wins": 34,
     "losses": 21,
@@ -86,9 +74,7 @@
   {
     "id": 7,
     "name": "Rohit Hyd",
-    "position": [
-      "MID"
-    ],
+    "position": ["MID"],
     "matches": 63,
     "wins": 25,
     "losses": 27,
@@ -100,9 +86,7 @@
   {
     "id": 8,
     "name": "Joe",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 60,
     "wins": 29,
     "losses": 21,
@@ -114,9 +98,7 @@
   {
     "id": 9,
     "name": "Tushar",
-    "position": [
-      "FWD"
-    ],
+    "position": ["FWD"],
     "matches": 59,
     "wins": 24,
     "losses": 25,
@@ -128,9 +110,7 @@
   {
     "id": 10,
     "name": "Vinay",
-    "position": [
-      "MID"
-    ],
+    "position": ["MID"],
     "matches": 57,
     "wins": 27,
     "losses": 22,
@@ -142,9 +122,7 @@
   {
     "id": 11,
     "name": "Animesh",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 52,
     "wins": 22,
     "losses": 24,
@@ -156,9 +134,7 @@
   {
     "id": 12,
     "name": "Pandey",
-    "position": [
-      "MID"
-    ],
+    "position": ["MID"],
     "matches": 44,
     "wins": 18,
     "losses": 22,
@@ -170,9 +146,7 @@
   {
     "id": 13,
     "name": "Sudeep",
-    "position": [
-      "FWD"
-    ],
+    "position": ["FWD"],
     "matches": 43,
     "wins": 15,
     "losses": 22,
@@ -184,9 +158,7 @@
   {
     "id": 14,
     "name": "Tushar Lal",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 37,
     "wins": 17,
     "losses": 14,
@@ -198,9 +170,7 @@
   {
     "id": 15,
     "name": "Sourabh",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 31,
     "wins": 17,
     "losses": 7,
@@ -212,9 +182,7 @@
   {
     "id": 16,
     "name": "Rohit Gautam",
-    "position": [
-      "MID"
-    ],
+    "position": ["MID"],
     "matches": 41,
     "wins": 20,
     "losses": 13,
@@ -226,9 +194,7 @@
   {
     "id": 17,
     "name": "Ammar",
-    "position": [
-      "MID"
-    ],
+    "position": ["MID"],
     "matches": 38,
     "wins": 18,
     "losses": 14,
@@ -240,9 +206,7 @@
   {
     "id": 18,
     "name": "Subbu",
-    "position": [
-      "FWD"
-    ],
+    "position": ["FWD"],
     "matches": 37,
     "wins": 14,
     "losses": 18,
@@ -254,9 +218,7 @@
   {
     "id": 19,
     "name": "Savan",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 34,
     "wins": 8,
     "losses": 19,
@@ -268,9 +230,7 @@
   {
     "id": 20,
     "name": "Deepak",
-    "position": [
-      "FWD"
-    ],
+    "position": ["FWD"],
     "matches": 29,
     "wins": 12,
     "losses": 13,
@@ -282,9 +242,7 @@
   {
     "id": 21,
     "name": "Vivek",
-    "position": [
-      "MID"
-    ],
+    "position": ["MID"],
     "matches": 19,
     "wins": 8,
     "losses": 6,
@@ -296,9 +254,7 @@
   {
     "id": 22,
     "name": "Vikalp",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 14,
     "wins": 6,
     "losses": 4,
@@ -310,9 +266,7 @@
   {
     "id": 23,
     "name": "Aayush",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 48,
     "wins": 20,
     "losses": 19,
@@ -324,9 +278,7 @@
   {
     "id": 24,
     "name": "Lalit",
-    "position": [
-      "FWD"
-    ],
+    "position": ["FWD"],
     "matches": 29,
     "wins": 12,
     "losses": 14,
@@ -338,9 +290,7 @@
   {
     "id": 25,
     "name": "Akshat",
-    "position": [
-      "MID"
-    ],
+    "position": ["MID"],
     "matches": 29,
     "wins": 14,
     "losses": 11,
@@ -352,9 +302,7 @@
   {
     "id": 26,
     "name": "John",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 28,
     "wins": 13,
     "losses": 12,
@@ -366,9 +314,7 @@
   {
     "id": 27,
     "name": "Nadeem",
-    "position": [
-      "GK"
-    ],
+    "position": ["GK"],
     "matches": 24,
     "wins": 11,
     "losses": 9,
@@ -380,9 +326,7 @@
   {
     "id": 28,
     "name": "David",
-    "position": [
-      "FWD"
-    ],
+    "position": ["FWD"],
     "matches": 21,
     "wins": 3,
     "losses": 15,
@@ -394,9 +338,7 @@
   {
     "id": 29,
     "name": "Vikas",
-    "position": [
-      "DEF"
-    ],
+    "position": ["DEF"],
     "matches": 19,
     "wins": 6,
     "losses": 11,
@@ -408,9 +350,7 @@
   {
     "id": 30,
     "name": "Aniket",
-    "position": [
-      "FWD"
-    ],
+    "position": ["FWD"],
     "matches": 10,
     "wins": 5,
     "losses": 5,
@@ -422,9 +362,7 @@
   {
     "id": 31,
     "name": "Raghav",
-    "position": [
-      "GK"
-    ],
+    "position": ["GK"],
     "matches": 13,
     "wins": 6,
     "losses": 6,
@@ -436,9 +374,7 @@
   {
     "id": 32,
     "name": "Soumyadeep",
-    "position": [
-      "FWD"
-    ],
+    "position": ["FWD"],
     "matches": 13,
     "wins": 7,
     "losses": 5,

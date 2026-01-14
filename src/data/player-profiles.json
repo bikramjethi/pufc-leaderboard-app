@@ -79,8 +79,8 @@
   {
     "name": "Lalit",
     "position": [
-      "LB",
-      "LW"
+      "DEF",
+      "FWD"
     ],
     "groupAvailibility": "MIDWEEK"
   },
@@ -227,7 +227,7 @@
   {
     "name": "Vinit",
     "position": [
-      "CB"
+      "DEF"
     ],
     "groupAvailibility": "ALLGAMES"
   },
@@ -248,21 +248,21 @@
   {
     "name": "Rahul Dhek",
     "position": [
-      "LW"
+      "FWD"
     ],
     "groupAvailibility": "N/A"
   },
   {
     "name": "Tejas",
     "position": [
-      "RB"
+      "DEF"
     ],
     "groupAvailibility": "ONLOAN"
   },
   {
     "name": "Suyash",
     "position": [
-      "LW"
+      "FWD"
     ],
     "groupAvailibility": "ONLOAN"
   },
@@ -290,7 +290,7 @@
   },
   {
     "name": "Alan",
-    "position": ["LB", "LW"],
+    "position": ["DEF", "FWD"],
     "groupAvailibility": "ONLOAN"
   },
   {
@@ -300,11 +300,11 @@
   },
   {
     "name": "Mani",
-    "position": ["ST"],
+    "position": ["FWD"],
     "groupAvailibility": "N/A"
   },
   {
-    "name": "Matthew",
+    "name": "Mathew",
     "position": ["FWD"],
     "groupAvailibility": "MIDWEEK"
   },

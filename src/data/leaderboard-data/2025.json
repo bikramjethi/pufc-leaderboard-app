@@ -31,7 +31,7 @@
     "id": 3,
     "name": "Vinit",
     "position": [
-      "CB"
+      "DEF"
     ],
     "matches": 74,
     "wins": 27,
@@ -74,7 +74,7 @@
     "name": "Joe",
     "position": [
       "GK",
-      "ST"
+      "FWD"
     ],
     "matches": 67,
     "wins": 25,
@@ -172,7 +172,8 @@
     "id": 13,
     "name": "Jethi",
     "position": [
-      "all"
+      "FWD",
+      "MID"
     ],
     "matches": 48,
     "wins": 32,
@@ -368,8 +369,8 @@
     "id": 27,
     "name": "Lalit",
     "position": [
-      "LB",
-      "LW"
+      "DEF",
+      "FWD"
     ],
     "matches": 36,
     "wins": 22,

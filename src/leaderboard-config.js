@@ -63,5 +63,27 @@ export const config = {
     enableScorersTrend: true,   // Show/hide the "Scorers Trend" sub-tab (weekly top scorers table)
     enableScoringDiffs: true,   // Show/hide the "Scoring Diffs" sub-tab (goal differences view)
   },
+
+  // Fun Stats Settings
+  FUN_STATS: {
+    enabled: false,                     // Show/hide the Fun Stats tab
+    seasons: ["2025", "2026"],         // Seasons with per-match data available (auto-picks up new years)
+    defaultSeason: "all",              // Default: "all" for combined, or specific year
+    enableColorStats: true,            // Show/hide the Color Win Rates feature
+    enableHeadToHead: true,            // Show/hide the Head-to-Head comparison feature
+    headToHeadSeasons: ["2026"],       // Seasons with detailed per-match data for H2H (2026+)
+    
+    // Additional Fun Stats Features
+    enableHotStreaks: true,            // 🔥 Player winning/scoring streaks (2026+ data only)
+    enableDreamTeamDuos: true,         // 🤝 Best performing player pairs
+    enableClutchFactor: true,          // 🎯 Decisive scorers in close games (≤2 goal margin)
+  },
+
+  // MVP Leaderboard Settings
+  MVP_LEADERBOARD: {
+    enabled: false,                     // Show/hide the MVP Leaderboard tab
+    seasons: ["2024", "2025", "2026"], // Available seasons for MVP calculation
+    defaultSeason: "all",              // Default season ("all" for All Time, or specific year)
+  },
 };
 
