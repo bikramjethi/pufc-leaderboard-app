@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
-import matchData2026 from "./data/attendance-data/2026.json";
-import { config } from "./leaderboard-config.js";
-import { FieldViewModal } from "./FieldViewModal.jsx";
+import matchData2026 from "../../data/attendance-data/2026.json";
+import { config } from "../../leaderboard-config.js";
+import { FieldViewModal } from "../field-view-modal";
 
 const matchDataByYear = {
   2026: matchData2026,

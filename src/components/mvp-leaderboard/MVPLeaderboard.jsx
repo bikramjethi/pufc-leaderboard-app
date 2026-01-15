@@ -1,13 +1,13 @@
 import { useState, useMemo } from "react";
-import { config } from "./leaderboard-config.js";
+import { config } from "../../leaderboard-config.js";
 import { 
   calculateMultiSeasonMVP, 
   MVP_WEIGHTS,
-} from "./utils/position-weights.js";
-import "./FunStats.css"; // Reuse MVP styles from FunStats.css
+} from "../../utils/position-weights.js";
+import "../fun-stats/FunStats.css"; // Reuse MVP styles from FunStats.css
 
 // Import leaderboard data for MVP calculations
-const leaderboardDataModules = import.meta.glob('./data/leaderboard-data/20*.json', { eager: true });
+const leaderboardDataModules = import.meta.glob('../../data/leaderboard-data/20*.json', { eager: true });
 
 // Build leaderboardDataByYear object from imported modules
 const leaderboardDataByYear = {};

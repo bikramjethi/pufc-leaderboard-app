@@ -8,7 +8,7 @@ const TEAM_COLORS = ["RED", "BLUE", "BLACK", "WHITE", "YELLOW"];
 const POSITIONS = ["GK", "RB", "CB", "LB", "RM", "CM", "LM", "ST"];
 
 // Load player profiles dynamically
-import playerProfiles from "./data/player-profiles.json";
+import playerProfiles from "../../data/player-profiles.json";
 
 // Dynamically import all available attendance data files
 const attendanceDataModules = import.meta.glob('./data/attendance-data/20*.json', { eager: true });

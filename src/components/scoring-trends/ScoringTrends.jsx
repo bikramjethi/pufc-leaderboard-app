@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { config } from "./leaderboard-config.js";
-import matchData2026 from "./data/attendance-data/2026.json";
-import matchData2025 from "./data/attendance-data/2025.json";
+import { config } from "../../leaderboard-config.js";
+import matchData2026 from "../../data/attendance-data/2026.json";
+import matchData2025 from "../../data/attendance-data/2025.json";
 
 const matchDataByYear = {
   2026: matchData2026,

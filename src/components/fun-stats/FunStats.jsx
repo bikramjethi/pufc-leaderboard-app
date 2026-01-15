@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
-import { config } from "./leaderboard-config.js";
+import { config } from "../../leaderboard-config.js";
 import "./FunStats.css";
 
 // Dynamically import all available match data files
 // This pattern allows automatic pickup of new season files (2027, 2028, etc.)
-const matchDataModules = import.meta.glob('./data/attendance-data/20*.json', { eager: true });
+const matchDataModules = import.meta.glob('../../data/attendance-data/20*.json', { eager: true });
 
 // Build matchDataByYear object from imported modules
 const matchDataByYear = {};
@@ -773,3 +773,4 @@ export const FunStats = () => {
     </div>
   );
 };
+

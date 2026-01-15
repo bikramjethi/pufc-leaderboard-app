@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
-import attendanceLeaderboardData2025 from "./data/attendance-data/leaderboard/2025.json";
-import attendanceLeaderboardData2026 from "./data/attendance-data/leaderboard/2026.json";
+import attendanceLeaderboardData2025 from "../../data/attendance-data/leaderboard/2025.json";
+import attendanceLeaderboardData2026 from "../../data/attendance-data/leaderboard/2026.json";
 
 const attendanceLeaderboardDataByYear = {
   2025: attendanceLeaderboardData2025,

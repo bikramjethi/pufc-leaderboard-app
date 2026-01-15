@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react";
-import { leaderboardData } from "./utils/get-data.js";
-import { config } from "./leaderboard-config.js";
-import matchData2026 from "./data/attendance-data/2026.json";
-import attendanceLeaderboard2025 from "./data/attendance-data/leaderboard/2025.json";
-import attendanceLeaderboard2026 from "./data/attendance-data/leaderboard/2026.json";
-import { trivia2024 } from "./data/insights/2024.js";
-import { trivia2025 } from "./data/insights/2025.js";
-import { trivia2026 } from "./data/insights/2026.js";
+import { leaderboardData } from "../../utils/get-data.js";
+import { config } from "../../leaderboard-config.js";
+import matchData2026 from "../../data/attendance-data/2026.json";
+import attendanceLeaderboard2025 from "../../data/attendance-data/leaderboard/2025.json";
+import attendanceLeaderboard2026 from "../../data/attendance-data/leaderboard/2026.json";
+import { trivia2024 } from "../../data/insights/2024.js";
+import { trivia2025 } from "../../data/insights/2025.js";
+import { trivia2026 } from "../../data/insights/2026.js";
 
 const triviaByYear = {
   2024: trivia2024,

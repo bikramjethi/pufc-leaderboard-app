@@ -1,9 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import { Row } from "./Row.jsx";
 import { ComparePanel } from "./ComparePanel.jsx";
-import { PlayerModal } from "./PlayerModal.jsx";
-import { config } from "./leaderboard-config.js";
-import { tickerMessages } from "./ticker-messages.js";
+import { PlayerModal } from "../player-modal";
+import { config } from "../../leaderboard-config.js";
+import { tickerMessages } from "../../ticker-messages.js";
 
 const baseColumns = [
   { key: "name", label: "Player", className: "player-col", sortable: true, tooltip: "Player Name" },

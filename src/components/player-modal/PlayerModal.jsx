@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getPlayerImage } from "./utils/playerImages";
+import { getPlayerImage } from "../../utils/playerImages";
 
 export const PlayerModal = ({ player, allSeasonData, isAllTime = false, onClose }) => {
   // Close on Escape key

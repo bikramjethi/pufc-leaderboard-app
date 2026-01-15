@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AttendanceLeaderboard } from "./AttendanceLeaderboard.jsx";
-import { config } from "./leaderboard-config.js";
+import { config } from "../../leaderboard-config.js";
 
 // Get available years from config
 const leaderboardYears = config.ATTENDANCE?.LEADERBOARD?.seasons || ["2025", "2026"];

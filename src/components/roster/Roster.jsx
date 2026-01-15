@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import playerProfiles from "./data/player-profiles.json";
+import playerProfiles from "../../data/player-profiles.json";
 
 const positionOrder = { GK: 0, DEF: 1, MID: 2, FWD: 3, ALL: 4 };
 
