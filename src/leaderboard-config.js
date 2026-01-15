@@ -64,14 +64,20 @@ export const config = {
     enableScoringDiffs: true,   // Show/hide the "Scoring Diffs" sub-tab (goal differences view)
   },
 
+  // Head to Head Settings (Standalone Tab)
+  H2H: {
+    enabled: false,                     // Show/hide the H2H tab
+    seasons: ["2025", "2026"],         // Seasons with per-match data available
+    defaultSeason: "all",              // Default: "all" for combined, or specific year
+    requiresBackfill: true,            // 2025 data must have isBackfilled: true
+  },
+
   // Fun Stats Settings
   FUN_STATS: {
     enabled: false,                     // Show/hide the Fun Stats tab
     seasons: ["2025", "2026"],         // Seasons with per-match data available (auto-picks up new years)
     defaultSeason: "all",              // Default: "all" for combined, or specific year
     enableColorStats: true,            // Show/hide the Color Win Rates feature
-    enableHeadToHead: true,            // Show/hide the Head-to-Head comparison feature
-    headToHeadSeasons: ["2026"],       // Seasons with detailed per-match data for H2H (2026+)
     
     // Additional Fun Stats Features
     enableHotStreaks: true,            // 🔥 Player winning/scoring streaks (2026+ data only)
@@ -83,7 +89,6 @@ export const config = {
     // false = include all 2025 matches (scoreline data is sufficient)
     requiresBackfill: {
       colorStats: false,               // Scoreline data is sufficient for color win rates
-      headToHead: true,                // Requires complete player attendance data
       hotStreaks: true,                // Requires complete player attendance data
       duosWinRate: true,               // Requires complete attendance for team composition
       duosTopScoring: false,           // Scorer info is captured accurately
@@ -103,6 +108,16 @@ export const config = {
   MATCH_ENTRY: {
     enabled: false,                     // Show/hide the Match Entry tab (admin tool)
     backfillYear: 2026,                // Years before this are marked as backfilled
+  },
+
+  // Defenders Corner Settings
+  DEFENDERS_CORNER: {
+    enabled: false,                     // Show/hide the Defenders Corner tab
+    seasons: ["2024", "2025", "2026"], // Available seasons for defender stats
+    trackerSeasons: ["2025", "2026"],  // Seasons with per-match tracker data
+    defaultSeason: "all",              // Default season ("all" for All Time)
+    minMatches: 5,                     // Minimum matches for leaderboard eligibility
+    defenderPositions: ["DEF", "GK", "CB", "LB", "RB", "LWB", "RWB"], // Positions considered as defenders
   },
 };
 
