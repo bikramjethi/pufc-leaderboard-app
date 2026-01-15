@@ -377,6 +377,18 @@
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.head-to-head .history-score .team-score {
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.head-to-head .history-score .winner-score {
+  color: var(--accent-primary);
 }
 
 .head-to-head .history-goals {

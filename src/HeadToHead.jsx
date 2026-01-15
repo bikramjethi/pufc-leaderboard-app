@@ -310,9 +310,27 @@ export const HeadToHead = () => {
                         )}
                       </div>
                       <div className="history-score">
-                        {Object.entries(match.scoreline).map(([team, score], i) => (
-                          <span key={team}>{i > 0 && ' - '}<span className="team-score">{score}</span></span>
-                        ))}
+                        {match.sameTeam ? (
+                          // When on same team, show their team score vs opponent score
+                          <>
+                            <span className="team-score">{match.scoreline[match.p1Team]}</span>
+                            <span> - </span>
+                            <span className="team-score">
+                              {match.scoreline[Object.keys(match.scoreline).find(t => t !== match.p1Team)]}
+                            </span>
+                          </>
+                        ) : (
+                          // When opposing, show player1's team score first, then player2's
+                          <>
+                            <span className={`team-score ${match.result === 'p1win' ? 'winner-score' : ''}`}>
+                              {match.scoreline[match.p1Team]}
+                            </span>
+                            <span> - </span>
+                            <span className={`team-score ${match.result === 'p2win' ? 'winner-score' : ''}`}>
+                              {match.scoreline[match.p2Team]}
+                            </span>
+                          </>
+                        )}
                       </div>
                       <div className="history-goals">
                         {match.p1Goals > 0 && <span className="goal-badge">{player1}: ⚽{match.p1Goals}</span>}
