@@ -292,7 +292,17 @@ export const HeadToHead = () => {
               <div className="h2h-card history">
                 <h3>📜 Match History</h3>
                 <div className="match-history-list">
-                  {h2hStats.matchDetails.slice().reverse().map((match, idx) => (
+                  {h2hStats.matchDetails
+                    .slice()
+                    .sort((a, b) => {
+                      // Parse DD/MM/YYYY format and sort descending (most recent first)
+                      const [dayA, monthA, yearA] = a.date.split('/').map(Number);
+                      const [dayB, monthB, yearB] = b.date.split('/').map(Number);
+                      const dateA = new Date(yearA, monthA - 1, dayA);
+                      const dateB = new Date(yearB, monthB - 1, dayB);
+                      return dateB - dateA;
+                    })
+                    .map((match, idx) => (
                     <div key={idx} className={`history-item ${match.result}`}>
                       <div className="history-date">
                         <span className="date">{match.date}</span>
