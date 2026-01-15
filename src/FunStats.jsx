@@ -84,21 +84,6 @@ const getPlayersFromAttendance = (attendance) => {
   return players;
 };
 
-// Helper to get unique player names across all matches (excluding "Others" and patterns like "David+1")
-const getAllPlayerNames = (matches) => {
-  const names = new Set();
-  matches.forEach(match => {
-    if (match.attendance) {
-      getPlayersFromAttendance(match.attendance).forEach(p => {
-        if (isTrackablePlayer(p.name)) {
-          names.add(p.name);
-        }
-      });
-    }
-  });
-  return Array.from(names).sort();
-};
-
 // Color configuration for display
 const colorConfig = {
   RED: { bg: '#dc2626', text: '#fff', name: 'Red' },
@@ -116,7 +101,6 @@ export const FunStats = () => {
   // Determine first enabled tab
   const getDefaultTab = () => {
     if (config.FUN_STATS?.enableColorStats) return "color-stats";
-    if (config.FUN_STATS?.enableHeadToHead) return "head-to-head";
     if (config.FUN_STATS?.enableHotStreaks) return "hot-streaks";
     if (config.FUN_STATS?.enableDreamTeamDuos) return "dream-duos";
     if (config.FUN_STATS?.enableClutchFactor) return "clutch-factor";
@@ -124,8 +108,6 @@ export const FunStats = () => {
   };
   
   const [activeSubTab, setActiveSubTab] = useState(getDefaultTab());
-  const [player1, setPlayer1] = useState("");
-  const [player2, setPlayer2] = useState("");
 
   // Get backfill requirements from config
   const backfillReqs = config.FUN_STATS?.requiresBackfill || {};
@@ -138,14 +120,6 @@ export const FunStats = () => {
     }
     return getValidMatches(selectedSeason, req);
   }, [selectedSeason, selectableSeasons, backfillReqs.colorStats]);
-  
-  const h2hMatches = useMemo(() => {
-    const req = backfillReqs.headToHead ?? true;
-    if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year, req));
-    }
-    return getValidMatches(selectedSeason, req);
-  }, [selectedSeason, selectableSeasons, backfillReqs.headToHead]);
   
   const streakMatches = useMemo(() => {
     const req = backfillReqs.hotStreaks ?? true;
@@ -187,15 +161,11 @@ export const FunStats = () => {
     }
     return getValidMatches(selectedSeason, req);
   }, [selectedSeason, selectableSeasons, backfillReqs.duosMostGames]);
-
-  // For player selection in H2H, use h2h matches
-  const allPlayers = useMemo(() => getAllPlayerNames(h2hMatches), [h2hMatches]);
   
   // Get match count label based on active tab
   const getMatchCountLabel = () => {
     switch (activeSubTab) {
       case "color-stats": return `${colorStatsMatches.length} matches`;
-      case "head-to-head": return `${h2hMatches.length} matches`;
       case "hot-streaks": return `${streakMatches.length} matches`;
       case "dream-duos": return "various data sources";
       case "clutch-factor": return `${clutchMatches.length} matches`;
@@ -252,82 +222,6 @@ export const FunStats = () => {
       })
       .sort((a, b) => b.winPct - a.winPct);
   }, [colorStatsMatches]);
-
-  // Calculate head-to-head stats between two players based on selected season
-  const h2hStats = useMemo(() => {
-    if (!player1 || !player2 || player1 === player2) {
-      return null;
-    }
-
-    const stats = {
-      player1: { name: player1, wins: 0, losses: 0, draws: 0, goals: 0, matches: 0 },
-      player2: { name: player2, wins: 0, losses: 0, draws: 0, goals: 0, matches: 0 },
-      together: { wins: 0, losses: 0, draws: 0, matches: 0, goals: 0 },
-      matchDetails: [],
-    };
-
-    h2hMatches.forEach(match => {
-      const players = getPlayersFromAttendance(match.attendance);
-      const p1Data = players.find(p => p.name === player1);
-      const p2Data = players.find(p => p.name === player2);
-      
-      if (!p1Data || !p2Data) return;
-      
-      const winningTeam = getWinningTeam(match.scoreline);
-      const sameTeam = p1Data.team === p2Data.team;
-      
-      const matchDetail = {
-        date: match.date,
-        day: match.day,
-        sameTeam,
-        p1Team: p1Data.team,
-        p2Team: p2Data.team,
-        p1Goals: p1Data.goals || 0,
-        p2Goals: p2Data.goals || 0,
-        scoreline: match.scoreline,
-        result: null,
-      };
-      
-      if (sameTeam) {
-        stats.together.matches += 1;
-        stats.together.goals += (p1Data.goals || 0) + (p2Data.goals || 0);
-        
-        if (winningTeam === 'DRAW') {
-          stats.together.draws += 1;
-          matchDetail.result = 'draw';
-        } else if (winningTeam === p1Data.team) {
-          stats.together.wins += 1;
-          matchDetail.result = 'win';
-        } else {
-          stats.together.losses += 1;
-          matchDetail.result = 'loss';
-        }
-      } else {
-        stats.player1.matches += 1;
-        stats.player2.matches += 1;
-        stats.player1.goals += p1Data.goals || 0;
-        stats.player2.goals += p2Data.goals || 0;
-        
-        if (winningTeam === 'DRAW') {
-          stats.player1.draws += 1;
-          stats.player2.draws += 1;
-          matchDetail.result = 'draw';
-        } else if (winningTeam === p1Data.team) {
-          stats.player1.wins += 1;
-          stats.player2.losses += 1;
-          matchDetail.result = 'p1win';
-        } else {
-          stats.player1.losses += 1;
-          stats.player2.wins += 1;
-          matchDetail.result = 'p2win';
-        }
-      }
-      
-      stats.matchDetails.push(matchDetail);
-    });
-
-    return stats;
-  }, [player1, player2, h2hMatches]);
 
   // ================== HOT STREAKS (based on selected season) ==================
   const hotStreaks = useMemo(() => {
@@ -557,7 +451,6 @@ export const FunStats = () => {
 
   // Feature flags
   const enableColorStats = config.FUN_STATS?.enableColorStats !== false;
-  const enableHeadToHead = config.FUN_STATS?.enableHeadToHead !== false;
   const enableHotStreaks = config.FUN_STATS?.enableHotStreaks !== false;
   const enableDreamDuos = config.FUN_STATS?.enableDreamTeamDuos !== false;
   const enableClutch = config.FUN_STATS?.enableClutchFactor !== false;
@@ -569,7 +462,6 @@ export const FunStats = () => {
   // Build tabs list based on enabled features
   const tabs = [
     { id: "color-stats", label: "🎨 Colors", enabled: enableColorStats },
-    { id: "head-to-head", label: "⚔️ H2H", enabled: enableHeadToHead },
     { id: "hot-streaks", label: "🔥 Streaks", enabled: enableHotStreaks },
     { id: "dream-duos", label: "🤝 Duos", enabled: enableDreamDuos },
     { id: "clutch-factor", label: "🎯 Clutch", enabled: enableClutch },
@@ -667,140 +559,6 @@ export const FunStats = () => {
               );
             })}
           </div>
-        </div>
-      )}
-
-      {/* ========== HEAD TO HEAD ========== */}
-      {activeSubTab === "head-to-head" && enableHeadToHead && (
-        <div className="h2h-section">
-          <div className="section-header">
-            <h2>⚔️ Head to Head</h2>
-            <p className="section-subtitle">
-              Select two players to compare their record ({matchCountLabel})
-            </p>
-          </div>
-
-          <div className="h2h-selectors">
-            <div className="player-selector">
-              <label htmlFor="player1-select">Player 1</label>
-              <div className="select-wrapper">
-                <select id="player1-select" value={player1} onChange={(e) => setPlayer1(e.target.value)}>
-                  <option value="">Select player...</option>
-                  {allPlayers.filter(p => p !== player2).map(name => (
-                    <option key={name} value={name}>{name}</option>
-                  ))}
-                </select>
-                <span className="select-arrow">▼</span>
-              </div>
-            </div>
-
-            <div className="vs-badge">VS</div>
-
-            <div className="player-selector">
-              <label htmlFor="player2-select">Player 2</label>
-              <div className="select-wrapper">
-                <select id="player2-select" value={player2} onChange={(e) => setPlayer2(e.target.value)}>
-                  <option value="">Select player...</option>
-                  {allPlayers.filter(p => p !== player1).map(name => (
-                    <option key={name} value={name}>{name}</option>
-                  ))}
-                </select>
-                <span className="select-arrow">▼</span>
-              </div>
-            </div>
-          </div>
-
-          {h2hStats && (
-            <div className="h2h-results">
-              {h2hStats.player1.matches > 0 && (
-                <div className="h2h-card versus">
-                  <h3>⚔️ Against Each Other</h3>
-                  <div className="h2h-versus-display">
-                    <div className={`player-stats ${h2hStats.player1.wins > h2hStats.player2.wins ? 'winner' : ''}`}>
-                      <span className="player-name">{player1}</span>
-                      <span className="player-wins">{h2hStats.player1.wins} wins</span>
-                      <span className="player-goals">{h2hStats.player1.goals} goals</span>
-                    </div>
-                    <div className="versus-center">
-                      <span className="draws-count">{h2hStats.player1.draws} draws</span>
-                      <span className="matches-count">{h2hStats.player1.matches} matches</span>
-                    </div>
-                    <div className={`player-stats ${h2hStats.player2.wins > h2hStats.player1.wins ? 'winner' : ''}`}>
-                      <span className="player-name">{player2}</span>
-                      <span className="player-wins">{h2hStats.player2.wins} wins</span>
-                      <span className="player-goals">{h2hStats.player2.goals} goals</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {h2hStats.together.matches > 0 && (
-                <div className="h2h-card together">
-                  <h3>🤝 Playing Together</h3>
-                  <div className="together-stats">
-                    <div className="together-record">
-                      <span className="record-win">{h2hStats.together.wins}W</span>
-                      <span className="record-draw">{h2hStats.together.draws}D</span>
-                      <span className="record-loss">{h2hStats.together.losses}L</span>
-                    </div>
-                    <div className="together-details">
-                      <span>{h2hStats.together.matches} matches</span>
-                      <span>{h2hStats.together.goals} combined goals</span>
-                      <span>{((h2hStats.together.wins / h2hStats.together.matches) * 100).toFixed(0)}% win rate</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {h2hStats.matchDetails.length > 0 && (
-                <div className="h2h-card history">
-                  <h3>📜 Match History</h3>
-                  <div className="match-history-list">
-                    {h2hStats.matchDetails.slice().reverse().map((match, idx) => (
-                      <div key={idx} className={`history-item ${match.result}`}>
-                        <div className="history-date">
-                          <span className="date">{match.date}</span>
-                          <span className="day-badge">{match.day}</span>
-                        </div>
-                        <div className="history-teams">
-                          {match.sameTeam ? (
-                            <span className="same-team">{player1} & {player2} ({match.p1Team})</span>
-                          ) : (
-                            <span className="versus-teams">
-                              <span className={match.result === 'p1win' ? 'winner' : ''}>{player1} ({match.p1Team})</span>
-                              <span className="vs">vs</span>
-                              <span className={match.result === 'p2win' ? 'winner' : ''}>{player2} ({match.p2Team})</span>
-                            </span>
-                          )}
-                        </div>
-                        <div className="history-score">
-                          {Object.entries(match.scoreline).map(([team, score], i) => (
-                            <span key={team}>{i > 0 && ' - '}<span className="team-score">{score}</span></span>
-                          ))}
-                        </div>
-                        <div className="history-goals">
-                          {match.p1Goals > 0 && <span className="goal-badge">{player1}: ⚽{match.p1Goals}</span>}
-                          {match.p2Goals > 0 && <span className="goal-badge">{player2}: ⚽{match.p2Goals}</span>}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {h2hStats.matchDetails.length === 0 && (
-                <div className="no-data-message">
-                  <p>No matches found where both players participated.</p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {(!player1 || !player2) && (
-            <div className="no-data-message">
-              <p>Select two players to see their head-to-head record.</p>
-            </div>
-          )}
         </div>
       )}
 
