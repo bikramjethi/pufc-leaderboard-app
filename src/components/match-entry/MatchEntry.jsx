@@ -11,7 +11,7 @@ const POSITIONS = ["GK", "RB", "CB", "LB", "RM", "CM", "LM", "ST"];
 import playerProfiles from "../../data/player-profiles.json";
 
 // Dynamically import all available attendance data files
-const attendanceDataModules = import.meta.glob('./data/attendance-data/20*.json', { eager: true });
+const attendanceDataModules = import.meta.glob('../../data/attendance-data/20*.json', { eager: true });
 
 // Build attendanceDataByYear object from imported modules
 const attendanceDataByYear = {};
