@@ -43,7 +43,7 @@ export const config = {
       enabled: true,                    // Show/hide the Tracker sub-tab
       seasons: ["2026"],                // Available seasons (per-match data starts from 2026)
       defaultSeason: "2026",            // Default season to load
-      enableFieldViewModal: false,      // Show field view modal when clicking match headers
+      enableFieldViewModal: true,      // Show field view modal when clicking match headers
     },
   },
 
