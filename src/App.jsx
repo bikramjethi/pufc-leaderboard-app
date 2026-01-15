@@ -10,6 +10,7 @@ import { HeadToHead } from "./components/head-to-head";
 import { MVPLeaderboard } from "./components/mvp-leaderboard";
 import { MatchEntry } from "./components/match-entry";
 import { DefendersCorner } from "./components/defenders-corner";
+import { CreateLineup } from "./components/create-lineup";
 import "./App.css";
 import "./components/fun-stats/FunStats.css";
 import { config } from "./leaderboard-config.js";
@@ -54,6 +55,7 @@ const getNavItems = () => [
     group: "Admin",
     items: [
       { id: "match-entry", label: "Match Entry", icon: "📝", enabled: config.MATCH_ENTRY?.enabled },
+      { id: "create-lineup", label: "Create Lineup", icon: "⚽", enabled: config.CREATE_LINEUP?.enabled },
     ],
   },
 ];
@@ -95,6 +97,7 @@ function App() {
       "inactive-players": "Inactive Players",
       "onloan-roster": "On Loan Players",
       "match-entry": "Match Data Entry Tool",
+      "create-lineup": "Create Lineup",
     };
     return subtitles[activeTab] || "Player Statistics";
   };
@@ -337,6 +340,8 @@ function App() {
             <Roster type="onloan" />
           ) : activeTab === "match-entry" ? (
             <MatchEntry />
+          ) : activeTab === "create-lineup" ? (
+            <CreateLineup />
           ) : null}
         </main>
 
