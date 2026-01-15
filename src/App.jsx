@@ -9,6 +9,7 @@ import { FunStats } from "./components/fun-stats";
 import { HeadToHead } from "./components/head-to-head";
 import { MVPLeaderboard } from "./components/mvp-leaderboard";
 import { MatchEntry } from "./components/match-entry";
+import { DefendersCorner } from "./components/defenders-corner";
 import "./App.css";
 import "./components/fun-stats/FunStats.css";
 import { config } from "./leaderboard-config.js";
@@ -30,6 +31,7 @@ const getNavItems = () => [
       { id: "fun-stats", label: "Fun Stats", icon: "🎲", enabled: config.FUN_STATS?.enabled },
       { id: "h2h", label: "Head to Head", icon: "⚔️", enabled: config.H2H?.enabled },
       { id: "mvp-leaderboard", label: "MVP Leaderboard", icon: "🏆", enabled: config.MVP_LEADERBOARD?.enabled },
+      { id: "defenders-corner", label: "Defenders Corner", icon: "🛡️", enabled: config.DEFENDERS_CORNER?.enabled },
     ],
   },
   {
@@ -87,6 +89,7 @@ function App() {
       "fun-stats": "Fun Stats",
       "h2h": "Head to Head Comparison",
       "mvp-leaderboard": "MVP Leaderboard",
+      "defenders-corner": "Defenders Corner",
       "midweek-roster": "Midweek Roster",
       "weekend-roster": "Weekend Roster",
       "inactive-players": "Inactive Players",
@@ -322,6 +325,8 @@ function App() {
           <HeadToHead />
         ) : activeTab === "mvp-leaderboard" ? (
           <MVPLeaderboard />
+        ) : activeTab === "defenders-corner" ? (
+          <DefendersCorner />
         ) : activeTab === "midweek-roster" ? (
             <Roster type="midweek" />
           ) : activeTab === "weekend-roster" ? (
