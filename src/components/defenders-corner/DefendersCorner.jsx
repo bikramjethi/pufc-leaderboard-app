@@ -252,34 +252,30 @@ export const DefendersCorner = () => {
       }));
   }, [allTrackerMatches]);
 
-  // ==================== OWN GOAL LEADERS (ALL PLAYERS - FROM LEADERBOARD DATA) ====================
+  // ==================== OWN GOAL LEADERS (ALL PLAYERS - FROM TRACKER DATA) ====================
   const ownGoalLeaders = useMemo(() => {
-    const seasonsToUse = selectedSeason === "all" ? leaderboardSeasons : [selectedSeason];
     const playerStats = {};
 
-    seasonsToUse.forEach(year => {
-      const yearData = leaderboardDataByYear[year];
-      if (!yearData) return;
-
-      yearData.forEach(player => {
-        if (player.name === 'Others') return;
-        if (!player.ownGoals || player.ownGoals === 0) return;
-
-        const positionStr = Array.isArray(player.position) 
-          ? player.position.join('/') 
-          : player.position || '';
+    allTrackerMatches.forEach(match => {
+      const players = getPlayersFromAttendance(match.attendance);
+      
+      players.forEach(player => {
+        if (!isTrackablePlayer(player.name)) return;
+        
+        const ownGoals = player.ownGoals || 0;
+        if (ownGoals === 0) return;
 
         if (!playerStats[player.name]) {
           playerStats[player.name] = {
             name: player.name,
             ownGoals: 0,
             matches: 0,
-            position: positionStr,
+            position: player.position || '',
           };
         }
 
-        playerStats[player.name].ownGoals += player.ownGoals || 0;
-        playerStats[player.name].matches += player.matches || 0;
+        playerStats[player.name].ownGoals += ownGoals;
+        playerStats[player.name].matches += 1;
       });
     });
 
@@ -287,7 +283,7 @@ export const DefendersCorner = () => {
       .filter(p => p.ownGoals > 0)
       .sort((a, b) => b.ownGoals - a.ownGoals)
       .slice(0, 15);
-  }, [selectedSeason, leaderboardSeasons]);
+  }, [allTrackerMatches]);
 
   // ==================== SORTED STATS ====================
   
@@ -353,7 +349,7 @@ export const DefendersCorner = () => {
     { id: "win-rate", label: "📈 Win Rate", icon: "📈", source: "leaderboard" },
     { id: "most-wins", label: "🏆 Most Wins", icon: "🏆", source: "leaderboard" },
     { id: "duos", label: "🤝 Duos", icon: "🤝", source: "tracker" },
-    { id: "own-goals", label: "😅 OG Leaders", icon: "😅", source: "leaderboard" },
+    { id: "own-goals", label: "😅 OG Leaders", icon: "😅", source: "tracker" },
   ];
 
   if (!config.DEFENDERS_CORNER?.enabled) return null;
@@ -365,7 +361,9 @@ export const DefendersCorner = () => {
   // Get data source label for current tab
   const currentTabSource = tabs.find(t => t.id === activeTab)?.source;
   const dataSourceLabel = currentTabSource === "tracker" 
-    ? `${trackerMatchCount} tracked matches` 
+    ? (activeTab === "own-goals" 
+        ? `${trackerMatchCount} tracked matches (all players)` 
+        : `${trackerMatchCount} tracked matches`)
     : `${leaderboardPlayerCount} defenders`;
 
   return (
@@ -774,7 +772,7 @@ export const DefendersCorner = () => {
           </div>
         )}
 
-        {/* OWN GOAL LEADERS - ALL PLAYERS (LEADERBOARD DATA) */}
+        {/* OWN GOAL LEADERS - ALL PLAYERS (TRACKER DATA) */}
         {activeTab === "own-goals" && (
           <div className="dc-section">
             <div className="section-intro">
@@ -798,13 +796,12 @@ export const DefendersCorner = () => {
                       <span className="og-count">{p.ownGoals}</span>
                       <span className="og-label">OG{p.ownGoals > 1 ? 's' : ''}</span>
                     </div>
-                    <div className="shame-matches">{p.matches} matches</div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="no-data">
-                <p>No own goals recorded! Perfect play! 🎉</p>
+                <p>No own goals recorded in tracked matches! Perfect play! 🎉</p>
               </div>
             )}
           </div>
