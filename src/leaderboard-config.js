@@ -110,6 +110,11 @@ export const config = {
     backfillYear: 2026,                // Years before this are marked as backfilled
   },
 
+  // Create Lineup Admin Tool
+  CREATE_LINEUP: {
+    enabled: false,                     // Show/hide the Create Lineup tab (admin tool)
+  },
+
   // Defenders Corner Settings
   DEFENDERS_CORNER: {
     enabled: false,                     // Show/hide the Defenders Corner tab
