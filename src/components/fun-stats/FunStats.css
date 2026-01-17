@@ -732,7 +732,10 @@
   border-color: var(--gold);
 }
 
-.rank {
+.streak-item .rank,
+.duo-item .rank,
+.impact-item .rank,
+.clutch-item .rank {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-muted);
@@ -746,7 +749,10 @@
   color: var(--gold);
 }
 
-.name {
+.streak-item .name,
+.duo-item .name,
+.impact-item .name,
+.clutch-item .name {
   flex: 1;
   font-weight: 600;
   color: var(--text-primary);
