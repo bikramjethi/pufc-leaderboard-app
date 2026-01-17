@@ -11,6 +11,7 @@ import { MVPLeaderboard } from "./components/mvp-leaderboard";
 import { MatchEntry } from "./components/match-entry";
 import { DefendersCorner } from "./components/defenders-corner";
 import { CreateLineup } from "./components/create-lineup";
+import { WeeklyTeams } from "./components/weekly-teams";
 import "./App.css";
 import "./components/fun-stats/FunStats.css";
 import { config } from "./leaderboard-config.js";
@@ -40,6 +41,7 @@ const getNavItems = () => [
     items: [
       { id: "attendance", label: "Leaderboard", icon: "📅", enabled: config.ATTENDANCE?.enabled },
       { id: "weekly-tracker", label: "Weekly Tracker", icon: "🗓️", enabled: config.ATTENDANCE?.TRACKER?.enabled },
+      { id: "weekly-teams", label: "Weekly Teams", icon: "👥", enabled: config.WEEKLY_TEAMS?.enabled },
     ],
   },
   {
@@ -86,6 +88,7 @@ function App() {
       "leaderboard": selectedYear === "all-time" ? "All-Time Career Stats" : "Player Statistics",
       "attendance": "Attendance Leaderboard",
       "weekly-tracker": "Weekly Tracker",
+      "weekly-teams": "Weekly Teams",
       "insights": "Season Insights",
       "scoring-trends": "Scoring Trends",
       "fun-stats": "Fun Stats",
@@ -318,6 +321,8 @@ function App() {
             <Attendance />
           ) : activeTab === "weekly-tracker" ? (
             <WeeklyTracker />
+          ) : activeTab === "weekly-teams" ? (
+            <WeeklyTeams />
           ) : activeTab === "insights" ? (
             <Insights />
         ) : activeTab === "scoring-trends" ? (
