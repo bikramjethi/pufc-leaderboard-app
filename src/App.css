@@ -728,6 +728,29 @@ body::before {
   overflow-x: auto;
   overflow-y: auto;
   max-height: 70vh;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  position: relative;
+  /* Always show scrollbar on webkit browsers */
+  scrollbar-width: thin;
+}
+
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
 }
 
 .leaderboard-table {
@@ -1791,6 +1814,28 @@ body::before {
 
   .main-content {
     padding: 0.75rem;
+    overflow-x: hidden;
+  }
+
+  .leaderboard {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .leaderboard-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .leaderboard-actions .search-container {
+    width: 100%;
+    margin-right: 0;
+    padding: 0.75rem 1rem;
+  }
+
+  .download-csv-btn-compact {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .year-selector label {
@@ -1802,50 +1847,156 @@ body::before {
     font-size: 0.85rem;
   }
 
+  /* Mobile-friendly table styles */
+  .table-container {
+    margin: 0;
+    width: 100%;
+    max-height: 60vh;
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .leaderboard-table {
+    font-size: 0.7rem;
+    table-layout: auto;
+    min-width: 600px;
+  }
+
   .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 0.4rem 0.2rem;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .leaderboard-table th {
+    font-size: 0.55rem;
+    letter-spacing: 0;
+  }
+
+  .leaderboard-table th.rank-col,
+  .leaderboard-table td.rank {
+    width: 25px;
+    min-width: 25px;
+    text-align: center;
+  }
+
+  .leaderboard-table th.player-col,
+  .player-row td.player-name {
+    min-width: 70px;
+    max-width: 90px;
+  }
+
+  .leaderboard-table th.position-col,
+  .leaderboard-table td.position-cell {
+    min-width: 45px;
+    width: 45px;
+  }
+
+  .leaderboard-table th.stat-col,
+  .player-row td.stat {
+    min-width: 28px;
+    width: 28px;
+    text-align: center;
+  }
+
+  .leaderboard-table th.select-col,
+  .player-row td.select-cell {
+    width: 22px;
+    min-width: 22px;
+  }
+
   .player-row td {
-    padding: 0.6rem 0.4rem;
-    font-size: 0.8rem;
-  }
-
-  .player-name {
-    font-size: 0.85rem;
-  }
-
-  .legend {
-    gap: 0.4rem 0.75rem;
-    padding: 0.5rem 0.75rem;
     font-size: 0.7rem;
   }
 
-  .news-ticker {
-    height: 36px;
+  .player-name,
+  .player-name-btn {
+    font-size: 0.7rem;
+    font-weight: 500;
+    max-width: 85px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
   }
 
-  .ticker-label {
-    padding: 0 0.75rem;
+  .rank {
+    font-size: 0.7rem;
+    font-weight: 600;
   }
 
-  .ticker-label-text {
+  .position-cell {
+    display: table-cell !important;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .position-cell .position-badge {
+    display: inline-block;
+    margin: 0 1px;
+  }
+
+  .position-badge {
+    padding: 0.15rem 0.25rem;
+    font-size: 0.5rem;
+    border-radius: 3px;
+    line-height: 1;
+  }
+
+  .stat {
+    font-size: 0.7rem;
+  }
+
+  .trophy-emoji {
     font-size: 0.6rem;
   }
 
-  .ticker-label::after {
-    right: -10px;
-    width: 20px;
+  .player-checkbox {
+    width: 14px;
+    height: 14px;
   }
 
-  .ticker-wrapper {
-    margin-left: 0.75rem;
+  .legend {
+    display: none;
   }
 
-  .ticker-item {
-    padding: 0 1.5rem;
+  .leaderboard-actions {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
-  .ticker-text {
+  .leaderboard-actions .search-container {
+    width: 100%;
+    padding: 0.5rem;
+    border-bottom: none;
+  }
+
+  .search-input {
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
     font-size: 0.85rem;
-    font-weight: 600;
+  }
+
+  .download-csv-btn-compact {
+    display: none;
+  }
+
+  .stats-view-tabs {
+    padding: 0.35rem;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: nowrap;
+  }
+
+  .stats-view-tab {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.7rem;
+    gap: 0.25rem;
+  }
+
+  .news-ticker {
+    display: none;
   }
 
   .footer {
@@ -2713,12 +2864,35 @@ td.match-cell.fullhouse-match.onloan {
 
 .attendance-leaderboard-table-container {
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: 70vh;
+  -webkit-overflow-scrolling: touch;
   background: var(--bg-card);
   border-radius: 12px;
   border: 1px solid var(--border-color);
   box-shadow: 
     0 4px 6px -1px rgba(0, 0, 0, 0.2),
     0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  /* Always show scrollbar on webkit browsers */
+  scrollbar-width: thin;
+}
+
+.attendance-leaderboard-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.attendance-leaderboard-table-container::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+}
+
+.attendance-leaderboard-table-container::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 4px;
+}
+
+.attendance-leaderboard-table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
 }
 
 .attendance-leaderboard-table {
@@ -3032,6 +3206,63 @@ td.match-cell.fullhouse-match.onloan {
 
   .match-date {
     font-size: 0.6rem;
+  }
+
+  /* Attendance Leaderboard Mobile Fixes */
+  .attendance {
+    padding: 0.75rem;
+  }
+
+  .attendance-leaderboard-table-container {
+    max-height: 60vh;
+    margin: 0 -0.75rem;
+    padding: 0 0.75rem;
+    width: calc(100% + 1.5rem);
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .attendance-leaderboard-table {
+    min-width: 700px;
+    font-size: 0.7rem;
+  }
+
+  .attendance-leaderboard-table th {
+    padding: 0.4rem 0.2rem;
+    font-size: 0.6rem;
+  }
+
+  .attendance-leaderboard-table td {
+    padding: 0.4rem 0.2rem;
+    font-size: 0.7rem;
+  }
+
+  .attendance-leaderboard-table .category-col {
+    min-width: 60px;
+    padding-left: 0.5rem;
+    font-size: 0.65rem;
+  }
+
+  .attendance-leaderboard-table .name-col {
+    min-width: 70px;
+    padding-left: 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .attendance-leaderboard-table .sno-col {
+    min-width: 25px;
+    font-size: 0.7rem;
+  }
+
+  .attendance-leaderboard-table .stat-col {
+    min-width: 40px;
+    font-size: 0.7rem;
+  }
+
+  .attendance-leaderboard-table .pct-col {
+    min-width: 45px;
+    font-size: 0.7rem;
   }
 }
 

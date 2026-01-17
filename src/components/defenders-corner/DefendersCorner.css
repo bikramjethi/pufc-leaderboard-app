@@ -609,6 +609,8 @@
 
   .dc-table-header .col-matches,
   .dc-table-row .col-matches,
+  .dc-table-header .col-total,
+  .dc-table-row .col-total,
   .dc-table-header .col-record,
   .dc-table-row .col-record {
     display: none;
