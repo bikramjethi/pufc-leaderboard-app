@@ -115,6 +115,13 @@ export const config = {
     enabled: false,                     // Show/hide the Create Lineup tab (admin tool)
   },
 
+  // Weekly Teams Settings
+  WEEKLY_TEAMS: {
+    enabled: false,                     // Show/hide the Weekly Teams tab
+    seasons: ["2025", "2026"],         // Seasons with per-match attendance data
+    defaultSeason: "2026",             // Default season to load
+  },
+
   // Defenders Corner Settings
   DEFENDERS_CORNER: {
     enabled: false,                     // Show/hide the Defenders Corner tab
