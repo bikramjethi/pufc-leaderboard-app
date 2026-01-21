@@ -414,6 +414,9 @@ export const WeeklyTracker = () => {
             <span>
               🚫 {matches.filter((m) => m.matchCancelled).length} cancelled
             </span>
+            <span>
+              🏠 {playedMatches.filter((m) => m.isFullHouse).length} full house
+            </span>
             {matchData?.totalGoals !== undefined && (
               <span>⚽ {matchData.totalGoals} total goals</span>
             )}
