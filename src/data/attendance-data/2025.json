@@ -7125,7 +7125,7 @@
         "WHITE": [
           {
             "name": "David+1",
-            "goals": 0,
+            "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
@@ -7153,7 +7153,7 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "RB"
+            "position": "LB"
           },
           {
             "name": "Subarna",
@@ -7173,7 +7173,7 @@
           },
           {
             "name": "Anis",
-            "goals": 0,
+            "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "ONLOAN",
@@ -7182,14 +7182,6 @@
           {
             "name": "Rishav",
             "goals": 0,
-            "ownGoals": 0,
-            "cleanSheet": false,
-            "groupStatus": "REGULAR",
-            "position": "ST"
-          },
-          {
-            "name": "Others",
-            "goals": 2,
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",

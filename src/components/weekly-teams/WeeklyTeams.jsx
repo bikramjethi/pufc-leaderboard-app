@@ -213,6 +213,11 @@ export const WeeklyTeams = () => {
   // Check if match was cancelled
   const isCancelled = currentMatch?.matchCancelled;
   const isPlayed = currentMatch?.matchPlayed;
+  
+  // For seasons prior to 2026, check if match data is backfilled
+  const isPriorSeason = parseInt(selectedSeason) < 2026;
+  const isBackfilled = currentMatch?.isBackfilled === true;
+  const needsBackfill = isPriorSeason && isPlayed && !isCancelled && !isBackfilled;
 
   return (
     <div className="weekly-teams">
@@ -310,13 +315,21 @@ export const WeeklyTeams = () => {
             )}
           </div>
 
-          {/* Field View or Cancelled Message */}
+          {/* Field View or Cancelled Message or Backfill Message */}
           {isCancelled ? (
             <div className="wt-cancelled-view">
               <div className="cancelled-content">
                 <span className="cancelled-emoji">🚫</span>
                 <h3>Match Cancelled</h3>
                 <p>This match was not played on {formatDate(currentMatch?.date)}</p>
+              </div>
+            </div>
+          ) : needsBackfill ? (
+            <div className="wt-cancelled-view">
+              <div className="cancelled-content">
+                <span className="cancelled-emoji">📋</span>
+                <h3>Match data not backfilled yet</h3>
+                <p>Lineup data for this match is not available yet</p>
               </div>
             </div>
           ) : isPlayed && teams.length > 0 ? (

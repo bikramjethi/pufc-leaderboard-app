@@ -427,14 +427,14 @@ export const DefendersCorner = () => {
                       <div className="podium-overlay"></div>
                       <div className="podium-medal">{idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</div>
                       <div className="podium-content">
-                        <div className="podium-name">{p.name}</div>
-                        <div className="podium-position">{p.position}</div>
-                        <div className="podium-stat-main">
-                          <span className="stat-value">{p.avgConceded}</span>
-                          <span className="stat-label">Goals/Match</span>
-                        </div>
-                        <div className="podium-stat-sub">{p.goalsConceded} total conceded</div>
-                        <div className="podium-matches">{p.matches} matches</div>
+                      <div className="podium-name">{p.name}</div>
+                      <div className="podium-position">{p.position}</div>
+                      <div className="podium-stat-main">
+                        <span className="stat-value">{p.avgConceded}</span>
+                        <span className="stat-label">Goals/Match</span>
+                      </div>
+                      <div className="podium-stat-sub">{p.goalsConceded} total conceded</div>
+                      <div className="podium-matches">{p.matches} matches</div>
                       </div>
                     </div>
                   ))}
@@ -490,14 +490,14 @@ export const DefendersCorner = () => {
                       <div className="podium-overlay"></div>
                       <div className="podium-medal">{idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</div>
                       <div className="podium-content">
-                        <div className="podium-name">{p.name}</div>
-                        <div className="podium-position">{p.position}</div>
-                        <div className="podium-stat-main">
-                          <span className="stat-value">{p.goals}</span>
-                          <span className="stat-label">Goals</span>
-                        </div>
-                        <div className="podium-stat-sub">{p.goalsPerMatch} per match</div>
-                        <div className="podium-matches">{p.matches} matches</div>
+                      <div className="podium-name">{p.name}</div>
+                      <div className="podium-position">{p.position}</div>
+                      <div className="podium-stat-main">
+                        <span className="stat-value">{p.goals}</span>
+                        <span className="stat-label">Goals</span>
+                      </div>
+                      <div className="podium-stat-sub">{p.goalsPerMatch} per match</div>
+                      <div className="podium-matches">{p.matches} matches</div>
                       </div>
                     </div>
                   ))}
@@ -553,14 +553,14 @@ export const DefendersCorner = () => {
                       <div className="podium-overlay"></div>
                       <div className="podium-medal">{idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</div>
                       <div className="podium-content">
-                        <div className="podium-name">{p.name}</div>
-                        <div className="podium-position">{p.position}</div>
-                        <div className="podium-stat-main">
-                          <span className="stat-value">{p.winPct}%</span>
-                          <span className="stat-label">Win Rate</span>
-                        </div>
-                        <div className="podium-stat-sub">{p.wins}W-{p.draws}D-{p.losses}L</div>
-                        <div className="podium-matches">{p.matches} matches</div>
+                      <div className="podium-name">{p.name}</div>
+                      <div className="podium-position">{p.position}</div>
+                      <div className="podium-stat-main">
+                        <span className="stat-value">{p.winPct}%</span>
+                        <span className="stat-label">Win Rate</span>
+                      </div>
+                      <div className="podium-stat-sub">{p.wins}W-{p.draws}D-{p.losses}L</div>
+                      <div className="podium-matches">{p.matches} matches</div>
                       </div>
                     </div>
                   ))}
@@ -616,14 +616,14 @@ export const DefendersCorner = () => {
                       <div className="podium-overlay"></div>
                       <div className="podium-medal">{idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</div>
                       <div className="podium-content">
-                        <div className="podium-name">{p.name}</div>
-                        <div className="podium-position">{p.position}</div>
-                        <div className="podium-stat-main">
-                          <span className="stat-value">{p.wins}</span>
-                          <span className="stat-label">Wins</span>
-                        </div>
-                        <div className="podium-stat-sub">{p.winPct}% win rate</div>
-                        <div className="podium-matches">{p.matches} matches</div>
+                      <div className="podium-name">{p.name}</div>
+                      <div className="podium-position">{p.position}</div>
+                      <div className="podium-stat-main">
+                        <span className="stat-value">{p.wins}</span>
+                        <span className="stat-label">Wins</span>
+                      </div>
+                      <div className="podium-stat-sub">{p.winPct}% win rate</div>
+                      <div className="podium-matches">{p.matches} matches</div>
                       </div>
                     </div>
                   ))}
