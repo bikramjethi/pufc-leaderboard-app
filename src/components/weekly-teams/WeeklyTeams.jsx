@@ -61,7 +61,7 @@ const formatDate = (dateStr) => {
   if (!dateStr) return "";
   const parts = dateStr.split(/[-/]/);
   if (parts.length !== 3) return dateStr;
-  const [day, month, year] = parts;
+  const [day, month] = parts;
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   return `${parseInt(day)} ${months[parseInt(month) - 1]}`;
 };
