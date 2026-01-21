@@ -514,12 +514,12 @@
 .wt-stat-badge {
   padding: 1px 4px;
   border-radius: 3px;
-  font-size: 0.6rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
 .wt-stat-badge.goal-stat {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: blueviolet;
   color: #fff;
 }
 

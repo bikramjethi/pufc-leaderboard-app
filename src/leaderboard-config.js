@@ -58,7 +58,7 @@ export const config = {
   SCORING_TRENDS: {
     enabled: true,               // Show/hide the Scoring Trends tab
     seasons: ["2026", "2025"],   // Seasons with per-match data available
-    defaultSeason: "2025",       // Default season shown on Scoring Trends tab
+    defaultSeason: "2026",       // Default season shown on Scoring Trends tab
     enableScoringTrends: true,   // Show/hide the "Scoring Trends" sub-tab (graph view)
     enableScorersTrend: true,   // Show/hide the "Scorers Trend" sub-tab (weekly top scorers table)
     enableScoringDiffs: true,   // Show/hide the "Scoring Diffs" sub-tab (goal differences view)
