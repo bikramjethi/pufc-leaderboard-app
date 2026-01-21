@@ -128,7 +128,7 @@ const renderScoreline = (scoreline) => {
   return (
     <span className="scoreline-display">
       {Object.entries(scoreline).map(([team, score], idx, arr) => (
-        <span key={team}>
+        <span key={team} className={idx === 0 ? "team-1-score" : "team-2-score"}>
           <span className={`team-score team-${team.toLowerCase()}`} title={team}>
             {score}
           </span>
@@ -457,9 +457,9 @@ export const WeeklyTracker = () => {
                       >
                         <div className="match-header">
                           {match.matchPlayed && match.scoreline && renderScoreline(match.scoreline)}
-                          <span className="match-day">{match.day.slice(0, 3)}</span>
+                          {/* <span className="match-day">{match.day.slice(0, 3)}</span> */}
                           <span className="match-date">{formatDate(match.date)}</span>
-                          {isFullHouse && <span className="fullhouse-badge">🏠</span>}
+                          {/* {isFullHouse && <span className="fullhouse-badge">🏠</span>} */}
                         </div>
                       </th>
                     );

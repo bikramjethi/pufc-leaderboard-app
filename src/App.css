@@ -4291,6 +4291,14 @@ td.match-cell.fullhouse-match.onloan {
   font-weight: 700;
 }
 
+.team-1-score {
+  display: flex;
+}
+
+.team-2-score {
+  margin-left: -4px;
+}
+
 .score-separator {
   color: var(--text-muted);
   font-weight: 400;
