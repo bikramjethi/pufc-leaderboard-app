@@ -131,5 +131,10 @@ export const config = {
     minMatches: 5,                     // Minimum matches for leaderboard eligibility
     defenderPositions: ["DEF", "GK", "CB", "LB", "RB", "LWB", "RWB"], // Positions considered as defenders
   },
+
+  // Hall of Fame Settings
+  HALL_OF_FAME: {
+    enabled: true,                      // Show/hide the Hall of Fame tab
+  },
 };
 
