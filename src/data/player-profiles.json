@@ -77,6 +77,11 @@
     "groupAvailibility": "MIDWEEK"
   },
   {
+    "name": "Uma",
+    "position": ["GK"],
+    "groupAvailibility": "N/A"
+  },
+  {
     "name": "Lalit",
     "position": [
       "DEF",
