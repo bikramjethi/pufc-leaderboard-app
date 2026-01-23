@@ -162,7 +162,6 @@ export const MatchEntry = () => {
       const team1Data = matchData.attendance[color1] || [];
       let team1OthersCount = 0;
       let team1PlayerGoals = 0;
-      let team2OwnGoals = 0;
       const team1PlayersList = [];
       
       team1Data.forEach(p => {
@@ -178,7 +177,6 @@ export const MatchEntry = () => {
       const team2Data = matchData.attendance[color2] || [];
       let team2OthersCount = 0;
       let team2PlayerGoals = 0;
-      let team1OwnGoals = 0;
       const team2PlayersList = [];
       
       team2Data.forEach(p => {
@@ -188,12 +186,18 @@ export const MatchEntry = () => {
           team2PlayersList.push(createPlayerFromData(p));
           team2PlayerGoals += p.goals || 0;
         }
-        team1OwnGoals += p.ownGoals || 0;
       });
 
-      // Also get own goals from team 1 (which count for team 2)
+      // Calculate own goals: team1's own goals count for team2, team2's own goals count for team1
+      let team1OwnGoals = 0; // Own goals from team1 (RED) that count for team2 (BLUE)
+      let team2OwnGoals = 0; // Own goals from team2 (BLUE) that count for team1 (RED)
+      
       team1Data.forEach(p => {
-        team2OwnGoals += p.ownGoals || 0;
+        team1OwnGoals += p.ownGoals || 0; // RED's own goals count for BLUE
+      });
+      
+      team2Data.forEach(p => {
+        team2OwnGoals += p.ownGoals || 0; // BLUE's own goals count for RED
       });
 
       // Calculate unattributed goals if player goals + others + opponent OG don't match scoreline
@@ -264,6 +268,29 @@ export const MatchEntry = () => {
       cleanSheet: p.position === "GK" ? team1Score === 0 : p.cleanSheet,
     })));
   }, [team1Score, team2Score]);
+
+  // Auto-calculate "Others" goals when scoreline or player goals change (only if not loaded from data)
+  useEffect(() => {
+    if (loadedFromData) return; // Don't auto-calculate if data was loaded from existing match
+    
+    const team1PlayerGoals = team1Players.reduce((sum, p) => sum + (p.goals || 0), 0);
+    const team2PlayerGoals = team2Players.reduce((sum, p) => sum + (p.goals || 0), 0);
+    const team1OwnGoals = team1Players.reduce((sum, p) => sum + (p.ownGoals || 0), 0);
+    const team2OwnGoals = team2Players.reduce((sum, p) => sum + (p.ownGoals || 0), 0);
+    
+    // Team score = team's player goals + opponent's own goals
+    // So: team's expected player goals = team score - opponent's own goals
+    const expectedTeam1PlayerGoals = team1Score - team2OwnGoals;
+    const expectedTeam2PlayerGoals = team2Score - team1OwnGoals;
+    
+    // Calculate unattributed goals (difference between expected and actual player goals)
+    const team1Unattributed = Math.max(0, expectedTeam1PlayerGoals - team1PlayerGoals);
+    const team2Unattributed = Math.max(0, expectedTeam2PlayerGoals - team2PlayerGoals);
+    
+    // Only update if there's a change to avoid infinite loops
+    setTeam1OthersGoals(prev => prev !== team1Unattributed ? team1Unattributed : prev);
+    setTeam2OthersGoals(prev => prev !== team2Unattributed ? team2Unattributed : prev);
+  }, [team1Score, team2Score, team1Players, team2Players, loadedFromData]);
 
   // Add player to team
   const addPlayer = (team) => {
