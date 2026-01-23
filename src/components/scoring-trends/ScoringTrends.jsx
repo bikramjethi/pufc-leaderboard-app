@@ -948,8 +948,8 @@ export const ScoringTrends = () => {
                           ) : match.scoreline && Object.keys(match.scoreline).length > 0 ? (
                             <div className="scoreline-display">
                               {Object.entries(match.scoreline).map(([team, score], idx, arr) => (
-                                <span key={team}>
-                                  <span className={`team-score team-${team.toLowerCase()}`} title={team}>
+                                <span key={team} className="trends-score-wrapper">
+                                  <span className={`team-score team-${team.toLowerCase()} ${idx === 0 ? 'team-1-score' : 'team-2-score'}`} title={team}>
                                     {score}
                                   </span>
                                   {idx < arr.length - 1 && <span className="score-separator">-</span>}

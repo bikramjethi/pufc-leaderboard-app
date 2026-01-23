@@ -4305,6 +4305,14 @@ td.match-cell.fullhouse-match.onloan {
   margin: 0 0.1rem;
 }
 
+.trends-score-wrapper {
+  display: flex;
+}
+
+.trends-score-wrapper > .team-1-score {
+  margin-right: 2px;
+}
+
 /* Team color styles for scorelines */
 .team-score.team-black {
   background: #1a1a1a;
