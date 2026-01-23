@@ -1,8 +1,8 @@
 {
   "season": 2024,
-  "totalGoals": 15,
+  "totalGoals": 22,
   "weekendGoals": 6,
-  "weekdayGoals": 9,
+  "weekdayGoals": 16,
   "matches": [
     {
       "id": "02-01-2024",
@@ -326,12 +326,149 @@
       "id": "16-01-2024",
       "date": "16/01/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isFullHouse": false,
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Jethi",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Vinit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Animesh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Vinay",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "RM"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Lalit",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Nadeem",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Aayush",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Prateek",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Ashish",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Tushar",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Ammar",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "David",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Pandey",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 5,
+        "RED": 2
+      },
+      "totalGoals": 7
     },
     {
       "id": "20-01-2024",
@@ -1436,6 +1573,7 @@
   ],
   "allPlayers": [
     "Aayush",
+    "Ammar",
     "Animesh",
     "Ashish",
     "David",
