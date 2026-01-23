@@ -5,7 +5,6 @@ import "./DefendersCorner.css";
 
 // Dynamically import all available match data files
 const matchDataModules = import.meta.glob('../../data/attendance-data/20*.json', { eager: true });
-const leaderboardDataModules = import.meta.glob('../../data/leaderboard-data/20*.json', { eager: true });
 
 // Build data objects
 const matchDataByYear = {};
@@ -16,32 +15,28 @@ Object.entries(matchDataModules).forEach(([path, module]) => {
   }
 });
 
-const leaderboardDataByYear = {};
-Object.entries(leaderboardDataModules).forEach(([path, module]) => {
-  const yearMatch = path.match(/(\d{4})\.json$/);
-  if (yearMatch) {
-    leaderboardDataByYear[yearMatch[1]] = module.default;
-  }
-});
+// Get configured seasons - all from tracker data now
+const getTrackerSeasons = () => config.DEFENDERS_CORNER?.trackerSeasons || ["2024", "2025", "2026"];
+const getDefenderPositions = () => config.DEFENDERS_CORNER?.defenderPositions || ["GK", "CB", "LB", "RB"];
 
-// Get configured seasons
-const getLeaderboardSeasons = () => config.DEFENDERS_CORNER?.seasons || ["2024", "2025", "2026"];
-const getTrackerSeasons = () => config.DEFENDERS_CORNER?.trackerSeasons || ["2025", "2026"];
-const getDefenderPositions = () => config.DEFENDERS_CORNER?.defenderPositions || ["DEF", "GK", "CB", "LB", "RB", "LWB", "RWB"];
-
-// Helper to check if a position string indicates a defender
+// Helper to check if a position string indicates a defender (exact match for LB, RB, CB, GK only)
 const isDefenderPosition = (positionStr) => {
   if (!positionStr) return false;
   const defPositions = getDefenderPositions();
-  const positions = positionStr.toUpperCase().split('/');
-  return positions.some(p => defPositions.includes(p.trim()));
+  // Only exact match for the 4 defensive positions
+  return defPositions.includes(positionStr.toUpperCase().trim());
 };
 
-// Helper to get valid matches
+// Helper to get valid matches (with backfill check for pre-2026 seasons)
 const getValidMatches = (year) => {
   const data = matchDataByYear[year];
   if (!data?.matches) return [];
-  return data.matches.filter(m => m.matchPlayed && !m.matchCancelled);
+  return data.matches.filter(m => {
+    if (!m.matchPlayed || m.matchCancelled) return false;
+    // For 2024 and 2025, only include backfilled matches
+    if (parseInt(year) < 2026 && !m.isBackfilled) return false;
+    return true;
+  });
 };
 
 // Helper to get winning team
@@ -82,14 +77,14 @@ const isTrackablePlayer = (name) => {
 };
 
 export const DefendersCorner = () => {
-  const leaderboardSeasons = getLeaderboardSeasons();
   const trackerSeasons = getTrackerSeasons();
   const minMatches = config.DEFENDERS_CORNER?.minMatches || 5;
   
   const [selectedSeason, setSelectedSeason] = useState(config.DEFENDERS_CORNER?.defaultSeason || "all");
   const [activeTab, setActiveTab] = useState("least-conceded");
 
-  // ==================== TRACKER DATA (for Least Conceded & Duos) ====================
+  // ==================== ALL STATS FROM TRACKER DATA ====================
+  // Now using per-match positions from attendance data for all calculations
   const allTrackerMatches = useMemo(() => {
     const seasonsToUse = selectedSeason === "all" 
       ? trackerSeasons 
@@ -97,66 +92,26 @@ export const DefendersCorner = () => {
     return seasonsToUse.flatMap(year => getValidMatches(year));
   }, [selectedSeason, trackerSeasons]);
 
-  // Defender stats from tracker data (for goals conceded calculation)
+  // Defender stats from tracker data - used for ALL tabs now
+  // Only counts a player as defender when they played LB, RB, CB, or GK in that specific match
   const defenderTrackerStats = useMemo(() => {
     const playerStats = {};
 
     allTrackerMatches.forEach(match => {
       const players = getPlayersFromAttendance(match.attendance);
       const winningTeam = getWinningTeam(match.scoreline);
+      const isDraw = winningTeam === 'DRAW';
       
       players.forEach(player => {
         if (!isTrackablePlayer(player.name)) return;
+        // Only consider this player if they played a defensive position in THIS match
         if (!isDefenderPosition(player.position)) return;
 
         const team = player.team;
         const oppTeam = Object.keys(match.scoreline).find(t => t !== team);
         const goalsConceded = oppTeam ? (match.scoreline[oppTeam] || 0) : 0;
         const isWin = winningTeam === team;
-
-        if (!playerStats[player.name]) {
-          playerStats[player.name] = {
-            name: player.name,
-            matches: 0,
-            wins: 0,
-            goals: 0,
-            goalsConceded: 0,
-            position: player.position || 'DEF',
-          };
-        }
-
-        playerStats[player.name].matches += 1;
-        playerStats[player.name].goals += player.goals || 0;
-        playerStats[player.name].goalsConceded += goalsConceded;
-        if (isWin) playerStats[player.name].wins += 1;
-      });
-    });
-
-    return Object.values(playerStats)
-      .filter(p => p.matches >= minMatches)
-      .map(p => ({
-        ...p,
-        avgConceded: p.matches > 0 ? (p.goalsConceded / p.matches).toFixed(2) : 0,
-      }));
-  }, [allTrackerMatches, minMatches]);
-
-  // ==================== LEADERBOARD DATA (for Win Rate, Top Scorers, Most Wins) ====================
-  const defenderLeaderboardStats = useMemo(() => {
-    const seasonsToUse = selectedSeason === "all" ? leaderboardSeasons : [selectedSeason];
-    const playerStats = {};
-
-    seasonsToUse.forEach(year => {
-      const yearData = leaderboardDataByYear[year];
-      if (!yearData) return;
-
-      yearData.forEach(player => {
-        if (player.name === 'Others') return;
-        
-        const positionStr = Array.isArray(player.position) 
-          ? player.position.join('/') 
-          : player.position || '';
-        
-        if (!isDefenderPosition(positionStr)) return;
+        const isLoss = !isDraw && !isWin;
 
         if (!playerStats[player.name]) {
           playerStats[player.name] = {
@@ -167,27 +122,43 @@ export const DefendersCorner = () => {
             losses: 0,
             goals: 0,
             ownGoals: 0,
-            position: positionStr,
+            goalsConceded: 0,
+            positions: {},
           };
         }
 
-        playerStats[player.name].matches += player.matches || 0;
-        playerStats[player.name].wins += player.wins || 0;
-        playerStats[player.name].draws += player.draws || 0;
-        playerStats[player.name].losses += player.losses || 0;
+        playerStats[player.name].matches += 1;
         playerStats[player.name].goals += player.goals || 0;
         playerStats[player.name].ownGoals += player.ownGoals || 0;
+        playerStats[player.name].goalsConceded += goalsConceded;
+        if (isWin) playerStats[player.name].wins += 1;
+        if (isDraw) playerStats[player.name].draws += 1;
+        if (isLoss) playerStats[player.name].losses += 1;
+        
+        // Track positions played
+        const pos = player.position?.toUpperCase() || 'DEF';
+        playerStats[player.name].positions[pos] = (playerStats[player.name].positions[pos] || 0) + 1;
       });
     });
 
     return Object.values(playerStats)
       .filter(p => p.matches >= minMatches)
-      .map(p => ({
-        ...p,
-        winPct: p.matches > 0 ? ((p.wins / p.matches) * 100).toFixed(1) : 0,
-        goalsPerMatch: p.matches > 0 ? (p.goals / p.matches).toFixed(2) : 0,
-      }));
-  }, [selectedSeason, leaderboardSeasons, minMatches]);
+      .map(p => {
+        // Get most played position
+        const posEntries = Object.entries(p.positions);
+        const mainPos = posEntries.length > 0 
+          ? posEntries.sort((a, b) => b[1] - a[1])[0][0]
+          : 'DEF';
+        
+        return {
+          ...p,
+          position: mainPos,
+          avgConceded: p.matches > 0 ? (p.goalsConceded / p.matches).toFixed(2) : 0,
+          winPct: p.matches > 0 ? ((p.wins / p.matches) * 100).toFixed(1) : 0,
+          goalsPerMatch: p.matches > 0 ? (p.goals / p.matches).toFixed(2) : 0,
+        };
+      });
+  }, [allTrackerMatches, minMatches]);
 
   // ==================== DEFENSIVE DUOS FROM TRACKER DATA ====================
   const defensiveDuos = useMemo(() => {
@@ -252,69 +223,36 @@ export const DefendersCorner = () => {
       }));
   }, [allTrackerMatches]);
 
-  // ==================== OWN GOAL LEADERS (ALL PLAYERS - FROM TRACKER DATA) ====================
-  const ownGoalLeaders = useMemo(() => {
-    const playerStats = {};
-
-    allTrackerMatches.forEach(match => {
-      const players = getPlayersFromAttendance(match.attendance);
-      
-      players.forEach(player => {
-        if (!isTrackablePlayer(player.name)) return;
-        
-        const ownGoals = player.ownGoals || 0;
-        if (ownGoals === 0) return;
-
-        if (!playerStats[player.name]) {
-          playerStats[player.name] = {
-            name: player.name,
-            ownGoals: 0,
-            matches: 0,
-            position: player.position || '',
-          };
-        }
-
-        playerStats[player.name].ownGoals += ownGoals;
-        playerStats[player.name].matches += 1;
-      });
-    });
-
-    return Object.values(playerStats)
-      .filter(p => p.ownGoals > 0)
-      .sort((a, b) => b.ownGoals - a.ownGoals)
-      .slice(0, 15);
-  }, [allTrackerMatches]);
-
-  // ==================== SORTED STATS ====================
+  // ==================== SORTED STATS (ALL FROM TRACKER DATA) ====================
   
-  // Least goals conceded on avg (TRACKER DATA)
+  // Least goals conceded on avg
   const leastConceded = useMemo(() => {
     return [...defenderTrackerStats]
       .sort((a, b) => parseFloat(a.avgConceded) - parseFloat(b.avgConceded) || b.matches - a.matches)
       .slice(0, 15);
   }, [defenderTrackerStats]);
 
-  // Most scoring defenders (LEADERBOARD DATA)
+  // Most scoring defenders (from tracker - only when playing defensive positions)
   const topScoringDefenders = useMemo(() => {
-    return [...defenderLeaderboardStats]
+    return [...defenderTrackerStats]
       .filter(p => p.goals > 0)
       .sort((a, b) => b.goals - a.goals || parseFloat(b.goalsPerMatch) - parseFloat(a.goalsPerMatch))
       .slice(0, 15);
-  }, [defenderLeaderboardStats]);
+  }, [defenderTrackerStats]);
 
-  // Highest win % defenders (LEADERBOARD DATA)
+  // Highest win % defenders (from tracker - only when playing defensive positions)
   const highestWinPct = useMemo(() => {
-    return [...defenderLeaderboardStats]
+    return [...defenderTrackerStats]
       .sort((a, b) => parseFloat(b.winPct) - parseFloat(a.winPct) || b.wins - a.wins)
       .slice(0, 15);
-  }, [defenderLeaderboardStats]);
+  }, [defenderTrackerStats]);
 
-  // Most wins defenders (LEADERBOARD DATA)
+  // Most wins defenders (from tracker - only when playing defensive positions)
   const mostWins = useMemo(() => {
-    return [...defenderLeaderboardStats]
+    return [...defenderTrackerStats]
       .sort((a, b) => b.wins - a.wins || parseFloat(b.winPct) - parseFloat(a.winPct))
       .slice(0, 15);
-  }, [defenderLeaderboardStats]);
+  }, [defenderTrackerStats]);
 
   // Duo stats sorted (TRACKER DATA)
   const duosByLeastConceded = useMemo(() => {
@@ -342,29 +280,23 @@ export const DefendersCorner = () => {
       .slice(0, 10);
   }, [defensiveDuos]);
 
-  // Tabs configuration
+  // Tabs configuration - all now use tracker data
   const tabs = [
-    { id: "least-conceded", label: "🧱 Least Conceded", icon: "🧱", source: "tracker" },
-    { id: "top-scorers", label: "⚽ Top Scorers", icon: "⚽", source: "leaderboard" },
-    { id: "win-rate", label: "📈 Win Rate", icon: "📈", source: "leaderboard" },
-    { id: "most-wins", label: "🏆 Most Wins", icon: "🏆", source: "leaderboard" },
-    { id: "duos", label: "🤝 Duos", icon: "🤝", source: "tracker" },
-    { id: "own-goals", label: "😅 OG Leaders", icon: "😅", source: "tracker" },
+    { id: "least-conceded", label: "🧱 Least Conceded", icon: "🧱" },
+    { id: "top-scorers", label: "⚽ Top Scorers", icon: "⚽" },
+    { id: "win-rate", label: "📈 Win Rate", icon: "📈" },
+    { id: "most-wins", label: "🏆 Most Wins", icon: "🏆" },
+    { id: "duos", label: "🤝 Duos", icon: "🤝" },
   ];
 
   if (!config.DEFENDERS_CORNER?.enabled) return null;
 
   const seasonLabel = selectedSeason === "all" ? "All Time" : selectedSeason;
   const trackerMatchCount = allTrackerMatches.length;
-  const leaderboardPlayerCount = defenderLeaderboardStats.length;
+  const defenderCount = defenderTrackerStats.length;
 
-  // Get data source label for current tab
-  const currentTabSource = tabs.find(t => t.id === activeTab)?.source;
-  const dataSourceLabel = currentTabSource === "tracker" 
-    ? (activeTab === "own-goals" 
-        ? `${trackerMatchCount} tracked matches (all players)` 
-        : `${trackerMatchCount} tracked matches`)
-    : `${leaderboardPlayerCount} defenders`;
+  // Data source label - all from tracker now
+  const dataSourceLabel = `${trackerMatchCount} matches • ${defenderCount} defenders`;
 
   return (
     <div className="defenders-corner">
@@ -383,7 +315,7 @@ export const DefendersCorner = () => {
             className="season-select"
           >
             <option value="all">All Time</option>
-            {leaderboardSeasons.map(year => (
+            {trackerSeasons.map(year => (
               <option key={year} value={year}>{year}</option>
             ))}
           </select>
@@ -779,41 +711,6 @@ export const DefendersCorner = () => {
             ) : (
               <div className="no-data">
                 <p>Not enough tracker data to identify defensive duos for this period</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* OWN GOAL LEADERS - ALL PLAYERS (TRACKER DATA) */}
-        {activeTab === "own-goals" && (
-          <div className="dc-section">
-            <div className="section-intro">
-              <h3>😅 Own Goal Leaders</h3>
-              <p>The Hall of Unfortunate Moments (all positions)</p>
-            </div>
-            
-            {ownGoalLeaders.length > 0 ? (
-              <div className="shame-list">
-                {ownGoalLeaders.map((p, idx) => (
-                  <div key={p.name} className="shame-card">
-                    <div className="shame-rank">#{idx + 1}</div>
-                    <div className="shame-image">
-                      <img src={getPlayerImage(p.name)} alt={p.name} />
-                    </div>
-                    <div className="shame-info">
-                      <span className="shame-name">{p.name}</span>
-                      <span className="shame-position">{p.position}</span>
-                    </div>
-                    <div className="shame-og">
-                      <span className="og-count">{p.ownGoals}</span>
-                      <span className="og-label">OG{p.ownGoals > 1 ? 's' : ''}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="no-data">
-                <p>No own goals recorded in tracked matches! Perfect play! 🎉</p>
               </div>
             )}
           </div>

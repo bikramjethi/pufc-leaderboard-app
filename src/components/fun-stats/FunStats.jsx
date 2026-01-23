@@ -162,6 +162,15 @@ export const FunStats = () => {
     return getValidMatches(selectedSeason, req);
   }, [selectedSeason, selectableSeasons, backfillReqs.duosMostGames]);
   
+  // OG Leaders matches (requires backfilled data for complete player tracking)
+  const ogLeadersMatches = useMemo(() => {
+    const req = backfillReqs.ogLeaders ?? true;
+    if (selectedSeason === "all") {
+      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+    }
+    return getValidMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.ogLeaders]);
+
   // Get match count label based on active tab
   const getMatchCountLabel = () => {
     switch (activeSubTab) {
@@ -169,6 +178,7 @@ export const FunStats = () => {
       case "hot-streaks": return `${streakMatches.length} matches`;
       case "dream-duos": return "various data sources";
       case "clutch-factor": return `${clutchMatches.length} matches`;
+      case "og-leaders": return `${ogLeadersMatches.length} matches`;
       default: return "";
     }
   };
@@ -449,11 +459,52 @@ export const FunStats = () => {
     };
   }, [clutchMatches]);
 
+  // ================== OWN GOAL LEADERS (all players, all positions) ==================
+  const ogLeaders = useMemo(() => {
+    if (!config.FUN_STATS?.enableOGLeaders) return null;
+    
+    const playerOGs = {};
+    
+    ogLeadersMatches.forEach(match => {
+      const players = getPlayersFromAttendance(match.attendance);
+      
+      players.forEach(player => {
+        // Skip non-trackable players (Others, David+1 patterns, etc.)
+        if (!isTrackablePlayer(player.name)) return;
+        
+        const ownGoals = player.ownGoals || 0;
+        if (ownGoals === 0) return;
+        
+        if (!playerOGs[player.name]) {
+          playerOGs[player.name] = {
+            name: player.name,
+            ownGoals: 0,
+            matchesWithOG: 0,
+            position: player.position || '',
+          };
+        }
+        
+        playerOGs[player.name].ownGoals += ownGoals;
+        playerOGs[player.name].matchesWithOG += 1;
+        // Update position to most recent
+        if (player.position) {
+          playerOGs[player.name].position = player.position;
+        }
+      });
+    });
+    
+    return Object.values(playerOGs)
+      .filter(p => p.ownGoals > 0)
+      .sort((a, b) => b.ownGoals - a.ownGoals || b.matchesWithOG - a.matchesWithOG)
+      .slice(0, 15);
+  }, [ogLeadersMatches]);
+
   // Feature flags
   const enableColorStats = config.FUN_STATS?.enableColorStats !== false;
   const enableHotStreaks = config.FUN_STATS?.enableHotStreaks !== false;
   const enableDreamDuos = config.FUN_STATS?.enableDreamTeamDuos !== false;
   const enableClutch = config.FUN_STATS?.enableClutchFactor !== false;
+  const enableOGLeaders = config.FUN_STATS?.enableOGLeaders !== false;
 
   if (!config.FUN_STATS?.enabled) {
     return null;
@@ -465,6 +516,7 @@ export const FunStats = () => {
     { id: "hot-streaks", label: "🔥 Streaks", enabled: enableHotStreaks },
     { id: "dream-duos", label: "🤝 Duos", enabled: enableDreamDuos },
     { id: "clutch-factor", label: "🎯 Clutch", enabled: enableClutch },
+    { id: "og-leaders", label: "😅 OG Leaders", enabled: enableOGLeaders },
   ].filter(t => t.enabled);
 
   return (
@@ -765,6 +817,47 @@ export const FunStats = () => {
           {clutchFactor.topDecisiveScorers.length === 0 && (
             <div className="no-data-message">
               <p>No goals scored in close games yet.</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ========== OWN GOAL LEADERS ========== */}
+      {activeSubTab === "og-leaders" && enableOGLeaders && ogLeaders && (
+        <div className="og-leaders-section">
+          <div className="section-header">
+            <h2>😅 Own Goal Leaders</h2>
+            <p className="section-subtitle">
+              The Hall of Unfortunate Moments ({matchCountLabel})
+            </p>
+          </div>
+
+          {ogLeaders.length > 0 ? (
+            <div className="og-leaders-list">
+              {ogLeaders.map((p, idx) => (
+                <div key={p.name} className={`og-leader-card ${idx === 0 ? 'top-og' : ''}`}>
+                  <div className="og-rank">
+                    {idx === 0 ? '👑' : `#${idx + 1}`}
+                  </div>
+                  <div className="og-player-info">
+                    <span className="og-player-name">{p.name}</span>
+                    {p.position && <span className="og-position">{p.position}</span>}
+                  </div>
+                  <div className="og-stats">
+                    <div className="og-count">
+                      <span className="og-number">{p.ownGoals}</span>
+                      <span className="og-label">OG{p.ownGoals > 1 ? 's' : ''}</span>
+                    </div>
+                    <div className="og-matches">
+                      in {p.matchesWithOG} match{p.matchesWithOG > 1 ? 'es' : ''}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="no-data-message">
+              <p>No own goals recorded! Perfect play! 🎉</p>
             </div>
           )}
         </div>
