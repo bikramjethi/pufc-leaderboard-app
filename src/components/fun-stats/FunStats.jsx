@@ -15,10 +15,10 @@ Object.entries(matchDataModules).forEach(([path, module]) => {
   }
 });
 
-// Get available seasons for the selector (2025+ that have data)
+// Get available seasons for the selector (2024+ that have data)
 const getSelectableSeasons = () => {
   return Object.keys(matchDataByYear)
-    .filter(year => parseInt(year) >= 2025)
+    .filter(year => parseInt(year) >= 2024)
     .sort((a, b) => b - a);
 };
 
