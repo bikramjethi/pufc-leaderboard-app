@@ -210,14 +210,15 @@ export const WeeklyTeams = () => {
     setSelectedSeason(e.target.value);
   };
 
-  // Check if match was cancelled
+  // Check if match was cancelled or is a tournament
   const isCancelled = currentMatch?.matchCancelled;
   const isPlayed = currentMatch?.matchPlayed;
+  const isTournament = currentMatch?.isTournament === true;
   
   // For seasons prior to 2026, check if match data is backfilled
   const isPriorSeason = parseInt(selectedSeason) < 2026;
   const isBackfilled = currentMatch?.isBackfilled === true;
-  const needsBackfill = isPriorSeason && isPlayed && !isCancelled && !isBackfilled;
+  const needsBackfill = isPriorSeason && isPlayed && !isCancelled && !isTournament && !isBackfilled;
 
   return (
     <div className="weekly-teams">
@@ -260,19 +261,21 @@ export const WeeklyTeams = () => {
               {matches.map((match, idx) => {
                 const isActive = idx === currentMatchIndex;
                 const isCancelledMatch = match.matchCancelled;
+                const isTournamentMatch = match.isTournament === true;
                 const isPlayedMatch = match.matchPlayed && !match.matchCancelled;
                 
                 return (
                   <button
                     key={match.id || match.date}
                     ref={(el) => { matchRefs.current[idx] = el; }}
-                    className={`carousel-match ${isActive ? "active" : ""} ${isCancelledMatch ? "cancelled" : ""} ${!isPlayedMatch && !isCancelledMatch ? "pending" : ""}`}
+                    className={`carousel-match ${isActive ? "active" : ""} ${isCancelledMatch ? "cancelled" : ""} ${isTournamentMatch ? "tournament" : ""} ${!isPlayedMatch && !isCancelledMatch ? "pending" : ""}`}
                     onClick={() => setCurrentMatchIndex(idx)}
-                    title={`${formatDate(match.date)} - ${match.day}${isCancelledMatch ? " (Cancelled)" : ""}${!isPlayedMatch && !isCancelledMatch ? " (Pending)" : ""}`}
+                    title={`${formatDate(match.date)} - ${match.day}${isCancelledMatch ? " (Cancelled)" : ""}${isTournamentMatch ? " (Tournament)" : ""}${!isPlayedMatch && !isCancelledMatch && !isTournamentMatch ? " (Pending)" : ""}`}
                   >
                     <span className="match-date-short">{formatShortDate(match.date)}</span>
                     <span className="match-day-badge">{match.day?.charAt(0)}</span>
                     {isCancelledMatch && <span className="cancelled-badge">✕</span>}
+                    {isTournamentMatch && <span className="tournament-badge">🏆</span>}
                   </button>
                 );
               })}
@@ -315,13 +318,21 @@ export const WeeklyTeams = () => {
             )}
           </div>
 
-          {/* Field View or Cancelled Message or Backfill Message */}
+          {/* Field View or Cancelled Message or Tournament Message or Backfill Message */}
           {isCancelled ? (
             <div className="wt-cancelled-view">
               <div className="cancelled-content">
                 <span className="cancelled-emoji">🚫</span>
                 <h3>Match Cancelled</h3>
                 <p>This match was not played on {formatDate(currentMatch?.date)}</p>
+              </div>
+            </div>
+          ) : isTournament ? (
+            <div className="wt-cancelled-view tournament-view">
+              <div className="cancelled-content">
+                <span className="cancelled-emoji">🏆</span>
+                <h3>Tournament Week</h3>
+                <p>Round-robin tournament day - individual match stats not tracked</p>
               </div>
             </div>
           ) : needsBackfill ? (

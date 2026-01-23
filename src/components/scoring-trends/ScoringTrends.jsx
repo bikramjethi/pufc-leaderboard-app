@@ -110,6 +110,8 @@ export const ScoringTrends = () => {
         const matchDate = parseDate(m.date);
         // Only include if match date is today or in the past
         if (matchDate > today) return false;
+        // Skip tournament matches (round-robin days with no individual stats)
+        if (m.isTournament) return false;
         // For 2024, only include backfilled matches
         if (selectedSeason === "2024" && m.matchPlayed && !m.matchCancelled && !m.isBackfilled) {
           return false;
@@ -174,6 +176,8 @@ export const ScoringTrends = () => {
     const playedMatches = data.matches
       .filter((m) => {
         if (!m.matchPlayed || m.matchCancelled) return false;
+        // Skip tournament matches (round-robin days with no individual stats)
+        if (m.isTournament) return false;
         // For 2024, only include backfilled matches
         if (selectedSeason === "2024" && !m.isBackfilled) return false;
         return true;
@@ -335,6 +339,8 @@ export const ScoringTrends = () => {
         const matchDate = parseDate(m.date);
         // Only include if match date is today or in the past
         if (matchDate > today) return false;
+        // Skip tournament matches (round-robin days with no individual stats)
+        if (m.isTournament) return false;
         // For 2024, only include backfilled matches
         if (selectedSeason === "2024" && m.matchPlayed && !m.matchCancelled && !m.isBackfilled) {
           return false;
@@ -994,8 +1000,8 @@ export const ScoringTrends = () => {
                           ) : match.scoreline && Object.keys(match.scoreline).length > 0 ? (
                             <div className="scoreline-display">
                               {Object.entries(match.scoreline).map(([team, score], idx, arr) => (
-                                <span key={team}>
-                                  <span className={`team-score team-${team.toLowerCase()}`} title={team}>
+                                <span key={team} className="trends-score-wrapper">
+                                  <span className={`team-score team-${team.toLowerCase()} ${idx === 0 ? 'team-1-score' : 'team-2-score'}`} title={team}>
                                     {score}
                                   </span>
                                   {idx < arr.length - 1 && <span className="score-separator">-</span>}

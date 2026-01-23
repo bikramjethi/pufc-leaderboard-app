@@ -226,7 +226,7 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
   // Calculate full house matches (only for 2026+)
   if (trackerData && parseInt(trackerData.season) >= 2026) {
     const fullHouseMatches = trackerData.matches.filter(
-      (m) => m.matchPlayed && !m.matchCancelled && m.isFullHouse === true
+      (m) => m.matchPlayed && !m.matchCancelled && !m.isTournament && m.isFullHouse === true
     );
     insights.totalFullHouse = fullHouseMatches.length;
   }
@@ -238,9 +238,10 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
 const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
   if (!trackerData || !trackerData.matches) return null;
 
-  // Filter matches for the quarter
+  // Filter matches for the quarter (excluding tournaments)
   const quarterMatches = trackerData.matches.filter((match) => {
     if (!match.matchPlayed || match.matchCancelled) return false;
+    if (match.isTournament) return false;
     return getQuarter(match.date) === quarter;
   });
 

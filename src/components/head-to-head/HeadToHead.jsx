@@ -30,6 +30,8 @@ const getValidMatches = (year, requiresBackfill = true) => {
   
   return data.matches.filter(m => {
     if (!m.matchPlayed || m.matchCancelled) return false;
+    // Skip tournament matches (round-robin days with no individual stats)
+    if (m.isTournament) return false;
     // For 2024 and 2025, check if backfill is required
     if ((year === "2024" || year === "2025") && requiresBackfill && !m.isBackfilled) return false;
     return true;

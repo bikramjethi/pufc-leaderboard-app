@@ -159,9 +159,9 @@ export const WeeklyTracker = () => {
     return allPlayers.filter((player) => player.toLowerCase().includes(term));
   }, [searchTerm, allPlayers]);
 
-  // Get only played matches (not cancelled)
+  // Get only played matches (not cancelled, not tournaments)
   const playedMatches = useMemo(() => {
-    return matches.filter((m) => m.matchPlayed && !m.matchCancelled);
+    return matches.filter((m) => m.matchPlayed && !m.matchCancelled && !m.isTournament);
   }, [matches]);
 
   // Calculate attendance stats for each player (only for played matches)
@@ -359,9 +359,9 @@ export const WeeklyTracker = () => {
                 // Sort players alphabetically
                 const sortedPlayersCSV = Array.from(allPlayersSet).sort();
                 
-                // Get all match dates (only for played matches)
+                // Get all match dates (only for played matches, excluding tournaments)
                 const matchDates = matchData.matches
-                  .filter((match) => match.matchPlayed && !match.matchCancelled)
+                  .filter((match) => match.matchPlayed && !match.matchCancelled && !match.isTournament)
                   .map((match) => match.date || match.id)
                   .sort();
                 
@@ -376,7 +376,7 @@ export const WeeklyTracker = () => {
                   const row = [player];
                   matchDates.forEach((date) => {
                     const match = matchData.matches.find(
-                      (m) => (m.date === date || m.id === date) && m.matchPlayed && !m.matchCancelled
+                      (m) => (m.date === date || m.id === date) && m.matchPlayed && !m.matchCancelled && !m.isTournament
                     );
                     const attended = match && isPlayerInAttendance(match.attendance, player);
                     row.push(attended ? "1" : "");
