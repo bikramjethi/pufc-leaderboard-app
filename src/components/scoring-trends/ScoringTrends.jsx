@@ -2,10 +2,12 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { config } from "../../leaderboard-config.js";
 import matchData2026 from "../../data/attendance-data/2026.json";
 import matchData2025 from "../../data/attendance-data/2025.json";
+import matchData2024 from "../../data/attendance-data/2024.json";
 
 const matchDataByYear = {
   2026: matchData2026,
   2025: matchData2025,
+  2024: matchData2024,
 };
 
 
@@ -102,11 +104,17 @@ export const ScoringTrends = () => {
     today.setHours(23, 59, 59, 999); // Include matches from today
 
     // Include only past/current matches (played or cancelled), sorted by date
+    // For 2024, only include matches with isBackfilled: true
     const allMatches = [...data.matches]
       .filter((m) => {
         const matchDate = parseDate(m.date);
         // Only include if match date is today or in the past
-        return matchDate <= today;
+        if (matchDate > today) return false;
+        // For 2024, only include backfilled matches
+        if (selectedSeason === "2024" && m.matchPlayed && !m.matchCancelled && !m.isBackfilled) {
+          return false;
+        }
+        return true;
       })
       .sort((a, b) => {
         const dateA = parseDate(a.date);
@@ -164,7 +172,12 @@ export const ScoringTrends = () => {
     if (!data || !data.matches) return [];
 
     const playedMatches = data.matches
-      .filter((m) => m.matchPlayed && !m.matchCancelled)
+      .filter((m) => {
+        if (!m.matchPlayed || m.matchCancelled) return false;
+        // For 2024, only include backfilled matches
+        if (selectedSeason === "2024" && !m.isBackfilled) return false;
+        return true;
+      })
       .sort((a, b) => parseDate(a.date) - parseDate(b.date));
 
     // Group matches by week
@@ -316,8 +329,18 @@ export const ScoringTrends = () => {
     today.setHours(23, 59, 59, 999); // Include matches from today
 
     // Include only past/current matches, sorted by date
+    // For 2024, only include matches with isBackfilled: true
     const allMatches = [...data.matches]
-      .filter((m) => parseDate(m.date) <= today)
+      .filter((m) => {
+        const matchDate = parseDate(m.date);
+        // Only include if match date is today or in the past
+        if (matchDate > today) return false;
+        // For 2024, only include backfilled matches
+        if (selectedSeason === "2024" && m.matchPlayed && !m.matchCancelled && !m.isBackfilled) {
+          return false;
+        }
+        return true;
+      })
       .sort((a, b) => parseDate(a.date) - parseDate(b.date));
 
     const selectedYear = parseInt(selectedSeason);

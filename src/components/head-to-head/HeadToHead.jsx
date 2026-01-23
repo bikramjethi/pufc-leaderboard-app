@@ -30,7 +30,8 @@ const getValidMatches = (year, requiresBackfill = true) => {
   
   return data.matches.filter(m => {
     if (!m.matchPlayed || m.matchCancelled) return false;
-    if (year === "2025" && requiresBackfill && !m.isBackfilled) return false;
+    // For 2024 and 2025, check if backfill is required
+    if ((year === "2024" || year === "2025") && requiresBackfill && !m.isBackfilled) return false;
     return true;
   });
 };
