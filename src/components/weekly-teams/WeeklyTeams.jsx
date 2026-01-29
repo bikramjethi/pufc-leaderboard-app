@@ -176,8 +176,9 @@ export const WeeklyTeams = () => {
     }));
   }, [currentMatch]);
 
-  // Offset (in %) for duplicate positions so players don't overlap
-  const DUPLICATE_POSITION_OFFSET = 5;
+  // Offsets (in %) for duplicate positions so players don't overlap
+  const DUPLICATE_POSITION_OFFSET_Y = 8;
+  const DUPLICATE_POSITION_OFFSET_X = 4;
 
   // Get base position for a player (no duplicate offset)
   const getPlayerPosition = (player, side) => {
@@ -369,9 +370,9 @@ export const WeeklyTeams = () => {
                       title="Rotating goalkeeper"
                     >
                       <div className="wt-player-circle">
-                        <span className="wt-player-position">Rotating GK</span>
+                        <span className="wt-player-position">GK</span>
                       </div>
-                      <div className="wt-player-name-tag">—</div>
+                      <div className="wt-player-name-tag">Rotating GK</div>
                     </div>
                   );
                 })}
@@ -392,8 +393,10 @@ export const WeeklyTeams = () => {
                     const idx = posIndex[pos] ?? 0;
                     posIndex[pos] = idx + 1;
                     const total = posCount[pos] || 1;
-                    const offsetY = total > 1 ? (idx - (total - 1) / 2) * DUPLICATE_POSITION_OFFSET : 0;
-                    const position = { ...basePosition, y: basePosition.y + offsetY };
+                    const spread = total > 1 ? (idx - (total - 1) / 2) : 0;
+                    const offsetX = total > 1 ? spread * DUPLICATE_POSITION_OFFSET_X : 0;
+                    const offsetY = total > 1 ? spread * DUPLICATE_POSITION_OFFSET_Y : 0;
+                    const position = { ...basePosition, x: basePosition.x + offsetX, y: basePosition.y + offsetY };
                     const isOnLoan = player.groupStatus === "ONLOAN";
                     const isRotatedGoalie = !!player.rotatedGoalie;
                     const hasGoals = player.goals > 0;

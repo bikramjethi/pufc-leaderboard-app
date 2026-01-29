@@ -324,6 +324,24 @@
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  align-items: center;
+}
+
+.players-header .col-name {
+  text-align: left;
+}
+
+.players-header .col-pos,
+.players-header .col-goals,
+.players-header .col-og,
+.players-header .col-cs,
+.players-header .col-status,
+.players-header .col-actions {
+  text-align: center;
+}
+
+.players-header .col-rot-gk {
+  text-align: center;
 }
 
 .team-section.rotating-goalie .players-header {
@@ -335,6 +353,32 @@
   grid-template-columns: 1fr 60px 55px 45px 35px 80px 32px;
   gap: 0.5rem;
   align-items: center;
+}
+
+.match-player-row .col-name {
+  min-width: 0;
+}
+
+/* Datalist must not take a grid cell (would misalign columns) */
+.match-player-row datalist {
+  grid-column: 1;
+  grid-row: 1;
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.match-player-row .col-pos select,
+.match-player-row .col-goals input,
+.match-player-row .col-og input,
+.match-player-row .col-cs input,
+.match-player-row .col-status select {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .team-section.rotating-goalie .match-player-row {

@@ -28,8 +28,9 @@ const POSITION_COORDS = {
   },
 };
 
-// Offset (in percentage) for duplicate positions so players don't overlap
-const DUPLICATE_POSITION_OFFSET = 5;
+// Offsets (in percentage) for duplicate positions so players don't overlap
+const DUPLICATE_POSITION_OFFSET_Y = 8;
+const DUPLICATE_POSITION_OFFSET_X = 4;
 
 // Get team color class
 const getTeamColorClass = (teamColor) => {
@@ -148,9 +149,9 @@ export const FieldViewModal = ({ match, onClose }) => {
                 title="Rotating goalkeeper"
               >
                 <div className="player-circle">
-                  <span className="player-position">Rotating GK</span>
+                  <span className="player-position">GK</span>
                 </div>
-                <div className="player-name-tag">—</div>
+                <div className="player-name-tag">Rotating GK</div>
               </div>
             );
           })}
@@ -171,8 +172,10 @@ export const FieldViewModal = ({ match, onClose }) => {
               const idx = posIndex[pos] ?? 0;
               posIndex[pos] = idx + 1;
               const total = posCount[pos] || 1;
-              const offsetY = total > 1 ? (idx - (total - 1) / 2) * DUPLICATE_POSITION_OFFSET : 0;
-              const position = { ...basePosition, y: basePosition.y + offsetY };
+              const spread = total > 1 ? (idx - (total - 1) / 2) : 0;
+              const offsetX = total > 1 ? spread * DUPLICATE_POSITION_OFFSET_X : 0;
+              const offsetY = total > 1 ? spread * DUPLICATE_POSITION_OFFSET_Y : 0;
+              const position = { ...basePosition, x: basePosition.x + offsetX, y: basePosition.y + offsetY };
               const isOnLoan = player.groupStatus === "ONLOAN";
               const isRotatedGoalie = !!player.rotatedGoalie;
               const hasGoals = player.goals > 0;
