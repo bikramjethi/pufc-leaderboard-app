@@ -33,6 +33,7 @@ const createPlayer = () => ({
   ownGoals: 0,
   cleanSheet: false,
   groupStatus: "REGULAR",
+  rotatedGoalie: false,
 });
 
 // Create player from existing data
@@ -43,6 +44,7 @@ const createPlayerFromData = (playerData) => ({
   ownGoals: playerData.ownGoals || 0,
   cleanSheet: playerData.cleanSheet || false,
   groupStatus: playerData.groupStatus || "REGULAR",
+  rotatedGoalie: !!playerData.rotatedGoalie,
 });
 
 export const MatchEntry = () => {
@@ -54,6 +56,8 @@ export const MatchEntry = () => {
   const [team1Score, setTeam1Score] = useState(0);
   const [team2Score, setTeam2Score] = useState(0);
   const [isFullHouse, setIsFullHouse] = useState(false);
+  const [team1RotatingGoalie, setTeam1RotatingGoalie] = useState(false);
+  const [team2RotatingGoalie, setTeam2RotatingGoalie] = useState(false);
   const [team1Players, setTeam1Players] = useState([createPlayer()]);
   const [team2Players, setTeam2Players] = useState([createPlayer()]);
   
@@ -97,29 +101,16 @@ export const MatchEntry = () => {
     });
   }, [allKnownPlayers, usedPlayerNames]);
 
-  // Get positions already used by a team
-  const getUsedPositions = useCallback((teamPlayers, excludeIndex) => {
-    const used = new Set();
-    teamPlayers.forEach((p, idx) => {
-      if (idx !== excludeIndex && p.position) {
-        used.add(p.position);
-      }
-    });
-    return used;
-  }, []);
-
-  // Get available positions for a player on a team
-  const getAvailablePositions = useCallback((teamPlayers, playerIndex) => {
-    const usedPositions = getUsedPositions(teamPlayers, playerIndex);
+  // Get available positions for a player on a team.
+  // When rotating goalie is true for the team, GK is excluded (no single GK).
+  // Multiple players can share the same position (duplicates allowed).
+  const getAvailablePositions = useCallback((teamPlayers, playerIndex, isRotatingGoalie) => {
     const currentPosition = teamPlayers[playerIndex]?.position;
-    
-    return POSITIONS.filter(pos => {
-      // Always include the current position (so they can see it selected)
-      if (pos === currentPosition) return true;
-      // Exclude already used positions
-      return !usedPositions.has(pos);
-    });
-  }, [getUsedPositions]);
+    if (isRotatingGoalie) {
+      return POSITIONS.filter(pos => pos !== "GK" || pos === currentPosition);
+    }
+    return [...POSITIONS];
+  }, []);
 
   // Parse year from match ID (format: DD-MM-YYYY)
   const parseYearFromMatchId = useCallback((id) => {
@@ -145,6 +136,9 @@ export const MatchEntry = () => {
   // Populate form from existing match data
   const populateFromMatchData = useCallback((matchData) => {
     if (!matchData) return;
+
+    setTeam1RotatingGoalie(!!matchData.team1RotatingGoalie);
+    setTeam2RotatingGoalie(!!matchData.team2RotatingGoalie);
 
     // Get team colors from attendance
     const teamColors = Object.keys(matchData.attendance || {});
@@ -390,6 +384,7 @@ export const MatchEntry = () => {
         cleanSheet: p.cleanSheet || false,
         groupStatus: p.groupStatus,
         position: p.position,
+        ...(p.rotatedGoalie && { rotatedGoalie: true }),
       }));
     
     // Add "Others" entry if there are unattributed goals
@@ -414,6 +409,7 @@ export const MatchEntry = () => {
         cleanSheet: p.cleanSheet || false,
         groupStatus: p.groupStatus,
         position: p.position,
+        ...(p.rotatedGoalie && { rotatedGoalie: true }),
       }));
     
     // Add "Others" entry if there are unattributed goals
@@ -436,6 +432,8 @@ export const MatchEntry = () => {
       matchCancelled: false,
       isFullHouse,
       ...(isBackfill && { isBackfilled: true }),
+      ...(team1RotatingGoalie && { team1RotatingGoalie: true }),
+      ...(team2RotatingGoalie && { team2RotatingGoalie: true }),
       attendance: {
         [team1Color]: team1Attendance,
         [team2Color]: team2Attendance,
@@ -510,6 +508,8 @@ export const MatchEntry = () => {
     setTeam1Score(0);
     setTeam2Score(0);
     setIsFullHouse(false);
+    setTeam1RotatingGoalie(false);
+    setTeam2RotatingGoalie(false);
     setTeam1Players([createPlayer()]);
     setTeam2Players([createPlayer()]);
     setTeam1OthersGoals(0);
@@ -627,8 +627,18 @@ export const MatchEntry = () => {
         {/* Team Players */}
         <div className="teams-container">
           {/* Team 1 */}
-          <div className={`team-section team-${team1Color.toLowerCase()}`}>
-            <h3>{team1Color} Team</h3>
+          <div className={`team-section team-${team1Color.toLowerCase()} ${team1RotatingGoalie ? "rotating-goalie" : ""}`}>
+            <div className="team-section-header">
+              <h3>{team1Color} Team</h3>
+              <label className="rotating-goalie-checkbox">
+                <input
+                  type="checkbox"
+                  checked={team1RotatingGoalie}
+                  onChange={(e) => setTeam1RotatingGoalie(e.target.checked)}
+                />
+                Rotating GK
+              </label>
+            </div>
             <div className="players-table">
               <div className="players-header">
                 <span className="col-name">Player</span>
@@ -636,6 +646,7 @@ export const MatchEntry = () => {
                 <span className="col-goals">Goals</span>
                 <span className="col-og">OG</span>
                 <span className="col-cs">CS</span>
+                {team1RotatingGoalie && <span className="col-rot-gk" title="Rotated as goalkeeper">Rot. GK</span>}
                 <span className="col-status">Status</span>
                 <span className="col-actions"></span>
               </div>
@@ -659,7 +670,7 @@ export const MatchEntry = () => {
                     value={player.position}
                     onChange={(e) => updatePlayer(1, idx, "position", e.target.value)}
                   >
-                    {getAvailablePositions(team1Players, idx).map(pos => (
+                    {getAvailablePositions(team1Players, idx, team1RotatingGoalie).map(pos => (
                       <option key={pos} value={pos}>{pos}</option>
                     ))}
                   </select>
@@ -684,6 +695,15 @@ export const MatchEntry = () => {
                     onChange={(e) => updatePlayer(1, idx, "cleanSheet", e.target.checked)}
                     disabled={player.position === "GK"}
                   />
+                  {team1RotatingGoalie && (
+                    <label className="col-rot-gk checkbox-cell" title="Rotated as goalkeeper">
+                      <input
+                        type="checkbox"
+                        checked={!!player.rotatedGoalie}
+                        onChange={(e) => updatePlayer(1, idx, "rotatedGoalie", e.target.checked)}
+                      />
+                    </label>
+                  )}
                   <select
                     className="col-status"
                     value={player.groupStatus}
@@ -721,8 +741,18 @@ export const MatchEntry = () => {
           </div>
 
           {/* Team 2 */}
-          <div className={`team-section team-${team2Color.toLowerCase()}`}>
-            <h3>{team2Color} Team</h3>
+          <div className={`team-section team-${team2Color.toLowerCase()} ${team2RotatingGoalie ? "rotating-goalie" : ""}`}>
+            <div className="team-section-header">
+              <h3>{team2Color} Team</h3>
+              <label className="rotating-goalie-checkbox">
+                <input
+                  type="checkbox"
+                  checked={team2RotatingGoalie}
+                  onChange={(e) => setTeam2RotatingGoalie(e.target.checked)}
+                />
+                Rotating GK
+              </label>
+            </div>
             <div className="players-table">
               <div className="players-header">
                 <span className="col-name">Player</span>
@@ -730,6 +760,7 @@ export const MatchEntry = () => {
                 <span className="col-goals">Goals</span>
                 <span className="col-og">OG</span>
                 <span className="col-cs">CS</span>
+                {team2RotatingGoalie && <span className="col-rot-gk" title="Rotated as goalkeeper">Rot. GK</span>}
                 <span className="col-status">Status</span>
                 <span className="col-actions"></span>
               </div>
@@ -753,7 +784,7 @@ export const MatchEntry = () => {
                     value={player.position}
                     onChange={(e) => updatePlayer(2, idx, "position", e.target.value)}
                   >
-                    {getAvailablePositions(team2Players, idx).map(pos => (
+                    {getAvailablePositions(team2Players, idx, team2RotatingGoalie).map(pos => (
                       <option key={pos} value={pos}>{pos}</option>
                     ))}
                   </select>
@@ -778,6 +809,15 @@ export const MatchEntry = () => {
                     onChange={(e) => updatePlayer(2, idx, "cleanSheet", e.target.checked)}
                     disabled={player.position === "GK"}
                   />
+                  {team2RotatingGoalie && (
+                    <label className="col-rot-gk checkbox-cell" title="Rotated as goalkeeper">
+                      <input
+                        type="checkbox"
+                        checked={!!player.rotatedGoalie}
+                        onChange={(e) => updatePlayer(2, idx, "rotatedGoalie", e.target.checked)}
+                      />
+                    </label>
+                  )}
                   <select
                     className="col-status"
                     value={player.groupStatus}

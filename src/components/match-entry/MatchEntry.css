@@ -278,6 +278,35 @@
 .team-section.team-white { border-left-color: #cbd5e1; border-left-width: 4px; }
 .team-section.team-yellow { border-left-color: #eab308; border-left-width: 4px; }
 
+.team-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.team-section-header h3 {
+  margin: 0;
+}
+
+.rotating-goalie-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.rotating-goalie-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-primary);
+}
+
 /* Players Table */
 .players-table {
   display: flex;
@@ -297,11 +326,31 @@
   letter-spacing: 0.05em;
 }
 
+.team-section.rotating-goalie .players-header {
+  grid-template-columns: 1fr 60px 55px 45px 35px 40px 80px 32px;
+}
+
 .match-player-row {
   display: grid;
   grid-template-columns: 1fr 60px 55px 45px 35px 80px 32px;
   gap: 0.5rem;
   align-items: center;
+}
+
+.team-section.rotating-goalie .match-player-row {
+  grid-template-columns: 1fr 60px 55px 45px 35px 40px 80px 32px;
+}
+
+.match-player-row .col-rot-gk.checkbox-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.match-player-row .col-rot-gk input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-primary);
 }
 
 .match-player-row input[type="text"],

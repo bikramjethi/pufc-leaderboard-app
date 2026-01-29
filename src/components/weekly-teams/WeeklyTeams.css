@@ -492,6 +492,28 @@
   box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+/* Rotating GK placeholder at GK position */
+.wt-player-marker.wt-rotating-gk-placeholder .wt-player-circle {
+  border: 2px dashed rgba(255, 255, 255, 0.7);
+  opacity: 0.9;
+}
+
+.wt-player-marker.wt-rotating-gk-placeholder .wt-player-position {
+  font-size: 0.6rem;
+}
+
+/* Rotated goalie highlight (player who rotated in goal) */
+.wt-player-marker.rotated-goalie .wt-player-circle {
+  border: 2px solid #0ea5e9;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.wt-stat-badge.rotated-gk-badge {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  color: #fff;
+  font-size: 0.55rem;
+}
+
 .wt-player-marker.team-red .wt-player-circle {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   color: #fff;
@@ -594,6 +616,11 @@
 .legend-marker.onloan-marker {
   border: 2px solid #facc15;
   box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.4);
+}
+
+.legend-marker.rotated-goalie-marker {
+  border: 2px solid #0ea5e9;
+  box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.4);
 }
 
 .legend-icon {

@@ -162,33 +162,31 @@ export const WeeklyTeams = () => {
   // Extract teams from match attendance
   const teams = useMemo(() => {
     if (!currentMatch?.attendance) return [];
-    
-    const teamEntries = Object.entries(currentMatch.attendance);
+    const team1Rotating = !!currentMatch.team1RotatingGoalie;
+    const team2Rotating = !!currentMatch.team2RotatingGoalie;
+    const teamEntries = Object.entries(currentMatch.attendance).filter(
+      ([, players]) => Array.isArray(players)
+    );
     return teamEntries.map(([teamColor, players], index) => ({
       color: teamColor,
       players: players || [],
       side: index === 0 ? "team1" : "team2",
       score: currentMatch.scoreline?.[teamColor] ?? 0,
+      rotatingGoalie: index === 0 ? team1Rotating : team2Rotating,
     }));
   }, [currentMatch]);
 
-  // Get position for a player
-  const getPlayerPosition = (player, side, playerIndex, totalPlayers) => {
+  // Offset (in %) for duplicate positions so players don't overlap
+  const DUPLICATE_POSITION_OFFSET = 5;
+
+  // Get base position for a player (no duplicate offset)
+  const getPlayerPosition = (player, side) => {
     const pos = player.position?.toUpperCase();
     const coords = POSITION_COORDS[side];
-    
     if (pos && coords[pos]) {
-      return coords[pos];
+      return { ...coords[pos] };
     }
-    
-    // Fallback - spread players vertically if no position
-    const yStart = 20;
-    const yEnd = 80;
-    const yStep = (yEnd - yStart) / Math.max(totalPlayers - 1, 1);
-    return {
-      x: side === "team1" ? 30 : 70,
-      y: yStart + (playerIndex * yStep),
-    };
+    return null;
   };
 
   // Navigate to previous (older) match - left arrow
@@ -359,14 +357,45 @@ export const WeeklyTeams = () => {
                   <div className="wt-goal right"></div>
                 </div>
 
+                {/* Rotating GK placeholder (only for team with flag set) */}
+                {teams.map((team) => {
+                  if (!team.rotatingGoalie) return null;
+                  const gkCoords = POSITION_COORDS[team.side].GK;
+                  return (
+                    <div
+                      key={`${team.color}-rotating-gk`}
+                      className={`wt-player-marker wt-rotating-gk-placeholder ${getTeamColorClass(team.color)}`}
+                      style={{ left: `${gkCoords.x}%`, top: `${gkCoords.y}%` }}
+                      title="Rotating goalkeeper"
+                    >
+                      <div className="wt-player-circle">
+                        <span className="wt-player-position">Rotating GK</span>
+                      </div>
+                      <div className="wt-player-name-tag">—</div>
+                    </div>
+                  );
+                })}
+
                 {/* Players */}
-                {teams.map((team) => (
-                  team.players.map((player, playerIdx) => {
-                    const position = getPlayerPosition(player, team.side, playerIdx, team.players.length);
-                    
-                    if (!position) return null;
-                    
+                {teams.map((team) => {
+                  const posCount = {};
+                  (team.players || []).forEach((p) => {
+                    const pos = (p.position || "").toUpperCase();
+                    if (pos) posCount[pos] = (posCount[pos] || 0) + 1;
+                  });
+                  const posIndex = {};
+                  return (team.players || []).map((player, playerIdx) => {
+                    if (team.rotatingGoalie && (player.position || "").toUpperCase() === "GK") return null;
+                    const basePosition = getPlayerPosition(player, team.side);
+                    if (!basePosition) return null;
+                    const pos = (player.position || "").toUpperCase();
+                    const idx = posIndex[pos] ?? 0;
+                    posIndex[pos] = idx + 1;
+                    const total = posCount[pos] || 1;
+                    const offsetY = total > 1 ? (idx - (total - 1) / 2) * DUPLICATE_POSITION_OFFSET : 0;
+                    const position = { ...basePosition, y: basePosition.y + offsetY };
                     const isOnLoan = player.groupStatus === "ONLOAN";
+                    const isRotatedGoalie = !!player.rotatedGoalie;
                     const hasGoals = player.goals > 0;
                     const hasOwnGoals = player.ownGoals > 0;
                     const hasCleanSheet = player.cleanSheet;
@@ -374,22 +403,22 @@ export const WeeklyTeams = () => {
                     return (
                       <div
                         key={`${team.color}-${player.name}-${playerIdx}`}
-                        className={`wt-player-marker ${getTeamColorClass(team.color)} ${isOnLoan ? "onloan" : ""}`}
+                        className={`wt-player-marker ${getTeamColorClass(team.color)} ${isOnLoan ? "onloan" : ""} ${isRotatedGoalie ? "rotated-goalie" : ""}`}
                         style={{
                           left: `${position.x}%`,
                           top: `${position.y}%`,
                         }}
-                        title={`${player.name} (${player.position || "?"})`}
+                        title={`${player.name} (${player.position || "?"})${isRotatedGoalie ? " – rotated in goal" : ""}`}
                       >
-                        {/* Player circle */}
                         <div className="wt-player-circle">
                           <span className="wt-player-position">{player.position || "?"}</span>
                         </div>
-                        
-                        {/* Player name */}
                         <div className="wt-player-name-tag">{player.name}</div>
-                        
-                        {/* Stats badges */}
+                        {isRotatedGoalie && (
+                          <span className="wt-stat-badge rotated-gk-badge" title="Rotated as goalkeeper">
+                            RG
+                          </span>
+                        )}
                         <div className="wt-player-stats-badges">
                           {hasGoals && (
                             <span className="wt-stat-badge goal-stat" title={`${player.goals} goal(s)`}>
@@ -409,14 +438,17 @@ export const WeeklyTeams = () => {
                         </div>
                       </div>
                     );
-                  })
-                ))}
+                  });
+                })}
               </div>
 
               {/* Legend */}
               <div className="wt-legend">
                 <span className="legend-item">
                   <span className="legend-marker onloan-marker"></span> On Loan
+                </span>
+                <span className="legend-item">
+                  <span className="legend-marker rotated-goalie-marker"></span> Rotated GK
                 </span>
                 <span className="legend-item">
                   <span className="legend-icon">⚽</span> Goals

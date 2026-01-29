@@ -28,6 +28,9 @@ const POSITION_COORDS = {
   },
 };
 
+// Offset (in percentage) for duplicate positions so players don't overlap
+const DUPLICATE_POSITION_OFFSET = 5;
+
 // Get team color class
 const getTeamColorClass = (teamColor) => {
   const color = teamColor?.toUpperCase();
@@ -53,26 +56,25 @@ export const FieldViewModal = ({ match, onClose }) => {
   // Extract teams from attendance
   const teams = useMemo(() => {
     if (!match?.attendance) return [];
-    
+    const team1Rotating = !!match.team1RotatingGoalie;
+    const team2Rotating = !!match.team2RotatingGoalie;
     const teamEntries = Object.entries(match.attendance);
     return teamEntries.map(([teamColor, players], index) => ({
       color: teamColor,
-      players: players || [],
+      players: Array.isArray(players) ? players : [],
       side: index === 0 ? "team1" : "team2",
       score: match.scoreline?.[teamColor] ?? 0,
+      rotatingGoalie: index === 0 ? team1Rotating : team2Rotating,
     }));
   }, [match]);
 
-  // Get position for a player
+  // Get base position for a player (no duplicate offset)
   const getPlayerPosition = (player, side) => {
     const pos = player.position?.toUpperCase();
     const coords = POSITION_COORDS[side];
-    
     if (pos && coords[pos]) {
-      return coords[pos];
+      return { ...coords[pos] };
     }
-    
-    // Fallback - spread players vertically if no position
     return null;
   };
 
@@ -134,15 +136,45 @@ export const FieldViewModal = ({ match, onClose }) => {
             <div className="goal right"></div>
           </div>
 
+          {/* Rotating GK placeholder (only for team with flag set) */}
+          {teams.map((team) => {
+            if (!team.rotatingGoalie) return null;
+            const gkCoords = POSITION_COORDS[team.side].GK;
+            return (
+              <div
+                key={`${team.color}-rotating-gk`}
+                className={`player-marker rotating-gk-placeholder ${getTeamColorClass(team.color)}`}
+                style={{ left: `${gkCoords.x}%`, top: `${gkCoords.y}%` }}
+                title="Rotating goalkeeper"
+              >
+                <div className="player-circle">
+                  <span className="player-position">Rotating GK</span>
+                </div>
+                <div className="player-name-tag">—</div>
+              </div>
+            );
+          })}
+
           {/* Players */}
-          {teams.map((team) => (
-            team.players.map((player, playerIdx) => {
-              const position = getPlayerPosition(player, team.side);
-              
-              // Skip if no valid position found
-              if (!position) return null;
-              
+          {teams.map((team) => {
+            const posCount = {};
+            (team.players || []).forEach((p) => {
+              const pos = (p.position || "").toUpperCase();
+              if (pos) posCount[pos] = (posCount[pos] || 0) + 1;
+            });
+            const posIndex = {};
+            return (team.players || []).map((player, playerIdx) => {
+              if (team.rotatingGoalie && (player.position || "").toUpperCase() === "GK") return null;
+              const basePosition = getPlayerPosition(player, team.side);
+              if (!basePosition) return null;
+              const pos = (player.position || "").toUpperCase();
+              const idx = posIndex[pos] ?? 0;
+              posIndex[pos] = idx + 1;
+              const total = posCount[pos] || 1;
+              const offsetY = total > 1 ? (idx - (total - 1) / 2) * DUPLICATE_POSITION_OFFSET : 0;
+              const position = { ...basePosition, y: basePosition.y + offsetY };
               const isOnLoan = player.groupStatus === "ONLOAN";
+              const isRotatedGoalie = !!player.rotatedGoalie;
               const hasGoals = player.goals > 0;
               const hasOwnGoals = player.ownGoals > 0;
               const hasCleanSheet = player.cleanSheet;
@@ -150,21 +182,25 @@ export const FieldViewModal = ({ match, onClose }) => {
               return (
                 <div
                   key={`${team.color}-${player.name}-${playerIdx}`}
-                  className={`player-marker ${getTeamColorClass(team.color)} ${isOnLoan ? "onloan" : ""}`}
+                  className={`player-marker ${getTeamColorClass(team.color)} ${isOnLoan ? "onloan" : ""} ${isRotatedGoalie ? "rotated-goalie" : ""}`}
                   style={{
                     left: `${position.x}%`,
                     top: `${position.y}%`,
                   }}
-                  title={`${player.name} (${player.position || "?"})`}
+                  title={`${player.name} (${player.position || "?"})${isRotatedGoalie ? " – rotated in goal" : ""}`}
                 >
                   {/* Player circle */}
                   <div className="player-circle">
                     <span className="player-position">{player.position || "?"}</span>
                   </div>
-                  
                   {/* Player name */}
                   <div className="player-name-tag">{player.name}</div>
-                  
+                  {/* Rotated GK badge */}
+                  {isRotatedGoalie && (
+                    <span className="stat-badge rotated-gk-badge" title="Rotated as goalkeeper">
+                      RG
+                    </span>
+                  )}
                   {/* Stats badges */}
                   <div className="player-stats-badges">
                     {hasGoals && (
@@ -185,14 +221,17 @@ export const FieldViewModal = ({ match, onClose }) => {
                   </div>
                 </div>
               );
-            })
-          ))}
+            });
+          })}
         </div>
 
         {/* Legend */}
         <div className="field-modal-legend">
           <span className="legend-item">
             <span className="legend-marker onloan-legend"></span> On Loan Player
+          </span>
+          <span className="legend-item">
+            <span className="legend-marker rotated-goalie-legend"></span> Rotated GK
           </span>
           <span className="legend-item">
             <span className="legend-icon">⚽</span> Goals
