@@ -1,7 +1,7 @@
 {
   "season": 2026,
-  "totalGoals": 85,
-  "weekendGoals": 34,
+  "totalGoals": 91,
+  "weekendGoals": 40,
   "weekdayGoals": 51,
   "matches": [
     {
@@ -336,7 +336,7 @@
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR",
+            "groupStatus": "ONLOAN",
             "position": "RM"
           },
           {
@@ -921,7 +921,7 @@
             "goals": 3,
             "ownGoals": 0,
             "cleanSheet": false,
-            "groupStatus": "REGULAR",
+            "groupStatus": "ONLOAN",
             "position": "LM"
           },
           {
@@ -954,7 +954,7 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "N/A"
+            "position": "ST"
           }
         ],
         "BLACK": [
@@ -1195,11 +1195,148 @@
       "id": "31-01-2026",
       "date": "31/01/2026",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isFullHouse": false,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Joe",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Vikas",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Prateek",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Nilaj",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Sayan",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "RM"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Pandey",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Yuvraj",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "RB"
+          },
+          {
+            "name": "Rajat",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Vivek",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Ankur",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "RM"
+          },
+          {
+            "name": "Vedant",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Rahul Dhek",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "LM"
+          },
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 4,
+        "BLUE": 2
+      },
+      "totalGoals": 6
     },
     {
       "id": "03-02-2026",
@@ -2158,6 +2295,7 @@
     "Ammar",
     "Aniket",
     "Animesh",
+    "Ankur",
     "Ashish",
     "David",
     "Deepak",
@@ -2168,6 +2306,7 @@
     "Mani",
     "Mathew",
     "Nadeem",
+    "Nilaj",
     "Others",
     "Pandey",
     "Prateek",
@@ -2179,6 +2318,7 @@
     "Rohit Gautam",
     "Rohit Hyd",
     "Savan",
+    "Sayan",
     "Soumyadeep",
     "Sourabh",
     "Subarna",
@@ -2194,6 +2334,7 @@
     "Vinay",
     "Vinit",
     "Vinoth",
-    "Vivek"
+    "Vivek",
+    "Yuvraj"
   ]
 }

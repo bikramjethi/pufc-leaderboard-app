@@ -66,7 +66,7 @@ export const config = {
 
   // Head to Head Settings (Standalone Tab)
   H2H: {
-    enabled: false,                     // Show/hide the H2H tab
+    enabled: true,                     // Show/hide the H2H tab
     seasons: ["2024", "2025", "2026"],         // Seasons with per-match data available
     defaultSeason: "all",              // Default: "all" for combined, or specific year
     requiresBackfill: true,            // 2024 and 2025 data must have isBackfilled: true
@@ -74,7 +74,7 @@ export const config = {
 
   // Fun Stats Settings
   FUN_STATS: {
-    enabled: false,                     // Show/hide the Fun Stats tab
+    enabled: true,                     // Show/hide the Fun Stats tab
     seasons: ["2024", "2025", "2026"],         // Seasons with per-match data available (auto-picks up new years)
     defaultSeason: "all",              // Default: "all" for combined, or specific year
     enableColorStats: true,            // Show/hide the Color Win Rates feature
@@ -101,20 +101,20 @@ export const config = {
 
   // MVP Leaderboard Settings
   MVP_LEADERBOARD: {
-    enabled: false,                     // Show/hide the MVP Leaderboard tab
+    enabled: true,                     // Show/hide the MVP Leaderboard tab
     seasons: ["2024", "2025", "2026"], // Available seasons for MVP calculation
     defaultSeason: "all",              // Default season ("all" for All Time, or specific year)
   },
 
   // Match Entry Admin Tool
   MATCH_ENTRY: {
-    enabled: false,                     // Show/hide the Match Entry tab (admin tool)
+    enabled: true,                     // Show/hide the Match Entry tab (admin tool)
     backfillYear: 2026,                // Years before this are marked as backfilled
   },
 
   // Create Lineup Admin Tool
   CREATE_LINEUP: {
-    enabled: false,                     // Show/hide the Create Lineup tab (admin tool)
+    enabled: true,                     // Show/hide the Create Lineup tab (admin tool)
   },
 
   // Weekly Teams Settings
@@ -126,7 +126,7 @@ export const config = {
 
   // Defenders Corner Settings
   DEFENDERS_CORNER: {
-    enabled: false,                     // Show/hide the Defenders Corner tab
+    enabled: true,                     // Show/hide the Defenders Corner tab
     seasons: ["2024", "2025", "2026"], // Available seasons for defender stats
     trackerSeasons: ["2024", "2025", "2026"],  // Seasons with per-match tracker data
     defaultSeason: "all",              // Default season ("all" for All Time)
