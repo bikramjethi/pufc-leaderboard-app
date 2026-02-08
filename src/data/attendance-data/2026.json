@@ -1362,7 +1362,8 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "CM"
+            "position": "CM",
+            "rotatedGoalie": true
           },
           {
             "name": "Sayan",
@@ -1370,7 +1371,8 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "ONLOAN",
-            "position": "LM"
+            "position": "LM",
+            "rotatedGoalie": true
           },
           {
             "name": "Vinoth",
@@ -1386,7 +1388,8 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "ST"
+            "position": "ST",
+            "rotatedGoalie": true
           },
           {
             "name": "Vinit",
@@ -1410,7 +1413,8 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "RB"
+            "position": "RB",
+            "rotatedGoalie": true
           }
         ],
         "WHITE": [
