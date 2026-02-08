@@ -1344,7 +1344,7 @@
       "day": "Midweek",
       "matchPlayed": true,
       "matchCancelled": false,
-      "isFullHouse": false,
+      "isFullHouse": true,
       "team1RotatingGoalie": true,
       "attendance": {
         "BLACK": [
