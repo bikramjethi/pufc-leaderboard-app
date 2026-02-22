@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "totalGoals": 130,
-  "weekendGoals": 54,
-  "weekdayGoals": 76,
+  "totalGoals": 152,
+  "weekendGoals": 61,
+  "weekdayGoals": 91,
   "matches": [
     {
       "id": "03-01-2026",
@@ -1935,21 +1935,295 @@
       "id": "17-02-2026",
       "date": "17/02/2026",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isFullHouse": false,
+      "attendance": {
+        "RED": [
+          {
+            "name": "David",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          },
+          {
+            "name": "Ishan(John+1)",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "LM"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Rajat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Ishan(David+1)",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "CB"
+          },
+          {
+            "name": "John",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Akshat",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Vinay",
+            "goals": 5,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Vikas",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Vinay+1",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "LB"
+          },
+          {
+            "name": "Joe",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Vinit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Soumyadeep",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 7,
+        "BLUE": 8
+      },
+      "totalGoals": 15
     },
     {
       "id": "21-02-2026",
       "date": "21/02/2026",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isFullHouse": false,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Vedant",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Suyash",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "ST"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Subbu",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Tejas",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "RB"
+          },
+          {
+            "name": "Prateek",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Vikalp",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Animesh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Vikas",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Joe",
+            "goals": 0,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Ashish",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Savan",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Pandey",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Rishav",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 5,
+        "WHITE": 2
+      },
+      "totalGoals": 7
     },
     {
       "id": "24-02-2026",
@@ -2853,6 +3127,8 @@
     "Ashish",
     "David",
     "Deepak",
+    "Ishan(David+1)",
+    "Ishan(John+1)",
     "Jethi",
     "Joe",
     "John",
@@ -2888,6 +3164,7 @@
     "Vikalp",
     "Vikas",
     "Vinay",
+    "Vinay+1",
     "Vinit",
     "Vinoth",
     "Vivek",
