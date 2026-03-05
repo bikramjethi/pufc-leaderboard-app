@@ -78,13 +78,13 @@ export const config = {
     seasons: ["2024", "2025", "2026"],         // Seasons with per-match data available (auto-picks up new years)
     defaultSeason: "all",              // Default: "all" for combined, or specific year
     enableColorStats: true,            // Show/hide the Color Win Rates feature
-    
+
     // Additional Fun Stats Features
     enableHotStreaks: true,            // 🔥 Player winning/scoring streaks (2026+ data only)
     enableDreamTeamDuos: true,         // 🤝 Best performing player pairs
     enableClutchFactor: true,          // 🎯 Decisive scorers in close games (≤2 goal margin)
     enableOGLeaders: true,             // 😅 Own Goal Leaders (Hall of Unfortunate Moments)
-    
+
     // Which features require isBackfilled:true for 2024 and 2025 data
     // true = only include 2024/2025 matches marked as backfilled (complete data required)
     // false = include all 2024/2025 matches (scoreline data is sufficient)
@@ -114,7 +114,7 @@ export const config = {
 
   // Create Lineup Admin Tool
   CREATE_LINEUP: {
-    enabled: false,                     // Show/hide the Create Lineup tab (admin tool)
+    enabled: true,                     // Show/hide the Create Lineup tab (admin tool)
   },
 
   // Weekly Teams Settings
