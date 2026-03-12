@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { getDisplayName } from "../../utils/playerDisplayName";
 import attendanceLeaderboardData2025 from "../../data/attendance-data/leaderboard/2025.json";
 import attendanceLeaderboardData2026 from "../../data/attendance-data/leaderboard/2026.json";
 
@@ -422,7 +423,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                               </td>
                             )}
                             <td className="sno-col">{globalRowIndex}</td>
-                            <td className="name-col">{player.name}</td>
+                            <td className="name-col">{getDisplayName(player.name)}</td>
                             <td className="stat-col">{player.midweekGames}</td>
                             <td className="stat-col">{player.weekendGames}</td>
                             <td className="stat-col">
@@ -501,7 +502,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                   >
                     <td className="category-col">{player.category}</td>
                     <td className="sno-col">{index + 1}</td>
-                    <td className="name-col">{player.name}</td>
+                    <td className="name-col">{getDisplayName(player.name)}</td>
                     <td className="stat-col">{player.midweekGames}</td>
                     <td className="stat-col">{player.weekendGames}</td>
                     <td className="stat-col">

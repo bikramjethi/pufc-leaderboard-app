@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { getDisplayName } from "../../utils/playerDisplayName";
 
 const statRows = [
   { key: "matches", label: "Matches Played" },
@@ -73,7 +74,7 @@ export const ComparePanel = ({ players = [], onClose }) => {
                     <span className="position-badge position-n/a">N/A</span>
                   )}
                 </div>
-                <span className="compare-player-name">{player.name ?? "Unknown"}</span>
+                <span className="compare-player-name">{getDisplayName(player.name) ?? "Unknown"}</span>
               </div>
             </div>
           ))}

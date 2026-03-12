@@ -1,3 +1,5 @@
+import { getDisplayName } from "../../utils/playerDisplayName";
+
 export const Row = ({ 
   player, 
   rank, 
@@ -81,10 +83,10 @@ export const Row = ({
             onClick={onPlayerClick}
             aria-label={`View ${player.name}'s profile`}
           >
-            {player.name}
+            {getDisplayName(player.name)}
           </button>
         ) : (
-          player.name
+          getDisplayName(player.name)
         )}
       </td>
       <td className="position-cell">
