@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo } from "react";
 import "./CreateLineup.css";
 import playerProfiles from "../../data/player-profiles.json";
 
@@ -62,9 +62,6 @@ export const CreateLineup = () => {
     POSITIONS.map(pos => ({ position: pos, name: "" }))
   );
 
-  const fieldRef = useRef(null);
-  const [isExporting, setIsExporting] = useState(false);
-
   // Get all known player names
   const allKnownPlayers = useMemo(() => {
     return playerProfiles.map(p => p.name).sort();
@@ -87,86 +84,6 @@ export const CreateLineup = () => {
   const handleClear = () => {
     setTeam1Players(POSITIONS.map(pos => ({ position: pos, name: "" })));
     setTeam2Players(POSITIONS.map(pos => ({ position: pos, name: "" })));
-  };
-
-  // Export as image
-  const handleExport = async () => {
-    if (!fieldRef.current) return;
-    
-    setIsExporting(true);
-    try {
-      // Dynamic import of html2canvas
-      const html2canvas = (await import("html2canvas")).default;
-      
-      const canvas = await html2canvas(fieldRef.current, {
-        backgroundColor: "#1a1a2e",
-        scale: 2,
-        logging: false,
-      });
-      
-      // Convert to blob and download
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          alert("Failed to generate image");
-          setIsExporting(false);
-          return;
-        }
-        
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `lineup-${team1Color}-vs-${team2Color}-${Date.now()}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        setIsExporting(false);
-      }, "image/png");
-    } catch (error) {
-      console.error("Export failed:", error);
-      alert("Failed to export image. Please try again.");
-      setIsExporting(false);
-    }
-  };
-
-  // Copy to clipboard as image
-  const handleCopy = async () => {
-    if (!fieldRef.current) return;
-    
-    setIsExporting(true);
-    try {
-      const html2canvas = (await import("html2canvas")).default;
-      
-      const canvas = await html2canvas(fieldRef.current, {
-        backgroundColor: "#1a1a2e",
-        scale: 2,
-        logging: false,
-      });
-      
-      canvas.toBlob(async (blob) => {
-        if (!blob) {
-          alert("Failed to copy image");
-          setIsExporting(false);
-          return;
-        }
-        
-        try {
-          await navigator.clipboard.write([
-            new ClipboardItem({ "image/png": blob })
-          ]);
-          alert("Lineup copied to clipboard!");
-        } catch (err) {
-          alert("Failed to copy to clipboard. Please use Export instead.");
-        }
-        
-        setIsExporting(false);
-      }, "image/png");
-    } catch (error) {
-      console.error("Copy failed:", error);
-      alert("Failed to copy image. Please try again.");
-      setIsExporting(false);
-    }
   };
 
   return (
@@ -264,34 +181,15 @@ export const CreateLineup = () => {
 
           {/* Action Buttons */}
           <div className="lineup-actions">
-            <button 
-              className="btn-clear" 
-              onClick={handleClear}
-              disabled={isExporting}
-            >
+            <button className="btn-clear" onClick={handleClear}>
               Clear All
-            </button>
-            <button 
-              className="btn-copy" 
-              onClick={handleCopy}
-              disabled={isExporting}
-            >
-              {isExporting ? "Processing..." : "Copy Image"}
-            </button>
-            <button 
-              className="btn-export" 
-              onClick={handleExport}
-              disabled={isExporting}
-            >
-              {isExporting ? "Exporting..." : "Export Image"}
             </button>
           </div>
         </div>
 
         {/* Field View */}
         <div className="lineup-field-container">
-          <div className="field-wrapper" ref={fieldRef}>
-            {/* Header */}
+          <div className="field-wrapper">
             <div className="lineup-field-header">
               <div className="lineup-title">
                 <span className="lineup-vs">
@@ -306,7 +204,6 @@ export const CreateLineup = () => {
               </div>
             </div>
 
-            {/* Football Field - wrapped for portrait mode on small viewports */}
             <div className="field-view-portrait-wrapper">
             <div className="football-field">
               {/* Field markings */}
