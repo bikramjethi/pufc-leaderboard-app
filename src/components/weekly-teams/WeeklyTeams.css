@@ -327,12 +327,13 @@
 
 .wt-field-view {
   margin-top: 1rem;
+  position: relative;
 }
 
 .wt-football-field {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 aspect ratio */
+  padding-top: 56.25%; /* 16:9 aspect ratio - landscape */
   background: linear-gradient(
     to right,
     #2d8a3e 0%,
@@ -747,23 +748,56 @@
     font-size: 1.1rem;
   }
 
+  /* Portrait field: rotate to 9:16 for a cleaner mobile view */
+  .wt-field-view {
+    aspect-ratio: 9 / 16;
+    max-height: 80vh;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .wt-football-field {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 177.78%;
+    height: 56.25%;
+    margin: 0;
+    padding-top: 0 !important;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    border-radius: 12px;
+  }
+
+  /* Counter-rotate markers so dot stays on top, name/labels below (field is rotated -90deg) */
+  .wt-player-marker {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  /* Scaled-down position markers for portrait */
   .wt-player-circle {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
   }
 
   .wt-player-position {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
   }
 
   .wt-player-name-tag {
-    font-size: 0.55rem;
-    max-width: 60px;
+    font-size: 0.5rem;
+    max-width: 52px;
+    padding: 1px 4px;
   }
 
   .wt-stat-badge {
+    font-size: 0.45rem;
+    padding: 1px 2px;
+  }
+
+  .wt-player-marker.wt-rotating-gk-placeholder .wt-player-position {
     font-size: 0.5rem;
-    padding: 1px 3px;
   }
 
   .wt-legend {
@@ -774,15 +808,23 @@
 }
 
 @media (max-width: 480px) {
+  .wt-field-view {
+    max-height: 75vh;
+  }
+
   .wt-player-circle {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .wt-player-position {
+    font-size: 0.5rem;
   }
 
   .wt-player-name-tag {
-    font-size: 0.5rem;
-    max-width: 50px;
-    padding: 1px 4px;
+    font-size: 0.45rem;
+    max-width: 44px;
+    padding: 1px 3px;
   }
 
   .wt-player-stats-badges {
@@ -790,8 +832,12 @@
   }
 
   .wt-stat-badge {
+    font-size: 0.4rem;
+    padding: 0 2px;
+  }
+
+  .wt-player-marker.wt-rotating-gk-placeholder .wt-player-position {
     font-size: 0.45rem;
-    padding: 0px 2px;
   }
 
   .cancelled-emoji {

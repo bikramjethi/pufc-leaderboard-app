@@ -306,7 +306,8 @@ export const CreateLineup = () => {
               </div>
             </div>
 
-            {/* Football Field */}
+            {/* Football Field - wrapped for portrait mode on small viewports */}
+            <div className="field-view-portrait-wrapper">
             <div className="football-field">
               {/* Field markings */}
               <div className="field-grass">
@@ -363,6 +364,7 @@ export const CreateLineup = () => {
                   </div>
                 );
               })}
+            </div>
             </div>
           </div>
         </div>
