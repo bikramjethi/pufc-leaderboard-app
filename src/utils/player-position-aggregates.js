@@ -1,6 +1,9 @@
 /**
- * Aggregate per-match position counts from attendance JSON.
+ * Aggregate per-match stats from attendance JSON.
  * Only counts played, non-cancelled matches.
+ *
+ * Listed `position` drives the donut, bars, and flexibility tags.
+ * `rotatedGoalie` is counted separately (not as a GK position appearance).
  */
 
 /** @param {Array<{ name: string, groupAvailibility?: string }>} profiles */
@@ -18,10 +21,11 @@ export function buildEligibleProfileMap(profiles) {
 /**
  * @param {object} seasonData - attendance season file (matches array)
  * @param {Map<string, object>} eligibleByLower - from buildEligibleProfileMap
- * @returns {Map<string, Map<string, number>>} canonical name -> position -> count
+ * @returns {{ positions: Map<string, Map<string, number>>, rotatedGoalie: Map<string, number> }}
  */
-export function aggregatePositionsForSeason(seasonData, eligibleByLower) {
-  const counts = new Map();
+export function aggregateLineupStatsForSeason(seasonData, eligibleByLower) {
+  const positions = new Map();
+  const rotatedGoalie = new Map();
   const matches = seasonData?.matches || [];
 
   for (const m of matches) {
@@ -36,18 +40,22 @@ export function aggregatePositionsForSeason(seasonData, eligibleByLower) {
         const profile = eligibleByLower.get(player.name.toLowerCase().trim());
         if (!profile) continue;
 
-        const pos = String(player.position || "").trim().toUpperCase();
-        if (!pos) continue;
-
         const name = profile.name;
-        if (!counts.has(name)) counts.set(name, new Map());
-        const byPos = counts.get(name);
-        byPos.set(pos, (byPos.get(pos) || 0) + 1);
+        const pos = String(player.position || "").trim().toUpperCase();
+        if (pos) {
+          if (!positions.has(name)) positions.set(name, new Map());
+          const byPos = positions.get(name);
+          byPos.set(pos, (byPos.get(pos) || 0) + 1);
+        }
+
+        if (player.rotatedGoalie) {
+          rotatedGoalie.set(name, (rotatedGoalie.get(name) || 0) + 1);
+        }
       }
     }
   }
 
-  return counts;
+  return { positions, rotatedGoalie };
 }
 
 /**
@@ -66,4 +74,28 @@ export function mergePositionAggregates(aggs) {
     }
   }
   return merged;
+}
+
+/**
+ * @param {Map<string, number>[]} maps
+ * @returns {Map<string, number>}
+ */
+export function mergeRotatedGoalieCounts(maps) {
+  const out = new Map();
+  for (const m of maps) {
+    for (const [name, c] of m) {
+      out.set(name, (out.get(name) || 0) + c);
+    }
+  }
+  return out;
+}
+
+/**
+ * @param {{ positions: Map<string, Map<string, number>>, rotatedGoalie: Map<string, number> }[]} list
+ */
+export function mergeLineupStatsAggregates(list) {
+  return {
+    positions: mergePositionAggregates(list.map((s) => s.positions)),
+    rotatedGoalie: mergeRotatedGoalieCounts(list.map((s) => s.rotatedGoalie)),
+  };
 }

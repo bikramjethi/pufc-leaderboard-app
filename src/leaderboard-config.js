@@ -124,6 +124,13 @@ export const config = {
     defaultSeason: "2026",             // Default season to load
   },
 
+  // Who plays where (position mix per player from attendance lineups)
+  WHO_PLAYS_WHERE: {
+    enabled: true,
+    seasons: ["2026"],
+    defaultSeason: "2026",
+  },
+
   // Defenders Corner Settings
   DEFENDERS_CORNER: {
     enabled: false,                     // Show/hide the Defenders Corner tab

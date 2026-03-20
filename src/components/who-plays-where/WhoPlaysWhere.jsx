@@ -3,9 +3,9 @@ import playerProfiles from "../../data/player-profiles.json";
 import { config } from "../../leaderboard-config.js";
 import { getDisplayName } from "../../utils/playerDisplayName.js";
 import {
-  aggregatePositionsForSeason,
+  aggregateLineupStatsForSeason,
   buildEligibleProfileMap,
-  mergePositionAggregates,
+  mergeLineupStatsAggregates,
 } from "../../utils/player-position-aggregates.js";
 import { getPositionColor } from "../../utils/positionColors.js";
 import {
@@ -68,23 +68,27 @@ export const WhoPlaysWhere = () => {
     []
   );
 
-  const positionAgg = useMemo(() => {
+  const lineupStats = useMemo(() => {
     if (selectedSeason === "all") {
       const aggs = availableSeasons
         .map((y) => loadSeasonData(y))
         .filter(Boolean)
-        .map((data) => aggregatePositionsForSeason(data, eligibleByLower));
-      return mergePositionAggregates(aggs);
+        .map((data) => aggregateLineupStatsForSeason(data, eligibleByLower));
+      return mergeLineupStatsAggregates(aggs);
     }
     const data = loadSeasonData(selectedSeason);
-    return data ? aggregatePositionsForSeason(data, eligibleByLower) : new Map();
+    return data
+      ? aggregateLineupStatsForSeason(data, eligibleByLower)
+      : { positions: new Map(), rotatedGoalie: new Map() };
   }, [selectedSeason, availableSeasons, eligibleByLower]);
 
   const playerRowsAll = useMemo(() => {
+    const { positions, rotatedGoalie } = lineupStats;
     const rows = [];
-    for (const [name, posMap] of positionAgg) {
+    for (const [name, posMap] of positions) {
       const obj = Object.fromEntries(posMap);
       const total = Object.values(obj).reduce((a, b) => a + b, 0);
+      const rotatedCount = rotatedGoalie.get(name) || 0;
       if (total < 1) continue;
       const unique = Object.keys(obj).length;
       const lines = linesFromPosCounts(obj);
@@ -100,11 +104,12 @@ export const WhoPlaysWhere = () => {
         lines,
         spreadLabel,
         spreadAriaLabel,
+        rotatedCount,
       });
     }
     rows.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
     return rows;
-  }, [positionAgg]);
+  }, [lineupStats]);
 
   const playerRows = useMemo(() => {
     let rows = playerRowsAll;
@@ -129,8 +134,8 @@ export const WhoPlaysWhere = () => {
         <div className="wpw-title-block">
           <h2 className="wpw-title">Who plays where ?</h2>
           <p className="wpw-subtitle">
-            Filter by flexibility; each card’s strip lights up GK, defense, midfield, and attack
-            based on real lineup data.
+            Positions follow listed roles in attendance. Rotating-keeper stints are a separate small
+            count on each card when they exist.
           </p>
         </div>
         <div className="wpw-toolbar">
@@ -200,7 +205,17 @@ export const WhoPlaysWhere = () => {
       ) : (
         <ul className="wpw-grid">
           {playerRows.map(
-            ({ name, posCounts, total, unique, tag, lines, spreadLabel, spreadAriaLabel }) => (
+            ({
+              name,
+              posCounts,
+              total,
+              unique,
+              tag,
+              lines,
+              spreadLabel,
+              spreadAriaLabel,
+              rotatedCount,
+            }) => (
             <li key={name} className="wpw-card">
               <div className="wpw-card-top">
                 <div
@@ -221,6 +236,11 @@ export const WhoPlaysWhere = () => {
                       {tag === "utility" ? "Utility +" : tag === "flexible" ? "Flexible" : "Specialist"}
                     </span>
                   </p>
+                  {rotatedCount > 0 ? (
+                    <p className="wpw-rot-gk" title="Times marked rotating in goal for that match">
+                      Rot GK · {rotatedCount}
+                    </p>
+                  ) : null}
                   <div
                     className="wpw-pitch-strip"
                     role="img"
