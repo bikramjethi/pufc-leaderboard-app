@@ -12,6 +12,7 @@ import { MatchEntry } from "./components/match-entry";
 import { DefendersCorner } from "./components/defenders-corner";
 import { CreateLineup } from "./components/create-lineup";
 import { WeeklyTeams } from "./components/weekly-teams";
+import { WhoPlaysWhere } from "./components/who-plays-where/WhoPlaysWhere";
 import { HallOfFame } from "./components/hall-of-fame";
 import "./App.css";
 import "./components/fun-stats/FunStats.css";
@@ -44,6 +45,12 @@ const getNavItems = () => [
       { id: "attendance", label: "Leaderboard", icon: "📅", enabled: config.ATTENDANCE?.enabled },
       { id: "weekly-tracker", label: "Weekly Tracker", icon: "🗓️", enabled: config.ATTENDANCE?.TRACKER?.enabled },
       { id: "weekly-teams", label: "Weekly Teams", icon: "👥", enabled: config.WEEKLY_TEAMS?.enabled },
+      {
+        id: "who-plays-where",
+        label: "Who plays where ?",
+        icon: "🧭",
+        enabled: config.WHO_PLAYS_WHERE?.enabled,
+      },
     ],
   },
   {
@@ -91,6 +98,7 @@ function App() {
       "attendance": "Attendance Leaderboard",
       "weekly-tracker": "Weekly Tracker",
       "weekly-teams": "Weekly Teams",
+      "who-plays-where": "Who plays where ?",
       "insights": "Season Insights",
       "scoring-trends": "Scoring Trends",
       "fun-stats": "Fun Stats",
@@ -326,6 +334,8 @@ function App() {
             <WeeklyTracker />
           ) : activeTab === "weekly-teams" ? (
             <WeeklyTeams />
+          ) : activeTab === "who-plays-where" ? (
+            <WhoPlaysWhere />
           ) : activeTab === "insights" ? (
             <Insights />
         ) : activeTab === "scoring-trends" ? (
