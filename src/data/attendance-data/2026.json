@@ -639,7 +639,7 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "LM"
+            "position": "CB"
           },
           {
             "name": "Sudeep",
@@ -1121,7 +1121,8 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "CM"
+            "position": "CM",
+            "rotatedGoalie": true
           },
           {
             "name": "Pandey",

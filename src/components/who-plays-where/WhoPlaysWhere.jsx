@@ -8,7 +8,20 @@ import {
   mergePositionAggregates,
 } from "../../utils/player-position-aggregates.js";
 import { getPositionColor } from "../../utils/positionColors.js";
+import {
+  describePitchSpread,
+  flexibilityTag,
+  linesFromPosCounts,
+  pitchSpreadAria,
+} from "../../utils/pitch-spread.js";
 import "./WhoPlaysWhere.css";
+
+const TAG_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "specialist", label: "Specialist" },
+  { id: "flexible", label: "Flexible" },
+  { id: "utility", label: "Utility +" },
+];
 
 const attendanceModules = import.meta.glob("../../data/attendance-data/*.json", {
   eager: true,
@@ -48,6 +61,7 @@ export const WhoPlaysWhere = () => {
       : availableSeasons[0];
   const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
   const [search, setSearch] = useState("");
+  const [tagFilter, setTagFilter] = useState("all");
 
   const eligibleByLower = useMemo(
     () => buildEligibleProfileMap(playerProfiles),
@@ -66,24 +80,46 @@ export const WhoPlaysWhere = () => {
     return data ? aggregatePositionsForSeason(data, eligibleByLower) : new Map();
   }, [selectedSeason, availableSeasons, eligibleByLower]);
 
-  const playerRows = useMemo(() => {
+  const playerRowsAll = useMemo(() => {
     const rows = [];
     for (const [name, posMap] of positionAgg) {
       const obj = Object.fromEntries(posMap);
       const total = Object.values(obj).reduce((a, b) => a + b, 0);
       if (total < 1) continue;
       const unique = Object.keys(obj).length;
-      rows.push({ name, posCounts: obj, total, unique });
+      const lines = linesFromPosCounts(obj);
+      const tag = flexibilityTag(unique);
+      const spreadLabel = describePitchSpread(lines);
+      const spreadAriaLabel = pitchSpreadAria(lines);
+      rows.push({
+        name,
+        posCounts: obj,
+        total,
+        unique,
+        tag,
+        lines,
+        spreadLabel,
+        spreadAriaLabel,
+      });
     }
     rows.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+    return rows;
+  }, [positionAgg]);
 
+  const playerRows = useMemo(() => {
+    let rows = playerRowsAll;
+    if (tagFilter !== "all") {
+      rows = rows.filter((r) => r.tag === tagFilter);
+    }
     const q = search.trim().toLowerCase();
-    if (!q) return rows;
-    return rows.filter((r) => {
-      const display = getDisplayName(r.name).toLowerCase();
-      return r.name.toLowerCase().includes(q) || display.includes(q);
-    });
-  }, [positionAgg, search]);
+    if (q) {
+      rows = rows.filter((r) => {
+        const display = getDisplayName(r.name).toLowerCase();
+        return r.name.toLowerCase().includes(q) || display.includes(q);
+      });
+    }
+    return rows;
+  }, [playerRowsAll, search, tagFilter]);
 
   if (!cfg?.enabled) return null;
 
@@ -93,7 +129,8 @@ export const WhoPlaysWhere = () => {
         <div className="wpw-title-block">
           <h2 className="wpw-title">Who plays where ?</h2>
           <p className="wpw-subtitle">
-            Match appearances by position — see who rotates across the pitch
+            Filter by flexibility; each card’s strip lights up GK, defense, midfield, and attack
+            based on real lineup data.
           </p>
         </div>
         <div className="wpw-toolbar">
@@ -127,17 +164,43 @@ export const WhoPlaysWhere = () => {
             </select>
           </div>
         </div>
+
+        <div className="wpw-filter-row" role="group" aria-label="Filter by flexibility">
+          <span className="wpw-filter-label">Show</span>
+          <div className="wpw-filter-chips">
+            {TAG_FILTERS.map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                className={`wpw-filter-chip ${tagFilter === id ? "wpw-filter-chip--active" : ""}`}
+                onClick={() => setTagFilter(id)}
+                aria-pressed={tagFilter === id}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       {playerRows.length === 0 ? (
         <div className="wpw-empty">
-          {search.trim()
-            ? "No players match your search for this season."
-            : "No position data for this season yet."}
+          {playerRowsAll.length === 0
+            ? "No position data for this season yet."
+            : (() => {
+                const hasQ = Boolean(search.trim());
+                const hasTag = tagFilter !== "all";
+                if (hasQ && hasTag)
+                  return "No players match this search in the selected category.";
+                if (hasQ) return "No players match your search.";
+                if (hasTag) return "No players in this category for the current season.";
+                return "No players to show.";
+              })()}
         </div>
       ) : (
         <ul className="wpw-grid">
-          {playerRows.map(({ name, posCounts, total, unique }) => (
+          {playerRows.map(
+            ({ name, posCounts, total, unique, tag, lines, spreadLabel, spreadAriaLabel }) => (
             <li key={name} className="wpw-card">
               <div className="wpw-card-top">
                 <div
@@ -154,9 +217,37 @@ export const WhoPlaysWhere = () => {
                   <h3 className="wpw-player-name">{getDisplayName(name)}</h3>
                   <p className="wpw-meta">
                     <span className="wpw-meta-pill">{unique} positions</span>
-                    <span className="wpw-meta-pill wpw-meta-accent">
-                      {unique >= 4 ? "Utility +" : unique >= 2 ? "Flexible" : "Specialist"}
+                    <span className={`wpw-meta-pill wpw-meta-pill--${tag}`}>
+                      {tag === "utility" ? "Utility +" : tag === "flexible" ? "Flexible" : "Specialist"}
                     </span>
+                  </p>
+                  <div
+                    className="wpw-pitch-strip"
+                    role="img"
+                    aria-label={spreadAriaLabel || "Pitch spread"}
+                  >
+                    {[
+                      { line: "GK", label: "GK" },
+                      { line: "DEF", label: "Def" },
+                      { line: "MID", label: "Mid" },
+                      { line: "FWD", label: "Atk" },
+                    ].map(({ line, label }) => (
+                      <div key={line} className="wpw-pitch-strip-cell">
+                        <div
+                          className={`wpw-pitch-block ${lines.has(line) ? "wpw-pitch-block--on" : ""}`}
+                        />
+                        <span className="wpw-pitch-strip-cap">{label}</span>
+                      </div>
+                    ))}
+                    {lines.has("OTHER") ? (
+                      <div className="wpw-pitch-strip-cell wpw-pitch-strip-cell--other">
+                        <div className="wpw-pitch-block wpw-pitch-block--on wpw-pitch-block--other" />
+                        <span className="wpw-pitch-strip-cap">Other</span>
+                      </div>
+                    ) : null}
+                  </div>
+                  <p className="wpw-spread-copy" title={spreadLabel}>
+                    {spreadLabel}
                   </p>
                 </div>
               </div>
