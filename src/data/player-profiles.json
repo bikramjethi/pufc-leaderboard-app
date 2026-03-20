@@ -25,7 +25,7 @@
     "position": [
       "FWD"
     ],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Animesh",
@@ -333,5 +333,70 @@
     "name": "Vedant",
     "position": ["MID"],
     "groupAvailibility": "WEEKEND"
+  },
+  {
+    "name": "Altamash",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Ankur",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Gagan",
+    "position": ["DEF"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Indranil",
+    "position": ["DEF"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Manoj",
+    "position": ["DEF"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Nilaj",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Others",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Priyanshu",
+    "position": ["FWD"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Shaunav",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Somanna",
+    "position": ["MID"],
+    "groupAvailibility": "WEEKEND"
+  },
+  {
+    "name": "Srijan",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Vysakh",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
+  },
+  {
+    "name": "Yuvraj",
+    "position": ["MID"],
+    "groupAvailibility": "ONLOAN"
   }
 ]
