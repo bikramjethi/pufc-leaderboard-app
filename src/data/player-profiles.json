@@ -79,7 +79,7 @@
   {
     "name": "Uma Shankar",
     "position": ["GK"],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Lalit",
@@ -123,7 +123,7 @@
     "position": [
       "GK"
     ],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Rishabh",
@@ -200,14 +200,14 @@
     "position": [
       "FWD"
     ],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Tushar Lal",
     "position": [
       "DEF"
     ],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Vikalp",
@@ -256,43 +256,43 @@
     "position": [
       "FWD"
     ],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Tejas",
     "position": [
       "DEF"
     ],
-    "groupAvailibility": "ONLOAN"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Suyash",
     "position": [
       "FWD"
     ],
-    "groupAvailibility": "ONLOAN"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Sayan",
     "position": [
       "MID"
     ],
-    "groupAvailibility": "ONLOAN"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Ajay",
     "position": ["MID"],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Akshendra",
     "position": ["MID"],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Akshit",
     "position": ["DEF"],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Alan",
@@ -302,12 +302,12 @@
   {
     "name": "Anis",
     "position": ["MID"],
-    "groupAvailibility": "ONLOAN"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Mani",
     "position": ["FWD"],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "ONLOAN"
   },
   {
     "name": "Rajat",
@@ -317,17 +317,17 @@
   {
     "name": "Rajesh",
     "position": ["DEF"],
-    "groupAvailibility": "N/A"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Ram",
     "position": ["MID"],
-    "groupAvailibility": "ONLOAN"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Somu",
     "position": ["FWD"],
-    "groupAvailibility": "ONLOAN"
+    "groupAvailibility": "INACTIVE"
   },
   {
     "name": "Vedant",
