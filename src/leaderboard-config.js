@@ -145,5 +145,25 @@ export const config = {
   HALL_OF_FAME: {
     enabled: true,                      // Show/hide the Hall of Fame tab
   },
+
+  // Outstanding scoring (goal hauls in one match — cumulative across seasons)
+  OUTSTANDING_SCORING: {
+    enabled: false,
+    seasons: ["2024", "2025", "2026"],
+    /** Only scan the JSON for games with at least this many goals (match range slider floor) */
+    collectFloor: 3,
+    /** Single “volume” slider from rangeGoalMin through rangeGoalMax (shown as “{max}+” at the end) */
+    rangeGoalMin: 3,
+    rangeGoalMax: 9,
+    /** Initial slider position (minimum goals; always “N+” upward) */
+    defaultRangeMin: 6,
+    featLabel: "Big hauls",
+    /**
+     * If set (e.g. 2026), matches from seasons with year strictly before this
+     * require isBackfilled: true (same idea as Fun Stats legacy data).
+     * null = include all played matches in listed seasons.
+     */
+    onlyBackfilledBeforeYear: null,
+  },
 };
 
