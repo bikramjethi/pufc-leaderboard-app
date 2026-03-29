@@ -1,5 +1,5 @@
 /**
- * Scan attendance JSON for single-match goal hauls (e.g. double hat-trick = 6+).
+ * Scan attendance JSON for single-match goal hauls; filter by configurable goal range.
  */
 
 const attendanceModules = import.meta.glob("../data/attendance-data/*.json", {
@@ -41,12 +41,16 @@ export function formatScorelineShort(scoreline) {
 /**
  * @param {object} options
  * @param {string[]} options.seasons
- * @param {number} options.minGoals
- * @param {number} [options.onlyBackfilledBeforeYear] — if set, matches in seasons strictly before this calendar year need isBackfilled
+ * @param {number} [options.collectFloor=3] — only load performances with at least this many goals (efficiency)
+ * @param {number} options.rangeMin — inclusive lower bound (UI “from”)
+ * @param {number | null} options.rangeMax — inclusive upper bound; null = no cap (“9+”)
+ * @param {number} [options.onlyBackfilledBeforeYear]
  */
 export function collectOutstandingScoringPerformances({
   seasons,
-  minGoals,
+  collectFloor = 3,
+  rangeMin,
+  rangeMax,
   onlyBackfilledBeforeYear,
 }) {
   /** @type {Array<{ playerName: string, goals: number, season: string, matchId: string, date: string, day: string, teamColor: string, scoreline: Record<string, number>, ownGoals: number }>} */
@@ -75,7 +79,9 @@ export function collectOutstandingScoringPerformances({
         for (const p of players) {
           if (!p?.name || isNonPlayerName(p.name)) continue;
           const g = Number(p.goals) || 0;
-          if (g < minGoals) continue;
+          if (g < collectFloor) continue;
+          if (g < rangeMin) continue;
+          if (rangeMax != null && g > rangeMax) continue;
           flat.push({
             playerName: p.name,
             goals: g,
@@ -112,4 +118,11 @@ export function collectOutstandingScoringPerformances({
   );
 
   return { rows, totalPerformances: flat.length };
+}
+
+/** Human-readable filter label for hero / modal */
+export function formatGoalRangeLabel(rangeMin, rangeMax) {
+  if (rangeMax == null) return `${rangeMin}+ goals in one game`;
+  if (rangeMin === rangeMax) return `${rangeMin} goals in one game`;
+  return `${rangeMin}–${rangeMax} goals in one game`;
 }
