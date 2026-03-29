@@ -102,23 +102,21 @@ export const OutstandingScoring = () => {
                 aria-valuenow={rangeMin}
                 aria-label={`Show games with at least this many goals in one match; right end is ${openTopLabel}`}
               />
-              <div
-                className="osp-slider-ticks"
-                style={{
-                  gridTemplateColumns: `repeat(${tickLabels.length}, minmax(0, 1fr))`,
-                }}
-                aria-hidden
-              >
-                {tickLabels.map((n) => (
-                  <span
-                    key={n}
-                    className={
-                      n === gMax ? "osp-slider-tick osp-slider-tick--open" : "osp-slider-tick"
-                    }
-                  >
-                    {n === gMax ? openTopLabel : n}
-                  </span>
-                ))}
+              <div className="osp-slider-ticks" aria-hidden>
+                {tickLabels.map((n) => {
+                  const tickPct = span > 0 ? ((n - gMin) / span) * 100 : 50;
+                  return (
+                    <span
+                      key={n}
+                      className={
+                        n === gMax ? "osp-slider-tick osp-slider-tick--open" : "osp-slider-tick"
+                      }
+                      style={{ left: `${tickPct}%` }}
+                    >
+                      {n === gMax ? openTopLabel : n}
+                    </span>
+                  );
+                })}
               </div>
             </div>
             <p className="osp-range-hint">

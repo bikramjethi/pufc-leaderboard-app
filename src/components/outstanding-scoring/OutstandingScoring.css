@@ -194,18 +194,24 @@
   cursor: grabbing;
 }
 
+/* Match native range thumb centers: ticks at (value - min) / (max - min), not equal grid columns */
 .osp-slider-ticks {
   position: absolute;
   left: 0;
   right: 0;
   top: calc(50% + var(--osp-thumb) / 2 + 0.35rem);
-  display: grid;
-  justify-items: center;
-  gap: 0;
+  height: 1.1rem;
+  pointer-events: none;
   font-size: 0.68rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--text-muted);
+}
+
+.osp-slider-tick {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .osp-slider-tick--open {
