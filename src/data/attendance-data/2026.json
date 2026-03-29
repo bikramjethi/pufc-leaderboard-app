@@ -2993,7 +2993,7 @@
       "day": "Midweek",
       "matchPlayed": true,
       "matchCancelled": false,
-      "isFullHouse": false,
+      "isFullHouse": true,
       "team2RotatingGoalie": true,
       "attendance": {
         "RED": [
@@ -3145,7 +3145,7 @@
       "day": "Weekend",
       "matchPlayed": true,
       "matchCancelled": false,
-      "isFullHouse": false,
+      "isFullHouse": true,
       "team1RotatingGoalie": true,
       "team2RotatingGoalie": true,
       "attendance": {
