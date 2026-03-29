@@ -313,7 +313,6 @@
   text-align: left;
   font-family: inherit;
   cursor: pointer;
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -348,24 +347,10 @@
   outline-offset: 2px;
 }
 
-.osp-card-badge {
-  position: absolute;
-  top: 0.65rem;
-  right: 0.65rem;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 0.2rem 0.45rem;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--gold), color-mix(in srgb, var(--gold) 70%, #b45309));
-  color: #1a1206;
-  letter-spacing: 0.04em;
-}
-
 .osp-card-name {
   font-size: 1.08rem;
   font-weight: 700;
   color: var(--text-primary);
-  padding-right: 3.5rem;
   line-height: 1.25;
 }
 

@@ -146,30 +146,24 @@ export const OutstandingScoring = () => {
         </div>
       ) : (
         <ul className="osp-grid">
-          {rows.map(({ name, count, performances }) => {
-            const topHaul = Math.max(...performances.map((p) => p.goals));
-            return (
-              <li key={name}>
-                <button
-                  type="button"
-                  className="osp-card"
-                  onClick={() => setModalPlayer({ name, performances })}
-                >
-                  <span className="osp-card-badge" aria-hidden>
-                    {topHaul}
+          {rows.map(({ name, count, performances }) => (
+            <li key={name}>
+              <button
+                type="button"
+                className="osp-card"
+                onClick={() => setModalPlayer({ name, performances })}
+              >
+                <span className="osp-card-name">{getDisplayName(name)}</span>
+                <span className="osp-card-count">
+                  <span className="osp-card-count-num">{count}</span>
+                  <span className="osp-card-count-lbl">
+                    {count === 1 ? "game" : "games"}
                   </span>
-                  <span className="osp-card-name">{getDisplayName(name)}</span>
-                  <span className="osp-card-count">
-                    <span className="osp-card-count-num">{count}</span>
-                    <span className="osp-card-count-lbl">
-                      {count === 1 ? "game" : "games"}
-                    </span>
-                  </span>
-                  <span className="osp-card-hint">View matches →</span>
-                </button>
-              </li>
-            );
-          })}
+                </span>
+                <span className="osp-card-hint">View matches →</span>
+              </button>
+            </li>
+          ))}
         </ul>
       )}
 
