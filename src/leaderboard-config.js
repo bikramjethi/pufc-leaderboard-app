@@ -108,7 +108,7 @@ export const config = {
 
   // Match Entry Admin Tool
   MATCH_ENTRY: {
-    enabled: false,                     // Show/hide the Match Entry tab (admin tool)
+    enabled: true,                     // Show/hide the Match Entry tab (admin tool)
     backfillYear: 2026,                // Years before this are marked as backfilled
   },
 
