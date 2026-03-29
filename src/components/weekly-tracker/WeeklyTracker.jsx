@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useLayoutEffect } from "react";
 import matchData2026 from "../../data/attendance-data/2026.json";
 import { config } from "../../leaderboard-config.js";
 import { FieldViewModal } from "../field-view-modal";
@@ -49,6 +49,18 @@ const formatDate = (dateStr) => {
   return `${dayNum}${suffix(dayNum)} ${monthName}`;
 };
 
+// Parse match id "DD-MM-YYYY" for chronological comparison (hover hint on player name)
+const getMatchTime = (match) => {
+  if (!match?.id) return 0;
+  const parts = match.id.split("-");
+  if (parts.length >= 3) {
+    const [d, m, y] = parts;
+    const t = new Date(`${y}-${m}-${d}`).getTime();
+    return Number.isNaN(t) ? 0 : t;
+  }
+  return 0;
+};
+
 // Helper to get all player names from attendance object
 const getAllPlayerNames = (attendance) => {
   if (!attendance || typeof attendance !== 'object') return [];
@@ -76,6 +88,37 @@ const isPlayerInAttendance = (attendance, playerName) => {
     }
     return false;
   });
+};
+
+/** Most recent played match in the list (same rules as stats) — for initial horizontal scroll */
+const getLatestPlayedMatchId = (matchList) => {
+  let bestId = null;
+  let bestT = -1;
+  for (const m of matchList) {
+    if (!m.matchPlayed || m.matchCancelled || m.isTournament) continue;
+    const t = getMatchTime(m);
+    if (t >= bestT) {
+      bestT = t;
+      bestId = m.id;
+    }
+  }
+  return bestId;
+};
+
+/** Latest played (non-cancelled, non-tournament) match the player attended */
+const getPlayerLastAttendedMatch = (player, matchList) => {
+  let best = null;
+  let bestT = -1;
+  for (const m of matchList) {
+    if (!m.matchPlayed || m.matchCancelled || m.isTournament) continue;
+    if (!isPlayerInAttendance(m.attendance, player)) continue;
+    const t = getMatchTime(m);
+    if (t >= bestT) {
+      bestT = t;
+      best = m;
+    }
+  }
+  return best;
 };
 
 // Helper to get player data from attendance
@@ -147,6 +190,7 @@ export const WeeklyTracker = () => {
   // Field view modal state
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [showFieldViewModal, setShowFieldViewModal] = useState(false);
+  const tableScrollRef = useRef(null);
 
   // Load match data based on year
   const matchData = matchDataByYear[trackerYear];
@@ -186,6 +230,57 @@ export const WeeklyTracker = () => {
       return (statsB?.percentage || 0) - (statsA?.percentage || 0);
     });
   }, [filteredPlayers, playerStats]);
+
+  const lastAttendedLabelByPlayer = useMemo(() => {
+    const map = new Map();
+    for (const player of sortedPlayers) {
+      const last = getPlayerLastAttendedMatch(player, matches);
+      map.set(
+        player,
+        last ? `Last attended: ${formatDate(last.date)}` : "No played matches attended yet"
+      );
+    }
+    return map;
+  }, [sortedPlayers, matches]);
+
+  // On open (mount) or season change: scroll so the latest played match column is in view
+  useLayoutEffect(() => {
+    const list = matchData?.matches ?? [];
+    if (!list.length) return;
+    const container = tableScrollRef.current;
+    if (!container) return;
+
+    const run = () => {
+      const focusId = getLatestPlayedMatchId(list);
+      // Room for sticky Player + % columns (see App.css .sticky-col / .attendance-stat)
+      const stickyLeftPad = 190;
+
+      if (!focusId) {
+        container.scrollTo({
+          left: Math.max(0, container.scrollWidth - container.clientWidth),
+          behavior: "smooth",
+        });
+        return;
+      }
+
+      const safeId =
+        typeof CSS !== "undefined" && typeof CSS.escape === "function"
+          ? CSS.escape(focusId)
+          : focusId.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+      const th = container.querySelector(`th.match-col[data-match-id="${safeId}"]`);
+      if (!th) return;
+
+      const cRect = container.getBoundingClientRect();
+      const thRect = th.getBoundingClientRect();
+      const xInContent = thRect.left - cRect.left + container.scrollLeft;
+      const targetLeft = Math.max(0, xInContent - stickyLeftPad);
+      container.scrollTo({ left: targetLeft, behavior: "smooth" });
+    };
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(run);
+    });
+  }, [trackerYear, matchData]);
 
   const getAttendanceClass = (percentage) => {
     if (percentage >= 80) return "attendance-high";
@@ -429,7 +524,7 @@ export const WeeklyTracker = () => {
           </div>
 
           {/* Attendance Table */}
-          <div className="attendance-table-container">
+          <div className="attendance-table-container" ref={tableScrollRef}>
             <table className="attendance-table">
               <thead>
                 <tr>
@@ -441,6 +536,7 @@ export const WeeklyTracker = () => {
                     return (
                       <th
                         key={match.id}
+                        data-match-id={match.id}
                         className={`match-col ${getMatchHeaderClass(match)}${isClickable ? ' clickable' : ''}`}
                         title={`${match.day} - ${match.date}${match.matchCancelled
                           ? " (Cancelled)"
@@ -474,7 +570,12 @@ export const WeeklyTracker = () => {
                   const stats = playerStats.find((s) => s.player === player);
                   return (
                     <tr key={player} className="player-row">
-                      <td className="player-name sticky-col">{player}</td>
+                      <td
+                        className="player-name sticky-col"
+                        title={lastAttendedLabelByPlayer.get(player)}
+                      >
+                        {player}
+                      </td>
                       <td
                         className={`stat attendance-stat ${getAttendanceClass(
                           stats?.percentage || 0
