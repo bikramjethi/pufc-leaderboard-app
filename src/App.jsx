@@ -14,6 +14,7 @@ import { CreateLineup } from "./components/create-lineup";
 import { WeeklyTeams } from "./components/weekly-teams";
 import { WhoPlaysWhere } from "./components/who-plays-where/WhoPlaysWhere";
 import { HallOfFame } from "./components/hall-of-fame";
+import { OutstandingScoring } from "./components/outstanding-scoring";
 import "./App.css";
 import "./components/fun-stats/FunStats.css";
 import { config } from "./leaderboard-config.js";
@@ -37,6 +38,12 @@ const getNavItems = () => [
       { id: "mvp-leaderboard", label: "MVP Leaderboard", icon: "🏆", enabled: config.MVP_LEADERBOARD?.enabled },
       { id: "defenders-corner", label: "Defenders Corner", icon: "🛡️", enabled: config.DEFENDERS_CORNER?.enabled },
       { id: "hall-of-fame", label: "Hall of Fame", icon: "⭐", enabled: config.HALL_OF_FAME?.enabled },
+      {
+        id: "outstanding-scoring",
+        label: "Outstanding scoring",
+        icon: "🌟",
+        enabled: config.OUTSTANDING_SCORING?.enabled,
+      },
     ],
   },
   {
@@ -106,6 +113,7 @@ function App() {
       "mvp-leaderboard": "MVP Leaderboard",
       "defenders-corner": "Defenders Corner",
       "hall-of-fame": "Hall of Fame",
+      "outstanding-scoring": "Outstanding scoring performances",
       "midweek-roster": "Midweek Roster",
       "weekend-roster": "Weekend Roster",
       "inactive-players": "Inactive Players",
@@ -350,6 +358,8 @@ function App() {
           <DefendersCorner />
         ) : activeTab === "hall-of-fame" ? (
           <HallOfFame />
+        ) : activeTab === "outstanding-scoring" ? (
+          <OutstandingScoring />
         ) : activeTab === "midweek-roster" ? (
             <Roster type="midweek" />
           ) : activeTab === "weekend-roster" ? (
