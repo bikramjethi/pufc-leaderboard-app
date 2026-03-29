@@ -13,6 +13,11 @@ function loadSeasonData(season) {
   return null;
 }
 
+/** Placeholder lineup rows — not real players */
+function isNonPlayerName(name) {
+  return String(name || "").trim().toLowerCase() === "others";
+}
+
 function matchSortTime(matchId) {
   if (!matchId) return 0;
   const parts = String(matchId).split("-");
@@ -68,7 +73,7 @@ export function collectOutstandingScoringPerformances({
       for (const [teamColor, players] of Object.entries(att)) {
         if (!Array.isArray(players)) continue;
         for (const p of players) {
-          if (!p?.name) continue;
+          if (!p?.name || isNonPlayerName(p.name)) continue;
           const g = Number(p.goals) || 0;
           if (g < minGoals) continue;
           flat.push({

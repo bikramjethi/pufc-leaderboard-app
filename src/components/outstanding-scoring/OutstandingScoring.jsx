@@ -49,8 +49,7 @@ export const OutstandingScoring = () => {
           <div className="osp-hero-glow" aria-hidden />
           <h1 className="osp-title">Outstanding scoring performances</h1>
           <p className="osp-lead">
-            Every time someone bags <strong>{minGoals}+ goals</strong> in a single match —{" "}
-            {thresholdLabel}. Cumulative across {seasons.join(", ")}.
+            Every time someone bags <strong>{minGoals}+ goals</strong> in a single match
           </p>
           <div className="osp-stats-bar">
             <span className="osp-stat-pill">
