@@ -3518,7 +3518,8 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "ST"
+            "position": "ST",
+            "rotatedGoalie": true
           }
         ],
         "BLUE": [
