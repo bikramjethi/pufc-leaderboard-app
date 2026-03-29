@@ -5,10 +5,31 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const year = process.argv[2];
+/** First 4-digit year in argv (supports `node sync-stats.js 2026` or `... --2026`). */
+function parseYear(argv) {
+  for (let i = 2; i < argv.length; i++) {
+    const a = argv[i];
+    if (/^\d{4}$/.test(a)) return a;
+    const dashYear = /^--(\d{4})$/.exec(a);
+    if (dashYear) return dashYear[1];
+    const eq = /^--year=(\d{4})$/.exec(a);
+    if (eq) return eq[1];
+    if ((a === '--year' || a === '-y') && argv[i + 1] && /^\d{4}$/.test(argv[i + 1])) {
+      return argv[i + 1];
+    }
+  }
+  return null;
+}
+
+const year = parseYear(process.argv);
 
 if (!year) {
-  console.error('❌ Please provide a year as an argument (e.g., node scripts/sync-stats.js 2026)');
+  console.error('❌ Please provide a year as an argument.');
+  console.error('');
+  console.error('   npm:  npm run sync-stats -- 2026');
+  console.error('        (the "--" is required so npm forwards 2026 to the script)');
+  console.error('');
+  console.error('   node: node scripts/sync-stats.js 2026');
   process.exit(1);
 }
 

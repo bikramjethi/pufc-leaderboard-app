@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "update-percentages": "node scripts/update-attendance-percentages.js",
     "sync-stats": "node scripts/sync-stats.js",
+    "sync-stats:2026": "node scripts/sync-stats.js 2026",
     "update-match": "node scripts/update-match.js",
     "process-match": "node scripts/process-match.js",
     "match-server": "node scripts/save-match-server.js"
