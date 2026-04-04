@@ -116,7 +116,7 @@
     "position": [
       "DEF"
     ],
-    "groupAvailibility": "ALLGAMES"
+    "groupAvailibility": "WEEKEND"
   },
   {
     "name": "Raghav",
@@ -184,9 +184,10 @@
   {
     "name": "Subbu",
     "position": [
+      "GK",
       "FWD"
     ],
-    "groupAvailibility": "MIDWEEK"
+    "groupAvailibility": "WEEKEND"
   },
   {
     "name": "Sudeep",
