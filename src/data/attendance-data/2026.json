@@ -3602,7 +3602,6 @@
       "matchPlayed": true,
       "matchCancelled": false,
       "isFullHouse": false,
-      "team1RotatingGoalie": true,
       "team2RotatingGoalie": true,
       "attendance": {
         "BLACK": [
@@ -3612,7 +3611,7 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "RM"
+            "position": "LM"
           },
           {
             "name": "Joe",
@@ -3620,7 +3619,7 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "RB"
+            "position": "GK"
           },
           {
             "name": "Vinit",
@@ -3644,7 +3643,7 @@
             "ownGoals": 0,
             "cleanSheet": false,
             "groupStatus": "REGULAR",
-            "position": "LM"
+            "position": "RB"
           },
           {
             "name": "Vinay",
