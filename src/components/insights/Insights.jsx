@@ -129,6 +129,8 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
     highestHatTricks: [],
     cleanSheets: [],
     totalFullHouse: 0, // Only tracked from 2026 onwards
+    totalFullHouseWeekend: 0,
+    totalFullHouseWeekday: 0,
   };
 
   // Find top scorers (top 3, or all tied first place if more than 3)
@@ -229,6 +231,8 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
       (m) => m.matchPlayed && !m.matchCancelled && !m.isTournament && m.isFullHouse === true
     );
     insights.totalFullHouse = fullHouseMatches.length;
+    insights.totalFullHouseWeekend = fullHouseMatches.filter((m) => m.day === "Weekend").length;
+    insights.totalFullHouseWeekday = fullHouseMatches.filter((m) => m.day === "Midweek").length;
   }
 
   return insights;
@@ -262,6 +266,8 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     mostAttended: [],
     cleanSheets: [],
     fullHouseMatches: 0, // Only tracked from 2026 onwards
+    fullHouseWeekendMatches: 0,
+    fullHouseWeekdayMatches: 0,
   };
 
   // Calculate top scorers for the quarter - get scorers from attendance object
@@ -313,7 +319,10 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
 
   // Calculate full house matches (only for 2026+)
   if (parseInt(trackerData.season) >= 2026) {
-    insights.fullHouseMatches = quarterMatches.filter((m) => m.isFullHouse === true).length;
+    const fullHouseMatches = quarterMatches.filter((m) => m.isFullHouse === true);
+    insights.fullHouseMatches = fullHouseMatches.length;
+    insights.fullHouseWeekendMatches = fullHouseMatches.filter((m) => m.day === "Weekend").length;
+    insights.fullHouseWeekdayMatches = fullHouseMatches.filter((m) => m.day === "Midweek").length;
   }
 
   return insights;
@@ -430,10 +439,20 @@ export const Insights = () => {
                 <div className="insight-value">{overallInsights.weekendGames}</div>
               </div>
               {parseInt(selectedSeason) >= 2026 && overallInsights.totalFullHouse !== undefined && (
-                <div className="insight-card fullhouse-card">
-                  <div className="insight-label">🏠 Full House Matches</div>
-                  <div className="insight-value">{overallInsights.totalFullHouse}</div>
-                </div>
+                <>
+                  <div className="insight-card fullhouse-card">
+                    <div className="insight-label">🏠 Full House Matches</div>
+                    <div className="insight-value">{overallInsights.totalFullHouse}</div>
+                  </div>
+                  <div className="insight-card fullhouse-card">
+                    <div className="insight-label">🏠 Weekend Full House</div>
+                    <div className="insight-value">{overallInsights.totalFullHouseWeekend}</div>
+                  </div>
+                  <div className="insight-card fullhouse-card">
+                    <div className="insight-label">🏠 Weekday Full House</div>
+                    <div className="insight-value">{overallInsights.totalFullHouseWeekday}</div>
+                  </div>
+                </>
               )}
             </>
           )}
@@ -573,6 +592,14 @@ export const Insights = () => {
                   <div className="insight-label">🏠 Full House</div>
                   <div className="insight-value">{quarterlyInsights.q1.fullHouseMatches}</div>
                 </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Weekend Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q1.fullHouseWeekendMatches}</div>
+                </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Weekday Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q1.fullHouseWeekdayMatches}</div>
+                </div>
               </div>
               {quarterlyInsights.q1.topScorers.length > 0 && (
                 <div className="insights-highlights">
@@ -622,6 +649,14 @@ export const Insights = () => {
                 <div className="insight-card fullhouse-card">
                   <div className="insight-label">🏠 Full House</div>
                   <div className="insight-value">{quarterlyInsights.q2.fullHouseMatches}</div>
+                </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Weekend Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q2.fullHouseWeekendMatches}</div>
+                </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Weekday Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q2.fullHouseWeekdayMatches}</div>
                 </div>
               </div>
               {quarterlyInsights.q2.topScorers.length > 0 && (
@@ -686,6 +721,14 @@ export const Insights = () => {
                   <div className="insight-label">🏠 Full House</div>
                   <div className="insight-value">{quarterlyInsights.q3.fullHouseMatches}</div>
                 </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Weekend Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q3.fullHouseWeekendMatches}</div>
+                </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Weekday Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q3.fullHouseWeekdayMatches}</div>
+                </div>
               </div>
               {quarterlyInsights.q3.topScorers.length > 0 && (
                 <div className="insights-highlights">
@@ -748,6 +791,14 @@ export const Insights = () => {
                 <div className="insight-card fullhouse-card">
                   <div className="insight-label">🏠 Full House</div>
                   <div className="insight-value">{quarterlyInsights.q4.fullHouseMatches}</div>
+                </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Weekend Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q4.fullHouseWeekendMatches}</div>
+                </div>
+                <div className="insight-card fullhouse-card">
+                  <div className="insight-label">🏠 Weekday Full House</div>
+                  <div className="insight-value">{quarterlyInsights.q4.fullHouseWeekdayMatches}</div>
                 </div>
               </div>
               {quarterlyInsights.q4.topScorers.length > 0 && (
