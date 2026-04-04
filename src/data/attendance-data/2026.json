@@ -3170,7 +3170,7 @@
             "name": "Vikalp",
             "goals": 0,
             "ownGoals": 0,
-            "cleanSheet": true,
+            "cleanSheet": false,
             "groupStatus": "REGULAR",
             "position": "RB"
           },
@@ -3178,7 +3178,7 @@
             "name": "Rishav",
             "goals": 0,
             "ownGoals": 0,
-            "cleanSheet": true,
+            "cleanSheet": false,
             "groupStatus": "REGULAR",
             "position": "ST"
           },
@@ -3194,7 +3194,7 @@
             "name": "Somanna",
             "goals": 0,
             "ownGoals": 0,
-            "cleanSheet": true,
+            "cleanSheet": false,
             "groupStatus": "REGULAR",
             "position": "LM"
           },
