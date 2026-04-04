@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import playerProfiles from "../../data/player-profiles.json";
 
 const positionOrder = { GK: 0, DEF: 1, MID: 2, FWD: 3, ALL: 4 };
+const NON_PLAYER_NAMES = new Set(["others"]);
 
 // Map specific positions to their categories
 const getPositionCategory = (pos) => {
@@ -14,20 +15,31 @@ const getPositionCategory = (pos) => {
   return 'DEF'; // Default fallback
 };
 
+const getAvailabilityGroup = (player) =>
+  String(player?.groupAvailibility || "")
+    .trim()
+    .toUpperCase();
+
+const isRealPlayer = (player) => {
+  const name = String(player?.name || "").trim().toLowerCase();
+  return Boolean(name) && !NON_PLAYER_NAMES.has(name);
+};
+
 const getFilteredPlayers = (filterType) => {
+    const profiles = playerProfiles.filter(isRealPlayer);
     switch (filterType) {
         case "midweek":
-            return playerProfiles.filter(
-                (p) => p.groupAvailibility === "MIDWEEK" || p.groupAvailibility === "ALLGAMES"
+            return profiles.filter(
+                (p) => getAvailabilityGroup(p) === "MIDWEEK" || getAvailabilityGroup(p) === "ALLGAMES"
             );
         case "weekend":
-            return playerProfiles.filter(
-                (p) => p.groupAvailibility === "WEEKEND" || p.groupAvailibility === "ALLGAMES"
+            return profiles.filter(
+                (p) => getAvailabilityGroup(p) === "WEEKEND" || getAvailabilityGroup(p) === "ALLGAMES"
             );
         case "inactive":
-            return playerProfiles.filter((p) => p.groupAvailibility === "N/A");
+            return profiles.filter((p) => getAvailabilityGroup(p) === "INACTIVE");
         case "onloan":
-            return playerProfiles.filter((p) => p.groupAvailibility === "ONLOAN");
+            return profiles.filter((p) => getAvailabilityGroup(p) === "ONLOAN");
         default:
             return [];
     }
