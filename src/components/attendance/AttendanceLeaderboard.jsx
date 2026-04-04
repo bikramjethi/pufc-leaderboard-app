@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { getDisplayName } from "../../utils/playerDisplayName";
 import attendanceLeaderboardData2025 from "../../data/attendance-data/leaderboard/2025.json";
 import attendanceLeaderboardData2026 from "../../data/attendance-data/leaderboard/2026.json";
+import playerProfiles from "../../data/player-profiles.json";
 
 const attendanceLeaderboardDataByYear = {
   2025: attendanceLeaderboardData2025,
@@ -10,6 +11,31 @@ const attendanceLeaderboardDataByYear = {
       attendanceLeaderboardData2026.summary && 
       attendanceLeaderboardData2026.players && 
       { 2026: attendanceLeaderboardData2026 }),
+};
+
+const NON_PLAYER_NAMES = new Set(["others"]);
+
+const normalizeName = (name) => String(name || "").trim().toLowerCase();
+
+const normalizeAvailability = (availability) =>
+  String(availability || "")
+    .trim()
+    .toUpperCase();
+
+const profileCategoryByName = new Map(
+  (playerProfiles || [])
+    .filter((p) => !NON_PLAYER_NAMES.has(normalizeName(p?.name)))
+    .map((p) => [normalizeName(p.name), normalizeAvailability(p.groupAvailibility)])
+);
+
+const deriveCategoryFromProfile = (playerName) => {
+  if (NON_PLAYER_NAMES.has(normalizeName(playerName))) return "Others";
+  const availability = profileCategoryByName.get(normalizeName(playerName));
+  if (availability === "MIDWEEK") return "MIDWEEK";
+  if (availability === "WEEKEND") return "WEEKEND";
+  if (availability === "ALLGAMES" || availability === "ALL") return "ALLGAMES";
+  if (availability === "INACTIVE" || availability === "ONLOAN") return "Others";
+  return "Others";
 };
 
 export const AttendanceLeaderboard = ({ year = "2025" }) => {
@@ -53,6 +79,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
       const percentages = calculatePercentages(player, summary);
       return {
         ...player,
+        category: deriveCategoryFromProfile(player.name),
         calculatedMidweekPercentage: percentages.midweekPercentage,
         calculatedWeekendPercentage: percentages.weekendPercentage,
         calculatedTotalPercentage: percentages.totalPercentage,
@@ -142,10 +169,11 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     }
     const groups = {};
     data.players.forEach((player) => {
-      if (!groups[player.category]) {
-        groups[player.category] = [];
+      const category = deriveCategoryFromProfile(player.name);
+      if (!groups[category]) {
+        groups[category] = [];
       }
-      groups[player.category].push(player);
+      groups[category].push({ ...player, category });
     });
     
     // Sort players within each category by totalGames (descending), putting player named "Others" at bottom
@@ -213,7 +241,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   };
 
   // Category order for default view - handle both "ALL" and "ALLGAMES"
-  const categoryOrder = ["ALL", "ALLGAMES", "WEEKEND", "MIDWEEK", "Others"];
+  const categoryOrder = ["ALLGAMES", "WEEKEND", "MIDWEEK", "Others"];
 
   if (!data || !data.summary || !data.players || data.players.length === 0) {
     return (
