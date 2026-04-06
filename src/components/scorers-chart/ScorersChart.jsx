@@ -9,7 +9,10 @@ import {
   YAxis,
 } from "recharts";
 import { config } from "../../leaderboard-config.js";
-import { buildScorersChartData } from "../../utils/scorers-chart-data.js";
+import {
+  buildScorersChartData,
+  getConfiguredScorersSeasons,
+} from "../../utils/scorers-chart-data.js";
 import { getDisplayName } from "../../utils/playerDisplayName.js";
 import "./ScorersChart.css";
 
@@ -118,15 +121,42 @@ function PlayerLegend({ topPlayers, hiddenPlayers, onToggle, onShowAll }) {
   );
 }
 
+const SCOPE_ALL = "all";
+
 export function ScorersChart() {
   const chartCfg = config.SCORERS_CHART || {};
-  const dataSeason = chartCfg.dataSeason;
   const topN = chartCfg.topN ?? 10;
 
-  const built = useMemo(
-    () => buildScorersChartData({ dataSeason, topN }),
-    [dataSeason, topN]
+  const configuredSeasons = useMemo(
+    () => getConfiguredScorersSeasons(chartCfg.dataSeason),
+    [chartCfg.dataSeason]
   );
+  const seasonsSig = configuredSeasons.join(",");
+
+  const [scope, setScope] = useState(SCOPE_ALL);
+
+  useEffect(() => {
+    setScope(SCOPE_ALL);
+  }, [seasonsSig]);
+
+  useEffect(() => {
+    if (scope !== SCOPE_ALL && !configuredSeasons.includes(scope)) {
+      setScope(SCOPE_ALL);
+    }
+  }, [configuredSeasons, scope]);
+
+  const dataSeasonForBuild = useMemo(() => {
+    if (configuredSeasons.length <= 1) return configuredSeasons;
+    if (scope === SCOPE_ALL) return configuredSeasons;
+    return [scope];
+  }, [configuredSeasons, scope]);
+
+  const built = useMemo(
+    () => buildScorersChartData({ dataSeason: dataSeasonForBuild, topN }),
+    [dataSeasonForBuild, topN]
+  );
+
+  const showSeasonSelector = configuredSeasons.length > 1;
 
   const topPlayersKey = built?.topPlayers?.join("\0") ?? "";
   const [hiddenPlayers, setHiddenPlayers] = useState(() => new Set());
@@ -180,6 +210,34 @@ export function ScorersChart() {
           <span className="scorers-chart__badge-inner">Live season arc</span>
         </div>
       </header>
+
+      {showSeasonSelector ? (
+        <div className="scorers-chart__season-bar scoring-trends-year-selector">
+          <label htmlFor="scorers-chart-season-scope">Season</label>
+          <div className="select-wrapper">
+            <select
+              id="scorers-chart-season-scope"
+              value={scope}
+              onChange={(e) => setScope(e.target.value)}
+            >
+              <option value={SCOPE_ALL}>All combined</option>
+              {configuredSeasons.map((y) => (
+                <option key={y} value={y}>
+                  {y} only
+                </option>
+              ))}
+            </select>
+            <span className="select-arrow">▼</span>
+          </div>
+        </div>
+      ) : configuredSeasons.length === 1 ? (
+        <p className="scorers-chart__season-solo">
+          <span className="scorers-chart__season-solo-hint">
+            Season menu appears when more than one year is configured for this
+            chart.
+          </span>
+        </p>
+      ) : null}
 
       <PlayerLegend
         topPlayers={topPlayers}

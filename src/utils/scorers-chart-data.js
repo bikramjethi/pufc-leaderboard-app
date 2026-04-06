@@ -24,6 +24,13 @@ function normalizeSeasonKeys(dataSeason) {
   return ["2026"];
 }
 
+/** Sorted unique season keys from config (for UI + building a subset). */
+export function getConfiguredScorersSeasons(dataSeason) {
+  return [...normalizeSeasonKeys(dataSeason)].sort(
+    (a, b) => Number(a) - Number(b)
+  );
+}
+
 /** Parse DD/MM/YYYY from match.date (falls back to id DD-MM-YYYY). */
 function parseMatchDate(match) {
   if (match?.date) {
