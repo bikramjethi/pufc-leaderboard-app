@@ -64,6 +64,19 @@ export const config = {
     enableScoringDiffs: true,   // Show/hide the "Scoring Diffs" sub-tab (goal differences view)
   },
 
+  // Scorers chart (top-N cumulative goals by week — uses per-match attendance only)
+  SCORERS_CHART: {
+    enabled: true,
+    /**
+     * Seasons to merge into one chronological chart (add years as you backfill).
+     * Each year must exist in `src/utils/scorers-chart-data.js` (static JSON import).
+     * View menu: all-time bar chart (leaderboard career totals), optional combined line chart
+     * when 2+ entries, and a per-season line chart. Default view is the latest year in this list.
+     */
+    dataSeason: ["2026"],
+    topN: 10,
+  },
+
   // Head to Head Settings (Standalone Tab)
   H2H: {
     enabled: false,                     // Show/hide the H2H tab
