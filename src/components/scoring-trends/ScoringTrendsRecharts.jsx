@@ -289,7 +289,7 @@ export function GoalsTrendChart({ rows, yMax }) {
             name="Weekday"
             stroke={COLOR_WD}
             strokeWidth={2.75}
-            connectNulls={false}
+            connectNulls
             dot={playedLineDot(COLOR_WD)}
             activeDot={{ r: 8, strokeWidth: 2, stroke: "var(--bg-card)" }}
             animationDuration={900}
@@ -301,7 +301,7 @@ export function GoalsTrendChart({ rows, yMax }) {
             name="Weekend"
             stroke={COLOR_WE}
             strokeWidth={2.75}
-            connectNulls={false}
+            connectNulls
             dot={playedLineDot(COLOR_WE)}
             activeDot={{ r: 8, strokeWidth: 2, stroke: "var(--bg-card)" }}
             animationDuration={900}
@@ -399,7 +399,7 @@ export function DiffsTrendChart({ rows, yMax }) {
             name="Weekday"
             stroke={COLOR_WD}
             strokeWidth={2.75}
-            connectNulls={false}
+            connectNulls
             dot={playedLineDot(COLOR_WD)}
             activeDot={{ r: 8, strokeWidth: 2, stroke: "var(--bg-card)" }}
             animationDuration={900}
@@ -411,7 +411,7 @@ export function DiffsTrendChart({ rows, yMax }) {
             name="Weekend"
             stroke={COLOR_WE}
             strokeWidth={2.75}
-            connectNulls={false}
+            connectNulls
             dot={playedLineDot(COLOR_WE)}
             activeDot={{ r: 8, strokeWidth: 2, stroke: "var(--bg-card)" }}
             animationDuration={900}
