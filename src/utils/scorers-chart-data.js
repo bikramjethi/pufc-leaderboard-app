@@ -1,6 +1,7 @@
 import matchData2024 from "../data/attendance-data/2024.json";
 import matchData2025 from "../data/attendance-data/2025.json";
 import matchData2026 from "../data/attendance-data/2026.json";
+import { aggregateAllTimeStats } from "./leaderboard-calculations.js";
 
 /** Extend this map when adding a new season file. */
 const MATCH_DATA_BY_SEASON = {
@@ -184,5 +185,35 @@ export function buildScorersChartData({ dataSeason, topN = 10 } = {}) {
     weekLabels: chartData.map((r) => r.weekLabel),
     seasonLabel: formatSeasonLabel(loadedSeasons),
     dataSeasons: loadedSeasons,
+  };
+}
+
+/**
+ * Top-N career goal scorers from aggregated leaderboard stats (all seasons in get-data).
+ * Bars are ordered ascending by goals (lowest of the top N on the left).
+ */
+export function buildAllTimeTopScorersBarData(topN = 10) {
+  const players = aggregateAllTimeStats();
+  const filtered = players.filter(
+    (p) => p?.name && String(p.name).trim().toLowerCase() !== "others"
+  );
+  const sortedDesc = [...filtered].sort(
+    (a, b) => (Number(b.goals) || 0) - (Number(a.goals) || 0)
+  );
+  const top = sortedDesc.slice(0, Math.max(1, topN));
+  const ascending = [...top].sort(
+    (a, b) => (Number(a.goals) || 0) - (Number(b.goals) || 0)
+  );
+  if (ascending.length === 0) return null;
+
+  const maxGoals = Math.max(...ascending.map((p) => Number(p.goals) || 0));
+
+  return {
+    barData: ascending.map((p) => ({
+      playerKey: p.name,
+      goals: Number(p.goals) || 0,
+    })),
+    topPlayers: ascending.map((p) => p.name),
+    maxGoals,
   };
 }
