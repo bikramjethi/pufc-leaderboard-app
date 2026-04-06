@@ -5,6 +5,7 @@ import { WeeklyTracker } from "./components/weekly-tracker";
 import { Roster } from "./components/roster";
 import { Insights } from "./components/insights";
 import { ScoringTrends } from "./components/scoring-trends";
+import { ScorersChart } from "./components/scorers-chart";
 import { FunStats } from "./components/fun-stats";
 import { HeadToHead } from "./components/head-to-head";
 import { MVPLeaderboard } from "./components/mvp-leaderboard";
@@ -33,6 +34,12 @@ const getNavItems = () => [
       { id: "leaderboard", label: "Leaderboard", icon: "📊", enabled: true },
       { id: "insights", label: "Insights", icon: "📈", enabled: config.INSIGHTS?.enabled },
       { id: "scoring-trends", label: "Trends", icon: "📉", enabled: config.SCORING_TRENDS?.enabled },
+      {
+        id: "scorers-chart",
+        label: "Scorers chart",
+        icon: "🎯",
+        enabled: config.SCORERS_CHART?.enabled,
+      },
       { id: "fun-stats", label: "Fun Stats", icon: "🎲", enabled: config.FUN_STATS?.enabled },
       { id: "h2h", label: "Head to Head", icon: "⚔️", enabled: config.H2H?.enabled },
       { id: "mvp-leaderboard", label: "MVP Leaderboard", icon: "🏆", enabled: config.MVP_LEADERBOARD?.enabled },
@@ -108,6 +115,7 @@ function App() {
       "who-plays-where": "Who plays where ?",
       "insights": "Season Insights",
       "scoring-trends": "Scoring Trends",
+      "scorers-chart": "Scorers chart",
       "fun-stats": "Fun Stats",
       "h2h": "Head to Head Comparison",
       "mvp-leaderboard": "MVP Leaderboard",
@@ -348,6 +356,8 @@ function App() {
             <Insights />
         ) : activeTab === "scoring-trends" ? (
           <ScoringTrends />
+        ) : activeTab === "scorers-chart" ? (
+          <ScorersChart />
         ) : activeTab === "fun-stats" ? (
           <FunStats />
         ) : activeTab === "h2h" ? (
