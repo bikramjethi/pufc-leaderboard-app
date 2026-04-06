@@ -3898,11 +3898,11 @@ td.match-cell.fullhouse-match.onloan {
 }
 
 .weekday-indicator {
-  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
 }
 
 .weekend-indicator {
-  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+  background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
 }
 
 .stat-details {
@@ -4179,11 +4179,11 @@ td.match-cell.fullhouse-match.onloan {
 }
 
 .weekday-color {
-  background: #3b82f6;
+  background: #60a5fa;
 }
 
 .weekend-color {
-  background: #f59e0b;
+  background: #fbbf24;
 }
 
 .legend-text {
@@ -4709,11 +4709,11 @@ td.match-cell.fullhouse-match.onloan {
 }
 
 .diff-stat-value.weekday {
-  color: #3b82f6;
+  color: #60a5fa;
 }
 
 .diff-stat-value.weekend {
-  color: #f59e0b;
+  color: #fbbf24;
 }
 
 .scoring-diffs-table-container {

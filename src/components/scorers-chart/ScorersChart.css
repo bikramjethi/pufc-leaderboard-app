@@ -60,17 +60,6 @@
   margin-bottom: 1rem;
 }
 
-.scorers-chart__season-solo {
-  margin: 0 0 1rem;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
-.scorers-chart__season-solo-hint {
-  font-weight: 500;
-}
-
 .scorers-chart__headline {
   flex: 1;
   min-width: 220px;

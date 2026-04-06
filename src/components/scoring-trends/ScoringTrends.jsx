@@ -1,5 +1,6 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { config } from "../../leaderboard-config.js";
+import { DiffsTrendChart, GoalsTrendChart } from "./ScoringTrendsRecharts.jsx";
 import matchData2026 from "../../data/attendance-data/2026.json";
 import matchData2025 from "../../data/attendance-data/2025.json";
 import matchData2024 from "../../data/attendance-data/2024.json";
@@ -71,10 +72,6 @@ export const ScoringTrends = () => {
   };
   
   const [activeSubTab, setActiveSubTab] = useState(getDefaultSubTab());
-  const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, content: null });
-  const [diffTooltip, setDiffTooltip] = useState({ visible: false, x: 0, y: 0, content: null });
-  const svgRef = useRef(null);
-  const diffSvgRef = useRef(null);
 
   // Ensure activeSubTab is always one of the enabled tabs
   useEffect(() => {
@@ -446,40 +443,77 @@ export const ScoringTrends = () => {
     return { data: sortedResults, weekdayData, weekendData };
   }, [selectedSeason]);
 
-  // SVG dimensions
-  const svgWidth = 800;
-  const svgHeight = 400;
-  const padding = { top: 40, right: 40, bottom: 60, left: 60 };
-  const chartWidth = svgWidth - padding.left - padding.right;
-  const chartHeight = svgHeight - padding.top - padding.bottom;
+  const goalsChartRows = useMemo(() => {
+    const maxLen = Math.max(
+      graphData.weekday.length,
+      graphData.weekend.length,
+      1
+    );
+    const rows = [];
+    for (let i = 0; i < maxLen; i++) {
+      const wd = graphData.weekday[i];
+      const we = graphData.weekend[i];
+      rows.push({
+        matchLabel: `M${i + 1}`,
+        weekdayGoals: wd && !wd.isCancelled ? wd.goals : null,
+        weekendGoals: we && !we.isCancelled ? we.goals : null,
+        weekdayCancelY: wd?.isCancelled ? 0 : null,
+        weekendCancelY: we?.isCancelled ? 0 : null,
+        weekdayMeta: wd ?? null,
+        weekendMeta: we ?? null,
+      });
+    }
+    return rows;
+  }, [graphData]);
 
-  // Scale functions
-  const maxMatches = Math.max(graphData.weekday.length, graphData.weekend.length, 1);
-  // Use 0-based index internally so first point is at left edge
-  const xScale = (index) => {
-    // If only 1 match, place at left edge; otherwise distribute evenly
-    if (maxMatches === 1) return padding.left;
-    return padding.left + ((index - 1) / (maxMatches - 1)) * chartWidth;
-  };
-  const yScale = (goals) => padding.top + chartHeight - (goals / graphData.maxGoals) * chartHeight;
+  const diffsChartRows = useMemo(() => {
+    const weekdayDiffsData = weeklyDiffs.weekdayData;
+    const weekendDiffsData = weeklyDiffs.weekendData;
+    const maxLen = Math.max(
+      weekdayDiffsData.length,
+      weekendDiffsData.length,
+      1
+    );
+    const maxDiff = Math.max(
+      ...weekdayDiffsData
+        .filter((d) => !d.isCancelled)
+        .map((d) => d.diff || 0),
+      ...weekendDiffsData
+        .filter((d) => !d.isCancelled)
+        .map((d) => d.diff || 0),
+      5
+    );
+    const rows = [];
+    for (let i = 0; i < maxLen; i++) {
+      const wd = weekdayDiffsData[i];
+      const we = weekendDiffsData[i];
+      rows.push({
+        matchLabel: `M${i + 1}`,
+        weekdayDiff: wd && !wd.isCancelled ? wd.diff : null,
+        weekendDiff: we && !we.isCancelled ? we.diff : null,
+        weekdayCancelY: wd?.isCancelled ? 0 : null,
+        weekendCancelY: we?.isCancelled ? 0 : null,
+        weekdayMeta: wd ?? null,
+        weekendMeta: we ?? null,
+      });
+    }
+    return { rows, maxDiff };
+  }, [weeklyDiffs]);
 
-  // Generate path data (only connect non-cancelled matches with lines)
-  const generatePath = (matches) => {
-    if (matches.length === 0) return "";
-    // Filter out cancelled matches for the line path
-    const playedMatches = matches
-      .map((m, i) => ({ ...m, originalIndex: i + 1 }))
-      .filter(m => !m.isCancelled);
-    if (playedMatches.length === 0) return "";
-    const points = playedMatches.map((m) => `${xScale(m.originalIndex)},${yScale(m.goals)}`);
-    return `M ${points.join(" L ")}`;
-  };
-
-  // Generate grid lines
-  const yGridLines = [];
-  for (let i = 0; i <= graphData.maxGoals; i += Math.ceil(graphData.maxGoals / 5)) {
-    yGridLines.push(i);
-  }
+  const diffsSummary = useMemo(() => {
+    const wd = weeklyDiffs.weekdayData.filter((d) => !d.isCancelled);
+    const we = weeklyDiffs.weekendData.filter((d) => !d.isCancelled);
+    return {
+      avgWeekday:
+        wd.length > 0
+          ? (wd.reduce((s, d) => s + d.diff, 0) / wd.length).toFixed(1)
+          : "0",
+      avgWeekend:
+        we.length > 0
+          ? (we.reduce((s, d) => s + d.diff, 0) / we.length).toFixed(1)
+          : "0",
+    };
+  }, [weeklyDiffs]);
 
   return (
     <div className="scoring-trends">
@@ -566,350 +600,9 @@ export const ScoringTrends = () => {
             </div>
           </div>
 
-          {/* Graph Container */}
-          <div className="scoring-trends-graph-container" ref={svgRef}>
-            <svg
-              viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="scoring-trends-svg"
-              preserveAspectRatio="xMidYMid meet"
-              onMouseLeave={() => setTooltip({ visible: false, x: 0, y: 0, content: null })}
-            >
-              {/* Background */}
-              <rect
-                x={padding.left}
-                y={padding.top}
-                width={chartWidth}
-                height={chartHeight}
-                fill="var(--bg-secondary)"
-                rx="8"
-              />
-
-              {/* Grid Lines */}
-              {yGridLines.map((value) => (
-                <g key={value}>
-                  <line
-                    x1={padding.left}
-                    y1={yScale(value)}
-                    x2={svgWidth - padding.right}
-                    y2={yScale(value)}
-                    stroke="var(--border-color)"
-                    strokeDasharray="4,4"
-                    opacity="0.5"
-                  />
-                  <text
-                    x={padding.left - 10}
-                    y={yScale(value)}
-                    textAnchor="end"
-                    dominantBaseline="middle"
-                    fill="var(--text-muted)"
-                    fontSize="12"
-                    fontFamily="Outfit, sans-serif"
-                  >
-                    {value}
-                  </text>
-                </g>
-              ))}
-
-              {/* X-axis labels */}
-              {Array.from({ length: maxMatches }, (_, i) => {
-                const matchNum = i + 1;
-                // Show all labels if <= 10 matches, otherwise show every nth label
-                if (maxMatches > 10 && matchNum % Math.ceil(maxMatches / 10) !== 0 && matchNum !== 1 && matchNum !== maxMatches) {
-                  return null;
-                }
-                return (
-                  <text
-                    key={i}
-                    x={xScale(matchNum)}
-                    y={svgHeight - padding.bottom + 20}
-                    textAnchor="middle"
-                    fill="var(--text-muted)"
-                    fontSize="12"
-                    fontFamily="Outfit, sans-serif"
-                  >
-                    M{matchNum}
-                  </text>
-                );
-              })}
-
-              {/* Axis Labels */}
-              <text
-                x={svgWidth / 2}
-                y={svgHeight - 10}
-                textAnchor="middle"
-                fill="var(--text-secondary)"
-                fontSize="14"
-                fontWeight="600"
-                fontFamily="Outfit, sans-serif"
-              >
-                Match Day
-              </text>
-              <text
-                x={20}
-                y={svgHeight / 2}
-                textAnchor="middle"
-                fill="var(--text-secondary)"
-                fontSize="14"
-                fontWeight="600"
-                fontFamily="Outfit, sans-serif"
-                transform={`rotate(-90, 20, ${svgHeight / 2})`}
-              >
-                Goals
-              </text>
-
-              {/* Weekend Line */}
-              {graphData.weekend.length > 0 && (
-                <>
-                  <path
-                    d={generatePath(graphData.weekend)}
-                    fill="none"
-                    stroke="#f59e0b"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="trend-line weekend-line"
-                  />
-                  {/* Weekend Points */}
-                  {graphData.weekend.map((match, i) => {
-                    const cx = xScale(i + 1);
-                    const cy = yScale(match.goals);
-                    const isCancelled = match.isCancelled;
-                    return (
-                      <g key={`weekend-${i}`} className={`data-point-group ${isCancelled ? 'cancelled' : ''}`}>
-                        {isCancelled ? (
-                          // Cancelled match: X marker at bottom
-                          <>
-                            <line
-                              x1={cx - 6}
-                              y1={yScale(0) - 6}
-                              x2={cx + 6}
-                              y2={yScale(0) + 6}
-                              stroke="#ef4444"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              className="cancelled-marker"
-                            />
-                            <line
-                              x1={cx + 6}
-                              y1={yScale(0) - 6}
-                              x2={cx - 6}
-                              y2={yScale(0) + 6}
-                              stroke="#ef4444"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              className="cancelled-marker"
-                            />
-                            {/* Invisible hitbox for tooltip */}
-                            <circle
-                              cx={cx}
-                              cy={yScale(0)}
-                              r="12"
-                              fill="transparent"
-                              style={{ cursor: 'pointer' }}
-                              onMouseEnter={() => {
-                                const rect = svgRef.current?.getBoundingClientRect();
-                                if (rect) {
-                                  const svgX = (cx / svgWidth) * rect.width;
-                                  const svgY = (yScale(0) / svgHeight) * rect.height;
-                                  setTooltip({
-                                    visible: true,
-                                    x: svgX,
-                                    y: svgY - 10,
-                                    position: 'above',
-                                    content: {
-                                      date: match.date,
-                                      isCancelled: true,
-                                      type: 'weekend'
-                                    }
-                                  });
-                                }
-                              }}
-                              onMouseLeave={() => setTooltip({ visible: false, x: 0, y: 0, content: null })}
-                            />
-                          </>
-                        ) : (
-                          <circle
-                            cx={cx}
-                            cy={cy}
-                            r="7"
-                            fill="#f59e0b"
-                            stroke="var(--bg-card)"
-                            strokeWidth="2"
-                            className="data-point weekend-point"
-                            style={{ cursor: 'pointer' }}
-                            onMouseEnter={() => {
-                              const rect = svgRef.current?.getBoundingClientRect();
-                              if (rect) {
-                                const svgX = (cx / svgWidth) * rect.width;
-                                const svgY = (cy / svgHeight) * rect.height;
-                                // If point is in upper 30% of graph, show tooltip below
-                                const isNearTop = svgY < rect.height * 0.3;
-                                setTooltip({
-                                  visible: true,
-                                  x: svgX,
-                                  y: isNearTop ? svgY + 20 : svgY - 10,
-                                  position: isNearTop ? 'below' : 'above',
-                                  content: {
-                                    date: match.date,
-                                    scoreline: match.scoreline,
-                                    goals: match.goals,
-                                    type: 'weekend'
-                                  }
-                                });
-                              }
-                            }}
-                            onMouseLeave={() => setTooltip({ visible: false, x: 0, y: 0, content: null })}
-                          />
-                        )}
-                      </g>
-                    );
-                  })}
-                </>
-              )}
-
-              {/* Weekday Line */}
-              {graphData.weekday.length > 0 && (
-                <>
-                  <path
-                    d={generatePath(graphData.weekday)}
-                    fill="none"
-                    stroke="#3b82f6"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="trend-line weekday-line"
-                  />
-                  {/* Weekday Points */}
-                  {graphData.weekday.map((match, i) => {
-                    const cx = xScale(i + 1);
-                    const cy = yScale(match.goals);
-                    const isCancelled = match.isCancelled;
-                    return (
-                      <g key={`weekday-${i}`} className={`data-point-group ${isCancelled ? 'cancelled' : ''}`}>
-                        {isCancelled ? (
-                          // Cancelled match: X marker at bottom
-                          <>
-                            <line
-                              x1={cx - 6}
-                              y1={yScale(0) - 6}
-                              x2={cx + 6}
-                              y2={yScale(0) + 6}
-                              stroke="#ef4444"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              className="cancelled-marker"
-                            />
-                            <line
-                              x1={cx + 6}
-                              y1={yScale(0) - 6}
-                              x2={cx - 6}
-                              y2={yScale(0) + 6}
-                              stroke="#ef4444"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              className="cancelled-marker"
-                            />
-                            {/* Invisible hitbox for tooltip */}
-                            <circle
-                              cx={cx}
-                              cy={yScale(0)}
-                              r="12"
-                              fill="transparent"
-                              style={{ cursor: 'pointer' }}
-                              onMouseEnter={() => {
-                                const rect = svgRef.current?.getBoundingClientRect();
-                                if (rect) {
-                                  const svgX = (cx / svgWidth) * rect.width;
-                                  const svgY = (yScale(0) / svgHeight) * rect.height;
-                                  setTooltip({
-                                    visible: true,
-                                    x: svgX,
-                                    y: svgY - 10,
-                                    position: 'above',
-                                    content: {
-                                      date: match.date,
-                                      isCancelled: true,
-                                      type: 'weekday'
-                                    }
-                                  });
-                                }
-                              }}
-                              onMouseLeave={() => setTooltip({ visible: false, x: 0, y: 0, content: null })}
-                            />
-                          </>
-                        ) : (
-                          <circle
-                            cx={cx}
-                            cy={cy}
-                            r="7"
-                            fill="#3b82f6"
-                            stroke="var(--bg-card)"
-                            strokeWidth="2"
-                            className="data-point weekday-point"
-                            style={{ cursor: 'pointer' }}
-                            onMouseEnter={() => {
-                              const rect = svgRef.current?.getBoundingClientRect();
-                              if (rect) {
-                                const svgX = (cx / svgWidth) * rect.width;
-                                const svgY = (cy / svgHeight) * rect.height;
-                                // If point is in upper 30% of graph, show tooltip below
-                                const isNearTop = svgY < rect.height * 0.3;
-                                setTooltip({
-                                  visible: true,
-                                  x: svgX,
-                                  y: isNearTop ? svgY + 20 : svgY - 10,
-                                  position: isNearTop ? 'below' : 'above',
-                                  content: {
-                                    date: match.date,
-                                    scoreline: match.scoreline,
-                                    goals: match.goals,
-                                    type: 'weekday'
-                                  }
-                                });
-                              }
-                            }}
-                            onMouseLeave={() => setTooltip({ visible: false, x: 0, y: 0, content: null })}
-                          />
-                        )}
-                      </g>
-                    );
-                  })}
-                </>
-              )}
-            </svg>
-            
-            {/* Custom Tooltip */}
-            {tooltip.visible && tooltip.content && (
-              <div 
-                className={`graph-tooltip ${tooltip.content.isCancelled ? 'cancelled' : ''}`}
-                style={{
-                  left: tooltip.x,
-                  top: tooltip.y,
-                  transform: tooltip.position === 'below' ? 'translate(-50%, 0)' : 'translate(-50%, -100%)'
-                }}
-              >
-                <div className="tooltip-date">{tooltip.content.date}</div>
-                {tooltip.content.isCancelled ? (
-                  <div className="tooltip-cancelled">❌ Cancelled</div>
-                ) : (
-                  <>
-                    {tooltip.content.scoreline && Object.keys(tooltip.content.scoreline).length > 0 && (
-                      <div className="tooltip-scoreline">
-                        {Object.entries(tooltip.content.scoreline).map(([team, score], idx, arr) => (
-                          <span key={team}>
-                            <span className={`tooltip-team team-${team.toLowerCase()}`}>{score}</span>
-                            {idx < arr.length - 1 && <span className="tooltip-separator">-</span>}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <div className={`tooltip-total ${tooltip.content.type}`}>
-                      {tooltip.content.goals} goals
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
+          {/* Graph — Recharts */}
+          <div className="scoring-trends-graph-container">
+            <GoalsTrendChart rows={goalsChartRows} yMax={graphData.maxGoals} />
           </div>
 
           {/* Legend */}
@@ -1119,395 +812,21 @@ export const ScoringTrends = () => {
       )}
 
       {/* Scoring Diffs View */}
-      {enableScoringDiffs && activeSubTab === "scoring-diffs" && (() => {
-        // Use pre-computed data from weeklyDiffs
-        const weekdayDiffsData = weeklyDiffs.weekdayData;
-        const weekendDiffsData = weeklyDiffs.weekendData;
-        const maxDiffMatches = Math.max(weekdayDiffsData.length, weekendDiffsData.length, 1);
-        const maxDiff = Math.max(
-          ...weekdayDiffsData.filter(d => !d.isCancelled).map(d => d.diff || 0),
-          ...weekendDiffsData.filter(d => !d.isCancelled).map(d => d.diff || 0),
-          5
-        );
-        
-        const diffXScale = (index) => {
-          if (maxDiffMatches === 1) return padding.left;
-          return padding.left + ((index - 1) / (maxDiffMatches - 1)) * chartWidth;
-        };
-        const diffYScale = (diff) => padding.top + chartHeight - (diff / maxDiff) * chartHeight;
-        
-        const generateDiffPath = (matches) => {
-          if (matches.length === 0) return "";
-          // Only connect non-cancelled matches with lines
-          const playedMatches = matches.filter(m => !m.isCancelled);
-          if (playedMatches.length === 0) return "";
-          const points = playedMatches.map((m) => `${diffXScale(m.index)},${diffYScale(m.diff)}`);
-          return `M ${points.join(" L ")}`;
-        };
-        
-        const diffYGridLines = [];
-        for (let i = 0; i <= maxDiff; i++) {
-          diffYGridLines.push(i);
-        }
-        
-        return (
+      {enableScoringDiffs && activeSubTab === "scoring-diffs" && (
         <div className="scoring-diffs-section">
           <div className="scoring-diffs-summary">
             <div className="diff-stat-card">
               <span className="diff-stat-label">Avg Weekday Diff</span>
-              <span className="diff-stat-value weekday">
-                {(() => {
-                  const played = weekdayDiffsData.filter(d => !d.isCancelled);
-                  return played.length > 0
-                    ? (played.reduce((sum, d) => sum + d.diff, 0) / played.length).toFixed(1)
-                    : 0;
-                })()}
-              </span>
+              <span className="diff-stat-value weekday">{diffsSummary.avgWeekday}</span>
             </div>
             <div className="diff-stat-card">
               <span className="diff-stat-label">Avg Weekend Diff</span>
-              <span className="diff-stat-value weekend">
-                {(() => {
-                  const played = weekendDiffsData.filter(d => !d.isCancelled);
-                  return played.length > 0
-                    ? (played.reduce((sum, d) => sum + d.diff, 0) / played.length).toFixed(1)
-                    : 0;
-                })()}
-              </span>
+              <span className="diff-stat-value weekend">{diffsSummary.avgWeekend}</span>
             </div>
           </div>
 
-          {/* Diffs Graph */}
-          <div className="scoring-diffs-graph-container" ref={diffSvgRef}>
-            <svg
-              viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-              className="scoring-diffs-svg"
-              preserveAspectRatio="xMidYMid meet"
-              onMouseLeave={() => setDiffTooltip({ visible: false, x: 0, y: 0, content: null })}
-            >
-              {/* Background */}
-              <rect
-                x={padding.left}
-                y={padding.top}
-                width={chartWidth}
-                height={chartHeight}
-                fill="var(--bg-secondary)"
-                rx="8"
-              />
-
-              {/* Grid Lines */}
-              {diffYGridLines.map((value) => (
-                <g key={value}>
-                  <line
-                    x1={padding.left}
-                    y1={diffYScale(value)}
-                    x2={svgWidth - padding.right}
-                    y2={diffYScale(value)}
-                    stroke="var(--border-color)"
-                    strokeDasharray="4,4"
-                    opacity="0.5"
-                  />
-                  <text
-                    x={padding.left - 10}
-                    y={diffYScale(value)}
-                    textAnchor="end"
-                    dominantBaseline="middle"
-                    fill="var(--text-muted)"
-                    fontSize="12"
-                    fontFamily="Outfit, sans-serif"
-                  >
-                    {value}
-                  </text>
-                </g>
-              ))}
-
-              {/* X-axis labels */}
-              {Array.from({ length: maxDiffMatches }, (_, i) => {
-                const matchNum = i + 1;
-                if (maxDiffMatches > 10 && matchNum % Math.ceil(maxDiffMatches / 10) !== 0 && matchNum !== 1 && matchNum !== maxDiffMatches) {
-                  return null;
-                }
-                return (
-                  <text
-                    key={i}
-                    x={diffXScale(matchNum)}
-                    y={svgHeight - padding.bottom + 20}
-                    textAnchor="middle"
-                    fill="var(--text-muted)"
-                    fontSize="12"
-                    fontFamily="Outfit, sans-serif"
-                  >
-                    M{matchNum}
-                  </text>
-                );
-              })}
-
-              {/* Axis Labels */}
-              <text
-                x={svgWidth / 2}
-                y={svgHeight - 10}
-                textAnchor="middle"
-                fill="var(--text-secondary)"
-                fontSize="14"
-                fontWeight="600"
-                fontFamily="Outfit, sans-serif"
-              >
-                Match Day
-              </text>
-              <text
-                x={15}
-                y={svgHeight / 2}
-                textAnchor="middle"
-                fill="var(--text-secondary)"
-                fontSize="14"
-                fontWeight="600"
-                fontFamily="Outfit, sans-serif"
-                transform={`rotate(-90, 15, ${svgHeight / 2})`}
-              >
-                Goal Difference
-              </text>
-
-              {/* Weekend Line */}
-              {weekendDiffsData.length > 0 && (
-                <>
-                  <path
-                    d={generateDiffPath(weekendDiffsData)}
-                    fill="none"
-                    stroke="#f59e0b"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="trend-line weekend-line"
-                  />
-                  {weekendDiffsData.map((match, i) => {
-                    const cx = diffXScale(match.index);
-                    const cy = diffYScale(match.diff);
-                    const isCancelled = match.isCancelled;
-                    return (
-                      <g key={`diff-weekend-${i}`} className={`data-point-group ${isCancelled ? 'cancelled' : ''}`}>
-                        {isCancelled ? (
-                          // Cancelled match: X marker at bottom
-                          <>
-                            <line
-                              x1={cx - 6}
-                              y1={diffYScale(0) - 6}
-                              x2={cx + 6}
-                              y2={diffYScale(0) + 6}
-                              stroke="#ef4444"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              className="cancelled-marker"
-                            />
-                            <line
-                              x1={cx + 6}
-                              y1={diffYScale(0) - 6}
-                              x2={cx - 6}
-                              y2={diffYScale(0) + 6}
-                              stroke="#ef4444"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              className="cancelled-marker"
-                            />
-                            <circle
-                              cx={cx}
-                              cy={diffYScale(0)}
-                              r="12"
-                              fill="transparent"
-                              style={{ cursor: 'pointer' }}
-                              onMouseEnter={() => {
-                                const rect = diffSvgRef.current?.getBoundingClientRect();
-                                if (rect) {
-                                  const svgX = (cx / svgWidth) * rect.width;
-                                  const svgY = (diffYScale(0) / svgHeight) * rect.height;
-                                  setDiffTooltip({
-                                    visible: true,
-                                    x: svgX,
-                                    y: svgY - 10,
-                                    position: 'above',
-                                    content: { date: match.date, isCancelled: true, type: 'weekend' }
-                                  });
-                                }
-                              }}
-                              onMouseLeave={() => setDiffTooltip({ visible: false, x: 0, y: 0, content: null })}
-                            />
-                          </>
-                        ) : (
-                          <circle
-                            cx={cx}
-                            cy={cy}
-                            r="7"
-                            fill="#f59e0b"
-                            stroke="var(--bg-card)"
-                            strokeWidth="2"
-                            className="data-point weekend-point"
-                            style={{ cursor: 'pointer' }}
-                            onMouseEnter={() => {
-                              const rect = diffSvgRef.current?.getBoundingClientRect();
-                              if (rect) {
-                                const svgX = (cx / svgWidth) * rect.width;
-                                const svgY = (cy / svgHeight) * rect.height;
-                                // If point is in upper 30% of graph, show tooltip below
-                                const isNearTop = svgY < rect.height * 0.3;
-                                setDiffTooltip({
-                                  visible: true,
-                                  x: svgX,
-                                  y: isNearTop ? svgY + 20 : svgY - 10,
-                                  position: isNearTop ? 'below' : 'above',
-                                  content: {
-                                    date: match.date,
-                                    scoreline: match.scoreline,
-                                    diff: match.diff,
-                                    type: 'weekend'
-                                  }
-                                });
-                              }
-                            }}
-                            onMouseLeave={() => setDiffTooltip({ visible: false, x: 0, y: 0, content: null })}
-                          />
-                        )}
-                      </g>
-                    );
-                  })}
-                </>
-              )}
-
-              {/* Weekday Line */}
-              {weekdayDiffsData.length > 0 && (
-                <>
-                  <path
-                    d={generateDiffPath(weekdayDiffsData)}
-                    fill="none"
-                    stroke="#3b82f6"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="trend-line weekday-line"
-                  />
-                  {weekdayDiffsData.map((match, i) => {
-                    const cx = diffXScale(match.index);
-                    const cy = diffYScale(match.diff);
-                    const isCancelled = match.isCancelled;
-                    return (
-                      <g key={`diff-weekday-${i}`} className={`data-point-group ${isCancelled ? 'cancelled' : ''}`}>
-                        {isCancelled ? (
-                          // Cancelled match: X marker at bottom
-                          <>
-                            <line
-                              x1={cx - 6}
-                              y1={diffYScale(0) - 6}
-                              x2={cx + 6}
-                              y2={diffYScale(0) + 6}
-                              stroke="#ef4444"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              className="cancelled-marker"
-                            />
-                            <line
-                              x1={cx + 6}
-                              y1={diffYScale(0) - 6}
-                              x2={cx - 6}
-                              y2={diffYScale(0) + 6}
-                              stroke="#ef4444"
-                              strokeWidth="3"
-                              strokeLinecap="round"
-                              className="cancelled-marker"
-                            />
-                            <circle
-                              cx={cx}
-                              cy={diffYScale(0)}
-                              r="12"
-                              fill="transparent"
-                              style={{ cursor: 'pointer' }}
-                              onMouseEnter={() => {
-                                const rect = diffSvgRef.current?.getBoundingClientRect();
-                                if (rect) {
-                                  const svgX = (cx / svgWidth) * rect.width;
-                                  const svgY = (diffYScale(0) / svgHeight) * rect.height;
-                                  setDiffTooltip({
-                                    visible: true,
-                                    x: svgX,
-                                    y: svgY - 10,
-                                    position: 'above',
-                                    content: { date: match.date, isCancelled: true, type: 'weekday' }
-                                  });
-                                }
-                              }}
-                              onMouseLeave={() => setDiffTooltip({ visible: false, x: 0, y: 0, content: null })}
-                            />
-                          </>
-                        ) : (
-                          <circle
-                            cx={cx}
-                            cy={cy}
-                            r="7"
-                            fill="#3b82f6"
-                            stroke="var(--bg-card)"
-                            strokeWidth="2"
-                            className="data-point weekday-point"
-                            style={{ cursor: 'pointer' }}
-                            onMouseEnter={() => {
-                              const rect = diffSvgRef.current?.getBoundingClientRect();
-                              if (rect) {
-                                const svgX = (cx / svgWidth) * rect.width;
-                                const svgY = (cy / svgHeight) * rect.height;
-                                // If point is in upper 30% of graph, show tooltip below
-                                const isNearTop = svgY < rect.height * 0.3;
-                                setDiffTooltip({
-                                  visible: true,
-                                  x: svgX,
-                                  y: isNearTop ? svgY + 20 : svgY - 10,
-                                  position: isNearTop ? 'below' : 'above',
-                                  content: {
-                                    date: match.date,
-                                    scoreline: match.scoreline,
-                                    diff: match.diff,
-                                    type: 'weekday'
-                                  }
-                                });
-                              }
-                            }}
-                            onMouseLeave={() => setDiffTooltip({ visible: false, x: 0, y: 0, content: null })}
-                          />
-                        )}
-                      </g>
-                    );
-                  })}
-                </>
-              )}
-            </svg>
-            
-            {/* Custom Tooltip for Diffs */}
-            {diffTooltip.visible && diffTooltip.content && (
-              <div 
-                className={`graph-tooltip ${diffTooltip.content.isCancelled ? 'cancelled' : ''}`}
-                style={{
-                  left: diffTooltip.x,
-                  top: diffTooltip.y,
-                  transform: diffTooltip.position === 'below' ? 'translate(-50%, 0)' : 'translate(-50%, -100%)'
-                }}
-              >
-                <div className="tooltip-date">{diffTooltip.content.date}</div>
-                {diffTooltip.content.isCancelled ? (
-                  <div className="tooltip-cancelled">❌ Cancelled</div>
-                ) : (
-                  <>
-                    {diffTooltip.content.scoreline && Object.keys(diffTooltip.content.scoreline).length > 0 && (
-                      <div className="tooltip-scoreline">
-                        {Object.entries(diffTooltip.content.scoreline).map(([team, score], idx, arr) => (
-                          <span key={team}>
-                            <span className={`tooltip-team team-${team.toLowerCase()}`}>{score}</span>
-                            {idx < arr.length - 1 && <span className="tooltip-separator">-</span>}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <div className={`tooltip-total ${diffTooltip.content.type}`}>
-                      Diff: {diffTooltip.content.diff}
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
+          <div className="scoring-diffs-graph-container">
+            <DiffsTrendChart rows={diffsChartRows.rows} yMax={diffsChartRows.maxDiff} />
           </div>
 
           {/* Legend */}
@@ -1644,8 +963,7 @@ export const ScoringTrends = () => {
             </div>
           </div>
         </div>
-        );
-      })()}
+      )}
     </div>
   );
 };
