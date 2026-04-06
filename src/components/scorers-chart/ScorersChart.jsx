@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -164,14 +164,19 @@ export function ScorersChart() {
     [chartCfg.dataSeason]
   );
   const seasonsSig = configuredSeasons.join(",");
+  const skipFirstSeasonsEffect = useRef(true);
 
   const [scope, setScope] = useState(defaultScopeFromConfig);
 
   useEffect(() => {
+    if (skipFirstSeasonsEffect.current) {
+      skipFirstSeasonsEffect.current = false;
+      return;
+    }
     const latest =
       configuredSeasons[configuredSeasons.length - 1] ?? SCOPE_ALL_TIME;
     setScope(latest);
-  }, [seasonsSig]);
+  }, [seasonsSig, configuredSeasons]);
 
   useEffect(() => {
     if (scope === SCOPE_COMBINED && configuredSeasons.length <= 1) {
@@ -267,7 +272,7 @@ export function ScorersChart() {
     const yMax = Math.max(1, Math.ceil(maxGoals * 1.12));
 
     return (
-      <div className="scorers-chart scorers-chart--bar-mode">
+      <div className="scorers-chart">
         <header className="scorers-chart__header">
           <div className="scorers-chart__headline">
             <h2 className="scorers-chart__title scorers-chart__title--bar">
