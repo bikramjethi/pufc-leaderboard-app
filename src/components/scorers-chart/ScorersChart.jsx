@@ -42,7 +42,13 @@ function defaultScopeFromConfig() {
   return s.length ? s[s.length - 1] : SCOPE_ALL_TIME;
 }
 
-function LineChartTooltip({ active, payload, label, hiddenPlayers }) {
+function LineChartTooltip({
+  active,
+  payload,
+  label,
+  hiddenPlayers,
+  showActiveWeeks,
+}) {
   if (!active || !payload?.length) return null;
   const hidden = hiddenPlayers ?? new Set();
   const rows = [...payload]
@@ -59,22 +65,39 @@ function LineChartTooltip({ active, payload, label, hiddenPlayers }) {
     <div className="scorers-chart-tooltip">
       <div className="scorers-chart-tooltip__title">{label}</div>
       <ul className="scorers-chart-tooltip__list">
-        {rows.map((p) => (
-          <li key={String(p.dataKey)} className="scorers-chart-tooltip__item">
-            <span
-              className="scorers-chart-tooltip__swatch"
-              style={{ background: p.color }}
-              aria-hidden
-            />
-            <span className="scorers-chart-tooltip__name">
-              {getDisplayName(p.dataKey)}
-            </span>
-            <span className="scorers-chart-tooltip__value">
-              {p.value}
-              <span className="scorers-chart-tooltip__suffix"> goals</span>
-            </span>
-          </li>
-        ))}
+        {rows.map((p) => {
+          const full = p.payload;
+          const dk = String(p.dataKey);
+          const aw =
+            showActiveWeeks === true
+              ? full?.[`__activeWeeks_${dk}`]
+              : undefined;
+          const awLabel =
+            typeof aw === "number"
+              ? ` · ${aw} active ${aw === 1 ? "week" : "weeks"}`
+              : null;
+          return (
+            <li key={dk} className="scorers-chart-tooltip__item">
+              <span
+                className="scorers-chart-tooltip__swatch"
+                style={{ background: p.color }}
+                aria-hidden
+              />
+              <span className="scorers-chart-tooltip__name">
+                {getDisplayName(p.dataKey)}
+              </span>
+              <span className="scorers-chart-tooltip__value">
+                {p.value}
+                <span className="scorers-chart-tooltip__suffix"> goals</span>
+                {awLabel ? (
+                  <span className="scorers-chart-tooltip__active-weeks">
+                    {awLabel}
+                  </span>
+                ) : null}
+              </span>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
@@ -193,10 +216,28 @@ export function ScorersChart() {
     return [scope];
   }, [scope, isAllTime]);
 
+  const trackActiveWeeks = useMemo(() => {
+    if (isAllTime) return false;
+    if (chartCfg.showRosterAbsence !== true) return false;
+    const seasons = chartCfg.rosterAbsenceSeasons;
+    if (!Array.isArray(seasons) || seasons.length === 0) return false;
+    const allowed = new Set(seasons.map((s) => String(s).trim()));
+    return allowed.has(String(scope));
+  }, [
+    isAllTime,
+    chartCfg.showRosterAbsence,
+    chartCfg.rosterAbsenceSeasons,
+    scope,
+  ]);
+
   const built = useMemo(() => {
     if (isAllTime) return null;
-    return buildScorersChartData({ dataSeason: dataSeasonForBuild, topN });
-  }, [isAllTime, dataSeasonForBuild, topN]);
+    return buildScorersChartData({
+      dataSeason: dataSeasonForBuild,
+      topN,
+      trackActiveWeeks,
+    });
+  }, [isAllTime, dataSeasonForBuild, topN, trackActiveWeeks]);
 
   const barBuilt = useMemo(() => {
     if (!isAllTime) return null;
@@ -226,6 +267,14 @@ export function ScorersChart() {
     setHiddenPlayers(new Set());
   }, []);
 
+  const selectOptions = useMemo(() => {
+    const opts = [{ value: SCOPE_ALL_TIME, label: "All-time (club totals)" }];
+    configuredSeasons.forEach((y) => {
+      opts.push({ value: y, label: `${y} season` });
+    });
+    return opts;
+  }, [configuredSeasons]);
+
   if (isAllTime) {
     if (!barBuilt?.barData?.length) {
       return (
@@ -241,14 +290,6 @@ export function ScorersChart() {
       </div>
     );
   }
-
-  const selectOptions = useMemo(() => {
-    const opts = [{ value: SCOPE_ALL_TIME, label: "All-time (club totals)" }];
-    configuredSeasons.forEach((y) => {
-      opts.push({ value: y, label: `${y} season` });
-    });
-    return opts;
-  }, [configuredSeasons]);
 
   if (isAllTime) {
     const { barData, topPlayers, maxGoals } = barBuilt;
@@ -531,7 +572,11 @@ export function ScorersChart() {
               />
               <Tooltip
                 content={(props) => (
-                  <LineChartTooltip {...props} hiddenPlayers={hiddenPlayers} />
+                  <LineChartTooltip
+                    {...props}
+                    hiddenPlayers={hiddenPlayers}
+                    showActiveWeeks={trackActiveWeeks}
+                  />
                 )}
                 cursor={{
                   stroke: "var(--scorers-chart-cursor)",

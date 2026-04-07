@@ -75,6 +75,15 @@ export const config = {
      */
     dataSeason: ["2025", "2026"],
     topN: 10,
+    /**
+     * When true, the line-chart tooltip includes each player's cumulative "active weeks" count
+     * (weeks with at least one attendance appearance on a played league match). Only applies
+     * when the selected line season is in rosterAbsenceSeasons (2026-only until older years
+     * are fully backfilled).
+     */
+    showRosterAbsence: false,
+    /** Seasons trusted for active-week counts from attendance; add "2025", "2024" after backfill. */
+    rosterAbsenceSeasons: ["2026"],
   },
 
   // Head to Head Settings (Standalone Tab)

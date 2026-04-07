@@ -406,6 +406,13 @@
   margin-left: 0.15rem;
 }
 
+.scorers-chart-tooltip__active-weeks {
+  font-weight: 500;
+  font-size: 0.72em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 @media (max-width: 640px) {
   .scorers-chart__canvas-wrap {
     padding-left: 0;

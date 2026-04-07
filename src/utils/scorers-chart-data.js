@@ -83,6 +83,32 @@ function collectGoalsForMatch(match) {
   return byName;
 }
 
+/** Lowercase trimmed names on the match sheet (any attendance row), excluding "Others". */
+function attendanceNamesForMatch(match) {
+  /** @type {Set<string>} */
+  const set = new Set();
+  const att = match?.attendance;
+  if (!att || typeof att !== "object") return set;
+  for (const team of Object.values(att)) {
+    if (!Array.isArray(team)) continue;
+    for (const p of team) {
+      if (!p?.name || isOthersName(p.name)) continue;
+      set.add(String(p.name).trim().toLowerCase());
+    }
+  }
+  return set;
+}
+
+/** All sheet names across every included match in a week (case-insensitive union). */
+function attendanceNamesOnSheetInWeek(weekMatches) {
+  /** @type {Set<string>} */
+  const set = new Set();
+  for (const match of weekMatches) {
+    for (const n of attendanceNamesForMatch(match)) set.add(n);
+  }
+  return set;
+}
+
 function formatSeasonLabel(seasonKeys) {
   const sorted = [...seasonKeys].sort(
     (a, b) => Number(a) - Number(b)
@@ -97,9 +123,14 @@ function formatSeasonLabel(seasonKeys) {
  * @param {object} options
  * @param {string[] | string} [options.dataSeason] — season keys (e.g. ["2026"] or ["2025","2026"])
  * @param {number} options.topN
+ * @param {boolean} [options.trackActiveWeeks] — when true, each row gets `__activeWeeks_<player>` = cumulative weeks (so far) with at least one attendance appearance
  * @returns {{ chartData: object[], topPlayers: string[], weekLabels: string[], seasonLabel: string, dataSeasons: string[] } | null}
  */
-export function buildScorersChartData({ dataSeason, topN = 10 } = {}) {
+export function buildScorersChartData({
+  dataSeason,
+  topN = 10,
+  trackActiveWeeks = false,
+} = {}) {
   const seasonKeys = normalizeSeasonKeys(dataSeason);
   const allMatches = [];
   const loadedSeasons = [];
@@ -131,6 +162,8 @@ export function buildScorersChartData({ dataSeason, topN = 10 } = {}) {
 
   /** @type {Map<string, Map<string, number>>} weekKey -> player -> goals in week */
   const goalsByWeek = new Map();
+  /** @type {Map<string, object[]> | null} */
+  const matchesByWeek = trackActiveWeeks ? new Map() : null;
   const weekOrder = [];
   const seenWeek = new Set();
 
@@ -144,6 +177,10 @@ export function buildScorersChartData({ dataSeason, topN = 10 } = {}) {
     const bucket = goalsByWeek.get(wk);
     for (const [name, g] of collectGoalsForMatch(m)) {
       bucket.set(name, (bucket.get(name) || 0) + g);
+    }
+    if (matchesByWeek) {
+      if (!matchesByWeek.has(wk)) matchesByWeek.set(wk, []);
+      matchesByWeek.get(wk).push(m);
     }
   }
 
@@ -164,6 +201,8 @@ export function buildScorersChartData({ dataSeason, topN = 10 } = {}) {
 
   /** @type {Record<string, number>} */
   const cumulative = Object.fromEntries(topPlayers.map((n) => [n, 0]));
+  /** @type {Record<string, number>} */
+  const activeWeeks = Object.fromEntries(topPlayers.map((n) => [n, 0]));
 
   const chartData = weekOrder.map((wk, idx) => {
     const row = {
@@ -171,10 +210,19 @@ export function buildScorersChartData({ dataSeason, topN = 10 } = {}) {
       weekKey: wk,
     };
     const b = goalsByWeek.get(wk);
+    const namesOnSheet =
+      trackActiveWeeks && matchesByWeek
+        ? attendanceNamesOnSheetInWeek(matchesByWeek.get(wk) || [])
+        : null;
     for (const player of topPlayers) {
       const add = b.get(player) || 0;
       cumulative[player] += add;
       row[player] = cumulative[player];
+      if (namesOnSheet) {
+        const needle = String(player).trim().toLowerCase();
+        if (namesOnSheet.has(needle)) activeWeeks[player] += 1;
+        row[`__activeWeeks_${player}`] = activeWeeks[player];
+      }
     }
     return row;
   });
