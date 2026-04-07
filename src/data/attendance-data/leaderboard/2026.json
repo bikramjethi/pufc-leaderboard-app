@@ -386,20 +386,6 @@
     },
     {
       "category": "MIDWEEK",
-      "sno": 28,
-      "name": "Mathew",
-      "midweekGames": 0,
-      "weekendGames": 0,
-      "totalGames": 0,
-      "midweekPercentage": 0,
-      "weekendPercentage": 0,
-      "totalPercentage": 0,
-      "games2024": 31,
-      "difference": null,
-      "notes": null
-    },
-    {
-      "category": "MIDWEEK",
       "sno": 29,
       "name": "Vikas",
       "midweekGames": 9,
