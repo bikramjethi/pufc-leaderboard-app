@@ -68,11 +68,10 @@ export const config = {
   SCORERS_CHART: {
     enabled: true,
     /**
-     * Seasons to merge into one chronological chart (add years as you backfill).
+     * Line chart is one season at a time; list which years appear in the View menu (plus all-time bar).
      * 2025+ include per-match scorer rows in attendance JSON; chart uses only played, non-tournament games.
      * Each year must exist in `src/utils/scorers-chart-data.js` (static JSON import).
-     * View menu: all-time bar chart (leaderboard career totals), optional combined line chart
-     * when 2+ entries, and a per-season line chart. Default view is the latest year in this list.
+     * Default line view is the latest year in this list.
      */
     dataSeason: ["2025", "2026"],
     topN: 10,

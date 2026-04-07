@@ -36,7 +36,6 @@ const PLAYER_STROKES = [
 ];
 
 const SCOPE_ALL_TIME = "all-time";
-const SCOPE_COMBINED = "all";
 
 function defaultScopeFromConfig() {
   const s = getConfiguredScorersSeasons(config.SCORERS_CHART?.dataSeason);
@@ -179,16 +178,8 @@ export function ScorersChart() {
   }, [seasonsSig, configuredSeasons]);
 
   useEffect(() => {
-    if (scope === SCOPE_COMBINED && configuredSeasons.length <= 1) {
-      const latest =
-        configuredSeasons[configuredSeasons.length - 1] ?? SCOPE_ALL_TIME;
-      setScope(latest);
-    }
-    if (
-      scope !== SCOPE_ALL_TIME &&
-      scope !== SCOPE_COMBINED &&
-      !configuredSeasons.includes(scope)
-    ) {
+    if (scope === SCOPE_ALL_TIME) return;
+    if (!configuredSeasons.includes(scope)) {
       const latest =
         configuredSeasons[configuredSeasons.length - 1] ?? SCOPE_ALL_TIME;
       setScope(latest);
@@ -199,10 +190,8 @@ export function ScorersChart() {
 
   const dataSeasonForBuild = useMemo(() => {
     if (isAllTime) return [];
-    if (configuredSeasons.length <= 1) return configuredSeasons;
-    if (scope === SCOPE_COMBINED) return configuredSeasons;
     return [scope];
-  }, [configuredSeasons, scope, isAllTime]);
+  }, [scope, isAllTime]);
 
   const built = useMemo(() => {
     if (isAllTime) return null;
@@ -255,12 +244,6 @@ export function ScorersChart() {
 
   const selectOptions = useMemo(() => {
     const opts = [{ value: SCOPE_ALL_TIME, label: "All-time (club totals)" }];
-    if (configuredSeasons.length > 1) {
-      opts.push({
-        value: SCOPE_COMBINED,
-        label: "All seasons combined",
-      });
-    }
     configuredSeasons.forEach((y) => {
       opts.push({ value: y, label: `${y} season` });
     });
