@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "totalGoals": 266,
+  "totalGoals": 276,
   "weekendGoals": 110,
-  "weekdayGoals": 156,
+  "weekdayGoals": 166,
   "matches": [
     {
       "id": "03-01-2026",
@@ -4219,11 +4219,153 @@
       "id": "14-04-2026",
       "date": "14/04/2026",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isFullHouse": false,
+      "team2RotatingGoalie": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Nadeem",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          },
+          {
+            "name": "Ashish",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Vinit Patel",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Jethi",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Alan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "ONLOAN",
+            "position": "RM"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "John",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Vinit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Sourabh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Ishan(David+1)",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Ishan(John+1)",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Subarna",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "David",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST",
+            "rotatedGoalie": true
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 8,
+        "BLUE": 2
+      },
+      "totalGoals": 10
     },
     {
       "id": "18-04-2026",
