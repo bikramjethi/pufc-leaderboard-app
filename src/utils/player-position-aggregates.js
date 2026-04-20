@@ -10,6 +10,7 @@
 export function buildEligibleProfileMap(profiles) {
   const map = new Map();
   for (const p of profiles) {
+    if (p.isTracked === false) continue;
     const g = p.groupAvailibility;
     if (g === "INACTIVE" || g === "ONLOAN") continue;
     const key = p.name.toLowerCase().trim();

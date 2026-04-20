@@ -22,6 +22,9 @@ import { config } from "./leaderboard-config.js";
 import { isSmallScreen } from "./utils/isSmallScreen.js";
 import { aggregateAllTimeStats } from "./utils/leaderboard-calculations.js";
 import { leaderboardData } from "./utils/get-data.js";
+import { filterLeaderboardDataByTracked, filterPlayersForStatsLeaderboard } from "./utils/playerTracking.js";
+
+const statsLeaderboardBySeason = filterLeaderboardDataByTracked(leaderboardData);
 
 // Get available years from config, falling back to data keys
 const availableYears = config.STATS_LEADERBOARD?.seasons || Object.keys(leaderboardData).sort((a, b) => b - a);
@@ -91,7 +94,8 @@ function App() {
     (availableYears.includes("2026") ? "2026" : "all-time");
   const [selectedYear, setSelectedYear] = useState(defaultYear);
   const [players, setPlayers] = useState(() => {
-    return leaderboardData[defaultYear] || aggregateAllTimeStats();
+    const season = statsLeaderboardBySeason[defaultYear];
+    return season?.length ? season : aggregateAllTimeStats();
   });
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("pufc-theme") || "dark";
@@ -141,7 +145,9 @@ function App() {
     if (selectedYear === "all-time") {
       setPlayers(aggregateAllTimeStats());
     } else {
-      setPlayers(leaderboardData[selectedYear]);
+      setPlayers(
+        filterPlayersForStatsLeaderboard(leaderboardData[selectedYear] || [])
+      );
     }
   }, [selectedYear]);
 
@@ -171,7 +177,10 @@ function App() {
     if (tabId === "leaderboard") {
       const resetYear = config.STATS_LEADERBOARD?.defaultSeason || "2026";
       setSelectedYear(resetYear);
-      setPlayers(leaderboardData[resetYear] || aggregateAllTimeStats());
+      const season = filterPlayersForStatsLeaderboard(
+        leaderboardData[resetYear] || []
+      );
+      setPlayers(season.length ? season : aggregateAllTimeStats());
     }
   };
 
@@ -340,7 +349,7 @@ function App() {
           {activeTab === "leaderboard" ? (
             <Leaderboard
               players={players}
-              allSeasonData={leaderboardData}
+              allSeasonData={statsLeaderboardBySeason}
               isAllTime={selectedYear === "all-time"}
               selectedYear={selectedYear}
             />

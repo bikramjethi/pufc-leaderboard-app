@@ -1,5 +1,9 @@
 import { useState, useMemo } from "react";
 import { leaderboardData } from "../../utils/get-data.js";
+import {
+  filterPlayersForStatsLeaderboard,
+  isStatsTrackedPlayerName,
+} from "../../utils/playerTracking.js";
 import { config } from "../../leaderboard-config.js";
 import matchData2026 from "../../data/attendance-data/2026.json";
 import attendanceLeaderboard2025 from "../../data/attendance-data/leaderboard/2025.json";
@@ -64,6 +68,7 @@ const buildProfilePositionMap = () => {
   const map = new Map();
   (playerProfiles || []).forEach((p) => {
     if (!isRealPlayer(p?.name)) return;
+    if (p.isTracked === false) return;
     const groups = Array.isArray(p?.position)
       ? p.position.map(normalizePositionGroup).filter((g) => g !== "OTHER")
       : [];
@@ -98,7 +103,9 @@ const calculateAdvancedInsights = (matches, leaderboardData, profilePositionMap)
     const teamStrength = {};
     const teamResult = {};
     teams.forEach((team) => {
-      const players = (match.attendance?.[team] || []).filter((p) => isRealPlayer(p?.name));
+      const players = (match.attendance?.[team] || []).filter(
+        (p) => isRealPlayer(p?.name) && isStatsTrackedPlayerName(p.name)
+      );
       const strengths = players.map((p) => winRateByPlayer.get(p.name) ?? 50);
       teamStrength[team] = strengths.length
         ? strengths.reduce((a, b) => a + b, 0) / strengths.length
@@ -106,6 +113,7 @@ const calculateAdvancedInsights = (matches, leaderboardData, profilePositionMap)
       teamResult[team] = getTeamResult(match, team);
 
       players.forEach((p) => {
+        if (!isStatsTrackedPlayerName(p.name)) return;
         if (!attendanceByPlayer.has(p.name)) {
           attendanceByPlayer.set(p.name, { combined: 0, weekend: 0, midweek: 0 });
         }
@@ -129,6 +137,7 @@ const calculateAdvancedInsights = (matches, leaderboardData, profilePositionMap)
             (p) => isRealPlayer(p?.name) && (Number(p?.goals) || 0) > 0
           );
           scorers.forEach((p) => {
+            if (!isStatsTrackedPlayerName(p.name)) return;
             if (!upsetDriverMap.has(p.name)) upsetDriverMap.set(p.name, { name: p.name, upsets: 0, goals: 0, points: 0 });
             const curr = upsetDriverMap.get(p.name);
             const g = Number(p.goals) || 0;
@@ -142,6 +151,7 @@ const calculateAdvancedInsights = (matches, leaderboardData, profilePositionMap)
   }
 
   const upsetDrivers = Array.from(upsetDriverMap.values())
+    .filter((d) => isStatsTrackedPlayerName(d.name))
     .sort((a, b) => b.points - a.points || b.goals - a.goals)
     .slice(0, 5);
 
@@ -151,6 +161,7 @@ const calculateAdvancedInsights = (matches, leaderboardData, profilePositionMap)
     midweek: [],
   };
   Array.from(attendanceByPlayer.entries()).forEach(([name, a]) => {
+    if (!isStatsTrackedPlayerName(name)) return;
     if (totalByDay.combined > 0 && a.combined === totalByDay.combined) perfectAttendance.combined.push(name);
     if (totalByDay.weekend > 0 && a.weekend === totalByDay.weekend) perfectAttendance.weekend.push(name);
     if (totalByDay.midweek > 0 && a.midweek === totalByDay.midweek) perfectAttendance.midweek.push(name);
@@ -293,6 +304,9 @@ const getTopNWithTies = (players, getValue, n = 3) => {
 const calculateOverallInsights = (leaderboardData, attendanceData, trackerData = null) => {
   if (!leaderboardData || leaderboardData.length === 0) return null;
 
+  leaderboardData = filterPlayersForStatsLeaderboard(leaderboardData);
+  if (leaderboardData.length === 0) return null;
+
   const insights = {
     totalPlayers: leaderboardData.length,
     totalGoals: leaderboardData.reduce((sum, p) => sum + (p.goals || 0), 0),
@@ -386,7 +400,10 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
     insights.totalGames = attendanceData.summary?.totalGames || 0;
     insights.midweekGames = attendanceData.summary?.midweekGames || 0;
     insights.weekendGames = attendanceData.summary?.weekendGames || 0;
-    const eligibleForAttendance = attendanceData.players?.filter((p) => p.name !== "Others") || [];
+    const eligibleForAttendance =
+      attendanceData.players?.filter(
+        (p) => p.name !== "Others" && isStatsTrackedPlayerName(p.name)
+      ) || [];
     const topAttended = getTopNWithTies(eligibleForAttendance, (p) => p.totalGames || 0, 3);
     insights.mostAttended = topAttended.map((p) => ({
       name: p.name,
@@ -394,7 +411,9 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
     }));
   } else {
     // If no attendance data, calculate most attended from leaderboard data (matches played)
-    const eligibleForAttendance = leaderboardData.filter((p) => p.name !== "Others");
+    const eligibleForAttendance = leaderboardData.filter(
+      (p) => p.name !== "Others" && isStatsTrackedPlayerName(p.name)
+    );
     const topAttended = getTopNWithTies(eligibleForAttendance, (p) => p.matches || 0, 3);
     insights.mostAttended = topAttended.map((p) => ({
       name: p.name,
@@ -421,6 +440,8 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
 // Calculate quarterly insights for 2026
 const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
   if (!trackerData || !trackerData.matches) return null;
+
+  leaderboardData = filterPlayersForStatsLeaderboard(leaderboardData || []);
 
   // Filter matches for the quarter (excluding tournaments)
   const quarterMatches = trackerData.matches.filter((match) => {
@@ -459,6 +480,7 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
   quarterMatches.forEach((match) => {
     const scorers = getScorersFromAttendance(match.attendance);
     scorers.forEach((scorer) => {
+      if (!isStatsTrackedPlayerName(scorer.name)) return;
       const current = scorerMap.get(scorer.name) || 0;
       scorerMap.set(scorer.name, current + (scorer.goals || 0));
     });
@@ -475,6 +497,7 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
   quarterMatches.forEach((match) => {
     const players = getAllPlayersFromAttendance(match.attendance);
     players.forEach((player) => {
+      if (!isStatsTrackedPlayerName(player.name)) return;
       const current = attendanceMap.get(player.name) || 0;
       attendanceMap.set(player.name, current + 1);
     });
@@ -491,6 +514,7 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
   quarterMatches.forEach((match) => {
     const cleanSheetPlayers = getCleanSheetsFromAttendance(match.attendance);
     cleanSheetPlayers.forEach((playerName) => {
+      if (!isStatsTrackedPlayerName(playerName)) return;
       const current = cleanSheetsMap.get(playerName) || 0;
       cleanSheetsMap.set(playerName, current + 1);
     });
@@ -528,7 +552,7 @@ export const Insights = () => {
 
   // Load data based on season
   const leaderboardDataForSeason = useMemo(() => {
-    return leaderboardData[selectedSeason] || [];
+    return filterPlayersForStatsLeaderboard(leaderboardData[selectedSeason] || []);
   }, [selectedSeason]);
   
   // Load attendance leaderboard data

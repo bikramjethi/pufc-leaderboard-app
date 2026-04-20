@@ -2,6 +2,7 @@ import matchData2024 from "../data/attendance-data/2024.json";
 import matchData2025 from "../data/attendance-data/2025.json";
 import matchData2026 from "../data/attendance-data/2026.json";
 import { aggregateAllTimeStats } from "./leaderboard-calculations.js";
+import { isStatsTrackedPlayerName } from "./playerTracking.js";
 
 /** Extend this map when adding a new season file. */
 const MATCH_DATA_BY_SEASON = {
@@ -74,6 +75,7 @@ function collectGoalsForMatch(match) {
     if (!Array.isArray(team)) continue;
     for (const p of team) {
       if (!p?.name || isOthersName(p.name)) continue;
+      if (!isStatsTrackedPlayerName(p.name)) continue;
       const g = Number(p.goals) || 0;
       if (g <= 0) continue;
       const key = p.name;
