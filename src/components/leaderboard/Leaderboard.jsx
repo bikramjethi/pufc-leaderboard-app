@@ -103,29 +103,36 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
     }
   };
 
-  // Transform players based on selected statsView (overall, weekday, weekend)
+  // Transform players based on selected statsView (overall, weekday, weekend).
+  // Each tab only lists players with at least one match in that scope.
   const transformedPlayers = useMemo(() => {
+    const atLeastOneMatch = (p) => (Number(p.matches) || 0) >= 1;
+
     if (statsView === "overall" || !hasDetailedStats) {
-      return players;
+      return players.filter(atLeastOneMatch);
     }
-    
-    // For weekday/weekend views, extract the relevant stats
-    return players.map(player => {
-      const periodStats = statsView === "weekday" ? player.weekdayStats : player.weekendStats;
-      if (!periodStats) return player;
-      
-      return {
-        ...player,
-        matches: periodStats.matches || 0,
-        wins: periodStats.wins || 0,
-        losses: periodStats.losses || 0,
-        draws: periodStats.draws || 0,
-        cleanSheets: periodStats.cleanSheets || 0,
-        goals: periodStats.goals || 0,
-        hatTricks: periodStats.hatTricks || 0,
-        ownGoals: periodStats.ownGoals || 0,
-      };
-    });
+
+    return players
+      .map((player) => {
+        const periodStats =
+          statsView === "weekday" ? player.weekdayStats : player.weekendStats;
+        if (!periodStats) return null;
+        const matches = Number(periodStats.matches) || 0;
+        if (matches < 1) return null;
+
+        return {
+          ...player,
+          matches,
+          wins: periodStats.wins || 0,
+          losses: periodStats.losses || 0,
+          draws: periodStats.draws || 0,
+          cleanSheets: periodStats.cleanSheets || 0,
+          goals: periodStats.goals || 0,
+          hatTricks: periodStats.hatTricks || 0,
+          ownGoals: periodStats.ownGoals || 0,
+        };
+      })
+      .filter(Boolean);
   }, [players, statsView, hasDetailedStats]);
 
   // Add calculated percentages to players
