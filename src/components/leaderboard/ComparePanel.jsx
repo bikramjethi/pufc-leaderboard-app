@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { getDisplayName } from "../../utils/playerDisplayName";
+import { COMPARE_STAT_KEY_TO_COLUMN_CONFIG } from "../../utils/stats-leaderboard-columns.js";
 
-const statRows = [
+const ALL_COMPARE_STAT_ROWS = [
   { key: "matches", label: "Matches Played" },
   { key: "wins", label: "Wins" },
   { key: "draws", label: "Draws" },
@@ -11,9 +12,10 @@ const statRows = [
   { key: "cleanSheets", label: "Clean Sheets" },
   { key: "goals", label: "Goals" },
   { key: "hatTricks", label: "Hat Tricks" },
+  { key: "ownGoals", label: "Own Goals" },
 ];
 
-export const ComparePanel = ({ players = [], onClose }) => {
+export const ComparePanel = ({ players = [], columnVisibility, onClose }) => {
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (e) => {
@@ -22,6 +24,20 @@ export const ComparePanel = ({ players = [], onClose }) => {
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, [onClose]);
+
+  const statRows = useMemo(() => {
+    const vis = columnVisibility;
+    if (!vis) return ALL_COMPARE_STAT_ROWS;
+
+    const hasOg = players.some((p) => p.ownGoals !== undefined);
+
+    return ALL_COMPARE_STAT_ROWS.filter((row) => {
+      if (row.key === "ownGoals" && !hasOg) return false;
+      const cfgKey = COMPARE_STAT_KEY_TO_COLUMN_CONFIG[row.key];
+      if (!cfgKey) return true;
+      return vis[cfgKey] !== false;
+    });
+  }, [columnVisibility, players]);
 
   // Guard against missing players (after hooks)
   if (!players || players.length < 2) return null;

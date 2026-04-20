@@ -25,6 +25,25 @@ export const config = {
     enabled: true,                      // Show/hide the Stats Leaderboard tab
     seasons: ["2024", "2025", "2026"],  // Available seasons
     defaultSeason: "2026",              // Default season to load
+    /**
+     * Per-column visibility on the stats leaderboard table, CSV, legend, and compare panel.
+     * Set a key to false to hide that column. Omitted keys default to true.
+     * `ownGoals` only appears when season data includes own-goals; if false it is always hidden.
+     */
+    columns: {
+      player: true,           // Player name
+      position: true,       // Pos
+      matchesPlayed: true,  // MP
+      wins: false,           // W
+      draws: false,          // D
+      losses: false,         // L
+      winPercentage: false,  // W%
+      lossPercentage: false, // L%
+      cleanSheets: true,      // CS
+      goals: true,          // G
+      hatTricks: true,      // HT
+      ownGoals: true,      // OG (only when data has the field)
+    },
   },
 
   // Attendance Settings (Attendance tab)

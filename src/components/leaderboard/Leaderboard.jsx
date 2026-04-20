@@ -4,23 +4,11 @@ import { ComparePanel } from "./ComparePanel.jsx";
 import { PlayerModal } from "../player-modal";
 import { config } from "../../leaderboard-config.js";
 import { tickerMessages } from "../../ticker-messages.js";
-
-const baseColumns = [
-  { key: "name", label: "Player", className: "player-col", sortable: true, tooltip: "Player Name" },
-  { key: "position", label: "Pos", className: "position-col", sortable: true, tooltip: "Playing Position" },
-  { key: "matches", label: "MP", className: "stat-col", sortable: true, tooltip: "Matches Played" },
-  { key: "wins", label: "W", className: "stat-col", sortable: true, tooltip: "Total Wins" },
-  { key: "draws", label: "D", className: "stat-col", sortable: true, tooltip: "Total Draws" },
-  { key: "losses", label: "L", className: "stat-col", sortable: true, tooltip: "Total Losses" },
-  { key: "winPct", label: "W%", className: "stat-col", sortable: true, tooltip: "Win Percentage" },
-  { key: "lossPct", label: "L%", className: "stat-col", sortable: true, tooltip: "Loss Percentage" },
-  { key: "cleanSheets", label: "CS", className: "stat-col", sortable: true, tooltip: "Clean Sheets" },
-  { key: "goals", label: "G", className: "stat-col", sortable: true, tooltip: "Goals Scored" },
-  { key: "hatTricks", label: "HT", className: "stat-col", sortable: true, tooltip: "Hat Tricks" },
-];
-
-// OG column - only shown when data has ownGoals key
-const ogColumn = { key: "ownGoals", label: "OG", className: "stat-col", sortable: true, tooltip: "Own Goals" };
+import {
+  getVisibleStatsLeaderboardTableColumns,
+  mergeStatsLeaderboardColumnConfig,
+  resolveVisibleSortKey,
+} from "../../utils/stats-leaderboard-columns.js";
 
 // Helper to calculate percentages
 const calcPercentages = (player) => {
@@ -50,18 +38,29 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
     return players.some(player => player.ownGoals !== undefined);
   }, [players]);
 
+  const columnVisibility = useMemo(
+    () => mergeStatsLeaderboardColumnConfig(config.STATS_LEADERBOARD),
+    []
+  );
+
+  const columns = useMemo(
+    () => getVisibleStatsLeaderboardTableColumns(columnVisibility, hasOwnGoals),
+    [columnVisibility, hasOwnGoals]
+  );
+
   // Reset statsView when year changes
   useEffect(() => {
     setStatsView("overall");
   }, [selectedYear]);
 
-  // Build columns dynamically based on data
-  const columns = useMemo(() => {
-    if (hasOwnGoals) {
-      return [...baseColumns, ogColumn];
+  useEffect(() => {
+    const validKeys = new Set(columns.map((c) => c.key));
+    if (!validKeys.has(sortKey)) {
+      const next = resolveVisibleSortKey(config.DEFAULT_SORT_KEY, columns, "matches");
+      setSortKey(next);
+      setSortDirection(next === "name" ? "asc" : "desc");
     }
-    return baseColumns;
-  }, [hasOwnGoals]);
+  }, [columns, sortKey]);
 
   const handlePlayerClick = (player) => {
     if (config.ENABLE_PLAYER_MODAL) {
@@ -171,6 +170,10 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
     });
   }, [filteredPlayers, sortKey, sortDirection]);
 
+  const visibleStatKeys = useMemo(() => {
+    return new Set(columns.map((c) => c.key));
+  }, [columns]);
+
   // Calculate top 3 values per column (capped at 3 highlights max)
   // Exclude "Others" from top 3 calculations
   const topValues = useMemo(() => {
@@ -178,9 +181,11 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
     const playersForTopValues = playersWithPct.filter((p) => p.name !== "Others");
     
     // Higher is better for these stats
-    const higherIsBetter = ["matches", "wins", "draws", "winPct", "cleanSheets", "goals", "hatTricks", "ownGoals"];
+    const higherIsBetter = ["matches", "wins", "draws", "winPct", "cleanSheets", "goals", "hatTricks", "ownGoals"].filter(
+      (k) => visibleStatKeys.has(k)
+    );
     // Lower is better for these stats
-    const lowerIsBetter = ["losses", "lossPct"];
+    const lowerIsBetter = ["losses", "lossPct"].filter((k) => visibleStatKeys.has(k));
     
     const tops = {};
     
@@ -257,7 +262,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
     });
     
     return tops;
-  }, [playersWithPct]);
+  }, [playersWithPct, visibleStatKeys]);
 
   const getSortIndicator = (key) => {
     if (sortKey !== key) return <span className="sort-indicator">⇅</span>;
@@ -327,57 +332,40 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
         <button
           className="download-csv-btn-compact"
           onClick={() => {
-            // Convert leaderboard data to CSV
             const csvRows = [];
-            
-            // CSV Headers - conditionally include OG
-            const headers = [
-              "Rank",
-              "Player",
-              "Position",
-              "Matches Played",
-              "Wins",
-              "Draws",
-              "Losses",
-              "Win %",
-              "Loss %",
-              "Clean Sheets",
-              "Goals",
-              "Hat Tricks"
-            ];
-            if (hasOwnGoals) headers.push("Own Goals");
+            const headers = ["Rank", ...columns.map((c) => c.csvHeader)];
             csvRows.push(headers.join(","));
 
-            // Add each player as a row
             sortedPlayers.forEach((player, index) => {
-              const winPct = player.matches > 0 
-                ? ((player.wins / player.matches) * 100).toFixed(1)
-                : "0.0";
-              const lossPct = player.matches > 0
-                ? ((player.losses / player.matches) * 100).toFixed(1)
-                : "0.0";
+              const positionStr =
+                player.position && Array.isArray(player.position)
+                  ? player.position.join("/")
+                  : "N/A";
+              const winPct =
+                player.matches > 0
+                  ? ((player.wins / player.matches) * 100).toFixed(1)
+                  : "0.0";
+              const lossPct =
+                player.matches > 0
+                  ? ((player.losses / player.matches) * 100).toFixed(1)
+                  : "0.0";
 
-              // Position is always an array, join with "/" for CSV
-              const positionStr = player.position && Array.isArray(player.position)
-                ? player.position.join("/")
-                : "N/A";
-              
-              const row = [
-                index + 1,
-                player.name,
-                positionStr,
-                player.matches || 0,
-                player.wins || 0,
-                player.draws || 0,
-                player.losses || 0,
-                winPct,
-                lossPct,
-                player.cleanSheets || 0,
-                player.goals || 0,
-                player.hatTricks || 0
-              ];
-              if (hasOwnGoals) row.push(player.ownGoals || 0);
-              csvRows.push(row.join(","));
+              const cells = columns.map((col) => {
+                switch (col.key) {
+                  case "name":
+                    return player.name;
+                  case "position":
+                    return positionStr;
+                  case "winPct":
+                    return winPct;
+                  case "lossPct":
+                    return lossPct;
+                  default:
+                    return player[col.key] ?? 0;
+                }
+              });
+
+              csvRows.push([index + 1, ...cells].join(","));
             });
 
             // Create CSV content
@@ -457,11 +445,11 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
                 key={player.id}
                 player={player}
                 rank={index + 1}
+                columns={columns}
                 topValues={topValues}
                 showHighlight={config.ENABLE_MAX_HIGHLIGHT}
                 showCheckbox={config.ENABLE_COMPARISON}
                 showPlayerModal={config.ENABLE_PLAYER_MODAL}
-                showOwnGoals={hasOwnGoals}
                 isSelected={selectedPlayers.some((p) => p.id === player.id)}
                 onSelect={() => handlePlayerSelect(player)}
                 onPlayerClick={() => handlePlayerClick(player)}
@@ -472,16 +460,13 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
       </div>
 
       <div className="legend">
-        <span><strong>MP</strong> Matches Played</span>
-        <span><strong>W</strong> Wins</span>
-        <span><strong>D</strong> Draws</span>
-        <span><strong>L</strong> Losses</span>
-        <span><strong>W%</strong> Win Rate</span>
-        <span><strong>L%</strong> Loss Rate</span>
-        <span><strong>CS</strong> Clean Sheets</span>
-        <span><strong>G</strong> Goals</span>
-        <span><strong>HT</strong> Hat Tricks</span>
-        {hasOwnGoals && <span><strong>OG</strong> Own Goals</span>}
+        {columns
+          .filter((c) => c.legend)
+          .map((c) => (
+            <span key={c.key}>
+              <strong>{c.legend.abbr}</strong> {c.legend.text}
+            </span>
+          ))}
         <span className="legend-divider"></span>
         <span className="legend-highlight">
           <strong className="highlight-gold">1st</strong>
@@ -493,6 +478,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
       {config.ENABLE_COMPARISON && selectedPlayers.length === config.MAX_COMPARE_PLAYERS && (
         <ComparePanel
           players={selectedPlayers}
+          columnVisibility={columnVisibility}
           onClose={clearComparison}
         />
       )}

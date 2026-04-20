@@ -1,34 +1,29 @@
 import { getDisplayName } from "../../utils/playerDisplayName";
 
-export const Row = ({ 
-  player, 
-  rank, 
-  topValues, 
+export const Row = ({
+  player,
+  rank,
+  columns,
+  topValues,
   showHighlight = true,
   showCheckbox = true,
   showPlayerModal = true,
-  showOwnGoals = false,
-  isSelected = false, 
+  isSelected = false,
   onSelect,
-  onPlayerClick
+  onPlayerClick,
 }) => {
-  // Position is always an array
-  const positions = player?.position && Array.isArray(player.position) 
-    ? player.position 
-    : ["N/A"];
-  
+  const positions =
+    player?.position && Array.isArray(player.position) ? player.position : ["N/A"];
+
   const getRankClass = () => {
     return "rank";
   };
 
-  // Returns highlight class based on rank (gold, silver, bronze) or empty string
-  // Exclude "Others" from highlights
   const getHighlightClass = (key) => {
     if (!showHighlight || !topValues || !topValues[key] || player.name === "Others") return "";
     const playerVal = player[key] ?? 0;
     const { first, second, third } = topValues[key];
-    
-    // For percentage values, use rounded comparison
+
     if (key === "winPct" || key === "lossPct") {
       const rounded = Math.round(playerVal);
       if (first !== null && rounded === Math.round(first)) return "stat-gold";
@@ -36,31 +31,102 @@ export const Row = ({
       if (third !== null && rounded === Math.round(third)) return "stat-bronze";
       return "";
     }
-    
-    // For other stats, exact comparison
+
     if (first !== null && playerVal === first) return "stat-gold";
     if (second !== null && playerVal === second) return "stat-silver";
     if (third !== null && playerVal === third) return "stat-bronze";
     return "";
   };
 
-  // Get trophy emoji for goals value only
-  // Exclude "Others" from medals
   const getTrophyEmoji = () => {
     if (!topValues || !topValues.goals || player.name === "Others") return null;
-    
+
     const playerGoals = player.goals ?? 0;
     const { first, second, third } = topValues.goals;
-    
-    // Exact match for goals
+
     if (first !== null && playerGoals === first) return "🥇";
     if (second !== null && playerGoals === second) return "🥈";
     if (third !== null && playerGoals === third) return "🥉";
-    
+
     return null;
   };
 
   const safeNumber = (val) => (typeof val === "number" ? val : 0);
+
+  const renderColumnCell = (col) => {
+    switch (col.key) {
+      case "name":
+        return (
+          <td key={col.key} className="player-name">
+            {showPlayerModal ? (
+              <button
+                type="button"
+                className="player-name-btn"
+                onClick={onPlayerClick}
+                aria-label={`View ${player.name}'s profile`}
+              >
+                {getDisplayName(player.name)}
+              </button>
+            ) : (
+              getDisplayName(player.name)
+            )}
+          </td>
+        );
+      case "position":
+        return (
+          <td key={col.key} className="position-cell">
+            {positions.map((pos, idx) => (
+              <span
+                key={idx}
+                className={`position-badge position-${pos.toLowerCase()}`}
+                title={pos}
+              >
+                {pos}
+              </span>
+            ))}
+          </td>
+        );
+      case "winPct":
+        return (
+          <td
+            key={col.key}
+            className={`stat stat-pct ${getHighlightClass("winPct")}`}
+          >
+            {safeNumber(player.winPct).toFixed(0)}%
+          </td>
+        );
+      case "lossPct":
+        return (
+          <td
+            key={col.key}
+            className={`stat stat-pct ${getHighlightClass("lossPct")}`}
+          >
+            {safeNumber(player.lossPct).toFixed(0)}%
+          </td>
+        );
+      case "goals": {
+        const trophy = getTrophyEmoji();
+        return (
+          <td key={col.key} className={`stat stat-goals ${getHighlightClass("goals")}`}>
+            {player.goals}
+            {trophy ? <span className="trophy-emoji">{trophy}</span> : null}
+          </td>
+        );
+      }
+      case "ownGoals":
+        return (
+          <td key={col.key} className={`stat ${getHighlightClass("ownGoals")}`}>
+            {player.ownGoals ?? 0}
+          </td>
+        );
+      default:
+        return (
+          <td key={col.key} className={`stat ${getHighlightClass(col.key)}`}>
+            {player[col.key] ?? 0}
+          </td>
+        );
+    }
+  };
 
   return (
     <tr className={`player-row ${isSelected ? "player-row-selected" : ""}`}>
@@ -76,47 +142,7 @@ export const Row = ({
         </td>
       )}
       <td className={getRankClass()}>{rank}</td>
-      <td className="player-name">
-        {showPlayerModal ? (
-          <button 
-            className="player-name-btn" 
-            onClick={onPlayerClick}
-            aria-label={`View ${player.name}'s profile`}
-          >
-            {getDisplayName(player.name)}
-          </button>
-        ) : (
-          getDisplayName(player.name)
-        )}
-      </td>
-      <td className="position-cell">
-        {positions.map((pos, idx) => (
-          <span 
-            key={idx} 
-            className={`position-badge position-${pos.toLowerCase()}`}
-            title={pos}
-          >
-            {pos}
-          </span>
-        ))}
-      </td>
-      <td className={`stat ${getHighlightClass("matches")}`}>{player.matches}</td>
-      <td className={`stat ${getHighlightClass("wins")}`}>{player.wins}</td>
-      <td className={`stat ${getHighlightClass("draws")}`}>{player.draws}</td>
-      <td className={`stat ${getHighlightClass("losses")}`}>{player.losses}</td>
-      <td className={`stat stat-pct ${getHighlightClass("winPct")}`}>{safeNumber(player.winPct).toFixed(0)}%</td>
-      <td className={`stat stat-pct ${getHighlightClass("lossPct")}`}>{safeNumber(player.lossPct).toFixed(0)}%</td>
-      <td className={`stat ${getHighlightClass("cleanSheets")}`}>{player.cleanSheets}</td>
-      <td className={`stat stat-goals ${getHighlightClass("goals")}`}>
-        {player.goals}
-        {getTrophyEmoji() && (
-          <span className="trophy-emoji">
-            {getTrophyEmoji()}
-          </span>
-        )}
-      </td>
-      <td className={`stat ${getHighlightClass("hatTricks")}`}>{player.hatTricks}</td>
-      {showOwnGoals && <td className={`stat ${getHighlightClass("ownGoals")}`}>{player.ownGoals ?? 0}</td>}
+      {(columns || []).map((col) => renderColumnCell(col))}
     </tr>
   );
 };
