@@ -5,7 +5,7 @@
       "DEF"
     ],
     "groupAvailibility": "MIDWEEK",
-    "isTracked": false
+    "isTracked": true
   },
   {
     "name": "Akshat",
@@ -264,7 +264,7 @@
       "MID"
     ],
     "groupAvailibility": "ALLGAMES",
-    "isTracked": false
+    "isTracked": true
   },
   {
     "name": "Vinit",
@@ -296,7 +296,7 @@
       "FWD"
     ],
     "groupAvailibility": "INACTIVE",
-    "isTracked": false
+    "isTracked": true
   },
   {
     "name": "Tejas",
