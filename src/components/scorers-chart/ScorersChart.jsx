@@ -16,7 +16,9 @@ import { config } from "../../leaderboard-config.js";
 import {
   buildAllTimeTopScorersBarData,
   buildScorersChartData,
+  buildSeasonLeaderboardBarData,
   getConfiguredScorersSeasons,
+  getLeaderboardBarSeasonSet,
 } from "../../utils/scorers-chart-data.js";
 import { getDisplayName } from "../../utils/playerDisplayName.js";
 import "./ScorersChart.css";
@@ -103,7 +105,7 @@ function LineChartTooltip({
   );
 }
 
-function BarGoalsTooltip({ active, payload }) {
+function BarGoalsTooltip({ active, payload, suffixText }) {
   if (!active || !payload?.length) return null;
   const row = payload[0];
   const name = row?.payload?.playerKey;
@@ -117,7 +119,7 @@ function BarGoalsTooltip({ active, payload }) {
         <span className="scorers-chart-bar-tooltip__value">{row.value}</span>
         <span className="scorers-chart-bar-tooltip__suffix">
           {" "}
-          career goals · all seasons
+          {suffixText || "career goals · all seasons"}
         </span>
       </p>
     </div>
@@ -185,6 +187,10 @@ export function ScorersChart() {
     () => getConfiguredScorersSeasons(chartCfg.dataSeason),
     [chartCfg.dataSeason]
   );
+  const leaderboardBarSeasons = useMemo(
+    () => getLeaderboardBarSeasonSet(chartCfg.leaderboardBarSeasons),
+    [chartCfg.leaderboardBarSeasons]
+  );
   const seasonsSig = configuredSeasons.join(",");
   const skipFirstSeasonsEffect = useRef(true);
 
@@ -210,6 +216,8 @@ export function ScorersChart() {
   }, [scope, configuredSeasons]);
 
   const isAllTime = scope === SCOPE_ALL_TIME;
+  const usesLeaderboardBar =
+    !isAllTime && leaderboardBarSeasons.has(String(scope));
 
   const dataSeasonForBuild = useMemo(() => {
     if (isAllTime) return [];
@@ -217,7 +225,7 @@ export function ScorersChart() {
   }, [scope, isAllTime]);
 
   const trackActiveWeeks = useMemo(() => {
-    if (isAllTime) return false;
+    if (isAllTime || usesLeaderboardBar) return false;
     if (chartCfg.showRosterAbsence !== true) return false;
     const seasons = chartCfg.rosterAbsenceSeasons;
     if (!Array.isArray(seasons) || seasons.length === 0) return false;
@@ -228,25 +236,36 @@ export function ScorersChart() {
     chartCfg.showRosterAbsence,
     chartCfg.rosterAbsenceSeasons,
     scope,
+    usesLeaderboardBar,
   ]);
 
   const built = useMemo(() => {
-    if (isAllTime) return null;
+    if (isAllTime || usesLeaderboardBar) return null;
     return buildScorersChartData({
       dataSeason: dataSeasonForBuild,
       topN,
       trackActiveWeeks,
     });
-  }, [isAllTime, dataSeasonForBuild, topN, trackActiveWeeks]);
+  }, [isAllTime, usesLeaderboardBar, dataSeasonForBuild, topN, trackActiveWeeks]);
 
   const barBuilt = useMemo(() => {
     if (!isAllTime) return null;
     return buildAllTimeTopScorersBarData(topN);
   }, [isAllTime, topN]);
 
+  const leaderboardBarBuilt = useMemo(() => {
+    if (!usesLeaderboardBar) return null;
+    return buildSeasonLeaderboardBarData(scope, topN);
+  }, [usesLeaderboardBar, scope, topN]);
+
+  const isBarChartView = isAllTime || usesLeaderboardBar;
+  const seasonBarView = isAllTime ? barBuilt : leaderboardBarBuilt;
+
   const topPlayersKey = isAllTime
     ? barBuilt?.topPlayers?.join("\0") ?? ""
-    : built?.topPlayers?.join("\0") ?? "";
+    : usesLeaderboardBar
+      ? leaderboardBarBuilt?.topPlayers?.join("\0") ?? ""
+      : built?.topPlayers?.join("\0") ?? "";
 
   const [hiddenPlayers, setHiddenPlayers] = useState(() => new Set());
 
@@ -275,11 +294,11 @@ export function ScorersChart() {
     return opts;
   }, [configuredSeasons]);
 
-  if (isAllTime) {
-    if (!barBuilt?.barData?.length) {
+  if (isBarChartView) {
+    if (!seasonBarView?.barData?.length) {
       return (
         <div className="scorers-chart scorers-chart--empty">
-          <p>No all-time scorer data available.</p>
+          <p>No scorer data available for this view.</p>
         </div>
       );
     }
@@ -291,25 +310,45 @@ export function ScorersChart() {
     );
   }
 
-  if (isAllTime) {
-    const { barData, topPlayers, maxGoals } = barBuilt;
+  if (isBarChartView && seasonBarView) {
+    const { barData, topPlayers, maxGoals } = seasonBarView;
     const yMax = Math.max(1, Math.ceil(maxGoals * 1.12));
+    const barTitle = isAllTime
+      ? "All-time top scorers"
+      : `${scope} season top scorers`;
+    const barSubtitle = isAllTime
+      ? `Top ${topPlayers.length} career goals in PUFC · Bars left → right from lowest to highest in this group`
+      : `Top ${topPlayers.length} goals · from leaderboard totals · Bars left → right from lowest to highest in this group`;
+    const barBadge = isAllTime ? "Club records" : "Leaderboard totals";
+    const barTooltipSuffix = isAllTime
+      ? "career goals · all seasons"
+      : `season goals · leaderboard-data/${scope}.json`;
+    const barFooter = isAllTime ? (
+      <>
+        Career totals summed across every season in leaderboard data (excluding
+        &quot;Others&quot;).
+      </>
+    ) : (
+      <>
+        Season goal totals from <code>leaderboard-data/{scope}.json</code>{" "}
+        (tracked players only). Weekly line chart is not used for {scope}{" "}
+        because match-level scorer rows in attendance are incomplete for that
+        year.
+      </>
+    );
 
     return (
       <div className="scorers-chart">
         <header className="scorers-chart__header">
           <div className="scorers-chart__headline">
             <h2 className="scorers-chart__title scorers-chart__title--bar">
-              All-time top scorers
+              {barTitle}
             </h2>
-            <p className="scorers-chart__subtitle">
-              Top {topPlayers.length} career goals in PUFC · Bars left → right
-              from lowest to highest in this group
-            </p>
+            <p className="scorers-chart__subtitle">{barSubtitle}</p>
           </div>
           <div className="scorers-chart__badge" aria-hidden>
             <span className="scorers-chart__badge-glow" />
-            <span className="scorers-chart__badge-inner">Club records</span>
+            <span className="scorers-chart__badge-inner">{barBadge}</span>
           </div>
         </header>
 
@@ -414,7 +453,7 @@ export function ScorersChart() {
                 }}
               />
               <Tooltip
-                content={<BarGoalsTooltip />}
+                content={<BarGoalsTooltip suffixText={barTooltipSuffix} />}
                 cursor={{
                   fill: "var(--scorers-chart-bar-cursor)",
                   radius: 8,
@@ -452,10 +491,7 @@ export function ScorersChart() {
         </div>
 
         <footer className="scorers-chart__footer">
-          <span className="scorers-chart__foot-note">
-            Career totals summed across every season in leaderboard data
-            (excluding &quot;Others&quot;).
-          </span>
+          <span className="scorers-chart__foot-note">{barFooter}</span>
         </footer>
       </div>
     );

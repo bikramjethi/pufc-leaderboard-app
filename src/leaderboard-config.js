@@ -91,8 +91,14 @@ export const config = {
      * 2025+ include per-match scorer rows in attendance JSON; chart uses only played, non-tournament games.
      * Each year must exist in `src/utils/scorers-chart-data.js` (static JSON import).
      * Default line view is the latest year in this list.
+     * Include 2024 here to show it in the menu; it renders as a bar chart (see leaderboardBarSeasons).
      */
-    dataSeason: ["2025", "2026"],
+    dataSeason: ["2024", "2025", "2026"],
+    /**
+     * Seasons where attendance scorer rows are incomplete — show a bar chart using
+     * `src/data/leaderboard-data/{year}.json` goal totals instead of the weekly line chart.
+     */
+    leaderboardBarSeasons: ["2024"],
     topN: 10,
     /**
      * When true, the line-chart tooltip includes each player's cumulative "active weeks" count

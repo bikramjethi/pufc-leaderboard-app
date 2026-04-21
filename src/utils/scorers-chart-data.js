@@ -1,6 +1,7 @@
 import matchData2024 from "../data/attendance-data/2024.json";
 import matchData2025 from "../data/attendance-data/2025.json";
 import matchData2026 from "../data/attendance-data/2026.json";
+import leaderboardData2024 from "../data/leaderboard-data/2024.json";
 import { aggregateAllTimeStats } from "./leaderboard-calculations.js";
 import { isStatsTrackedPlayerName } from "./playerTracking.js";
 
@@ -31,6 +32,61 @@ export function getConfiguredScorersSeasons(dataSeason) {
   return [...normalizeSeasonKeys(dataSeason)].sort(
     (a, b) => Number(a) - Number(b)
   );
+}
+
+const LEADERBOARD_BAR_BY_SEASON = {
+  "2024": leaderboardData2024,
+};
+
+/**
+ * Seasons that should use leaderboard goal totals (bar chart) instead of attendance-based lines.
+ * @param {string[] | undefined} seasons — from config.SCORERS_CHART.leaderboardBarSeasons
+ */
+export function getLeaderboardBarSeasonSet(seasons) {
+  const set = new Set();
+  if (Array.isArray(seasons)) {
+    seasons.forEach((s) => {
+      const k = String(s).trim();
+      if (k && LEADERBOARD_BAR_BY_SEASON[k]) set.add(k);
+    });
+  }
+  return set;
+}
+
+/**
+ * Top-N goal scorers for one season from `leaderboard-data/{season}.json` (bar chart).
+ * Same shape as {@link buildAllTimeTopScorersBarData}.
+ */
+export function buildSeasonLeaderboardBarData(seasonKey, topN = 10) {
+  const list = LEADERBOARD_BAR_BY_SEASON[String(seasonKey)];
+  if (!Array.isArray(list) || list.length === 0) return null;
+
+  const filtered = list.filter(
+    (p) =>
+      p?.name &&
+      String(p.name).trim().toLowerCase() !== "others" &&
+      isStatsTrackedPlayerName(p.name)
+  );
+  const sortedDesc = [...filtered].sort(
+    (a, b) => (Number(b.goals) || 0) - (Number(a.goals) || 0)
+  );
+  const top = sortedDesc.slice(0, Math.max(1, topN));
+  const ascending = [...top].sort(
+    (a, b) => (Number(a.goals) || 0) - (Number(b.goals) || 0)
+  );
+  if (ascending.length === 0) return null;
+
+  const maxGoals = Math.max(...ascending.map((p) => Number(p.goals) || 0));
+
+  return {
+    barData: ascending.map((p) => ({
+      playerKey: p.name,
+      goals: Number(p.goals) || 0,
+    })),
+    topPlayers: ascending.map((p) => p.name),
+    maxGoals,
+    seasonKey: String(seasonKey),
+  };
 }
 
 /** Parse DD/MM/YYYY from match.date (falls back to id DD-MM-YYYY). */
