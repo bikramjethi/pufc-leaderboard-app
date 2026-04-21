@@ -1,8 +1,8 @@
 {
   "season": 2024,
-  "totalGoals": 44,
-  "weekendGoals": 13,
-  "weekdayGoals": 31,
+  "totalGoals": 772,
+  "weekendGoals": 340,
+  "weekdayGoals": 432,
   "matches": [
     {
       "id": "02-01-2024",
@@ -815,309 +815,1726 @@
       "id": "10-02-2024",
       "date": "10/02/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 5,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Animesh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 6,
+        "BLUE": 2
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "13-02-2024",
       "date": "13/02/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aniket",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 4,
+        "WHITE": 4
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "17-02-2024",
       "date": "17/02/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Deepak",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subbu",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Vysakh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 7,
+        "RED": 2
+      },
+      "totalGoals": 9,
+      "isFullHouse": false
     },
     {
       "id": "20-02-2024",
       "date": "20/02/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Ashish",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Prateek",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Savan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 6,
+        "RED": 2
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "24-02-2024",
       "date": "24/02/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subbu",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": []
+      },
+      "scoreline": {
+        "WHITE": 7,
+        "BLACK": 0
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "27-02-2024",
       "date": "27/02/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": []
+      },
+      "scoreline": {
+        "RED": 2,
+        "BLUE": 0
+      },
+      "totalGoals": 2,
+      "isFullHouse": false
     },
     {
       "id": "02-03-2024",
       "date": "02/03/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Subbu",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 4,
+        "BLACK": 2
+      },
+      "totalGoals": 6,
+      "isFullHouse": false
     },
     {
       "id": "05-03-2024",
       "date": "05/03/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Rohit Hyd",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Lalit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 4,
+        "BLACK": 3
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "09-03-2024",
       "date": "09/03/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Rohit Hyd",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Deepak",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 4,
+        "BLUE": 4
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "12-03-2024",
       "date": "12/03/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "David",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 2,
+        "WHITE": 2
+      },
+      "totalGoals": 4,
+      "isFullHouse": false
     },
     {
       "id": "16-03-2024",
       "date": "16/03/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Ashish",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Deepak",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subbu",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Savan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": []
+      },
+      "scoreline": {
+        "RED": 8,
+        "BLUE": 0
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "19-03-2024",
       "date": "19/03/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "YELLOW": [
+          {
+            "name": "Subbu",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "YELLOW": 8,
+        "BLUE": 3
+      },
+      "totalGoals": 11,
+      "isFullHouse": false
     },
     {
       "id": "23-03-2024",
       "date": "23/03/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Vikalp",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Rishav",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 4,
+        "WHITE": 4
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "26-03-2024",
       "date": "26/03/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Rishav",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Animesh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Atul",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 7,
+        "RED": 4
+      },
+      "totalGoals": 11,
+      "isFullHouse": false
     },
     {
       "id": "30-03-2024",
       "date": "30/03/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Subbu",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vikalp",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "YELLOW": [
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 4,
+        "YELLOW": 2
+      },
+      "totalGoals": 6,
+      "isFullHouse": false
     },
     {
       "id": "02-04-2024",
       "date": "02/04/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Jethi",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sachith",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Aniket",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Lalit",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 7,
+        "BLACK": 5
+      },
+      "totalGoals": 12,
+      "isFullHouse": false
     },
     {
       "id": "06-04-2024",
       "date": "06/04/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Subbu",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Tushar Lal",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 2,
+        "BLUE": 2
+      },
+      "totalGoals": 4,
+      "isFullHouse": false
     },
     {
       "id": "09-04-2024",
       "date": "09/04/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Aniket",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Lalit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aditya",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ajay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 8,
+        "BLACK": 2
+      },
+      "totalGoals": 10,
+      "isFullHouse": false
     },
     {
       "id": "13-04-2024",
       "date": "13/04/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vikalp",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 3,
+        "BLUE": 2
+      },
+      "totalGoals": 5,
+      "isFullHouse": false
     },
     {
       "id": "16-04-2024",
       "date": "16/04/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Ashish",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ajay",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Nikhil",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush Friend",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashwick",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 10,
+        "RED": 3
+      },
+      "totalGoals": 13,
+      "isFullHouse": false
     },
     {
       "id": "20-04-2024",
       "date": "20/04/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vivek",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 3,
+        "BLACK": 1
+      },
+      "totalGoals": 4,
+      "isFullHouse": false
     },
     {
       "id": "23-04-2024",
       "date": "23/04/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Sachith",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Vinay",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashwick Friend",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ajay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Others",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 1,
+        "RED": 6
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "27-04-2024",
       "date": "27/04/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Deepak",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Rishav",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subbu",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna +1",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 8,
+        "BLACK": 7
+      },
+      "totalGoals": 15,
+      "isFullHouse": false
     },
     {
       "id": "30-04-2024",
       "date": "30/04/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Rishav",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Nikhil",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashwick",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ajay",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 6,
+        "WHITE": 6
+      },
+      "totalGoals": 12,
+      "isFullHouse": false
     },
     {
       "id": "04-05-2024",
       "date": "04/05/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Jethi",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Mohit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 3,
+        "BLUE": 4
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "07-05-2024",
       "date": "07/05/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vikas",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Vikas",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 4,
+        "WHITE": 1
+      },
+      "totalGoals": 5,
+      "isFullHouse": false
     },
     {
       "id": "11-05-2024",
       "date": "11/05/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Sudeep",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "YELLOW": [
+          {
+            "name": "Rishav",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subbu",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vivek",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 5,
+        "YELLOW": 5
+      },
+      "totalGoals": 10,
+      "isFullHouse": false
     },
     {
       "id": "14-05-2024",
       "date": "14/05/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Animesh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Pandey",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 2,
+        "BLUE": 1
+      },
+      "totalGoals": 3,
+      "isFullHouse": false
     },
     {
       "id": "18-05-2024",
@@ -1134,34 +2551,189 @@
       "id": "21-05-2024",
       "date": "21/05/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Ashish",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Soumyadeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Lalit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Animesh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 4,
+        "BLUE": 4
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "25-05-2024",
       "date": "25/05/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Sudeep",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Savan",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 3,
+        "WHITE": 1
+      },
+      "totalGoals": 4,
+      "isFullHouse": false
     },
     {
       "id": "28-05-2024",
       "date": "28/05/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Ehtesham",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Saamedh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Prateek",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 6,
+        "WHITE": 1
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "01-06-2024",
@@ -1178,78 +2750,469 @@
       "id": "04-06-2024",
       "date": "04/06/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Ehtesham",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Soumyadeep",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 6,
+        "WHITE": 3
+      },
+      "totalGoals": 9,
+      "isFullHouse": false
     },
     {
       "id": "08-06-2024",
       "date": "08/06/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "YELLOW": [
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Subbu",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Deepak",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Pandey",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "YELLOW": 3,
+        "BLUE": 5
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "11-06-2024",
       "date": "11/06/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Aniket",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Soumyadeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "John",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sayan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Prateek",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vikas",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 6,
+        "BLUE": 5
+      },
+      "totalGoals": 11,
+      "isFullHouse": false
     },
     {
       "id": "15-06-2024",
       "date": "15/06/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Tushar",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Deepak",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 5,
+        "BLACK": 2
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "18-06-2024",
       "date": "18/06/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Tushar Lal Friend",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Soumyadeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Aniket",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 5,
+        "BLUE": 4
+      },
+      "totalGoals": 9,
+      "isFullHouse": false
     },
     {
       "id": "22-06-2024",
       "date": "22/06/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Subbu",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Subarna",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Pandey",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aditya",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 5,
+        "BLACK": 4
+      },
+      "totalGoals": 9,
+      "isFullHouse": false
     },
     {
       "id": "25-06-2024",
       "date": "25/06/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Nikhil",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Lalit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 2,
+        "BLACK": 1
+      },
+      "totalGoals": 3,
+      "isFullHouse": false
     },
     {
       "id": "29-06-2024",
@@ -1266,122 +3229,733 @@
       "id": "02-07-2024",
       "date": "02/07/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Soumyadeep",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sayan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 5,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Lalit",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aniket",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "John",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 4,
+        "BLACK": 10
+      },
+      "totalGoals": 14,
+      "isFullHouse": false
     },
     {
       "id": "06-07-2024",
       "date": "06/07/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Vishal",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Aditya",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vysakh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 5,
+        "BLUE": 3
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "09-07-2024",
       "date": "09/07/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Lalit",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ehtesham",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Anirudh",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aniket",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 9,
+        "RED": 4
+      },
+      "totalGoals": 13,
+      "isFullHouse": false
     },
     {
       "id": "13-07-2024",
       "date": "13/07/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Rohit Gautam",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Rohit hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 3,
+        "WHITE": 1
+      },
+      "totalGoals": 4,
+      "isFullHouse": false
     },
     {
       "id": "16-07-2024",
       "date": "16/07/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Lalit",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sayan",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "David",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshat",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aniket",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ehtesham",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 7,
+        "RED": 10
+      },
+      "totalGoals": 17,
+      "isFullHouse": false
     },
     {
       "id": "20-07-2024",
       "date": "20/07/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vivek",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Ashish",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 3,
+        "WHITE": 3
+      },
+      "totalGoals": 6,
+      "isFullHouse": false
     },
     {
       "id": "23-07-2024",
       "date": "23/07/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "David",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Jethi",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 4,
+        "WHITE": 4
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "27-07-2024",
       "date": "27/07/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Vysakh",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Raghav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Deepak",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 5,
+        "RED": 2
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "30-07-2024",
       "date": "30/07/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Rohit Hyd",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "John",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Rishav",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 3,
+        "WHITE": 5
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "03-08-2024",
       "date": "03/08/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Ashish",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Pandey",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 1,
+        "RED": 6
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "06-08-2024",
       "date": "06/08/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aniket",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "David",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ehtesham",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Soumyadeep",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Lalit",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar Lal",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 5,
+        "RED": 10
+      },
+      "totalGoals": 15,
+      "isFullHouse": false
     },
     {
       "id": "10-08-2024",
@@ -1398,67 +3972,417 @@
       "id": "13-08-2024",
       "date": "13/08/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Lalit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aniket",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joshi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Ashish",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 4,
+        "RED": 7
+      },
+      "totalGoals": 11,
+      "isFullHouse": false
     },
     {
       "id": "17-08-2024",
       "date": "17/08/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Sudeep",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Raghav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Rohit Gautam",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 5,
+        "WHITE": 2
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "20-08-2024",
       "date": "20/08/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Aniket",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshat",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi Friend",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 6,
+        "WHITE": 5
+      },
+      "totalGoals": 11,
+      "isFullHouse": false
     },
     {
       "id": "24-08-2024",
       "date": "24/08/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subbu",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 3,
+        "RED": 3
+      },
+      "totalGoals": 6,
+      "isFullHouse": false
     },
     {
       "id": "27-08-2024",
       "date": "27/08/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Animesh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Pandey",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 3,
+        "WHITE": 5
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "31-08-2024",
       "date": "31/08/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Pandey",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Lalit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Animesh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Prateek",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 6,
+        "BLUE": 5
+      },
+      "totalGoals": 11,
+      "isFullHouse": false
     },
     {
       "id": "03-09-2024",
@@ -1475,56 +4399,389 @@
       "id": "07-09-2024",
       "date": "07/09/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Subbu",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Animesh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 5,
+        "BLACK": 2
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "10-09-2024",
       "date": "10/09/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Lalit",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vikas",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Mathew",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 4,
+        "BLUE": 6
+      },
+      "totalGoals": 10,
+      "isFullHouse": false
     },
     {
       "id": "14-09-2024",
       "date": "14/09/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Ammar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vikas",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Soumyadeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 4,
+        "BLACK": 10
+      },
+      "totalGoals": 14,
+      "isFullHouse": false
     },
     {
       "id": "17-09-2024",
       "date": "17/09/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Animesh",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "David",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vikas",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 5,
+        "BLACK": 9
+      },
+      "totalGoals": 14,
+      "isFullHouse": false
     },
     {
       "id": "21-09-2024",
       "date": "21/09/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Vysakh",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar Lal",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 4,
+        "RED": 9
+      },
+      "totalGoals": 13,
+      "isFullHouse": false
     },
     {
       "id": "24-09-2024",
@@ -1541,34 +4798,197 @@
       "id": "28-09-2024",
       "date": "28/09/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Deepak",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Pandey",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 1,
+        "RED": 4
+      },
+      "totalGoals": 5,
+      "isFullHouse": false
     },
     {
       "id": "01-10-2024",
       "date": "01/10/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Jethi",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "David+1",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 9,
+        "BLUE": 5
+      },
+      "totalGoals": 14,
+      "isFullHouse": false
     },
     {
       "id": "05-10-2024",
       "date": "05/10/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Savan",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 2,
+        "WHITE": 4
+      },
+      "totalGoals": 6,
+      "isFullHouse": false
     },
     {
       "id": "08-10-2024",
@@ -1585,12 +5005,85 @@
       "id": "12-10-2024",
       "date": "12/10/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sourabh Friend",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "John Friend",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 4,
+        "WHITE": 4
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "15-10-2024",
@@ -1607,122 +5100,756 @@
       "id": "19-10-2024",
       "date": "19/10/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Rishav",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Pandey",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sarthak",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Sudha",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 5,
+        "RED": 3
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "22-10-2024",
       "date": "22/10/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Rishav",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "John friend",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 4,
+        "BLACK": 3
+      },
+      "totalGoals": 7,
+      "isFullHouse": false
     },
     {
       "id": "26-10-2024",
       "date": "26/10/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Ram",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 3,
+        "RED": 2
+      },
+      "totalGoals": 5,
+      "isFullHouse": false
     },
     {
       "id": "29-10-2024",
       "date": "29/10/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Srijan",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Soumya",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Unkown (Sai)",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 2,
+        "BLUE": 8
+      },
+      "totalGoals": 10,
+      "isFullHouse": false
     },
     {
       "id": "02-11-2024",
       "date": "02/11/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Vysakh",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vivek",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Mani",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Somanna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 5,
+        "WHITE": 3
+      },
+      "totalGoals": 8,
+      "isFullHouse": false
     },
     {
       "id": "05-11-2024",
       "date": "05/11/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Sudeep",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "YELLOW": [
+          {
+            "name": "Subarna",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Prateek",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 6,
+        "YELLOW": 5
+      },
+      "totalGoals": 11,
+      "isFullHouse": false
     },
     {
       "id": "09-11-2024",
       "date": "09/11/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "YELLOW": [
+          {
+            "name": "Vivek",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Pandey",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Animesh",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "YELLOW": 12,
+        "WHITE": 3
+      },
+      "totalGoals": 15,
+      "isFullHouse": false
     },
     {
       "id": "12-11-2024",
       "date": "12/11/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Aayush",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Mathew",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Pandey",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Alan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 3,
+        "BLACK": 8
+      },
+      "totalGoals": 11,
+      "isFullHouse": false
     },
     {
       "id": "16-11-2024",
       "date": "16/11/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": []
+      },
+      "scoreline": {
+        "BLUE": 3,
+        "RED": 0
+      },
+      "totalGoals": 3,
+      "isFullHouse": false
     },
     {
       "id": "19-11-2024",
       "date": "19/11/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Somanna",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Soumyadeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Pandey",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 5,
+        "BLACK": 8
+      },
+      "totalGoals": 13,
+      "isFullHouse": false
     },
     {
       "id": "23-11-2024",
       "date": "23/11/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Rohit Gautam",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ram",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Vinay",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vivek",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Midhun",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 4,
+        "RED": 6
+      },
+      "totalGoals": 10,
+      "isFullHouse": false
     },
     {
       "id": "26-11-2024",
@@ -1739,12 +5866,77 @@
       "id": "30-11-2024",
       "date": "30/11/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Tushar",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Joe",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Gagan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 8,
+        "WHITE": 2
+      },
+      "totalGoals": 10,
+      "isFullHouse": false
     },
     {
       "id": "03-12-2024",
@@ -1772,67 +5964,449 @@
       "id": "10-12-2024",
       "date": "10/12/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Mathew",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Sudeep",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "sourabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinay",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Jai",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Tushar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 3,
+        "WHITE": 13
+      },
+      "totalGoals": 16,
+      "isFullHouse": false
     },
     {
       "id": "14-12-2024",
       "date": "14/12/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Vinit",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subbu",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Tushar",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ram",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Gagan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vivek",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ammar",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 2,
+        "BLUE": 9
+      },
+      "totalGoals": 11,
+      "isFullHouse": false
     },
     {
       "id": "17-12-2024",
       "date": "17/12/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "WHITE": [
+          {
+            "name": "Vinay",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Mathew",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subarna",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Subbu",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "BLACK": [
+          {
+            "name": "Pandey",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ram",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "WHITE": 10,
+        "BLACK": 6
+      },
+      "totalGoals": 16,
+      "isFullHouse": false
     },
     {
       "id": "21-12-2024",
       "date": "21/12/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Rishav",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Vinit friend",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Ranvir",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 7,
+        "RED": 2
+      },
+      "totalGoals": 9,
+      "isFullHouse": false
     },
     {
       "id": "24-12-2024",
       "date": "24/12/2024",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLUE": [
+          {
+            "name": "Vinay",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Hyd",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "RED": [
+          {
+            "name": "Vinoth",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ajay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Aayush",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLUE": 9,
+        "RED": 5
+      },
+      "totalGoals": 14,
+      "isFullHouse": false
     },
     {
       "id": "28-12-2024",
       "date": "28/12/2024",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "isBackfilled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isBackfilled": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Vinay",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Ashish",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ],
+        "YELLOW": [
+          {
+            "name": "Ajay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          },
+          {
+            "name": "Pandey",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "MID"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 3,
+        "YELLOW": 3
+      },
+      "totalGoals": 6,
+      "isFullHouse": false
     },
     {
       "id": "31-12-2024",
@@ -1848,9 +6422,20 @@
   ],
   "allPlayers": [
     "Aayush",
+    "Aayush Friend",
+    "Aditya",
+    "Ajay",
+    "Akshat",
+    "Akshit",
+    "Alan",
     "Ammar",
+    "Aniket",
     "Animesh",
+    "Anirudh",
     "Ashish",
+    "Ashwick",
+    "Ashwick Friend",
+    "Atul",
     "Bhaanu",
     "David",
     "David + 1",
@@ -1860,29 +6445,68 @@
     "David + 5",
     "David + 6",
     "David + 7",
+    "David+1",
+    "Deepak",
+    "Ehtesham",
+    "Gagan",
     "Gambit",
+    "Jai",
     "Jethi",
+    "Jethi Friend",
     "Joe",
+    "John",
+    "John friend",
+    "John Friend",
+    "Joshi",
     "Lalit",
+    "Mani",
+    "Mathew",
+    "Midhun",
     "Minkle",
+    "Mohit",
     "Nadeem",
+    "Nikhil",
     "Others",
     "Pandey",
     "Prateek",
+    "Raghav",
+    "Ram",
+    "Ranvir",
+    "Rishav",
     "Rohit Gautam",
+    "Rohit hyd",
     "Rohit Hyd",
+    "Saamedh",
+    "Sachith",
+    "Sarthak",
     "Savan",
+    "Sayan",
     "Sharath",
+    "Somanna",
+    "Soumya",
+    "Soumyadeep",
+    "sourabh",
     "Sourabh",
+    "Sourabh Friend",
+    "Srijan",
     "Subarna",
+    "Subarna +1",
     "Subbu",
     "Sudeep",
+    "Sudha",
     "Tushar",
+    "Tushar Lal",
+    "Tushar Lal Friend",
     "Uma Shankar",
+    "Unkown (Sai)",
+    "Vikalp",
     "Vikas",
     "Vinay",
     "Vinit",
+    "Vinit friend",
     "Vinoth",
-    "Vivek"
+    "Vishal",
+    "Vivek",
+    "Vysakh"
   ]
 }
