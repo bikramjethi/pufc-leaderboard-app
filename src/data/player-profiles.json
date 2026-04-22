@@ -520,6 +520,14 @@
     "position": [
       "DEF"
     ],
+    "groupAvailibility": "MIDWEEK",
+    "isTracked": true
+  },
+  {
+    "name": "Ishan(Mid)",
+    "position": [
+      "MID"
+    ],
     "groupAvailibility": "ONLOAN",
     "isTracked": true
   }
