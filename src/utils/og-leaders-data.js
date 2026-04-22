@@ -48,22 +48,16 @@ function matchSortTime(matchId) {
 }
 
 /**
- * @param {string} year
- * @param {boolean} requiresBackfill
+ * Matches eligible for own-goal totals. We do **not** gate on `isBackfilled`:
+ * OGs are explicit per-player `ownGoals` on each row; excluding non-flagged
+ * matches (most of 2024–2025) drops valid OGs (e.g. Prateek 19-07-2025).
  */
-function getValidMatchesForYear(year, requiresBackfill) {
+function getOgEligibleMatchesForYear(year) {
   const data = matchDataByYearForOg[year];
   if (!data?.matches) return [];
   return data.matches.filter((m) => {
     if (!m.matchPlayed || m.matchCancelled) return false;
     if (m.isTournament) return false;
-    if (
-      (year === "2024" || year === "2025") &&
-      requiresBackfill &&
-      !m.isBackfilled
-    ) {
-      return false;
-    }
     return true;
   });
 }
@@ -71,18 +65,14 @@ function getValidMatchesForYear(year, requiresBackfill) {
 /**
  * @param {object} options
  * @param {number} [options.topN=15]
- * @param {boolean} [options.requiresBackfillLegacy=true] — 2024/2025 only count matches with `isBackfilled: true`
  */
-export function buildCumulativeOgLeadersData({
-  topN = 15,
-  requiresBackfillLegacy = true,
-} = {}) {
+export function buildCumulativeOgLeadersData({ topN = 15 } = {}) {
   const seasons = getOgLeaderSeasonKeys();
   /** @type {Map<string, { totalOgs: number, games: object[] }>} */
   const byPlayer = new Map();
 
   for (const year of seasons) {
-    const matches = getValidMatchesForYear(year, requiresBackfillLegacy);
+    const matches = getOgEligibleMatchesForYear(year);
     for (const m of matches) {
       const att = m.attendance;
       if (!att || typeof att !== "object") continue;
@@ -142,9 +132,6 @@ export function buildCumulativeOgLeadersData({
     maxOgs,
     byPlayer,
     seasonKeys: seasons,
-    matchCount: seasons.reduce(
-      (n, y) => n + getValidMatchesForYear(y, requiresBackfillLegacy).length,
-      0
-    ),
+    matchCount: seasons.reduce((n, y) => n + getOgEligibleMatchesForYear(y).length, 0),
   };
 }

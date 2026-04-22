@@ -52,16 +52,8 @@ function OgBarTooltip({ active, payload }) {
 export function OGLeaders() {
   const chartCfg = config.OG_LEADERS || {};
   const topN = typeof chartCfg.topN === "number" ? chartCfg.topN : 15;
-  const requiresBackfillLegacy = chartCfg.requiresBackfillLegacy !== false;
 
-  const built = useMemo(
-    () =>
-      buildCumulativeOgLeadersData({
-        topN,
-        requiresBackfillLegacy,
-      }),
-    [topN, requiresBackfillLegacy]
-  );
+  const built = useMemo(() => buildCumulativeOgLeadersData({ topN }), [topN]);
 
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
@@ -85,11 +77,11 @@ export function OGLeaders() {
   if (!built.barData.length) {
     return (
       <div className="scorers-chart og-leaders scorers-chart--empty">
-        <p>No own goals found in attendance data for the current filters.</p>
+        <p>No own goals found in attendance data.</p>
         <p className="ogl-empty-note">
-          Played league matches only (tournaments excluded). For 2024–2025, only
-          backfilled matches are counted when <code>requiresBackfillLegacy</code> is
-          enabled in config.
+          Counts every played, non-cancelled, non-tournament match in{" "}
+          <code>attendance-data/20*.json</code> where a player row has{" "}
+          <code>ownGoals</code> &gt; 0.
         </p>
       </div>
     );
