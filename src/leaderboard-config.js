@@ -111,6 +111,16 @@ export const config = {
     rosterAbsenceSeasons: ["2026"],
   },
 
+  // OG Leaders (cumulative own goals from all attendance season files via glob — no per-year picker)
+  OG_LEADERS: {
+    enabled: true,
+    topN: 15,
+    /**
+     * When true, 2024 and 2025 matches without `isBackfilled: true` are excluded (same rule as Fun Stats OG).
+     */
+    requiresBackfillLegacy: true,
+  },
+
   // Head to Head Settings (Standalone Tab)
   H2H: {
     enabled: false,                     // Show/hide the H2H tab

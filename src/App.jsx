@@ -16,6 +16,7 @@ import { WeeklyTeams } from "./components/weekly-teams";
 import { WhoPlaysWhere } from "./components/who-plays-where/WhoPlaysWhere";
 import { HallOfFame } from "./components/hall-of-fame";
 import { OutstandingScoring } from "./components/outstanding-scoring";
+import { OGLeaders } from "./components/og-leaders/OGLeaders";
 import "./App.css";
 import "./components/fun-stats/FunStats.css";
 import { config } from "./leaderboard-config.js";
@@ -53,6 +54,12 @@ const getNavItems = () => [
         label: "Outstanding scoring",
         icon: "🌟",
         enabled: config.OUTSTANDING_SCORING?.enabled,
+      },
+      {
+        id: "og-leaders",
+        label: "OG leaders",
+        icon: "😅",
+        enabled: config.OG_LEADERS?.enabled,
       },
     ],
   },
@@ -126,6 +133,7 @@ function App() {
       "defenders-corner": "Defenders Corner",
       "hall-of-fame": "Hall of Fame",
       "outstanding-scoring": "Outstanding scoring performances",
+      "og-leaders": "Cumulative own goals · all seasons",
       "midweek-roster": "Midweek Roster",
       "weekend-roster": "Weekend Roster",
       "inactive-players": "Inactive Players",
@@ -379,6 +387,8 @@ function App() {
           <HallOfFame />
         ) : activeTab === "outstanding-scoring" ? (
           <OutstandingScoring />
+        ) : activeTab === "og-leaders" ? (
+          <OGLeaders />
         ) : activeTab === "midweek-roster" ? (
             <Roster type="midweek" />
           ) : activeTab === "weekend-roster" ? (
