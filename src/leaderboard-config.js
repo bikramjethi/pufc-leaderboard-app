@@ -202,7 +202,7 @@ export const config = {
 
   // Outstanding scoring (goal hauls in one match — cumulative across seasons)
   OUTSTANDING_SCORING: {
-    enabled: false,
+    enabled: true,
     seasons: ["2024", "2025", "2026"],
     /** Only scan the JSON for games with at least this many goals (match range slider floor) */
     collectFloor: 3,
