@@ -6646,7 +6646,7 @@
             "position": "LB"
           },
           {
-            "name": "Ishan",
+            "name": "Ishan(CB)",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
@@ -6852,7 +6852,7 @@
             "position": "ST"
           },
           {
-            "name": "Ishan",
+            "name": "Ishan(CB)",
             "goals": 2,
             "ownGoals": 0,
             "cleanSheet": false,
@@ -7242,7 +7242,7 @@
             "position": "RM"
           },
           {
-            "name": "Ishan",
+            "name": "Ishan(CB)",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
@@ -7905,7 +7905,7 @@
     "George",
     "Gokul",
     "Goutham",
-    "Ishan",
+    "Ishan(CB)",
     "Jay",
     "Jeremy",
     "Jethi",

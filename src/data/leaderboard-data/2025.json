@@ -491,5 +491,19 @@
     "cleanSheets": 0,
     "goals": 79,
     "hatTricks": 10
+  },
+  {
+    "id": 36,
+    "name": "Ishan(CB)",
+    "position": [
+      "DEF"
+    ],
+    "matches": 3,
+    "wins": 0,
+    "losses": 3,
+    "draws": 0,
+    "cleanSheets": 0,
+    "goals": 3,
+    "hatTricks": 0
   }
 ]
