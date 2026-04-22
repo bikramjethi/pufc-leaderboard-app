@@ -6,6 +6,7 @@ import { config } from "../../leaderboard-config.js";
 import { tickerMessages } from "../../ticker-messages.js";
 import {
   getVisibleStatsLeaderboardTableColumns,
+  isStatsLeaderboardShowAllQueryActive,
   mergeStatsLeaderboardColumnConfig,
   resolveVisibleSortKey,
 } from "../../utils/stats-leaderboard-columns.js";
@@ -38,9 +39,23 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
     return players.some(player => player.ownGoals !== undefined);
   }, [players]);
 
+  const [showAllStatsFromQuery, setShowAllStatsFromQuery] = useState(() =>
+    isStatsLeaderboardShowAllQueryActive()
+  );
+
+  useEffect(() => {
+    const sync = () => setShowAllStatsFromQuery(isStatsLeaderboardShowAllQueryActive());
+    sync();
+    window.addEventListener("popstate", sync);
+    return () => window.removeEventListener("popstate", sync);
+  }, []);
+
   const columnVisibility = useMemo(
-    () => mergeStatsLeaderboardColumnConfig(config.STATS_LEADERBOARD),
-    []
+    () =>
+      mergeStatsLeaderboardColumnConfig(config.STATS_LEADERBOARD, {
+        forceAllColumnsVisible: showAllStatsFromQuery,
+      }),
+    [showAllStatsFromQuery]
   );
 
   const columns = useMemo(

@@ -17,8 +17,31 @@ export const DEFAULT_STATS_LEADERBOARD_COLUMNS = {
   ownGoals: true,
 };
 
-/** @param {{ columns?: Record<string, boolean> } | undefined} statsCfg */
-export function mergeStatsLeaderboardColumnConfig(statsCfg) {
+/**
+ * When the URL has `?showStats=true`, the stats leaderboard shows every column
+ * (see mergeStatsLeaderboardColumnConfig).
+ * @param {string} [search] — optional `window.location.search` (with leading `?`)
+ */
+export function isStatsLeaderboardShowAllQueryActive(search) {
+  const s =
+    typeof search === "string"
+      ? search
+      : typeof window !== "undefined"
+        ? window.location.search ?? ""
+        : "";
+  if (!s) return false;
+  const q = new URLSearchParams(s.startsWith("?") ? s.slice(1) : s);
+  return q.get("showStats")?.trim().toLowerCase() === "true";
+}
+
+/**
+ * @param {{ columns?: Record<string, boolean> } | undefined} statsCfg
+ * @param {{ forceAllColumnsVisible?: boolean }} [options] — set from `?showStats=true`
+ */
+export function mergeStatsLeaderboardColumnConfig(statsCfg, options = {}) {
+  if (options.forceAllColumnsVisible) {
+    return { ...DEFAULT_STATS_LEADERBOARD_COLUMNS };
+  }
   return {
     ...DEFAULT_STATS_LEADERBOARD_COLUMNS,
     ...(statsCfg?.columns && typeof statsCfg.columns === "object"

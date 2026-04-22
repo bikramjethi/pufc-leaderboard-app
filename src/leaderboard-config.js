@@ -29,6 +29,7 @@ export const config = {
      * Per-column visibility on the stats leaderboard table, CSV, legend, and compare panel.
      * Set a key to false to hide that column. Omitted keys default to true.
      * `ownGoals` only appears when season data includes own-goals; if false it is always hidden.
+     * Override: append `?showStats=true` to the app URL to show all of these columns at once.
      */
     columns: {
       player: true,           // Player name
