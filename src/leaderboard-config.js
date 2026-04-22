@@ -134,22 +134,18 @@ export const config = {
     enableColorStats: true,            // Show/hide the Color Win Rates feature
 
     // Additional Fun Stats Features
-    enableHotStreaks: true,            // 🔥 Player winning/scoring streaks (2026+ data only)
-    enableDreamTeamDuos: true,         // 🤝 Best performing player pairs
+    enableDreamTeamDuos: false,         // 🤝 Best performing player pairs
     enableClutchFactor: true,          // 🎯 Decisive scorers in close games (≤2 goal margin)
-    enableOGLeaders: true,             // 😅 Own Goal Leaders (Hall of Unfortunate Moments)
 
     // Which features require isBackfilled:true for 2024 and 2025 data
     // true = only include 2024/2025 matches marked as backfilled (complete data required)
     // false = include all 2024/2025 matches (scoreline data is sufficient)
     requiresBackfill: {
       colorStats: false,               // Scoreline data is sufficient for color win rates
-      hotStreaks: true,                // Requires complete player attendance data
       duosWinRate: true,               // Requires complete attendance for team composition
       duosTopScoring: false,           // Scorer info is captured accurately
       duosMostGames: true,             // Requires complete attendance data
       clutchFactor: false,             // Scorer info + scoreline is sufficient
-      ogLeaders: true,                 // Requires complete player data to track own goals
     },
   },
 

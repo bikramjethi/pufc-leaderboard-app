@@ -640,9 +640,8 @@
   }
 }
 
-/* ==================== HOT STREAKS ==================== */
+/* ==================== DREAM TEAM DUOS (shared list / grid patterns) ==================== */
 
-.hot-streaks-section,
 .dream-duos-section,
 .player-impact-section,
 .clutch-factor-section {
@@ -654,7 +653,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-.streaks-grid,
 .duos-grid,
 .impact-grid,
 .clutch-grid {
@@ -663,7 +661,6 @@
   gap: 1.25rem;
 }
 
-.streak-card,
 .duo-card,
 .impact-card,
 .clutch-card {
@@ -673,7 +670,6 @@
   border: 1px solid var(--border-color);
 }
 
-.streak-card h3,
 .duo-card h3,
 .impact-card h3,
 .clutch-card h3 {
@@ -692,7 +688,6 @@
   margin: -0.5rem 0 1rem;
 }
 
-.streak-list,
 .duo-list,
 .impact-list,
 .clutch-list {
@@ -701,7 +696,6 @@
   gap: 0.5rem;
 }
 
-.streak-item,
 .duo-item,
 .impact-item,
 .clutch-item {
@@ -716,7 +710,6 @@
   min-width: 0; /* Allow flex items to shrink */
 }
 
-.streak-item:hover,
 .duo-item:hover,
 .impact-item:hover,
 .clutch-item:hover {
@@ -724,7 +717,6 @@
   transform: translateX(4px);
 }
 
-.streak-item.top,
 .duo-item.top,
 .impact-item.top,
 .clutch-item.top {
@@ -732,7 +724,6 @@
   border-color: var(--gold);
 }
 
-.streak-item .rank,
 .duo-item .rank,
 .impact-item .rank,
 .clutch-item .rank {
@@ -742,14 +733,12 @@
   min-width: 24px;
 }
 
-.streak-item.top .rank,
 .duo-item.top .rank,
 .impact-item.top .rank,
 .clutch-item.top .rank {
   color: var(--gold);
 }
 
-.streak-item .name,
 .duo-item .name,
 .impact-item .name,
 .clutch-item .name {
@@ -762,45 +751,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-.streak-value {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  background: var(--bg-secondary);
-  margin-left: auto;
-  white-space: nowrap;
-}
-
-.streak-value.fire {
-  color: #f97316;
-  background: rgba(249, 115, 22, 0.15);
-}
-
-.streak-value.goal-streak {
-  color: var(--accent-primary);
-  background: rgba(34, 197, 94, 0.15);
-}
-
-.streak-value.unbeaten {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.15);
-}
-
-.no-streak {
-  text-align: center;
-  padding: 1rem 1.5rem;
-  color: var(--text-muted);
-  font-style: italic;
-  background: var(--bg-card);
-  border-radius: 8px;
-  border: 1px dashed var(--border-color);
-  font-size: 0.85rem;
-}
-
-/* ==================== DREAM TEAM DUOS ==================== */
 
 .duo-names {
   flex: 1;
@@ -1596,7 +1546,6 @@
     font-size: 0.7rem;
   }
 
-  .streaks-grid,
   .duos-grid,
   .impact-grid,
   .clutch-grid {
@@ -1745,7 +1694,6 @@
     font-size: 0.65rem;
   }
 
-  .streak-item,
   .duo-item,
   .impact-item,
   .clutch-item {
@@ -1775,134 +1723,3 @@
     font-size: 1.5rem;
   }
 }
-
-/* ==================== OWN GOAL LEADERS ==================== */
-
-.og-leaders-section {
-  animation: fadeIn 0.3s ease;
-}
-
-.og-leaders-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.og-leader-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  background: var(--bg-secondary);
-  border: 1px solid transparent;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-
-.og-leader-card:hover {
-  border-color: var(--border-color);
-  transform: translateX(4px);
-}
-
-.og-leader-card.top-og {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(251, 191, 36, 0.08) 100%);
-  border-color: rgba(239, 68, 68, 0.3);
-  padding: 1rem 1.25rem;
-}
-
-.og-rank {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  min-width: 2rem;
-  text-align: center;
-}
-
-.og-leader-card.top-og .og-rank {
-  font-size: 1.25rem;
-  color: var(--gold);
-}
-
-.og-player-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.og-player-name {
-  font-weight: 600;
-  color: var(--text-primary);
-  font-size: 0.95rem;
-}
-
-.og-leader-card.top-og .og-player-name {
-  font-size: 1.1rem;
-}
-
-.og-position {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.og-stats {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.15rem;
-}
-
-.og-count {
-  display: flex;
-  align-items: baseline;
-  gap: 0.25rem;
-}
-
-.og-number {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #ef4444;
-}
-
-.og-leader-card.top-og .og-number {
-  font-size: 1.5rem;
-}
-
-.og-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-}
-
-.og-matches {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-/* Mobile adjustments for OG Leaders */
-@media (max-width: 480px) {
-  .og-leader-card {
-    padding: 0.6rem 0.8rem;
-    gap: 0.75rem;
-  }
-
-  .og-leader-card.top-og {
-    padding: 0.8rem 1rem;
-  }
-
-  .og-player-name {
-    font-size: 0.85rem;
-  }
-
-  .og-number {
-    font-size: 1.1rem;
-  }
-
-  .og-leader-card.top-og .og-number {
-    font-size: 1.25rem;
-  }
-}
-

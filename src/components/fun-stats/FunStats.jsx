@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { config } from "../../leaderboard-config.js";
 import "./FunStats.css";
 
@@ -100,16 +100,34 @@ export const FunStats = () => {
   
   const [selectedSeason, setSelectedSeason] = useState("all");
   
-  // Determine first enabled tab
+  // Determine first enabled tab (align with `!== false` defaults used for tab visibility)
   const getDefaultTab = () => {
-    if (config.FUN_STATS?.enableColorStats) return "color-stats";
-    if (config.FUN_STATS?.enableHotStreaks) return "hot-streaks";
-    if (config.FUN_STATS?.enableDreamTeamDuos) return "dream-duos";
-    if (config.FUN_STATS?.enableClutchFactor) return "clutch-factor";
+    if (config.FUN_STATS?.enableColorStats !== false) return "color-stats";
+    if (config.FUN_STATS?.enableDreamTeamDuos !== false) return "dream-duos";
+    if (config.FUN_STATS?.enableClutchFactor !== false) return "clutch-factor";
     return "color-stats";
   };
-  
-  const [activeSubTab, setActiveSubTab] = useState(getDefaultTab());
+
+  const validFunStatTabIds = useMemo(() => {
+    const ids = [];
+    if (config.FUN_STATS?.enableColorStats !== false) ids.push("color-stats");
+    if (config.FUN_STATS?.enableDreamTeamDuos !== false) ids.push("dream-duos");
+    if (config.FUN_STATS?.enableClutchFactor !== false) ids.push("clutch-factor");
+    return ids;
+  }, [
+    config.FUN_STATS?.enableColorStats,
+    config.FUN_STATS?.enableDreamTeamDuos,
+    config.FUN_STATS?.enableClutchFactor,
+  ]);
+
+  const [activeSubTab, setActiveSubTab] = useState(getDefaultTab);
+
+  useEffect(() => {
+    if (!config.FUN_STATS?.enabled) return;
+    if (validFunStatTabIds.length > 0 && !validFunStatTabIds.includes(activeSubTab)) {
+      setActiveSubTab(validFunStatTabIds[0]);
+    }
+  }, [config.FUN_STATS?.enabled, validFunStatTabIds, activeSubTab]);
 
   // Get backfill requirements from config
   const backfillReqs = config.FUN_STATS?.requiresBackfill || {};
@@ -122,15 +140,7 @@ export const FunStats = () => {
     }
     return getValidMatches(selectedSeason, req);
   }, [selectedSeason, selectableSeasons, backfillReqs.colorStats]);
-  
-  const streakMatches = useMemo(() => {
-    const req = backfillReqs.hotStreaks ?? true;
-    if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year, req));
-    }
-    return getValidMatches(selectedSeason, req);
-  }, [selectedSeason, selectableSeasons, backfillReqs.hotStreaks]);
-  
+
   const clutchMatches = useMemo(() => {
     const req = backfillReqs.clutchFactor ?? false;
     if (selectedSeason === "all") {
@@ -163,24 +173,13 @@ export const FunStats = () => {
     }
     return getValidMatches(selectedSeason, req);
   }, [selectedSeason, selectableSeasons, backfillReqs.duosMostGames]);
-  
-  // OG Leaders matches (requires backfilled data for complete player tracking)
-  const ogLeadersMatches = useMemo(() => {
-    const req = backfillReqs.ogLeaders ?? true;
-    if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year, req));
-    }
-    return getValidMatches(selectedSeason, req);
-  }, [selectedSeason, selectableSeasons, backfillReqs.ogLeaders]);
 
   // Get match count label based on active tab
   const getMatchCountLabel = () => {
     switch (activeSubTab) {
       case "color-stats": return `${colorStatsMatches.length} matches`;
-      case "hot-streaks": return `${streakMatches.length} matches`;
       case "dream-duos": return "various data sources";
-      case "clutch-factor": return `${clutchMatches.length} matches`;
-      case "og-leaders": return `${ogLeadersMatches.length} matches`;
+      case "clutch-factor": return "by goals in close games";
       default: return "";
     }
   };
@@ -234,89 +233,6 @@ export const FunStats = () => {
       })
       .sort((a, b) => b.winPct - a.winPct);
   }, [colorStatsMatches]);
-
-  // ================== HOT STREAKS (based on selected season) ==================
-  const hotStreaks = useMemo(() => {
-    if (!config.FUN_STATS?.enableHotStreaks) return null;
-    
-    const playerStreaks = {};
-    
-    // Sort matches by date for chronological order
-    const sortedMatches = [...streakMatches].sort((a, b) => 
-      new Date(a.date.split('/').reverse().join('-')) - new Date(b.date.split('/').reverse().join('-'))
-    );
-    
-    sortedMatches.forEach(match => {
-      const players = getPlayersFromAttendance(match.attendance);
-      const winningTeam = getWinningTeam(match.scoreline);
-      
-      players.forEach(player => {
-        // Skip non-trackable players (Others, David+1 patterns, etc.)
-        if (!isTrackablePlayer(player.name)) return;
-        
-        if (!playerStreaks[player.name]) {
-          playerStreaks[player.name] = {
-            currentWinStreak: 0,
-            maxWinStreak: 0,
-            currentGoalStreak: 0,
-            maxGoalStreak: 0,
-            currentUnbeatenStreak: 0,
-            maxUnbeatenStreak: 0,
-            totalMatches: 0,
-            totalGoals: 0,
-            totalWins: 0,
-          };
-        }
-        
-        const ps = playerStreaks[player.name];
-        ps.totalMatches += 1;
-        ps.totalGoals += player.goals || 0;
-        
-        const isWin = winningTeam === player.team;
-        const isDraw = winningTeam === 'DRAW';
-        const hasGoal = (player.goals || 0) > 0;
-        
-        // Win streak
-        if (isWin) {
-          ps.currentWinStreak += 1;
-          ps.totalWins += 1;
-          ps.maxWinStreak = Math.max(ps.maxWinStreak, ps.currentWinStreak);
-        } else {
-          ps.currentWinStreak = 0;
-        }
-        
-        // Goal streak
-        if (hasGoal) {
-          ps.currentGoalStreak += 1;
-          ps.maxGoalStreak = Math.max(ps.maxGoalStreak, ps.currentGoalStreak);
-        } else {
-          ps.currentGoalStreak = 0;
-        }
-        
-        // Unbeaten streak
-        if (isWin || isDraw) {
-          ps.currentUnbeatenStreak += 1;
-          ps.maxUnbeatenStreak = Math.max(ps.maxUnbeatenStreak, ps.currentUnbeatenStreak);
-        } else {
-          ps.currentUnbeatenStreak = 0;
-        }
-      });
-    });
-    
-    // Filter players with at least 3 matches
-    const results = Object.entries(playerStreaks)
-      .filter(([, data]) => data.totalMatches >= 3)
-      .map(([name, data]) => ({ name, ...data }));
-    
-    return {
-      byCurrentWin: [...results].sort((a, b) => b.currentWinStreak - a.currentWinStreak).slice(0, 10),
-      byMaxWin: [...results].sort((a, b) => b.maxWinStreak - a.maxWinStreak).slice(0, 10),
-      byCurrentGoal: [...results].filter(p => p.currentGoalStreak > 0).sort((a, b) => b.currentGoalStreak - a.currentGoalStreak).slice(0, 10),
-      byMaxGoal: [...results].sort((a, b) => b.maxGoalStreak - a.maxGoalStreak).slice(0, 10),
-      byUnbeaten: [...results].sort((a, b) => b.currentUnbeatenStreak - a.currentUnbeatenStreak).slice(0, 10),
-      totalMatches: streakMatches.length,
-    };
-  }, [streakMatches]);
 
   // ================== DREAM TEAM DUOS (different data sources per metric) ==================
   const dreamTeamDuos = useMemo(() => {
@@ -461,52 +377,10 @@ export const FunStats = () => {
     };
   }, [clutchMatches]);
 
-  // ================== OWN GOAL LEADERS (all players, all positions) ==================
-  const ogLeaders = useMemo(() => {
-    if (!config.FUN_STATS?.enableOGLeaders) return null;
-    
-    const playerOGs = {};
-    
-    ogLeadersMatches.forEach(match => {
-      const players = getPlayersFromAttendance(match.attendance);
-      
-      players.forEach(player => {
-        // Skip non-trackable players (Others, David+1 patterns, etc.)
-        if (!isTrackablePlayer(player.name)) return;
-        
-        const ownGoals = player.ownGoals || 0;
-        if (ownGoals === 0) return;
-        
-        if (!playerOGs[player.name]) {
-          playerOGs[player.name] = {
-            name: player.name,
-            ownGoals: 0,
-            matchesWithOG: 0,
-            position: player.position || '',
-          };
-        }
-        
-        playerOGs[player.name].ownGoals += ownGoals;
-        playerOGs[player.name].matchesWithOG += 1;
-        // Update position to most recent
-        if (player.position) {
-          playerOGs[player.name].position = player.position;
-        }
-      });
-    });
-    
-    return Object.values(playerOGs)
-      .filter(p => p.ownGoals > 0)
-      .sort((a, b) => b.ownGoals - a.ownGoals || b.matchesWithOG - a.matchesWithOG)
-      .slice(0, 15);
-  }, [ogLeadersMatches]);
-
   // Feature flags
   const enableColorStats = config.FUN_STATS?.enableColorStats !== false;
-  const enableHotStreaks = config.FUN_STATS?.enableHotStreaks !== false;
   const enableDreamDuos = config.FUN_STATS?.enableDreamTeamDuos !== false;
   const enableClutch = config.FUN_STATS?.enableClutchFactor !== false;
-  const enableOGLeaders = config.FUN_STATS?.enableOGLeaders !== false;
 
   if (!config.FUN_STATS?.enabled) {
     return null;
@@ -515,10 +389,8 @@ export const FunStats = () => {
   // Build tabs list based on enabled features
   const tabs = [
     { id: "color-stats", label: "🎨 Colors", enabled: enableColorStats },
-    { id: "hot-streaks", label: "🔥 Streaks", enabled: enableHotStreaks },
     { id: "dream-duos", label: "🤝 Duos", enabled: enableDreamDuos },
     { id: "clutch-factor", label: "🎯 Clutch", enabled: enableClutch },
-    { id: "og-leaders", label: "😅 OG Leaders", enabled: enableOGLeaders },
   ].filter(t => t.enabled);
 
   return (
@@ -612,76 +484,6 @@ export const FunStats = () => {
                 </div>
               );
             })}
-          </div>
-        </div>
-      )}
-
-      {/* ========== HOT STREAKS ========== */}
-      {activeSubTab === "hot-streaks" && enableHotStreaks && hotStreaks && (
-        <div className="hot-streaks-section">
-          <div className="section-header">
-            <h2>🔥 Hot Streaks</h2>
-            <p className="section-subtitle">
-              Who's riding the wave of momentum? ({matchCountLabel})
-            </p>
-          </div>
-
-          <div className="streaks-grid">
-            <div className="streak-card">
-              <h3>🏆 Current Win Streak</h3>
-              <div className="streak-list">
-                {hotStreaks.byCurrentWin.slice(0, 5).map((p, idx) => (
-                  <div key={p.name} className={`streak-item ${idx === 0 ? 'top' : ''}`}>
-                    <span className="rank">#{idx + 1}</span>
-                    <span className="name">{p.name}</span>
-                    <span className="streak-value fire">{p.currentWinStreak}🔥</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="streak-card">
-              <h3>⚡ Best Ever Win Streak</h3>
-              <div className="streak-list">
-                {hotStreaks.byMaxWin.slice(0, 5).map((p, idx) => (
-                  <div key={p.name} className={`streak-item ${idx === 0 ? 'top' : ''}`}>
-                    <span className="rank">#{idx + 1}</span>
-                    <span className="name">{p.name}</span>
-                    <span className="streak-value">{p.maxWinStreak}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="streak-card">
-              <h3>⚽ Current Goal Streak</h3>
-              <div className="streak-list">
-                {hotStreaks.byCurrentGoal.length > 0 ? (
-                  hotStreaks.byCurrentGoal.slice(0, 5).map((p, idx) => (
-                    <div key={p.name} className={`streak-item ${idx === 0 ? 'top' : ''}`}>
-                      <span className="rank">#{idx + 1}</span>
-                      <span className="name">{p.name}</span>
-                      <span className="streak-value goal-streak">{p.currentGoalStreak}⚽</span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="no-streak">No active scoring streaks</div>
-                )}
-              </div>
-            </div>
-
-            <div className="streak-card">
-              <h3>🛡️ Current Unbeaten Run</h3>
-              <div className="streak-list">
-                {hotStreaks.byUnbeaten.slice(0, 5).map((p, idx) => (
-                  <div key={p.name} className={`streak-item ${idx === 0 ? 'top' : ''}`}>
-                    <span className="rank">#{idx + 1}</span>
-                    <span className="name">{p.name}</span>
-                    <span className="streak-value unbeaten">{p.currentUnbeatenStreak}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       )}
@@ -819,47 +621,6 @@ export const FunStats = () => {
           {clutchFactor.topDecisiveScorers.length === 0 && (
             <div className="no-data-message">
               <p>No goals scored in close games yet.</p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ========== OWN GOAL LEADERS ========== */}
-      {activeSubTab === "og-leaders" && enableOGLeaders && ogLeaders && (
-        <div className="og-leaders-section">
-          <div className="section-header">
-            <h2>😅 Own Goal Leaders</h2>
-            <p className="section-subtitle">
-              The Hall of Unfortunate Moments ({matchCountLabel})
-            </p>
-          </div>
-
-          {ogLeaders.length > 0 ? (
-            <div className="og-leaders-list">
-              {ogLeaders.map((p, idx) => (
-                <div key={p.name} className={`og-leader-card ${idx === 0 ? 'top-og' : ''}`}>
-                  <div className="og-rank">
-                    {idx === 0 ? '👑' : `#${idx + 1}`}
-                  </div>
-                  <div className="og-player-info">
-                    <span className="og-player-name">{p.name}</span>
-                    {p.position && <span className="og-position">{p.position}</span>}
-                  </div>
-                  <div className="og-stats">
-                    <div className="og-count">
-                      <span className="og-number">{p.ownGoals}</span>
-                      <span className="og-label">OG{p.ownGoals > 1 ? 's' : ''}</span>
-                    </div>
-                    <div className="og-matches">
-                      in {p.matchesWithOG} match{p.matchesWithOG > 1 ? 'es' : ''}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="no-data-message">
-              <p>No own goals recorded! Perfect play! 🎉</p>
             </div>
           )}
         </div>
