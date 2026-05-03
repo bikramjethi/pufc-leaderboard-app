@@ -92,6 +92,172 @@
   opacity: 0.8;
 }
 
+.section-header--with-selector {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: left;
+}
+
+/* ==================== CLUTCH GOALS ==================== */
+.clutch-goals-section {
+  animation: fadeIn 0.3s ease;
+}
+
+.clutch-goals-table {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background:
+    radial-gradient(circle at top right, rgba(251, 191, 36, 0.12), transparent 45%),
+    radial-gradient(circle at bottom left, rgba(249, 115, 22, 0.1), transparent 45%),
+    var(--bg-secondary);
+}
+
+.clutch-goals-header,
+.clutch-goals-row {
+  display: grid;
+  grid-template-columns: 64px 1fr 140px;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.clutch-goals-header {
+  padding: 0.8rem 1rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.clutch-goals-row {
+  padding: 0.72rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: transform 0.16s ease, background 0.16s ease;
+}
+
+.clutch-goals-row:last-child {
+  border-bottom: none;
+}
+
+.clutch-goals-row:hover {
+  background: rgba(34, 197, 94, 0.08);
+  transform: translateX(2px);
+}
+
+.clutch-goals-row.place-1,
+.clutch-goals-row.place-2,
+.clutch-goals-row.place-3 {
+  border-left: 3px solid transparent;
+}
+
+.clutch-goals-row.place-1 {
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.24), rgba(251, 191, 36, 0.05));
+  border-left-color: #fbbf24;
+}
+
+.clutch-goals-row.place-2 {
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.25), rgba(148, 163, 184, 0.05));
+  border-left-color: #94a3b8;
+}
+
+.clutch-goals-row.place-3 {
+  background: linear-gradient(90deg, rgba(251, 146, 60, 0.22), rgba(251, 146, 60, 0.05));
+  border-left-color: #fb923c;
+}
+
+.clutch-goals-row .col-rank {
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.clutch-goals-row .col-name {
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.clutch-goals-row .col-goals {
+  justify-self: center;
+  min-width: 72px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.14);
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(249, 115, 22, 0.25);
+}
+
+/* ==================== OUTCOME GOALS ==================== */
+.outcome-goals-section {
+  animation: fadeIn 0.3s ease;
+}
+
+.outcome-table {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.outcome-header,
+.outcome-row {
+  display: grid;
+  grid-template-columns: 44px 1fr 90px 90px;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.outcome-header {
+  padding: 0.75rem 1rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.outcome-row {
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.outcome-row:last-child {
+  border-bottom: none;
+}
+
+.outcome-row.top {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(34, 197, 94, 0.08) 100%);
+}
+
+.outcome-row .col-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.outcome-row .col-goals {
+  font-weight: 800;
+  color: var(--accent-primary);
+}
+
+.outcome-row .col-rank,
+.outcome-row .col-goals,
+.outcome-row .col-count,
+.outcome-header .col-goals,
+.outcome-header .col-count {
+  text-align: center;
+}
+
 /* ==================== COLOR STATS ==================== */
 
 .color-stats-grid {
@@ -574,6 +740,23 @@
     font-size: 1.25rem;
   }
 
+  .section-header--with-selector {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .clutch-goals-header,
+  .clutch-goals-row {
+    grid-template-columns: 52px 1fr 110px;
+  }
+
+  .outcome-header,
+  .outcome-row {
+    grid-template-columns: 34px 1fr 70px 70px;
+    font-size: 0.8rem;
+  }
+
   .color-stats-grid {
     grid-template-columns: 1fr;
   }
@@ -638,13 +821,26 @@
   .color-extra-stats {
     gap: 1rem;
   }
+
+  .outcome-header,
+  .outcome-row {
+    grid-template-columns: 30px 1fr 58px 58px;
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+  }
+
+  .clutch-goals-header,
+  .clutch-goals-row {
+    grid-template-columns: 44px 1fr 88px;
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+  }
 }
 
 /* ==================== DREAM TEAM DUOS (shared list / grid patterns) ==================== */
 
 .dream-duos-section,
-.player-impact-section,
-.clutch-factor-section {
+.player-impact-section {
   animation: fadeIn 0.3s ease;
 }
 
@@ -654,16 +850,14 @@
 }
 
 .duos-grid,
-.impact-grid,
-.clutch-grid {
+.impact-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.25rem;
 }
 
 .duo-card,
-.impact-card,
-.clutch-card {
+.impact-card {
   background: var(--bg-secondary);
   border-radius: 16px;
   padding: 1.5rem;
@@ -671,8 +865,7 @@
 }
 
 .duo-card h3,
-.impact-card h3,
-.clutch-card h3 {
+.impact-card h3 {
   font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -689,16 +882,14 @@
 }
 
 .duo-list,
-.impact-list,
-.clutch-list {
+.impact-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
 .duo-item,
-.impact-item,
-.clutch-item {
+.impact-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -711,22 +902,19 @@
 }
 
 .duo-item:hover,
-.impact-item:hover,
-.clutch-item:hover {
+.impact-item:hover {
   border-color: var(--border-color);
   transform: translateX(4px);
 }
 
 .duo-item.top,
-.impact-item.top,
-.clutch-item.top {
+.impact-item.top {
   background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(34, 197, 94, 0.08) 100%);
   border-color: var(--gold);
 }
 
 .duo-item .rank,
-.impact-item .rank,
-.clutch-item .rank {
+.impact-item .rank {
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-muted);
@@ -734,14 +922,12 @@
 }
 
 .duo-item.top .rank,
-.impact-item.top .rank,
-.clutch-item.top .rank {
+.impact-item.top .rank {
   color: var(--gold);
 }
 
 .duo-item .name,
-.impact-item .name,
-.clutch-item .name {
+.impact-item .name {
   flex: 1;
   font-weight: 600;
   color: var(--text-primary);
@@ -825,214 +1011,6 @@
 .impact-stats .details {
   font-size: 0.7rem;
   color: var(--text-muted);
-}
-
-/* ==================== CLUTCH FACTOR ==================== */
-
-.clutch-card.main {
-  grid-column: span 2;
-}
-
-.clutch-card.full-width {
-  grid-column: 1 / -1;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.clutch-stats {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.15rem;
-}
-
-.clutch-stats .clutch-rate {
-  font-size: 1rem;
-  font-weight: 800;
-  color: #f97316;
-}
-
-.clutch-stats .record {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.clutch-stats .decisive {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.clutch-stats .total-close {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-/* ==================== DECISIVE SCORERS PODIUM ==================== */
-
-.decisive-podium {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  padding: 1rem 0;
-}
-
-.decisive-spot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.5rem 2rem;
-  background: var(--bg-secondary);
-  border-radius: 16px;
-  border: 2px solid var(--border-color);
-  min-width: 150px;
-  transition: transform 0.2s ease;
-  text-align: center;
-}
-
-.decisive-spot:hover {
-  transform: translateY(-4px);
-}
-
-.decisive-spot.position-1 {
-  border-color: var(--gold);
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(251, 191, 36, 0.15) 100%);
-  order: 2;
-  padding-bottom: 2.5rem;
-  box-shadow: 0 8px 24px rgba(251, 191, 36, 0.2);
-}
-
-.decisive-spot.position-2 {
-  order: 1;
-  opacity: 0.95;
-}
-
-.decisive-spot.position-3 {
-  order: 3;
-  opacity: 0.9;
-}
-
-.decisive-medal {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.decisive-name {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.75rem;
-}
-
-.decisive-goals {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.decisive-goals .goals-count {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #f97316;
-  line-height: 1;
-}
-
-.decisive-goals .goals-label {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.decisive-matches {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.35rem;
-}
-
-.decisive-avg {
-  font-size: 0.75rem;
-  color: var(--accent-primary);
-  font-weight: 600;
-  padding: 0.25rem 0.6rem;
-  background: rgba(34, 197, 94, 0.1);
-  border-radius: 12px;
-}
-
-/* Decisive Scorers Table */
-.decisive-table {
-  background: var(--bg-secondary);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--border-color);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.decisive-header {
-  display: grid;
-  grid-template-columns: 50px 1fr 70px 80px 70px;
-  padding: 0.75rem 1rem;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.decisive-row {
-  display: grid;
-  grid-template-columns: 50px 1fr 70px 80px 70px;
-  padding: 0.7rem 1rem;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 0.9rem;
-  transition: background 0.2s ease;
-}
-
-.decisive-row:last-child {
-  border-bottom: none;
-}
-
-.decisive-row:hover {
-  background: var(--bg-card);
-}
-
-.decisive-row .col-rank {
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.decisive-row .col-name {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.decisive-row .col-goals {
-  font-weight: 700;
-  color: #f97316;
-  text-align: center;
-}
-
-.decisive-row .col-matches {
-  text-align: center;
-  color: var(--text-secondary);
-}
-
-.decisive-row .col-avg {
-  text-align: center;
-  color: var(--accent-primary);
-  font-weight: 600;
-}
-
-.decisive-header .col-goals,
-.decisive-header .col-matches,
-.decisive-header .col-avg {
-  text-align: center;
 }
 
 /* ==================== MVP INDEX ==================== */
@@ -1547,15 +1525,8 @@
   }
 
   .duos-grid,
-  .impact-grid,
-  .clutch-grid {
+  .impact-grid {
     grid-template-columns: 1fr;
-  }
-
-  .clutch-card.main,
-  .clutch-card.full-width {
-    grid-column: span 1;
-    max-width: none;
   }
 
   .mvp-podium {
@@ -1627,36 +1598,6 @@
     padding: 0.25rem 0.5rem;
   }
 
-  /* Decisive Scorers responsive */
-  .decisive-podium {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .decisive-spot {
-    order: unset !important;
-    min-width: 200px;
-    padding: 1.25rem 1.5rem;
-  }
-
-  .decisive-spot.position-1 {
-    padding-bottom: 1.5rem;
-  }
-
-  .decisive-medal {
-    font-size: 2rem;
-  }
-
-  .decisive-goals .goals-count {
-    font-size: 2rem;
-  }
-
-  .decisive-header,
-  .decisive-row {
-    grid-template-columns: 40px 1fr 55px 65px 55px;
-    font-size: 0.8rem;
-  }
-
   /* MVP formula responsive */
   .mvp-formula-container {
     padding: 1rem;
@@ -1695,8 +1636,7 @@
   }
 
   .duo-item,
-  .impact-item,
-  .clutch-item {
+  .impact-item {
     padding: 0.5rem 0.6rem;
   }
 

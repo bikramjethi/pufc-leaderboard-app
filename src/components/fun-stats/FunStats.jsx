@@ -5,6 +5,7 @@ import "./FunStats.css";
 // Dynamically import all available match data files
 // This pattern allows automatic pickup of new season files (2027, 2028, etc.)
 const matchDataModules = import.meta.glob('../../data/attendance-data/20*.json', { eager: true });
+const leaderboardDataModules = import.meta.glob('../../data/leaderboard-data/20*.json', { eager: true });
 
 // Build matchDataByYear object from imported modules
 const matchDataByYear = {};
@@ -15,11 +16,30 @@ Object.entries(matchDataModules).forEach(([path, module]) => {
   }
 });
 
+const leaderboardDataByYear = {};
+Object.entries(leaderboardDataModules).forEach(([path, module]) => {
+  const yearMatch = path.match(/(\d{4})\.json$/);
+  if (yearMatch) {
+    leaderboardDataByYear[yearMatch[1]] = module.default;
+  }
+});
+
 // Get available seasons for the selector (2024+ that have data)
 const getSelectableSeasons = () => {
   return Object.keys(matchDataByYear)
     .filter(year => parseInt(year) >= 2024)
     .sort((a, b) => b - a);
+};
+
+const toNameKey = (name) => String(name || "").trim().toLowerCase();
+
+const normalizeSeasonOptions = (seasons) => {
+  if (!Array.isArray(seasons)) return ["all"];
+  const cleaned = seasons
+    .map((s) => String(s).trim())
+    .filter(Boolean)
+    .filter((s) => s === "all" || /^\d{4}$/.test(s));
+  return cleaned.length ? [...new Set(cleaned)] : ["all"];
 };
 
 // Helper to get valid matches from a year's data
@@ -62,12 +82,14 @@ const getWinningTeam = (scoreline) => {
   return 'DRAW';
 };
 
-// Helper to check if match is close (≤2 goal margin, including draws)
-const isCloseMatch = (scoreline) => {
-  if (!scoreline || typeof scoreline !== 'object') return false;
-  const scores = Object.values(scoreline);
-  if (scores.length !== 2) return false;
-  return Math.abs(scores[0] - scores[1]) <= 2;
+// Clutch match: draw OR goal margin <= threshold
+const isClutchScoreline = (scoreline, maxGoalDiff = 2) => {
+  if (!scoreline || typeof scoreline !== "object") return false;
+  const teams = Object.keys(scoreline);
+  if (teams.length !== 2) return false;
+  const a = Number(scoreline[teams[0]]) || 0;
+  const b = Number(scoreline[teams[1]]) || 0;
+  return a === b || Math.abs(a - b) <= maxGoalDiff;
 };
 
 // Helper to get all players from a match's attendance
@@ -97,14 +119,69 @@ const colorConfig = {
 
 export const FunStats = () => {
   const selectableSeasons = getSelectableSeasons();
+  const outcomeTabCfg = useMemo(
+    () => config.FUN_STATS?.outcomeGoalsTabs || {},
+    []
+  );
+  const clutchCfg = useMemo(
+    () => config.FUN_STATS?.clutchGoals || {},
+    []
+  );
   
   const [selectedSeason, setSelectedSeason] = useState("all");
+  const [clutchSeason, setClutchSeason] = useState(clutchCfg.defaultSeason || "all");
+  const [outcomeSeasons, setOutcomeSeasons] = useState(() => ({
+    wins: outcomeTabCfg.wins?.defaultSeason || "all",
+    losses: outcomeTabCfg.losses?.defaultSeason || "all",
+    draws: outcomeTabCfg.draws?.defaultSeason || "all",
+  }));
+
+  const outcomeTabs = useMemo(() => {
+    const defs = [
+      { id: "outcome-wins", key: "wins", defaultLabel: "🏆 Winning Goals" },
+      { id: "outcome-losses", key: "losses", defaultLabel: "💔 Goals in losing side" },
+      { id: "outcome-draws", key: "draws", defaultLabel: "🤝 Goals in drawn games" },
+    ];
+    return defs.map((d) => {
+      const cfg = outcomeTabCfg[d.key] || {};
+      const seasons = normalizeSeasonOptions(cfg.seasons);
+      const defaultSeason = seasons.includes(String(cfg.defaultSeason))
+        ? String(cfg.defaultSeason)
+        : (seasons.includes("all") ? "all" : seasons[0]);
+      return {
+        ...d,
+        enabled: cfg.enabled !== false,
+        label: cfg.label || d.defaultLabel,
+        seasons,
+        defaultSeason,
+        topN: Number(cfg.topN) > 0 ? Number(cfg.topN) : 10,
+      };
+    });
+  }, [outcomeTabCfg]);
+
+  const clutchTab = useMemo(() => {
+    const seasons = normalizeSeasonOptions(clutchCfg.seasons);
+    const defaultSeason = seasons.includes(String(clutchCfg.defaultSeason))
+      ? String(clutchCfg.defaultSeason)
+      : (seasons.includes("all") ? "all" : seasons[0]);
+    return {
+      id: "clutch-goals",
+      enabled: clutchCfg.enabled !== false,
+      label: clutchCfg.label || "🔥 Clutch Goals",
+      seasons,
+      defaultSeason,
+      topN: Number(clutchCfg.topN) > 0 ? Number(clutchCfg.topN) : 10,
+      maxGoalDiff: Number(clutchCfg.maxGoalDiff) >= 0 ? Number(clutchCfg.maxGoalDiff) : 2,
+    };
+  }, [clutchCfg]);
   
   // Determine first enabled tab (align with `!== false` defaults used for tab visibility)
   const getDefaultTab = () => {
     if (config.FUN_STATS?.enableColorStats !== false) return "color-stats";
     if (config.FUN_STATS?.enableDreamTeamDuos !== false) return "dream-duos";
-    if (config.FUN_STATS?.enableClutchFactor !== false) return "clutch-factor";
+    if (config.FUN_STATS?.enableClutchGoals !== false && clutchTab.enabled) return clutchTab.id;
+    const firstOutcome = outcomeTabs.find((t) => t.enabled);
+    if (config.FUN_STATS?.enableOutcomeGoals !== false && firstOutcome) return firstOutcome.id;
     return "color-stats";
   };
 
@@ -112,13 +189,12 @@ export const FunStats = () => {
     const ids = [];
     if (config.FUN_STATS?.enableColorStats !== false) ids.push("color-stats");
     if (config.FUN_STATS?.enableDreamTeamDuos !== false) ids.push("dream-duos");
-    if (config.FUN_STATS?.enableClutchFactor !== false) ids.push("clutch-factor");
+    if (config.FUN_STATS?.enableClutchGoals !== false && clutchTab.enabled) ids.push(clutchTab.id);
+    if (config.FUN_STATS?.enableOutcomeGoals !== false) {
+      outcomeTabs.filter((t) => t.enabled).forEach((t) => ids.push(t.id));
+    }
     return ids;
-  }, [
-    config.FUN_STATS?.enableColorStats,
-    config.FUN_STATS?.enableDreamTeamDuos,
-    config.FUN_STATS?.enableClutchFactor,
-  ]);
+  }, [clutchTab, outcomeTabs]);
 
   const [activeSubTab, setActiveSubTab] = useState(getDefaultTab);
 
@@ -127,7 +203,22 @@ export const FunStats = () => {
     if (validFunStatTabIds.length > 0 && !validFunStatTabIds.includes(activeSubTab)) {
       setActiveSubTab(validFunStatTabIds[0]);
     }
-  }, [config.FUN_STATS?.enabled, validFunStatTabIds, activeSubTab]);
+  }, [validFunStatTabIds, activeSubTab]);
+
+  useEffect(() => {
+    setOutcomeSeasons((prev) => {
+      const next = { ...prev };
+      outcomeTabs.forEach((tab) => {
+        const current = String(prev[tab.key] || "");
+        next[tab.key] = tab.seasons.includes(current) ? current : tab.defaultSeason;
+      });
+      return next;
+    });
+  }, [outcomeTabs]);
+
+  useEffect(() => {
+    setClutchSeason((prev) => (clutchTab.seasons.includes(String(prev)) ? prev : clutchTab.defaultSeason));
+  }, [clutchTab]);
 
   // Get backfill requirements from config
   const backfillReqs = config.FUN_STATS?.requiresBackfill || {};
@@ -140,14 +231,6 @@ export const FunStats = () => {
     }
     return getValidMatches(selectedSeason, req);
   }, [selectedSeason, selectableSeasons, backfillReqs.colorStats]);
-
-  const clutchMatches = useMemo(() => {
-    const req = backfillReqs.clutchFactor ?? false;
-    if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year, req));
-    }
-    return getValidMatches(selectedSeason, req);
-  }, [selectedSeason, selectableSeasons, backfillReqs.clutchFactor]);
 
   // Duos have different requirements per metric
   const duosWinRateMatches = useMemo(() => {
@@ -179,7 +262,6 @@ export const FunStats = () => {
     switch (activeSubTab) {
       case "color-stats": return `${colorStatsMatches.length} matches`;
       case "dream-duos": return "various data sources";
-      case "clutch-factor": return "by goals in close games";
       default: return "";
     }
   };
@@ -327,60 +409,127 @@ export const FunStats = () => {
     };
   }, [duosWinRateMatches, duosScoringMatches, duosGamesMatches]);
 
-  // ================== CLUTCH FACTOR (Decisive Scorers only, based on selected season) ==================
-  const clutchFactor = useMemo(() => {
-    if (!config.FUN_STATS?.enableClutchFactor) return null;
-    
-    const playerClutch = {};
-    
-    clutchMatches.forEach(match => {
-      if (!isCloseMatch(match.scoreline)) return;
-      
-      const players = getPlayersFromAttendance(match.attendance);
-      const winningTeam = getWinningTeam(match.scoreline);
-      
-      players.forEach(player => {
-        // Skip non-trackable players (Others, David+1 patterns, etc.)
-        if (!isTrackablePlayer(player.name)) return;
-        
-        if (!playerClutch[player.name]) {
-          playerClutch[player.name] = {
-            closeMatches: 0,
-            closeWins: 0,
-            goalsInCloseGames: 0,
+  const outcomeGoalsData = useMemo(() => {
+    if (config.FUN_STATS?.enableOutcomeGoals === false) return {};
+
+    const outcomeKindByTab = {
+      wins: "wins",
+      losses: "losses",
+      draws: "draws",
+    };
+
+    const buildForTab = (tab) => {
+      const selected = String(outcomeSeasons[tab.key] || tab.defaultSeason || "all");
+      const seasonsToUse = selected === "all"
+        ? tab.seasons.filter((s) => s !== "all")
+        : [selected];
+
+      /** @type {Record<string, {goals: number, name: string}>} */
+      const goalsByPlayer = {};
+      seasonsToUse.forEach((year) => {
+        const matches = getValidMatches(year, false);
+        matches.forEach((match) => {
+          if (!match?.scoreline || !match?.attendance) return;
+          const winner = getWinningTeam(match.scoreline);
+          const players = getPlayersFromAttendance(match.attendance);
+          players.forEach((p) => {
+            if (!isTrackablePlayer(p.name)) return;
+            const g = Number(p.goals) || 0;
+            if (g <= 0) return;
+            const isWin = winner !== "DRAW" && winner === p.team;
+            const isLoss = winner !== "DRAW" && winner !== p.team;
+            const isDraw = winner === "DRAW";
+            const kind = outcomeKindByTab[tab.key];
+            const include = (kind === "wins" && isWin) || (kind === "losses" && isLoss) || (kind === "draws" && isDraw);
+            if (!include) return;
+
+            const nk = toNameKey(p.name);
+            if (!goalsByPlayer[nk]) goalsByPlayer[nk] = { goals: 0, name: String(p.name).trim() };
+            goalsByPlayer[nk].goals += g;
+          });
+        });
+      });
+
+      /** @type {Record<string, {wins:number, losses:number, draws:number}>} */
+      const wldByPlayer = {};
+      seasonsToUse.forEach((year) => {
+        const players = leaderboardDataByYear[year];
+        if (!Array.isArray(players)) return;
+        players.forEach((p) => {
+          if (!isTrackablePlayer(p?.name)) return;
+          const nk = toNameKey(p.name);
+          if (!wldByPlayer[nk]) {
+            wldByPlayer[nk] = { wins: 0, losses: 0, draws: 0 };
+          }
+          wldByPlayer[nk].wins += Number(p.wins) || 0;
+          wldByPlayer[nk].losses += Number(p.losses) || 0;
+          wldByPlayer[nk].draws += Number(p.draws) || 0;
+        });
+      });
+
+      const rows = Object.entries(goalsByPlayer)
+        .map(([nk, g]) => {
+          const counts = wldByPlayer[nk] || { wins: 0, losses: 0, draws: 0 };
+          return {
+            key: nk,
+            name: g.name,
+            goals: g.goals,
+            wins: counts.wins,
+            losses: counts.losses,
+            draws: counts.draws,
           };
-        }
-        
-        const pc = playerClutch[player.name];
-        pc.closeMatches += 1;
-        pc.goalsInCloseGames += player.goals || 0;
-        
-        if (winningTeam === player.team) {
-          pc.closeWins += 1;
-        }
+        })
+        .sort((a, b) => b.goals - a.goals || b.wins - a.wins || a.name.localeCompare(b.name))
+        .slice(0, tab.topN);
+
+      return {
+        selectedSeason: selected,
+        rows,
+      };
+    };
+
+    return Object.fromEntries(outcomeTabs.map((tab) => [tab.key, buildForTab(tab)]));
+  }, [outcomeTabs, outcomeSeasons]);
+
+  const clutchGoalsData = useMemo(() => {
+    if (config.FUN_STATS?.enableClutchGoals === false || !clutchTab.enabled) return { rows: [], matchCount: 0 };
+
+    const years = clutchSeason === "all"
+      ? clutchTab.seasons.filter((s) => s !== "all")
+      : [clutchSeason];
+
+    /** @type {Record<string, {name:string, goals:number}>} */
+    const goalsByPlayer = {};
+    let clutchMatchCount = 0;
+
+    years.forEach((year) => {
+      const matches = getValidMatches(year, false);
+      matches.forEach((match) => {
+        if (!isClutchScoreline(match.scoreline, clutchTab.maxGoalDiff)) return;
+        clutchMatchCount += 1;
+        getPlayersFromAttendance(match.attendance).forEach((p) => {
+          if (!isTrackablePlayer(p.name)) return;
+          const goals = Number(p.goals) || 0;
+          if (goals <= 0) return;
+          const key = toNameKey(p.name);
+          if (!goalsByPlayer[key]) goalsByPlayer[key] = { name: String(p.name).trim(), goals: 0 };
+          goalsByPlayer[key].goals += goals;
+        });
       });
     });
-    
-    const closeMatchCount = clutchMatches.filter(m => isCloseMatch(m.scoreline)).length;
-    
-    const results = Object.entries(playerClutch)
-      .filter(([, data]) => data.goalsInCloseGames > 0)
-      .map(([name, data]) => ({
-        name,
-        ...data,
-      }))
-      .sort((a, b) => b.goalsInCloseGames - a.goalsInCloseGames);
-    
-    return {
-      totalCloseMatches: closeMatchCount,
-      topDecisiveScorers: results.slice(0, 15),
-    };
-  }, [clutchMatches]);
+
+    const rows = Object.values(goalsByPlayer)
+      .sort((a, b) => b.goals - a.goals || a.name.localeCompare(b.name))
+      .slice(0, clutchTab.topN);
+
+    return { rows, matchCount: clutchMatchCount };
+  }, [clutchSeason, clutchTab]);
 
   // Feature flags
   const enableColorStats = config.FUN_STATS?.enableColorStats !== false;
   const enableDreamDuos = config.FUN_STATS?.enableDreamTeamDuos !== false;
-  const enableClutch = config.FUN_STATS?.enableClutchFactor !== false;
+  const enableClutchGoals = config.FUN_STATS?.enableClutchGoals !== false;
+  const enableOutcomeGoals = config.FUN_STATS?.enableOutcomeGoals !== false;
 
   if (!config.FUN_STATS?.enabled) {
     return null;
@@ -390,8 +539,11 @@ export const FunStats = () => {
   const tabs = [
     { id: "color-stats", label: "🎨 Colors", enabled: enableColorStats },
     { id: "dream-duos", label: "🤝 Duos", enabled: enableDreamDuos },
-    { id: "clutch-factor", label: "🎯 Clutch", enabled: enableClutch },
+    { id: clutchTab.id, label: clutchTab.label, enabled: enableClutchGoals && clutchTab.enabled },
+    ...outcomeTabs.map((t) => ({ id: t.id, label: t.label, enabled: enableOutcomeGoals && t.enabled })),
   ].filter(t => t.enabled);
+
+  const showGlobalSeasonSelector = activeSubTab === "color-stats" || activeSubTab === "dream-duos";
 
   return (
     <div className="fun-stats">
@@ -409,23 +561,24 @@ export const FunStats = () => {
           ))}
         </div>
         
-        {/* Global Season selector - available on all tabs */}
-        <div className="fun-stats-season-selector">
-          <label htmlFor="fun-stats-season">Season</label>
-          <div className="select-wrapper">
-            <select
-              id="fun-stats-season"
-              value={selectedSeason}
-              onChange={(e) => setSelectedSeason(e.target.value)}
-            >
-              <option value="all">All Time</option>
-              {selectableSeasons.map(year => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
-            <span className="select-arrow">▼</span>
+        {showGlobalSeasonSelector ? (
+          <div className="fun-stats-season-selector">
+            <label htmlFor="fun-stats-season">Season</label>
+            <div className="select-wrapper">
+              <select
+                id="fun-stats-season"
+                value={selectedSeason}
+                onChange={(e) => setSelectedSeason(e.target.value)}
+              >
+                <option value="all">All Time</option>
+                {selectableSeasons.map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+              <span className="select-arrow">▼</span>
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
 
       {/* ========== COLOR STATS ========== */}
@@ -562,69 +715,130 @@ export const FunStats = () => {
         </div>
       )}
 
-      {/* ========== CLUTCH FACTOR (Decisive Scorers only) ========== */}
-      {activeSubTab === "clutch-factor" && enableClutch && clutchFactor && (
-        <div className="clutch-factor-section">
-          <div className="section-header">
-            <h2>🎯 Decisive Scorers</h2>
-            <p className="section-subtitle">
-              Who scores the most when games are tight? ({clutchFactor.totalCloseMatches} close matches, ≤2 goal margin)
-            </p>
+      {/* ========== CLUTCH GOALS ========== */}
+      {enableClutchGoals && clutchTab.enabled && activeSubTab === clutchTab.id ? (
+        <div className="clutch-goals-section">
+          <div className="section-header section-header--with-selector">
+            <div>
+              <h2>{clutchTab.label}</h2>
+              <p className="section-subtitle">
+                Top {clutchTab.topN} scorers in clutch games (draws or goal diff ≤ {clutchTab.maxGoalDiff})
+              </p>
+            </div>
+            {clutchTab.seasons.length > 1 ? (
+              <div className="fun-stats-season-selector">
+                <label htmlFor="fun-stats-clutch-season">Season</label>
+                <div className="select-wrapper">
+                  <select
+                    id="fun-stats-clutch-season"
+                    value={clutchSeason}
+                    onChange={(e) => setClutchSeason(e.target.value)}
+                  >
+                    {clutchTab.seasons.map((s) => (
+                      <option key={s} value={s}>
+                        {s === "all" ? "All Time" : s}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="select-arrow">▼</span>
+                </div>
+              </div>
+            ) : null}
           </div>
 
-          {/* Top 3 Podium */}
-          {clutchFactor.topDecisiveScorers.length >= 3 && (
-            <div className="decisive-podium">
-              {clutchFactor.topDecisiveScorers.slice(0, 3).map((p, idx) => (
-                <div key={p.name} className={`decisive-spot position-${idx + 1}`}>
-                  <div className="decisive-medal">
-                    {idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}
-                  </div>
-                  <div className="decisive-name">{p.name}</div>
-                  <div className="decisive-goals">
-                    <span className="goals-count">{p.goalsInCloseGames}</span>
-                    <span className="goals-label">goals</span>
-                  </div>
-                  <div className="decisive-matches">
-                    in {p.closeMatches} close games
-                  </div>
-                  <div className="decisive-avg">
-                    {(p.goalsInCloseGames / p.closeMatches).toFixed(2)} per match
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Rest of the list */}
-          {clutchFactor.topDecisiveScorers.length > 3 && (
-            <div className="decisive-table">
-              <div className="decisive-header">
+          {clutchGoalsData.rows.length > 0 ? (
+            <div className="clutch-goals-table">
+              <div className="clutch-goals-header">
                 <span className="col-rank">#</span>
                 <span className="col-name">Player</span>
-                <span className="col-goals">Goals</span>
-                <span className="col-matches">Matches</span>
-                <span className="col-avg">Avg</span>
+                <span className="col-goals">Clutch Goals</span>
               </div>
-              {clutchFactor.topDecisiveScorers.slice(3).map((p, idx) => (
-                <div key={p.name} className="decisive-row">
-                  <span className="col-rank">{idx + 4}</span>
-                  <span className="col-name">{p.name}</span>
-                  <span className="col-goals">{p.goalsInCloseGames}</span>
-                  <span className="col-matches">{p.closeMatches}</span>
-                  <span className="col-avg">{(p.goalsInCloseGames / p.closeMatches).toFixed(2)}</span>
+              {clutchGoalsData.rows.map((row, idx) => (
+                <div key={row.name} className={`clutch-goals-row place-${idx + 1}`}>
+                  <span className="col-rank">
+                    {idx < 3 ? (idx === 0 ? "🥇" : idx === 1 ? "🥈" : "🥉") : `#${idx + 1}`}
+                  </span>
+                  <span className="col-name">{row.name}</span>
+                  <span className="col-goals">{row.goals}</span>
                 </div>
               ))}
             </div>
-          )}
-
-          {clutchFactor.topDecisiveScorers.length === 0 && (
+          ) : (
             <div className="no-data-message">
-              <p>No goals scored in close games yet.</p>
+              <p>No clutch-goal data available for the selected season.</p>
             </div>
           )}
         </div>
-      )}
+      ) : null}
+
+      {/* ========== OUTCOME GOALS TABS ========== */}
+      {enableOutcomeGoals && outcomeTabs.map((tab) => {
+        const active = activeSubTab === tab.id && tab.enabled;
+        if (!active) return null;
+        const data = outcomeGoalsData[tab.key] || { rows: [], selectedSeason: "all" };
+        const selectorId = `fun-stats-season-${tab.key}`;
+        const showSelector = tab.seasons.length > 1;
+        const subtitleSeason = data.selectedSeason === "all" ? "All Time" : data.selectedSeason;
+        const countField =
+          tab.key === "wins" ? "wins" : tab.key === "losses" ? "losses" : "draws";
+        const countHeader = countField === "wins" ? "Wins" : countField === "losses" ? "Losses" : "Draws";
+        return (
+          <div key={tab.id} className="outcome-goals-section">
+            <div className="section-header section-header--with-selector">
+              <div>
+                <h2>{tab.label}</h2>
+                <p className="section-subtitle">
+                  Top {tab.topN} players by goals from attendance match sheets with {countHeader.toLowerCase()} from leaderboard data ({subtitleSeason})
+                </p>
+              </div>
+              {showSelector ? (
+                <div className="fun-stats-season-selector">
+                  <label htmlFor={selectorId}>Season</label>
+                  <div className="select-wrapper">
+                    <select
+                      id={selectorId}
+                      value={outcomeSeasons[tab.key] || tab.defaultSeason}
+                      onChange={(e) =>
+                        setOutcomeSeasons((prev) => ({ ...prev, [tab.key]: e.target.value }))
+                      }
+                    >
+                      {tab.seasons.map((s) => (
+                        <option key={s} value={s}>
+                          {s === "all" ? "All Time" : s}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="select-arrow">▼</span>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            {data.rows.length > 0 ? (
+              <div className="outcome-table">
+                <div className="outcome-header">
+                  <span className="col-rank">#</span>
+                  <span className="col-name">Player</span>
+                  <span className="col-goals">Goals</span>
+                  <span className="col-count">{countHeader}</span>
+                </div>
+                {data.rows.map((p, idx) => (
+                  <div key={p.key} className={`outcome-row ${idx === 0 ? "top" : ""}`}>
+                    <span className="col-rank">{idx + 1}</span>
+                    <span className="col-name">{p.name}</span>
+                    <span className="col-goals">{p.goals}</span>
+                    <span className="col-count">{p[countField]}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="no-data-message">
+                <p>No scoring data available for the selected season.</p>
+              </div>
+            )}
+          </div>
+        );
+      })}
 
     </div>
   );
