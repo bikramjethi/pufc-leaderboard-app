@@ -1,7 +1,7 @@
 {
   "season": 2026,
-  "totalGoals": 314,
-  "weekendGoals": 126,
+  "totalGoals": 324,
+  "weekendGoals": 136,
   "weekdayGoals": 188,
   "matches": [
     {
@@ -4968,11 +4968,148 @@
       "id": "02-05-2026",
       "date": "02/05/2026",
       "day": "Weekend",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isFullHouse": false,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Rishabh",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Vedant",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Rohit Gautam",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          },
+          {
+            "name": "Vinit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Vivek",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Subarna",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Joe",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Jethi",
+            "goals": 4,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          },
+          {
+            "name": "Ketan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Ashish",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Sourabh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB"
+          },
+          {
+            "name": "Vinay",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Ammar",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Somanna",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 4,
+        "BLUE": 6
+      },
+      "totalGoals": 10
     },
     {
       "id": "05-05-2026",
