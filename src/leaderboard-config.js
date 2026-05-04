@@ -128,14 +128,53 @@ export const config = {
 
   // Fun Stats Settings
   FUN_STATS: {
-    enabled: false,                     // Show/hide the Fun Stats tab
+    enabled: true,                     // Show/hide the Fun Stats tab
     seasons: ["2024", "2025", "2026"],         // Seasons with per-match data available (auto-picks up new years)
     defaultSeason: "all",              // Default: "all" for combined, or specific year
     enableColorStats: true,            // Show/hide the Color Win Rates feature
 
     // Additional Fun Stats Features
     enableDreamTeamDuos: false,         // 🤝 Best performing player pairs
-    enableClutchFactor: true,          // 🎯 Decisive scorers in close games (≤2 goal margin)
+    enableClutchGoals: true,            // 🔥 Top scorers in close games (draw or ≤ max goal diff)
+    clutchGoals: {
+      enabled: true,
+      label: "🔥 Clutch Goals",
+      seasons: ["all", "2024", "2025", "2026"],
+      defaultSeason: "all",
+      topN: 10,
+      maxGoalDiff: 2,
+    },
+    enableOutcomeGoals: true,           // 🏁 Top scorers split by match result context (win/loss/draw)
+    /**
+     * Outcome-goals tabs:
+     * - goals are computed from attendance match sheets (per-match scorer rows)
+     * - W/L/D counts are read from leaderboard-data season files
+     * Each tab can have its own season menu. Include "all" to enable all-time aggregation.
+     * If only one option is present, the selector is hidden for that tab.
+     */
+    outcomeGoalsTabs: {
+      wins: {
+        enabled: true,
+        label: "🏆 Winning Goals",
+        seasons: ["all", "2024", "2025", "2026"],
+        defaultSeason: "all",
+        topN: 10,
+      },
+      losses: {
+        enabled: false,
+        label: "💔 Goals in losing side",
+        seasons: ["all", "2024", "2025", "2026"],
+        defaultSeason: "all",
+        topN: 10,
+      },
+      draws: {
+        enabled: false,
+        label: "🤝 Goals in drawn games",
+        seasons: ["all", "2024", "2025", "2026"],
+        defaultSeason: "all",
+        topN: 10,
+      },
+    },
 
     // Which features require isBackfilled:true for 2024 and 2025 data
     // true = only include 2024/2025 matches marked as backfilled (complete data required)
@@ -145,7 +184,6 @@ export const config = {
       duosWinRate: true,               // Requires complete attendance for team composition
       duosTopScoring: false,           // Scorer info is captured accurately
       duosMostGames: true,             // Requires complete attendance data
-      clutchFactor: false,             // Scorer info + scoreline is sufficient
     },
   },
 
