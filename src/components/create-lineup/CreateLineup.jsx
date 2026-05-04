@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./CreateLineup.css";
 import playerProfiles from "../../data/player-profiles.json";
 
@@ -35,6 +35,42 @@ const TEAM_COLORS = ["RED", "BLUE", "BLACK", "WHITE", "YELLOW"];
 // Position codes for 8v8 formation
 const POSITIONS = ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"];
 
+const URL_STATE_KEY = "lineup";
+
+const safeEncode = (obj) => {
+  try {
+    const json = JSON.stringify(obj);
+    return btoa(unescape(encodeURIComponent(json)));
+  } catch {
+    return "";
+  }
+};
+
+const safeDecode = (encoded) => {
+  try {
+    const json = decodeURIComponent(escape(atob(encoded)));
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+};
+
+const normalizeTeamPlayers = (teamPlayers) => {
+  const byPos = new Map(
+    Array.isArray(teamPlayers)
+      ? teamPlayers
+          .filter((p) => p?.position && POSITIONS.includes(String(p.position)))
+          .map((p) => [String(p.position), String(p.name || "")])
+      : []
+  );
+  return POSITIONS.map((position) => ({
+    position,
+    name: byPos.get(position) || "",
+  }));
+};
+
+const isValidTeamColor = (color) => TEAM_COLORS.includes(String(color || "").toUpperCase());
+
 // Get team color class
 const getTeamColorClass = (teamColor) => {
   const color = teamColor?.toUpperCase();
@@ -51,6 +87,7 @@ const getTeamColorClass = (teamColor) => {
 export const CreateLineup = () => {
   const [team1Color, setTeam1Color] = useState("RED");
   const [team2Color, setTeam2Color] = useState("BLUE");
+  const [shareStatus, setShareStatus] = useState("");
   
   // Team 1 players: { position: "GK", name: "" }
   const [team1Players, setTeam1Players] = useState(() => 
@@ -61,6 +98,24 @@ export const CreateLineup = () => {
   const [team2Players, setTeam2Players] = useState(() => 
     POSITIONS.map(pos => ({ position: pos, name: "" }))
   );
+
+  const lineupPayload = useMemo(() => ({
+    v: 1,
+    team1Color,
+    team2Color,
+    team1Players,
+    team2Players,
+  }), [team1Color, team2Color, team1Players, team2Players]);
+
+  const buildShareUrl = useCallback(() => {
+    const encoded = safeEncode(lineupPayload);
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", "create-lineup");
+    if (encoded) {
+      url.searchParams.set(URL_STATE_KEY, encoded);
+    }
+    return url.toString();
+  }, [lineupPayload]);
 
   // Get all known player names
   const allKnownPlayers = useMemo(() => {
@@ -84,7 +139,40 @@ export const CreateLineup = () => {
   const handleClear = () => {
     setTeam1Players(POSITIONS.map(pos => ({ position: pos, name: "" })));
     setTeam2Players(POSITIONS.map(pos => ({ position: pos, name: "" })));
+    setShareStatus("");
   };
+
+  const copyShareUrl = useCallback(async () => {
+    const url = buildShareUrl();
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareStatus("Share URL copied.");
+    } catch {
+      setShareStatus("Couldn't auto-copy. Copy from browser address bar after opening share URL.");
+      window.prompt("Copy this share URL", url);
+    }
+  }, [buildShareUrl]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const encoded = params.get(URL_STATE_KEY);
+    if (!encoded) return;
+
+    const decoded = safeDecode(encoded);
+    if (!decoded || typeof decoded !== "object") {
+      setShareStatus("Invalid share URL.");
+      return;
+    }
+
+    const nextTeam1Color = isValidTeamColor(decoded.team1Color) ? String(decoded.team1Color).toUpperCase() : "RED";
+    const nextTeam2Color = isValidTeamColor(decoded.team2Color) ? String(decoded.team2Color).toUpperCase() : "BLUE";
+
+    setTeam1Color(nextTeam1Color);
+    setTeam2Color(nextTeam2Color);
+    setTeam1Players(normalizeTeamPlayers(decoded.team1Players));
+    setTeam2Players(normalizeTeamPlayers(decoded.team2Players));
+    setShareStatus("Lineup loaded from share URL.");
+  }, []);
 
   return (
     <div className="create-lineup">
@@ -181,10 +269,18 @@ export const CreateLineup = () => {
 
           {/* Action Buttons */}
           <div className="lineup-actions">
+            <button className="btn-share" onClick={copyShareUrl}>
+              Copy Share URL
+            </button>
             <button className="btn-clear" onClick={handleClear}>
               Clear All
             </button>
           </div>
+          {shareStatus ? (
+            <p className="lineup-share-status" role="status">
+              {shareStatus}
+            </p>
+          ) : null}
         </div>
 
         {/* Field View */}

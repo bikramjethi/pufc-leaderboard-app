@@ -96,7 +96,19 @@ const getNavItems = () => [
 ];
 
 function App() {
-  const [activeTab, setActiveTab] = useState("leaderboard");
+  const [activeTab, setActiveTab] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const requested = params.get("tab");
+    if (!requested) return "leaderboard";
+
+    const enabledTabs = new Set(
+      getNavItems()
+        .flatMap((group) => group.items)
+        .filter((item) => item.enabled)
+        .map((item) => item.id)
+    );
+    return enabledTabs.has(requested) ? requested : "leaderboard";
+  });
   const defaultYear = config.STATS_LEADERBOARD?.defaultSeason || 
     (availableYears.includes("2026") ? "2026" : "all-time");
   const [selectedYear, setSelectedYear] = useState(defaultYear);
@@ -180,6 +192,13 @@ function App() {
   const handleNavClick = (tabId) => {
     setActiveTab(tabId);
     setMobileMenuOpen(false);
+    const url = new URL(window.location.href);
+    if (tabId === "leaderboard") {
+      url.searchParams.delete("tab");
+    } else {
+      url.searchParams.set("tab", tabId);
+    }
+    window.history.replaceState({}, "", url.toString());
     
     // Reset to default year when switching to leaderboard
     if (tabId === "leaderboard") {
