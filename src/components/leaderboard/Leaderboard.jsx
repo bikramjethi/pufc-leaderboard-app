@@ -11,6 +11,31 @@ import {
   resolveVisibleSortKey,
 } from "../../utils/stats-leaderboard-columns.js";
 
+const attendanceDataModules = import.meta.glob("../../data/attendance-data/20*.json", {
+  eager: true,
+});
+
+const POSITION_BUCKETS = {
+  ST: new Set(["ST"]),
+  MID: new Set(["LM", "CM", "RM"]),
+  DEF: new Set(["LB", "CB", "RB", "GK"]),
+};
+const BUCKET_PRIORITY = ["DEF", "MID", "ST"];
+
+const getDayBucket = (match) => {
+  const raw = String(match?.day || "").trim().toLowerCase();
+  if (raw === "midweek") return "weekday";
+  if (raw === "weekend") return "weekend";
+  return null;
+};
+
+const getSeasonAttendance = (season) => {
+  for (const [path, mod] of Object.entries(attendanceDataModules)) {
+    if (path.endsWith(`/${season}.json`)) return mod.default || mod;
+  }
+  return null;
+};
+
 // Helper to calculate percentages
 const calcPercentages = (player) => {
   const total = player.wins + player.draws + player.losses;
@@ -149,6 +174,99 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
       })
       .filter(Boolean);
   }, [players, statsView, hasDetailedStats]);
+
+  const positionRoleByPlayer = useMemo(() => {
+    const cfg = config.STATS_LEADERBOARD?.positionVisual;
+    if (!cfg?.enabled) return new Map();
+    if (!selectedYear || selectedYear === "all-time") return new Map();
+    const enabledSeasons = Array.isArray(cfg.seasons) ? cfg.seasons.map(String) : [];
+    if (!enabledSeasons.includes(String(selectedYear))) return new Map();
+
+    const seasonData = getSeasonAttendance(String(selectedYear));
+    const matches = seasonData?.matches;
+    if (!Array.isArray(matches) || matches.length === 0) return new Map();
+
+    /** @type {Map<string, {name:string, buckets: Record<string, number>}>} */
+    const countsByPlayer = new Map();
+    for (const m of matches) {
+      if (!m?.matchPlayed || m?.matchCancelled || m?.isTournament) continue;
+      if (statsView !== "overall") {
+        const day = getDayBucket(m);
+        if (day == null || day !== statsView) continue;
+      }
+
+      const att = m?.attendance;
+      if (!att || typeof att !== "object") continue;
+      for (const teamRows of Object.values(att)) {
+        if (!Array.isArray(teamRows)) continue;
+        for (const p of teamRows) {
+          const playerName = String(p?.name || "").trim();
+          if (!playerName || playerName.toLowerCase() === "others") continue;
+          const pos = String(p?.position || "").trim().toUpperCase();
+          let bucket = null;
+          for (const [k, set] of Object.entries(POSITION_BUCKETS)) {
+            if (set.has(pos)) {
+              bucket = k;
+              break;
+            }
+          }
+          if (!bucket) continue;
+
+          const key = playerName.toLowerCase();
+          if (!countsByPlayer.has(key)) {
+            countsByPlayer.set(key, {
+              name: playerName,
+              buckets: { DEF: 0, MID: 0, ST: 0 },
+            });
+          }
+          countsByPlayer.get(key).buckets[bucket] += 1;
+        }
+      }
+    }
+
+    const out = new Map();
+    for (const [key, meta] of countsByPlayer) {
+      const entries = Object.entries(meta.buckets);
+      const total = entries.reduce((s, [, c]) => s + c, 0);
+      if (total <= 0) continue;
+      const max = Math.max(...entries.map(([, c]) => c));
+      const tied = entries.filter(([, c]) => c === max).map(([k]) => k);
+      const dominant = BUCKET_PRIORITY.find((k) => tied.includes(k)) || tied[0];
+      const seg = [];
+      let acc = 0;
+      const bucketOrder = ["DEF", "MID", "ST"];
+      const bucketColors = {
+        DEF: "#22c55e",
+        MID: "#3b82f6",
+        ST: "#ef4444",
+      };
+      for (const b of bucketOrder) {
+        const c = meta.buckets[b] || 0;
+        if (c <= 0) continue;
+        const start = (acc / total) * 360;
+        acc += c;
+        const end = (acc / total) * 360;
+        seg.push(`${bucketColors[b]} ${start}deg ${end}deg`);
+      }
+      const fill = seg.length <= 1
+        ? bucketColors[dominant]
+        : `conic-gradient(${seg.join(", ")})`;
+      out.set(key, {
+        bucket: dominant,
+        fill,
+        tooltip: `DEF ${meta.buckets.DEF} (incl GK) · MID ${meta.buckets.MID} · FWD ${meta.buckets.ST}`,
+      });
+    }
+    return out;
+  }, [selectedYear, statsView]);
+
+  const showPositionDotLegend = useMemo(() => {
+    const cfg = config.STATS_LEADERBOARD?.positionVisual;
+    if (!cfg?.enabled) return false;
+    if (!selectedYear || selectedYear === "all-time") return false;
+    const enabledSeasons = Array.isArray(cfg.seasons) ? cfg.seasons.map(String) : [];
+    return enabledSeasons.includes(String(selectedYear));
+  }, [selectedYear]);
 
   // Add calculated percentages to players
   const playersWithPct = useMemo(() => {
@@ -468,6 +586,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
                 player={player}
                 rank={index + 1}
                 columns={columns}
+                positionRoleByPlayer={positionRoleByPlayer}
                 topValues={topValues}
                 showHighlight={config.ENABLE_MAX_HIGHLIGHT}
                 showCheckbox={config.ENABLE_COMPARISON}
@@ -495,6 +614,25 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
           <strong className="highlight-silver">2nd</strong>
           <strong className="highlight-bronze">3rd</strong>
         </span>
+        {showPositionDotLegend ? (
+          <>
+            <span className="legend-divider"></span>
+            <span className="position-dot-legend" aria-label="Position color legend">
+              <span className="position-dot-legend-item">
+                <span className="position-dot position-dot--st" aria-hidden />
+                FWD
+              </span>
+              <span className="position-dot-legend-item">
+                <span className="position-dot position-dot--mid" aria-hidden />
+                MID
+              </span>
+              <span className="position-dot-legend-item">
+                <span className="position-dot position-dot--def" aria-hidden />
+                DEF/GK
+              </span>
+            </span>
+          </>
+        ) : null}
       </div>
 
       {config.ENABLE_COMPARISON && selectedPlayers.length === config.MAX_COMPARE_PLAYERS && (

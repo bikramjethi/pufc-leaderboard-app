@@ -4,6 +4,7 @@ export const Row = ({
   player,
   rank,
   columns,
+  positionRoleByPlayer,
   topValues,
   showHighlight = true,
   showCheckbox = true,
@@ -73,6 +74,21 @@ export const Row = ({
           </td>
         );
       case "position":
+        {
+          const roleMeta = positionRoleByPlayer?.get(String(player?.name || "").toLowerCase());
+          if (roleMeta?.bucket) {
+            return (
+              <td key={col.key} className="position-cell">
+                <span
+                  className={`position-dot position-dot--${String(roleMeta.bucket).toLowerCase()}`}
+                  style={roleMeta.fill ? { background: roleMeta.fill } : undefined}
+                  title={roleMeta.tooltip}
+                  aria-label={`Primary position line: ${roleMeta.bucket}`}
+                />
+              </td>
+            );
+          }
+        }
         return (
           <td key={col.key} className="position-cell">
             {positions.map((pos, idx) => (

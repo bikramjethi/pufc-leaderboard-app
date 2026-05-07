@@ -958,6 +958,49 @@ body::before {
   overflow: hidden;
 }
 
+.position-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.24) inset,
+    0 1px 3px rgba(0, 0, 0, 0.28);
+}
+
+.position-dot--st {
+  background: #ef4444;
+}
+
+.position-dot--mid {
+  background: #3b82f6;
+}
+
+.position-dot--def {
+  background: #22c55e;
+}
+
+.position-dot-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.position-dot-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.position-dot-legend .position-dot {
+  width: 12px;
+  height: 12px;
+}
+
 .position-badge {
   display: inline-block;
   padding: 0.1rem 0.3rem;

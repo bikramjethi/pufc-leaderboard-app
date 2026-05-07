@@ -36,11 +36,25 @@ const TEAM_COLORS = ["RED", "BLUE", "BLACK", "WHITE", "YELLOW"];
 const POSITIONS = ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"];
 
 const URL_STATE_KEY = "lineup";
+const COMPACT_SCHEMA_VERSION = 2;
+
+const toBase64Url = (base64) =>
+  String(base64 || "")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+
+const fromBase64Url = (base64Url) => {
+  const raw = String(base64Url || "").replace(/-/g, "+").replace(/_/g, "/");
+  const pad = raw.length % 4;
+  return raw + (pad ? "=".repeat(4 - pad) : "");
+};
 
 const safeEncode = (obj) => {
   try {
     const json = JSON.stringify(obj);
-    return btoa(unescape(encodeURIComponent(json)));
+    const base64 = btoa(unescape(encodeURIComponent(json)));
+    return toBase64Url(base64);
   } catch {
     return "";
   }
@@ -48,7 +62,7 @@ const safeEncode = (obj) => {
 
 const safeDecode = (encoded) => {
   try {
-    const json = decodeURIComponent(escape(atob(encoded)));
+    const json = decodeURIComponent(escape(atob(fromBase64Url(encoded))));
     return JSON.parse(json);
   } catch {
     return null;
@@ -70,6 +84,35 @@ const normalizeTeamPlayers = (teamPlayers) => {
 };
 
 const isValidTeamColor = (color) => TEAM_COLORS.includes(String(color || "").toUpperCase());
+
+const compactPayload = ({ team1Color, team2Color, team1Players, team2Players }) => [
+  COMPACT_SCHEMA_VERSION,
+  String(team1Color || "RED").toUpperCase(),
+  String(team2Color || "BLUE").toUpperCase(),
+  POSITIONS.map((pos) => String(team1Players.find((p) => p.position === pos)?.name || "")),
+  POSITIONS.map((pos) => String(team2Players.find((p) => p.position === pos)?.name || "")),
+];
+
+const expandDecodedPayload = (decoded) => {
+  // v2 compact array format: [v, team1Color, team2Color, team1Names[], team2Names[]]
+  if (Array.isArray(decoded) && decoded[0] === COMPACT_SCHEMA_VERSION) {
+    const t1 = Array.isArray(decoded[3]) ? decoded[3] : [];
+    const t2 = Array.isArray(decoded[4]) ? decoded[4] : [];
+    return {
+      team1Color: decoded[1],
+      team2Color: decoded[2],
+      team1Players: POSITIONS.map((position, i) => ({ position, name: String(t1[i] || "") })),
+      team2Players: POSITIONS.map((position, i) => ({ position, name: String(t2[i] || "") })),
+    };
+  }
+
+  // Backward compatibility for old object payload shared links
+  if (decoded && typeof decoded === "object" && !Array.isArray(decoded)) {
+    return decoded;
+  }
+
+  return null;
+};
 
 // Get team color class
 const getTeamColorClass = (teamColor) => {
@@ -99,8 +142,7 @@ export const CreateLineup = () => {
     POSITIONS.map(pos => ({ position: pos, name: "" }))
   );
 
-  const lineupPayload = useMemo(() => ({
-    v: 1,
+  const lineupPayload = useMemo(() => compactPayload({
     team1Color,
     team2Color,
     team1Players,
@@ -159,18 +201,19 @@ export const CreateLineup = () => {
     if (!encoded) return;
 
     const decoded = safeDecode(encoded);
-    if (!decoded || typeof decoded !== "object") {
+    const expanded = expandDecodedPayload(decoded);
+    if (!expanded || typeof expanded !== "object") {
       setShareStatus("Invalid share URL.");
       return;
     }
 
-    const nextTeam1Color = isValidTeamColor(decoded.team1Color) ? String(decoded.team1Color).toUpperCase() : "RED";
-    const nextTeam2Color = isValidTeamColor(decoded.team2Color) ? String(decoded.team2Color).toUpperCase() : "BLUE";
+    const nextTeam1Color = isValidTeamColor(expanded.team1Color) ? String(expanded.team1Color).toUpperCase() : "RED";
+    const nextTeam2Color = isValidTeamColor(expanded.team2Color) ? String(expanded.team2Color).toUpperCase() : "BLUE";
 
     setTeam1Color(nextTeam1Color);
     setTeam2Color(nextTeam2Color);
-    setTeam1Players(normalizeTeamPlayers(decoded.team1Players));
-    setTeam2Players(normalizeTeamPlayers(decoded.team2Players));
+    setTeam1Players(normalizeTeamPlayers(expanded.team1Players));
+    setTeam2Players(normalizeTeamPlayers(expanded.team2Players));
     setShareStatus("Lineup loaded from share URL.");
   }, []);
 

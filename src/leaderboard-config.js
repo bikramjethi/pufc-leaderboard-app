@@ -45,6 +45,18 @@ export const config = {
       hatTricks: true,      // HT
       ownGoals: true,      // OG (only when data has the field)
     },
+    /**
+     * Replace static position tags with a filled role dot in configured seasons, using
+     * per-match attendance positions and the current leaderboard scope:
+     * - overall tab -> all matches in season
+     * - weekday tab -> midweek matches
+     * - weekend tab -> weekend matches
+     * Fallback for non-listed seasons keeps profile-based static position tags.
+     */
+    positionVisual: {
+      enabled: true,
+      seasons: ["2026"],
+    },
   },
 
   // Attendance Settings (Attendance tab)
