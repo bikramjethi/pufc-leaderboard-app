@@ -959,8 +959,8 @@ body::before {
 }
 
 .position-dot {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: inline-block;
   border: 1px solid rgba(255, 255, 255, 0.45);
