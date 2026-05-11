@@ -918,6 +918,7 @@ body::before {
 
 .player-row td {
   padding: 1rem 0.75rem;
+  vertical-align: middle;
 }
 
 .rank {
@@ -925,6 +926,7 @@ body::before {
   font-weight: 700;
   font-size: 1rem;
   color: var(--text-muted);
+  line-height: 1;
 }
 
 .rank-gold {
@@ -1076,6 +1078,7 @@ body::before {
   font-weight: 500;
   color: var(--text-secondary);
   font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 .stat-goals {
@@ -1097,21 +1100,18 @@ body::before {
 .stat-gold {
   background: rgba(168, 85, 247, 0.4);
   border-radius: 4px;
-  padding: 0.15rem 0.35rem;
   font-weight: 700;
 }
 
 .stat-silver {
   background: rgba(168, 85, 247, 0.25);
   border-radius: 4px;
-  padding: 0.15rem 0.35rem;
   font-weight: 600;
 }
 
 .stat-bronze {
   background: rgba(168, 85, 247, 0.12);
   border-radius: 4px;
-  padding: 0.15rem 0.35rem;
 }
 
 /* Selection & Compare */
