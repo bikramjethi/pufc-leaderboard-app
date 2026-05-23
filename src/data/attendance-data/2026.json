@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "totalGoals": 350,
+  "totalGoals": 362,
   "weekendGoals": 144,
-  "weekdayGoals": 206,
+  "weekdayGoals": 218,
   "matches": [
     {
       "id": "03-01-2026",
@@ -1982,7 +1982,7 @@
             "position": "LB"
           },
           {
-            "name": "Ishan(CB)",
+            "name": "Ishaan M",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
@@ -4319,7 +4319,7 @@
             "rotatedGoalie": true
           },
           {
-            "name": "Ishan(CB)",
+            "name": "Ishaan M",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
@@ -4590,7 +4590,7 @@
         ],
         "WHITE": [
           {
-            "name": "Ishan(CB)",
+            "name": "Ishaan M",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
@@ -4932,7 +4932,7 @@
             "position": "CM"
           },
           {
-            "name": "Ishan(CB)",
+            "name": "Ishaan M",
             "goals": 0,
             "ownGoals": 0,
             "cleanSheet": false,
@@ -5164,7 +5164,7 @@
             "rotatedGoalie": true
           },
           {
-            "name": "Ishan(CB)",
+            "name": "Ishaan M",
             "goals": 1,
             "ownGoals": 0,
             "cleanSheet": false,
@@ -5419,11 +5419,157 @@
       "id": "12-05-2026",
       "date": "12/05/2026",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isFullHouse": false,
+      "team1RotatingGoalie": true,
+      "team2RotatingGoalie": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Subarna",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Rajat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Vinit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Aaryen",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Jethi",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST",
+            "rotatedGoalie": true
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Rohit Hyd",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Ketan",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Ashish",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Sourabh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Ishaan M",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Akshat",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Rishav",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 6,
+        "BLUE": 6
+      },
+      "totalGoals": 12
     },
     {
       "id": "16-05-2026",
@@ -6087,6 +6233,7 @@
     }
   ],
   "allPlayers": [
+    "Aaryen",
     "Aayush",
     "Akshat",
     "Alan",
@@ -6100,7 +6247,7 @@
     "Deepak",
     "Gagan",
     "Indranil",
-    "Ishan(CB)",
+    "Ishaan M",
     "Ishan(Mid)",
     "Jethi",
     "Joe",

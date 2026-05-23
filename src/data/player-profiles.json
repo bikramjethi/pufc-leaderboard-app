@@ -516,7 +516,7 @@
     "isTracked": false
   },
   {
-    "name": "Ishan(CB)",
+    "name": "Ishaan M",
     "position": [
       "DEF"
     ],
@@ -529,6 +529,14 @@
       "MID"
     ],
     "groupAvailibility": "ONLOAN",
+    "isTracked": false
+  },
+  {
+    "name": "Ketan",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "ALLGAMES",
     "isTracked": true
   }
 ]

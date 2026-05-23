@@ -7,6 +7,9 @@ const TEAM_COLORS = ["RED", "BLUE", "BLACK", "WHITE", "YELLOW"];
 // Position codes for 8v8 formation
 const POSITIONS = ["GK", "RB", "CB", "LB", "RM", "CM", "LM", "ST"];
 
+// Default lineup: 8 positions pre-selected so a new match entry is ready to fill without setup
+const DEFAULT_LINEUP_POSITIONS = ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"];
+
 // Load player profiles dynamically
 import playerProfiles from "../../data/player-profiles.json";
 
@@ -25,10 +28,10 @@ Object.entries(attendanceDataModules).forEach(([path, module]) => {
 // Available years for dropdown (sorted descending)
 const AVAILABLE_YEARS = Object.keys(attendanceDataByYear).sort((a, b) => b - a);
 
-// Create a player template
-const createPlayer = () => ({
+// Create a player template; position defaults to "ST" for manually added rows
+const createPlayer = (position = "ST") => ({
   name: "",
-  position: "ST",
+  position,
   goals: 0,
   ownGoals: 0,
   cleanSheet: false,
@@ -47,10 +50,26 @@ const createPlayerFromData = (playerData) => ({
   rotatedGoalie: !!playerData.rotatedGoalie,
 });
 
+// Returns the first match in the current year that hasn't been played or cancelled yet,
+// up to and including today — this is almost always the match we need to enter next.
+const findNextUnfilledMatchId = () => {
+  const currentYear = new Date().getFullYear().toString();
+  const yearData = attendanceDataByYear[currentYear];
+  if (!yearData?.matches) return "";
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+  const unfilled = yearData.matches.find(m => {
+    if (m.matchPlayed || m.matchCancelled) return false;
+    const [dd, mm, yyyy] = m.id.split("-").map(Number);
+    return new Date(yyyy, mm - 1, dd) <= today;
+  });
+  return unfilled?.id ?? "";
+};
+
 export const MatchEntry = () => {
   // Form state
   const [year, setYear] = useState("2026");
-  const [matchId, setMatchId] = useState("");
+  const [matchId, setMatchId] = useState(() => findNextUnfilledMatchId());
   const [team1Color, setTeam1Color] = useState("RED");
   const [team2Color, setTeam2Color] = useState("BLUE");
   const [team1Score, setTeam1Score] = useState(0);
@@ -58,8 +77,8 @@ export const MatchEntry = () => {
   const [isFullHouse, setIsFullHouse] = useState(false);
   const [team1RotatingGoalie, setTeam1RotatingGoalie] = useState(false);
   const [team2RotatingGoalie, setTeam2RotatingGoalie] = useState(false);
-  const [team1Players, setTeam1Players] = useState([createPlayer()]);
-  const [team2Players, setTeam2Players] = useState([createPlayer()]);
+  const [team1Players, setTeam1Players] = useState(() => DEFAULT_LINEUP_POSITIONS.map(pos => createPlayer(pos)));
+  const [team2Players, setTeam2Players] = useState(() => DEFAULT_LINEUP_POSITIONS.map(pos => createPlayer(pos)));
   
   // Others goals (unattributed goals for each team)
   const [team1OthersGoals, setTeam1OthersGoals] = useState(0);
@@ -501,7 +520,7 @@ export const MatchEntry = () => {
 
   // Clear form
   const handleClear = () => {
-    setMatchId("");
+    setMatchId(findNextUnfilledMatchId());
     setYear("2026");
     setTeam1Color("RED");
     setTeam2Color("BLUE");
@@ -510,8 +529,8 @@ export const MatchEntry = () => {
     setIsFullHouse(false);
     setTeam1RotatingGoalie(false);
     setTeam2RotatingGoalie(false);
-    setTeam1Players([createPlayer()]);
-    setTeam2Players([createPlayer()]);
+    setTeam1Players(DEFAULT_LINEUP_POSITIONS.map(pos => createPlayer(pos)));
+    setTeam2Players(DEFAULT_LINEUP_POSITIONS.map(pos => createPlayer(pos)));
     setTeam1OthersGoals(0);
     setTeam2OthersGoals(0);
     setGeneratedJson("");
