@@ -1992,7 +1992,6 @@ body::before {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    display: block;
   }
 
   .leaderboard-table .player-row .position-cell {
