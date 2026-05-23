@@ -5580,7 +5580,7 @@
       "isFullHouse": true,
       "team1RotatingGoalie": true,
       "attendance": {
-        "RED": [
+        "WHITE": [
           {
             "name": "Subarna",
             "goals": 0,
@@ -5649,7 +5649,7 @@
             "position": "ST"
           }
         ],
-        "BLUE": [
+        "BLACK": [
           {
             "name": "Ashish",
             "goals": 0,
@@ -5717,8 +5717,8 @@
         ]
       },
       "scoreline": {
-        "RED": 1,
-        "BLUE": 1
+        "WHITE": 1,
+        "BLACK": 1
       },
       "totalGoals": 2
     },
