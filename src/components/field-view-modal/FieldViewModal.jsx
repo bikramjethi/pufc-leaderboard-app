@@ -31,6 +31,7 @@ const POSITION_COORDS = {
 // Offsets (in percentage) for duplicate positions so players don't overlap
 const DUPLICATE_POSITION_OFFSET_Y = 8;
 const DUPLICATE_POSITION_OFFSET_X = 4;
+const STRIKER_DUPLICATE_OFFSET_Y = 10;
 
 // Get team color class
 const getTeamColorClass = (teamColor) => {
@@ -77,6 +78,18 @@ export const FieldViewModal = ({ match, onClose }) => {
       return { ...coords[pos] };
     }
     return null;
+  };
+
+  const getPositionOffset = (positionCode, duplicateIndex, duplicateCount) => {
+    if (duplicateCount <= 1) return { x: 0, y: 0 };
+    const spread = duplicateIndex - (duplicateCount - 1) / 2;
+    if (positionCode === "ST") {
+      return { x: 0, y: spread * STRIKER_DUPLICATE_OFFSET_Y };
+    }
+    return {
+      x: spread * DUPLICATE_POSITION_OFFSET_X,
+      y: spread * DUPLICATE_POSITION_OFFSET_Y,
+    };
   };
 
   // Handle backdrop click
@@ -172,9 +185,7 @@ export const FieldViewModal = ({ match, onClose }) => {
               const idx = posIndex[pos] ?? 0;
               posIndex[pos] = idx + 1;
               const total = posCount[pos] || 1;
-              const spread = total > 1 ? (idx - (total - 1) / 2) : 0;
-              const offsetX = total > 1 ? spread * DUPLICATE_POSITION_OFFSET_X : 0;
-              const offsetY = total > 1 ? spread * DUPLICATE_POSITION_OFFSET_Y : 0;
+              const { x: offsetX, y: offsetY } = getPositionOffset(pos, idx, total);
               const position = { ...basePosition, x: basePosition.x + offsetX, y: basePosition.y + offsetY };
               const isOnLoan = player.groupStatus === "ONLOAN";
               const isRotatedGoalie = !!player.rotatedGoalie;

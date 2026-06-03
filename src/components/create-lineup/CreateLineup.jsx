@@ -34,6 +34,11 @@ const TEAM_COLORS = ["RED", "BLUE", "BLACK", "WHITE", "YELLOW"];
 
 // Position codes for 8v8 formation
 const POSITIONS = ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"];
+const MATCH_MODES = {
+  "8v8": ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"],
+  "9v9": ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST", "ST"],
+};
+const DEFAULT_MATCH_MODE = "8v8";
 
 const URL_STATE_KEY = "lineup";
 const COMPACT_SCHEMA_VERSION = 2;
@@ -69,40 +74,58 @@ const safeDecode = (encoded) => {
   }
 };
 
-const normalizeTeamPlayers = (teamPlayers) => {
-  const byPos = new Map(
-    Array.isArray(teamPlayers)
-      ? teamPlayers
-          .filter((p) => p?.position && POSITIONS.includes(String(p.position)))
-          .map((p) => [String(p.position), String(p.name || "")])
-      : []
-  );
-  return POSITIONS.map((position) => ({
+const buildTeamPlayersForMode = (mode) =>
+  (MATCH_MODES[mode] || MATCH_MODES[DEFAULT_MATCH_MODE]).map((position, idx) => ({
+    slotId: `${position}-${idx}`,
     position,
-    name: byPos.get(position) || "",
+    name: "",
   }));
+
+const normalizeTeamPlayers = (teamPlayers, mode = DEFAULT_MATCH_MODE) => {
+  const template = buildTeamPlayersForMode(mode);
+  const byPos = new Map();
+  (Array.isArray(teamPlayers) ? teamPlayers : [])
+    .filter((p) => p?.position && POSITIONS.includes(String(p.position)))
+    .forEach((p) => {
+      const pos = String(p.position);
+      const list = byPos.get(pos) || [];
+      list.push(String(p.name || ""));
+      byPos.set(pos, list);
+    });
+
+  return template.map((slot) => {
+    const names = byPos.get(slot.position) || [];
+    const name = names.length ? names.shift() : "";
+    return { ...slot, name };
+  });
 };
 
 const isValidTeamColor = (color) => TEAM_COLORS.includes(String(color || "").toUpperCase());
 
-const compactPayload = ({ team1Color, team2Color, team1Players, team2Players }) => [
+const compactPayload = ({ matchMode, team1Color, team2Color, team1Players, team2Players }) => [
   COMPACT_SCHEMA_VERSION,
+  String(matchMode || DEFAULT_MATCH_MODE),
   String(team1Color || "RED").toUpperCase(),
   String(team2Color || "BLUE").toUpperCase(),
-  POSITIONS.map((pos) => String(team1Players.find((p) => p.position === pos)?.name || "")),
-  POSITIONS.map((pos) => String(team2Players.find((p) => p.position === pos)?.name || "")),
+  (team1Players || []).map((p) => String(p?.name || "")),
+  (team2Players || []).map((p) => String(p?.name || "")),
 ];
 
 const expandDecodedPayload = (decoded) => {
-  // v2 compact array format: [v, team1Color, team2Color, team1Names[], team2Names[]]
+  // v2 compact array format (legacy): [v, team1Color, team2Color, team1Names[], team2Names[]]
+  // v2 extended: [v, matchMode, team1Color, team2Color, team1Names[], team2Names[]]
   if (Array.isArray(decoded) && decoded[0] === COMPACT_SCHEMA_VERSION) {
-    const t1 = Array.isArray(decoded[3]) ? decoded[3] : [];
-    const t2 = Array.isArray(decoded[4]) ? decoded[4] : [];
+    const hasMode = decoded[1] === "8v8" || decoded[1] === "9v9";
+    const mode = hasMode ? decoded[1] : DEFAULT_MATCH_MODE;
+    const t1 = Array.isArray(decoded[hasMode ? 4 : 3]) ? decoded[hasMode ? 4 : 3] : [];
+    const t2 = Array.isArray(decoded[hasMode ? 5 : 4]) ? decoded[hasMode ? 5 : 4] : [];
+    const template = buildTeamPlayersForMode(mode);
     return {
-      team1Color: decoded[1],
-      team2Color: decoded[2],
-      team1Players: POSITIONS.map((position, i) => ({ position, name: String(t1[i] || "") })),
-      team2Players: POSITIONS.map((position, i) => ({ position, name: String(t2[i] || "") })),
+      matchMode: mode,
+      team1Color: decoded[hasMode ? 2 : 1],
+      team2Color: decoded[hasMode ? 3 : 2],
+      team1Players: template.map((slot, i) => ({ ...slot, name: String(t1[i] || "") })),
+      team2Players: template.map((slot, i) => ({ ...slot, name: String(t2[i] || "") })),
     };
   }
 
@@ -128,26 +151,28 @@ const getTeamColorClass = (teamColor) => {
 };
 
 export const CreateLineup = () => {
+  const [matchMode, setMatchMode] = useState(DEFAULT_MATCH_MODE);
   const [team1Color, setTeam1Color] = useState("RED");
   const [team2Color, setTeam2Color] = useState("BLUE");
   const [shareStatus, setShareStatus] = useState("");
   
   // Team 1 players: { position: "GK", name: "" }
   const [team1Players, setTeam1Players] = useState(() => 
-    POSITIONS.map(pos => ({ position: pos, name: "" }))
+    buildTeamPlayersForMode(DEFAULT_MATCH_MODE)
   );
   
   // Team 2 players: { position: "GK", name: "" }
   const [team2Players, setTeam2Players] = useState(() => 
-    POSITIONS.map(pos => ({ position: pos, name: "" }))
+    buildTeamPlayersForMode(DEFAULT_MATCH_MODE)
   );
 
   const lineupPayload = useMemo(() => compactPayload({
+    matchMode,
     team1Color,
     team2Color,
     team1Players,
     team2Players,
-  }), [team1Color, team2Color, team1Players, team2Players]);
+  }), [matchMode, team1Color, team2Color, team1Players, team2Players]);
 
   const buildShareUrl = useCallback(() => {
     const encoded = safeEncode(lineupPayload);
@@ -165,22 +190,23 @@ export const CreateLineup = () => {
   }, []);
 
   // Update player name for a team
-  const updatePlayerName = (teamNum, position, name) => {
+  const updatePlayerName = (teamNum, slotId, name) => {
     if (teamNum === 1) {
       setTeam1Players(prev => 
-        prev.map(p => p.position === position ? { ...p, name } : p)
+        prev.map(p => p.slotId === slotId ? { ...p, name } : p)
       );
     } else {
       setTeam2Players(prev => 
-        prev.map(p => p.position === position ? { ...p, name } : p)
+        prev.map(p => p.slotId === slotId ? { ...p, name } : p)
       );
     }
   };
 
   // Clear all players
   const handleClear = () => {
-    setTeam1Players(POSITIONS.map(pos => ({ position: pos, name: "" })));
-    setTeam2Players(POSITIONS.map(pos => ({ position: pos, name: "" })));
+    setMatchMode(DEFAULT_MATCH_MODE);
+    setTeam1Players(buildTeamPlayersForMode(DEFAULT_MATCH_MODE));
+    setTeam2Players(buildTeamPlayersForMode(DEFAULT_MATCH_MODE));
     setShareStatus("");
   };
 
@@ -209,11 +235,13 @@ export const CreateLineup = () => {
 
     const nextTeam1Color = isValidTeamColor(expanded.team1Color) ? String(expanded.team1Color).toUpperCase() : "RED";
     const nextTeam2Color = isValidTeamColor(expanded.team2Color) ? String(expanded.team2Color).toUpperCase() : "BLUE";
+    const nextMode = expanded.matchMode === "9v9" ? "9v9" : "8v8";
 
+    setMatchMode(nextMode);
     setTeam1Color(nextTeam1Color);
     setTeam2Color(nextTeam2Color);
-    setTeam1Players(normalizeTeamPlayers(expanded.team1Players));
-    setTeam2Players(normalizeTeamPlayers(expanded.team2Players));
+    setTeam1Players(normalizeTeamPlayers(expanded.team1Players, nextMode));
+    setTeam2Players(normalizeTeamPlayers(expanded.team2Players, nextMode));
     setShareStatus("Lineup loaded from share URL.");
   }, []);
 
@@ -224,7 +252,27 @@ export const CreateLineup = () => {
         <div className="lineup-controls">
           <div className="controls-header">
             <h2>Create Lineup</h2>
-            <p>Set up your 8v8 football lineup</p>
+            <p>Set up your football lineup ({matchMode})</p>
+          </div>
+
+          <div className="team-color-selectors">
+            <div className="team-color-group">
+              <label>Match Mode</label>
+              <select
+                value={matchMode}
+                onChange={(e) => {
+                  const nextMode = e.target.value === "9v9" ? "9v9" : "8v8";
+                  setMatchMode(nextMode);
+                  setTeam1Players(buildTeamPlayersForMode(nextMode));
+                  setTeam2Players(buildTeamPlayersForMode(nextMode));
+                  setShareStatus("");
+                }}
+                className="color-select"
+              >
+                <option value="8v8">8v8</option>
+                <option value="9v9">9v9 (2 ST)</option>
+              </select>
+            </div>
           </div>
 
           {/* Team Color Selectors */}
@@ -262,18 +310,20 @@ export const CreateLineup = () => {
                 {team1Color} Team
               </h3>
               <div className="position-inputs">
-                {POSITIONS.map(pos => (
-                  <div key={pos} className="position-input-row">
-                    <label className="position-label">{pos}</label>
+                {team1Players.map((player, idx) => (
+                  <div key={player.slotId} className="position-input-row">
+                    <label className="position-label">
+                      {player.position}{player.position === "ST" && team1Players.filter((p) => p.position === "ST").length > 1 ? ` ${team1Players.slice(0, idx + 1).filter((p) => p.position === "ST").length}` : ""}
+                    </label>
                     <input
                       type="text"
                       className="player-name-input"
                       placeholder="Player name"
-                      value={team1Players.find(p => p.position === pos)?.name || ""}
-                      onChange={(e) => updatePlayerName(1, pos, e.target.value)}
-                      list={`team1-${pos}-players`}
+                      value={player.name || ""}
+                      onChange={(e) => updatePlayerName(1, player.slotId, e.target.value)}
+                      list={`team1-${player.slotId}-players`}
                     />
-                    <datalist id={`team1-${pos}-players`}>
+                    <datalist id={`team1-${player.slotId}-players`}>
                       {allKnownPlayers.map(name => (
                         <option key={name} value={name} />
                       ))}
@@ -288,18 +338,20 @@ export const CreateLineup = () => {
                 {team2Color} Team
               </h3>
               <div className="position-inputs">
-                {POSITIONS.map(pos => (
-                  <div key={pos} className="position-input-row">
-                    <label className="position-label">{pos}</label>
+                {team2Players.map((player, idx) => (
+                  <div key={player.slotId} className="position-input-row">
+                    <label className="position-label">
+                      {player.position}{player.position === "ST" && team2Players.filter((p) => p.position === "ST").length > 1 ? ` ${team2Players.slice(0, idx + 1).filter((p) => p.position === "ST").length}` : ""}
+                    </label>
                     <input
                       type="text"
                       className="player-name-input"
                       placeholder="Player name"
-                      value={team2Players.find(p => p.position === pos)?.name || ""}
-                      onChange={(e) => updatePlayerName(2, pos, e.target.value)}
-                      list={`team2-${pos}-players`}
+                      value={player.name || ""}
+                      onChange={(e) => updatePlayerName(2, player.slotId, e.target.value)}
+                      list={`team2-${player.slotId}-players`}
                     />
-                    <datalist id={`team2-${pos}-players`}>
+                    <datalist id={`team2-${player.slotId}-players`}>
                       {allKnownPlayers.map(name => (
                         <option key={name} value={name} />
                       ))}
@@ -358,17 +410,24 @@ export const CreateLineup = () => {
               </div>
 
               {/* Team 1 Players */}
-              {team1Players.map((player) => {
+              {team1Players.map((player, idx) => {
                 const position = POSITION_COORDS.team1[player.position];
                 if (!position || !player.name) return null;
+                const samePosPlayers = team1Players.filter((p) => p.position === player.position);
+                const posIdx = team1Players
+                  .slice(0, idx + 1)
+                  .filter((p) => p.position === player.position).length - 1;
+                const spread = samePosPlayers.length > 1 ? (posIdx - (samePosPlayers.length - 1) / 2) : 0;
+                const posX = player.position === "ST" ? position.x : position.x + spread * 4;
+                const posY = position.y + spread * 8;
 
                 return (
                   <div
-                    key={`team1-${player.position}`}
+                    key={`team1-${player.slotId}`}
                     className={`player-marker ${getTeamColorClass(team1Color)}`}
                     style={{
-                      left: `${position.x}%`,
-                      top: `${position.y}%`,
+                      left: `${posX}%`,
+                      top: `${posY}%`,
                     }}
                   >
                     <div className="player-circle">
@@ -380,17 +439,24 @@ export const CreateLineup = () => {
               })}
 
               {/* Team 2 Players */}
-              {team2Players.map((player) => {
+              {team2Players.map((player, idx) => {
                 const position = POSITION_COORDS.team2[player.position];
                 if (!position || !player.name) return null;
+                const samePosPlayers = team2Players.filter((p) => p.position === player.position);
+                const posIdx = team2Players
+                  .slice(0, idx + 1)
+                  .filter((p) => p.position === player.position).length - 1;
+                const spread = samePosPlayers.length > 1 ? (posIdx - (samePosPlayers.length - 1) / 2) : 0;
+                const posX = player.position === "ST" ? position.x : position.x + spread * 4;
+                const posY = position.y + spread * 8;
 
                 return (
                   <div
-                    key={`team2-${player.position}`}
+                    key={`team2-${player.slotId}`}
                     className={`player-marker ${getTeamColorClass(team2Color)}`}
                     style={{
-                      left: `${position.x}%`,
-                      top: `${position.y}%`,
+                      left: `${posX}%`,
+                      top: `${posY}%`,
                     }}
                   >
                     <div className="player-circle">

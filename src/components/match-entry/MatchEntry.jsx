@@ -7,8 +7,12 @@ const TEAM_COLORS = ["RED", "BLUE", "BLACK", "WHITE", "YELLOW"];
 // Position codes for 8v8 formation
 const POSITIONS = ["GK", "RB", "CB", "LB", "RM", "CM", "LM", "ST"];
 
-// Default lineup: 8 positions pre-selected so a new match entry is ready to fill without setup
-const DEFAULT_LINEUP_POSITIONS = ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"];
+const MATCH_MODES = {
+  "8v8": ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST"],
+  "9v9": ["GK", "LB", "CB", "RB", "LM", "CM", "RM", "ST", "ST"],
+};
+
+const DEFAULT_MATCH_MODE = "8v8";
 
 // Load player profiles dynamically
 import playerProfiles from "../../data/player-profiles.json";
@@ -70,6 +74,7 @@ export const MatchEntry = () => {
   // Form state
   const [year, setYear] = useState("2026");
   const [matchId, setMatchId] = useState(() => findNextUnfilledMatchId());
+  const [matchMode, setMatchMode] = useState(DEFAULT_MATCH_MODE);
   const [team1Color, setTeam1Color] = useState("RED");
   const [team2Color, setTeam2Color] = useState("BLUE");
   const [team1Score, setTeam1Score] = useState(0);
@@ -77,8 +82,8 @@ export const MatchEntry = () => {
   const [isFullHouse, setIsFullHouse] = useState(false);
   const [team1RotatingGoalie, setTeam1RotatingGoalie] = useState(false);
   const [team2RotatingGoalie, setTeam2RotatingGoalie] = useState(false);
-  const [team1Players, setTeam1Players] = useState(() => DEFAULT_LINEUP_POSITIONS.map(pos => createPlayer(pos)));
-  const [team2Players, setTeam2Players] = useState(() => DEFAULT_LINEUP_POSITIONS.map(pos => createPlayer(pos)));
+  const [team1Players, setTeam1Players] = useState(() => MATCH_MODES[DEFAULT_MATCH_MODE].map(pos => createPlayer(pos)));
+  const [team2Players, setTeam2Players] = useState(() => MATCH_MODES[DEFAULT_MATCH_MODE].map(pos => createPlayer(pos)));
   
   // Others goals (unattributed goals for each team)
   const [team1OthersGoals, setTeam1OthersGoals] = useState(0);
@@ -228,6 +233,17 @@ export const MatchEntry = () => {
       if (expectedTeam2Goals > team2Attributed) {
         team2OthersCount += (expectedTeam2Goals - team2Attributed);
       }
+
+      const detectModeFromTeamSize = (players) => {
+        const validPlayers = players.filter((p) => p.name.trim() && p.name !== "Others");
+        return validPlayers.length >= 9 ? "9v9" : "8v8";
+      };
+      const detectedMode =
+        detectModeFromTeamSize(team1PlayersList) === "9v9" ||
+        detectModeFromTeamSize(team2PlayersList) === "9v9"
+          ? "9v9"
+          : "8v8";
+      setMatchMode(detectedMode);
       
       setTeam1Players(team1PlayersList.length > 0 ? team1PlayersList : [createPlayer()]);
       setTeam1OthersGoals(team1OthersCount);
@@ -520,6 +536,7 @@ export const MatchEntry = () => {
 
   // Clear form
   const handleClear = () => {
+    setMatchMode(DEFAULT_MATCH_MODE);
     setMatchId(findNextUnfilledMatchId());
     setYear("2026");
     setTeam1Color("RED");
@@ -529,8 +546,8 @@ export const MatchEntry = () => {
     setIsFullHouse(false);
     setTeam1RotatingGoalie(false);
     setTeam2RotatingGoalie(false);
-    setTeam1Players(DEFAULT_LINEUP_POSITIONS.map(pos => createPlayer(pos)));
-    setTeam2Players(DEFAULT_LINEUP_POSITIONS.map(pos => createPlayer(pos)));
+    setTeam1Players(MATCH_MODES[DEFAULT_MATCH_MODE].map(pos => createPlayer(pos)));
+    setTeam2Players(MATCH_MODES[DEFAULT_MATCH_MODE].map(pos => createPlayer(pos)));
     setTeam1OthersGoals(0);
     setTeam2OthersGoals(0);
     setGeneratedJson("");
@@ -590,6 +607,23 @@ export const MatchEntry = () => {
               />
               Full House 🏠
             </label>
+          </div>
+          <div className="form-group">
+            <label>Match Mode</label>
+            <select
+              value={matchMode}
+              onChange={(e) => {
+                const selectedMode = e.target.value;
+                setMatchMode(selectedMode);
+                const template = MATCH_MODES[selectedMode] || MATCH_MODES[DEFAULT_MATCH_MODE];
+                setTeam1Players(template.map((pos) => createPlayer(pos)));
+                setTeam2Players(template.map((pos) => createPlayer(pos)));
+                setLoadedFromData(false);
+              }}
+            >
+              <option value="8v8">8v8</option>
+              <option value="9v9">9v9 (2 ST)</option>
+            </select>
           </div>
         </div>
 
