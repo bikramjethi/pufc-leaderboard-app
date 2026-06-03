@@ -117,6 +117,9 @@ const colorConfig = {
   YELLOW: { bg: '#eab308', text: '#1f2937', name: 'Yellow' },
 };
 
+const DUOS_MIN_MATCHES_WIN_RATE = 10;
+const DUOS_MIN_MATCHES_OTHERS = 3;
+
 export const FunStats = () => {
   const selectableSeasons = getSelectableSeasons();
   const outcomeTabCfg = useMemo(
@@ -374,9 +377,9 @@ export const FunStats = () => {
     const scoringDuoStats = calcDuoStats(duosScoringMatches);
     const gamesDuoStats = calcDuoStats(duosGamesMatches);
     
-    // Win rate results (min 3 matches) - uses backfill-required data
+    // Win rate results (min 10 matches) - uses backfill-required data
     const winRateResults = Object.values(winRateDuoStats)
-      .filter(d => d.matches >= 3)
+      .filter(d => d.matches >= DUOS_MIN_MATCHES_WIN_RATE)
       .map(d => ({
         ...d,
         winRate: ((d.wins / d.matches) * 100).toFixed(1),
@@ -386,7 +389,7 @@ export const FunStats = () => {
     
     // Top scoring results (min 3 matches) - doesn't require backfill
     const scoringResults = Object.values(scoringDuoStats)
-      .filter(d => d.matches >= 3)
+      .filter(d => d.matches >= DUOS_MIN_MATCHES_OTHERS)
       .map(d => ({
         ...d,
         goalsPerMatch: (d.combinedGoals / d.matches).toFixed(2),
@@ -395,7 +398,7 @@ export const FunStats = () => {
     
     // Most matches results (min 3 matches) - uses backfill-required data
     const matchesResults = Object.values(gamesDuoStats)
-      .filter(d => d.matches >= 3)
+      .filter(d => d.matches >= DUOS_MIN_MATCHES_OTHERS)
       .map(d => ({
         ...d,
         winRate: ((d.wins / d.matches) * 100).toFixed(1),
@@ -647,7 +650,7 @@ export const FunStats = () => {
           <div className="section-header">
             <h2>🤝 Dream Team Duos</h2>
             <p className="section-subtitle">
-              Which player pairs dominate together? ({matchCountLabel}, min 3 matches)
+              Which player pairs dominate together? ({matchCountLabel}, win-rate min {DUOS_MIN_MATCHES_WIN_RATE}, others min {DUOS_MIN_MATCHES_OTHERS})
             </p>
           </div>
 
