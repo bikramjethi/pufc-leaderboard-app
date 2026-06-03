@@ -26,9 +26,15 @@ export function linesFromPosCounts(posCounts) {
   return lines;
 }
 
-/** @param {number} uniquePositionCount */
-export function flexibilityTag(uniquePositionCount) {
-  if (uniquePositionCount >= 4) return "utility";
+/**
+ * Utility+ means genuine cross-line usage across DEF + MID + FWD.
+ * @param {number} uniquePositionCount
+ * @param {Set<PitchLine>} [lines]
+ */
+export function flexibilityTag(uniquePositionCount, lines = new Set()) {
+  const isUtilityPlus =
+    lines.has("DEF") && lines.has("MID") && lines.has("FWD");
+  if (isUtilityPlus) return "utility";
   if (uniquePositionCount >= 2) return "flexible";
   return "specialist";
 }

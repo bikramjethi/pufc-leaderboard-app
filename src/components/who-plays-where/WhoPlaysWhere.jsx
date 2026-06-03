@@ -92,7 +92,7 @@ export const WhoPlaysWhere = () => {
       if (total < 1) continue;
       const unique = Object.keys(obj).length;
       const lines = linesFromPosCounts(obj);
-      const tag = flexibilityTag(unique);
+      const tag = flexibilityTag(unique, lines);
       const spreadLabel = describePitchSpread(lines);
       const spreadAriaLabel = pitchSpreadAria(lines);
       rows.push({
