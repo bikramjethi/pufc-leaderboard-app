@@ -5,9 +5,9 @@
     "position": [
       "DEF"
     ],
-    "matches": 38,
+    "matches": 39,
     "wins": 20,
-    "losses": 13,
+    "losses": 14,
     "draws": 5,
     "cleanSheets": 0,
     "goals": 7,
@@ -24,9 +24,9 @@
       "ownGoals": 1
     },
     "weekdayStats": {
-      "matches": 19,
+      "matches": 20,
       "wins": 12,
-      "losses": 5,
+      "losses": 6,
       "draws": 2,
       "cleanSheets": 0,
       "goals": 3,
@@ -75,8 +75,8 @@
     "position": [
       "CB"
     ],
-    "matches": 31,
-    "wins": 12,
+    "matches": 32,
+    "wins": 13,
     "losses": 14,
     "draws": 5,
     "cleanSheets": 0,
@@ -94,8 +94,8 @@
       "ownGoals": 1
     },
     "weekdayStats": {
-      "matches": 15,
-      "wins": 5,
+      "matches": 16,
+      "wins": 6,
       "losses": 8,
       "draws": 2,
       "cleanSheets": 0,
@@ -180,8 +180,8 @@
     "position": [
       "GK"
     ],
-    "matches": 29,
-    "wins": 10,
+    "matches": 30,
+    "wins": 11,
     "losses": 16,
     "draws": 3,
     "cleanSheets": 0,
@@ -199,8 +199,8 @@
       "ownGoals": 1
     },
     "weekdayStats": {
-      "matches": 11,
-      "wins": 3,
+      "matches": 12,
+      "wins": 4,
       "losses": 7,
       "draws": 1,
       "cleanSheets": 0,
@@ -215,13 +215,13 @@
     "position": [
       "FWD"
     ],
-    "matches": 39,
-    "wins": 17,
+    "matches": 40,
+    "wins": 18,
     "losses": 17,
     "draws": 5,
     "cleanSheets": 0,
-    "goals": 30,
-    "hatTricks": 2,
+    "goals": 33,
+    "hatTricks": 3,
     "ownGoals": 0,
     "weekendStats": {
       "matches": 21,
@@ -234,13 +234,13 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 18,
-      "wins": 8,
+      "matches": 19,
+      "wins": 9,
       "losses": 8,
       "draws": 2,
       "cleanSheets": 0,
-      "goals": 20,
-      "hatTricks": 2,
+      "goals": 23,
+      "hatTricks": 3,
       "ownGoals": 0
     }
   },
@@ -250,9 +250,9 @@
     "position": [
       "DEF"
     ],
-    "matches": 18,
+    "matches": 19,
     "wins": 12,
-    "losses": 5,
+    "losses": 6,
     "draws": 1,
     "cleanSheets": 0,
     "goals": 3,
@@ -269,9 +269,9 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 17,
+      "matches": 18,
       "wins": 11,
-      "losses": 5,
+      "losses": 6,
       "draws": 1,
       "cleanSheets": 0,
       "goals": 3,
@@ -285,12 +285,12 @@
     "position": [
       "MID"
     ],
-    "matches": 29,
-    "wins": 12,
+    "matches": 30,
+    "wins": 13,
     "losses": 12,
     "draws": 5,
     "cleanSheets": 0,
-    "goals": 33,
+    "goals": 35,
     "hatTricks": 4,
     "ownGoals": 0,
     "weekendStats": {
@@ -304,12 +304,12 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 14,
-      "wins": 5,
+      "matches": 15,
+      "wins": 6,
       "losses": 7,
       "draws": 2,
       "cleanSheets": 0,
-      "goals": 19,
+      "goals": 21,
       "hatTricks": 2,
       "ownGoals": 0
     }
@@ -425,12 +425,12 @@
     "position": [
       "ALL"
     ],
-    "matches": 22,
+    "matches": 23,
     "wins": 9,
-    "losses": 9,
+    "losses": 10,
     "draws": 4,
     "cleanSheets": 0,
-    "goals": 40,
+    "goals": 41,
     "hatTricks": 8,
     "ownGoals": 0,
     "weekendStats": {
@@ -444,12 +444,12 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 12,
+      "matches": 13,
       "wins": 6,
-      "losses": 4,
+      "losses": 5,
       "draws": 2,
       "cleanSheets": 0,
-      "goals": 29,
+      "goals": 30,
       "hatTricks": 6,
       "ownGoals": 0
     }
@@ -460,9 +460,9 @@
     "position": [
       "MID"
     ],
-    "matches": 31,
+    "matches": 32,
     "wins": 17,
-    "losses": 10,
+    "losses": 11,
     "draws": 4,
     "cleanSheets": 0,
     "goals": 31,
@@ -479,9 +479,9 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 14,
+      "matches": 15,
       "wins": 8,
-      "losses": 4,
+      "losses": 5,
       "draws": 2,
       "cleanSheets": 0,
       "goals": 12,
@@ -530,12 +530,12 @@
     "position": [
       "FWD"
     ],
-    "matches": 20,
-    "wins": 9,
+    "matches": 21,
+    "wins": 10,
     "losses": 9,
     "draws": 2,
     "cleanSheets": 0,
-    "goals": 28,
+    "goals": 29,
     "hatTricks": 4,
     "ownGoals": 1,
     "weekendStats": {
@@ -549,12 +549,12 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 11,
-      "wins": 4,
+      "matches": 12,
+      "wins": 5,
       "losses": 6,
       "draws": 1,
       "cleanSheets": 0,
-      "goals": 15,
+      "goals": 16,
       "hatTricks": 2,
       "ownGoals": 1
     }
@@ -845,8 +845,8 @@
     "position": [
       "DEF"
     ],
-    "matches": 13,
-    "wins": 4,
+    "matches": 14,
+    "wins": 5,
     "losses": 9,
     "draws": 0,
     "cleanSheets": 1,
@@ -864,8 +864,8 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 13,
-      "wins": 4,
+      "matches": 14,
+      "wins": 5,
       "losses": 9,
       "draws": 0,
       "cleanSheets": 1,
@@ -916,9 +916,9 @@
       "LB",
       "LW"
     ],
-    "matches": 7,
+    "matches": 8,
     "wins": 4,
-    "losses": 3,
+    "losses": 4,
     "draws": 0,
     "cleanSheets": 0,
     "goals": 2,
@@ -935,9 +935,9 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 7,
+      "matches": 8,
       "wins": 4,
-      "losses": 3,
+      "losses": 4,
       "draws": 0,
       "cleanSheets": 0,
       "goals": 2,
@@ -951,12 +951,12 @@
     "position": [
       "DEF"
     ],
-    "matches": 13,
+    "matches": 14,
     "wins": 7,
-    "losses": 5,
+    "losses": 6,
     "draws": 1,
     "cleanSheets": 0,
-    "goals": 5,
+    "goals": 6,
     "hatTricks": 0,
     "ownGoals": 0,
     "weekendStats": {
@@ -970,12 +970,12 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 10,
+      "matches": 11,
       "wins": 5,
-      "losses": 4,
+      "losses": 5,
       "draws": 1,
       "cleanSheets": 0,
-      "goals": 4,
+      "goals": 5,
       "hatTricks": 0,
       "ownGoals": 0
     }
@@ -1126,9 +1126,9 @@
     "position": [
       "DEF"
     ],
-    "matches": 13,
+    "matches": 14,
     "wins": 4,
-    "losses": 8,
+    "losses": 9,
     "draws": 1,
     "cleanSheets": 0,
     "goals": 4,
@@ -1145,9 +1145,9 @@
       "ownGoals": 1
     },
     "weekdayStats": {
-      "matches": 8,
+      "matches": 9,
       "wins": 2,
-      "losses": 5,
+      "losses": 6,
       "draws": 1,
       "cleanSheets": 0,
       "goals": 4,
@@ -1687,12 +1687,12 @@
     "position": [
       "MID"
     ],
-    "matches": 7,
-    "wins": 1,
+    "matches": 8,
+    "wins": 2,
     "losses": 5,
     "draws": 1,
     "cleanSheets": 0,
-    "goals": 4,
+    "goals": 5,
     "hatTricks": 0,
     "ownGoals": 0,
     "weekendStats": {
@@ -1706,12 +1706,12 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 7,
-      "wins": 1,
+      "matches": 8,
+      "wins": 2,
       "losses": 5,
       "draws": 1,
       "cleanSheets": 0,
-      "goals": 4,
+      "goals": 5,
       "hatTricks": 0,
       "ownGoals": 0
     }
@@ -2177,9 +2177,9 @@
     "position": [
       "MID"
     ],
-    "matches": 6,
+    "matches": 7,
     "wins": 4,
-    "losses": 1,
+    "losses": 2,
     "draws": 1,
     "cleanSheets": 0,
     "goals": 8,
@@ -2196,9 +2196,9 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 4,
+      "matches": 5,
       "wins": 3,
-      "losses": 0,
+      "losses": 1,
       "draws": 1,
       "cleanSheets": 0,
       "goals": 7,
@@ -2212,8 +2212,8 @@
     "position": [
       "DEF"
     ],
-    "matches": 1,
-    "wins": 0,
+    "matches": 2,
+    "wins": 1,
     "losses": 0,
     "draws": 1,
     "cleanSheets": 0,
@@ -2231,8 +2231,8 @@
       "ownGoals": 0
     },
     "weekdayStats": {
-      "matches": 1,
-      "wins": 0,
+      "matches": 2,
+      "wins": 1,
       "losses": 0,
       "draws": 1,
       "cleanSheets": 0,
