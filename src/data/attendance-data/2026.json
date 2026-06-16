@@ -6795,7 +6795,8 @@
       "matchCancelled": false,
       "attendance": {},
       "scoreline": {},
-      "totalGoals": 0
+      "totalGoals": 0,
+      "isTournament": true
     },
     {
       "id": "16-06-2026",
