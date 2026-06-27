@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createClient } from '@supabase/supabase-js';
+import ws from 'ws';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,6 +52,27 @@ if (yearNum < 2026) {
   console.error('     - src/data/leaderboard-data/2025.json');
   console.error('');
   process.exit(1);
+}
+
+if (process.env.USE_SUPABASE_SYNC === 'true') {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const serviceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!supabaseUrl || !serviceRole) {
+    console.error('❌ USE_SUPABASE_SYNC=true but SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY is missing.');
+    process.exit(1);
+  }
+
+  const supabase = createClient(supabaseUrl, serviceRole, {
+    auth: { persistSession: false },
+    realtime: { transport: ws },
+  });
+  const { data, error } = await supabase.rpc('refresh_season_stats', { in_season_year: parseInt(year, 10) });
+  if (error) {
+    console.error('❌ Error running refresh_season_stats RPC:', error.message);
+    process.exit(1);
+  }
+  console.log('✅ Supabase stats refresh completed:', data);
+  process.exit(0);
 }
 
 // File paths
