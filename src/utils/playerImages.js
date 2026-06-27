@@ -26,6 +26,7 @@ import tushar from "../assets/player-profiles/tushar.jpeg";
 import deepak from "../assets/player-profiles/deepak.jpeg";
 import rohitHyd from "../assets/player-profiles/rohit-hyd.jpeg";
 import umaImage from "../assets/player-profiles/uma.jpg";
+import ishanImage from "../assets/player-profiles/ishaanm.jpeg";
 
 
 // Map player names (lowercase) to their profile images
@@ -54,6 +55,7 @@ const playerImageMap = {
   deepak,
   "rohit hyd": rohitHyd,
   "uma shankar": umaImage,
+  "ishaan m": ishanImage,
 };
 
 /**
