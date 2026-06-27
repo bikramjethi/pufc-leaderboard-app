@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "totalGoals": 443,
+  "totalGoals": 458,
   "weekendGoals": 170,
-  "weekdayGoals": 273,
+  "weekdayGoals": 288,
   "matches": [
     {
       "id": "03-01-2026",
@@ -7104,11 +7104,156 @@
       "id": "23-06-2026",
       "date": "23/06/2026",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "isFullHouse": false,
+      "team1RotatingGoalie": true,
+      "team2RotatingGoalie": true,
+      "attendance": {
+        "BLACK": [
+          {
+            "name": "Subarna",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Ketan",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB"
+          },
+          {
+            "name": "Lalit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Anuj",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Akshat",
+            "goals": 1,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Somu",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          },
+          {
+            "name": "Rishabh",
+            "goals": 1,
+            "ownGoals": 1,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          }
+        ],
+        "WHITE": [
+          {
+            "name": "Pandey",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "GK",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Animesh",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LB"
+          },
+          {
+            "name": "Vinit",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Aayush",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RB",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Omkar",
+            "goals": 3,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "LM"
+          },
+          {
+            "name": "Vinay",
+            "goals": 0,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "CM"
+          },
+          {
+            "name": "Vinoth",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "RM"
+          },
+          {
+            "name": "Sudeep",
+            "goals": 2,
+            "ownGoals": 0,
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "position": "ST"
+          }
+        ]
+      },
+      "scoreline": {
+        "BLACK": 7,
+        "WHITE": 8
+      },
+      "totalGoals": 15
     },
     {
       "id": "27-06-2026",
@@ -7661,6 +7806,7 @@
     "Aniket",
     "Animesh",
     "Ankur",
+    "Anuj",
     "Ashish",
     "David",
     "Deepak",
@@ -7679,6 +7825,7 @@
     "Mathew",
     "Nadeem",
     "Nilaj",
+    "Omkar",
     "Others",
     "Pandey",
     "Prateek",
