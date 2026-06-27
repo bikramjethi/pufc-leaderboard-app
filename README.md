@@ -79,6 +79,81 @@ npm run dev
 
 The main app will run on `http://localhost:5173`
 
+## Supabase Migration Workflow
+
+The app now supports a Supabase-backed data path (auth + DB) while keeping JSON fallback.
+
+### 1) Set environment variables
+
+Copy `.env.example` to `.env` and set:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+### 2) Apply database schema and RLS
+
+Run SQL in your Supabase SQL editor in this order:
+
+1. `supabase/schema.sql`
+2. `supabase/rls.sql`
+
+### 3) Import existing 2026 JSON data
+
+```bash
+npm run migrate:supabase:2026
+# (script source lives in supabase-migration/)
+```
+
+### 4) Verify DB parity vs local JSON
+
+```bash
+npm run verify:supabase:2026
+# (script source lives in supabase-migration/)
+```
+
+### 5) Enable Supabase features in app config
+
+In `src/leaderboard-config.js` under `config.SUPABASE`:
+
+- set `enabled: true`
+- set `writeEnabled: true` for match-entry writes
+- enable read modules selectively:
+  - `readModules.weeklyTracker`
+  - `readModules.attendanceLeaderboard`
+  - `readModules.statsLeaderboard`
+
+Recommended rollout: turn these on one by one.
+
+### 6) Match entry auth and roles
+
+- `Match Entry` supports email/password sign-in via Supabase Auth.
+- Only users with `admin` or `editor` role in `public.user_roles` can mutate protected tables.
+- Add a role manually in SQL:
+
+```sql
+insert into public.user_roles (user_id, role)
+values ('<auth_user_uuid>', 'admin')
+on conflict (user_id) do update set role = excluded.role;
+```
+
+### 7) Stats refresh via DB RPC
+
+To use DB-side seasonal refresh from CLI:
+
+```bash
+npm run sync-stats:supabase:2026
+```
+
+This calls the `refresh_season_stats` RPC.
+
+### Backup and rollback
+
+- Keep JSON files as fallback until parity is confirmed.
+- Export table snapshots from Supabase before large backfills.
+- If a read module misbehaves, disable it in `config.SUPABASE.readModules` and the app falls back to JSON.
+
 ### Admin Panel
 
 A separate admin app is available for managing leaderboard data:
