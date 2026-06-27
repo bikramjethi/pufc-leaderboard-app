@@ -11,16 +11,21 @@
     "update-percentages": "node scripts/update-attendance-percentages.js",
     "sync-stats": "node scripts/sync-stats.js",
     "sync-stats:2026": "node scripts/sync-stats.js 2026",
+    "sync-stats:supabase:2026": "USE_SUPABASE_SYNC=true node scripts/sync-stats.js 2026",
     "update-match": "node scripts/update-match.js",
     "process-match": "node scripts/process-match.js",
-    "match-server": "node scripts/save-match-server.js"
+    "match-server": "node scripts/save-match-server.js",
+    "migrate:supabase:2026": "node supabase-migration/migrate-json-to-supabase.js 2026",
+    "verify:supabase:2026": "node supabase-migration/verify-supabase-parity.js 2026"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.108.2",
     "@vercel/blob": "^2.0.0",
     "lz-string": "^1.5.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "recharts": "^3.8.1"
+    "recharts": "^3.8.1",
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",

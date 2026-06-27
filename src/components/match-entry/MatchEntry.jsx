@@ -1,5 +1,12 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import "./MatchEntry.css";
+import { config } from "../../leaderboard-config";
+import {
+  getCurrentSession,
+  signInWithPassword,
+  signOut,
+} from "../../services/supabase/auth";
+import { refreshSeasonStats, saveMatchEntry } from "../../services/supabase/data";
 
 // Available team colors
 const TEAM_COLORS = ["RED", "BLUE", "BLACK", "WHITE", "YELLOW"];
@@ -95,10 +102,23 @@ export const MatchEntry = () => {
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [error, setError] = useState("");
   const [loadedFromData, setLoadedFromData] = useState(false);
+  const [session, setSession] = useState(null);
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authLoading, setAuthLoading] = useState(false);
 
   // Get all known player names
   const allKnownPlayers = useMemo(() => {
     return playerProfiles.map(p => p.name).sort();
+  }, []);
+
+  useEffect(() => {
+    if (!config.SUPABASE?.enabled || !config.SUPABASE?.requireAuthForMatchEntry) return;
+    getCurrentSession()
+      .then(setSession)
+      .catch(() => {
+        setSession(null);
+      });
   }, []);
 
   // Get players already entered in both teams (for filtering autocomplete)
@@ -509,30 +529,74 @@ export const MatchEntry = () => {
     }
   };
 
-  // Save via API (requires the save-match.js server to be running)
+  // Save via Supabase or local API fallback
   const handleSave = async () => {
     const result = generateMatchJson();
     if (!result) return;
 
     try {
+      if (config.SUPABASE?.enabled && config.SUPABASE?.writeEnabled) {
+        if (requiresSignIn && !session) {
+          setError("Please sign in to save match data.");
+          return;
+        }
+        await saveMatchEntry({ year: result.year, matchData: result.matchData });
+        await refreshSeasonStats(result.year);
+        setSavedSuccess(true);
+        setError("");
+        setTimeout(() => setSavedSuccess(false), 3000);
+        return;
+      }
+
       const response = await fetch("http://localhost:3001/api/save-match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ year: result.year, matchData: result.matchData }),
       });
-
-      if (response.ok) {
-        setSavedSuccess(true);
-        setError("");
-        setTimeout(() => setSavedSuccess(false), 3000);
-      } else {
+      if (!response.ok) {
         const data = await response.json();
         setError(data.error || "Failed to save match");
+        return;
       }
-    } catch {
-      setError("Could not connect to save server. Make sure to run: node scripts/save-match-server.js");
+      setSavedSuccess(true);
+      setError("");
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (e) {
+      setError(
+        e?.message ||
+          "Could not save match. If using local mode, run: node scripts/save-match-server.js"
+      );
     }
   };
+
+  const handleSignIn = async () => {
+    setAuthLoading(true);
+    setError("");
+    try {
+      const data = await signInWithPassword({ email: authEmail.trim(), password: authPassword });
+      setSession(data.session || null);
+      setAuthPassword("");
+    } catch (e) {
+      setError(e?.message || "Failed to sign in");
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setSession(null);
+    } catch (e) {
+      setError(e?.message || "Failed to sign out");
+    }
+  };
+
+  const requiresSignIn =
+    config.SUPABASE?.enabled &&
+    config.SUPABASE?.writeEnabled &&
+    config.SUPABASE?.requireAuthForMatchEntry;
+  const usingSupabaseWrite = config.SUPABASE?.enabled && config.SUPABASE?.writeEnabled;
 
   // Clear form
   const handleClear = () => {
@@ -571,6 +635,46 @@ export const MatchEntry = () => {
       {loadedFromData && (
         <div className="info-message">
           ℹ️ Existing match data loaded. Modify as needed and save to update.
+        </div>
+      )}
+
+      {requiresSignIn && (
+        <div className="info-message">
+          {session ? (
+            <>
+              <span>Signed in as {session.user?.email}</span>{" "}
+              <button className="btn btn-secondary" onClick={handleSignOut}>
+                Sign out
+              </button>
+            </>
+          ) : (
+            <div className="form-row basic-info">
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
+                  placeholder="admin@example.com"
+                />
+              </div>
+              <div className="form-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  value={authPassword}
+                  onChange={(e) => setAuthPassword(e.target.value)}
+                  placeholder="••••••••"
+                />
+              </div>
+              <div className="form-group">
+                <label>&nbsp;</label>
+                <button className="btn btn-primary" onClick={handleSignIn} disabled={authLoading}>
+                  {authLoading ? "Signing in..." : "Sign in"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -915,7 +1019,11 @@ export const MatchEntry = () => {
           <button className="btn btn-primary" onClick={handleGenerate}>
             📋 Generate JSON
           </button>
-          <button className="btn btn-success" onClick={handleSave}>
+          <button
+            className="btn btn-success"
+            onClick={handleSave}
+            disabled={requiresSignIn && !session}
+          >
             💾 Save Match
           </button>
           <button className="btn btn-secondary" onClick={handleClear}>
@@ -926,7 +1034,10 @@ export const MatchEntry = () => {
         {/* Success Message */}
         {savedSuccess && (
           <div className="success-message">
-            ✅ Match saved successfully! Run sync-stats to update leaderboards.
+            ✅ Match saved successfully!
+            {usingSupabaseWrite
+              ? " Leaderboards are refreshed automatically for 2026+ seasons."
+              : " Run sync-stats to update leaderboards."}
           </div>
         )}
 
@@ -944,13 +1055,21 @@ export const MatchEntry = () => {
             </div>
             <pre>{generatedJson}</pre>
             <div className="json-instructions">
-              <p>
-                <strong>Option 1:</strong> Click "Save Match" to save directly (requires server)
-              </p>
-              <p>
-                <strong>Option 2:</strong> Copy the JSON and run: 
-                <code>echo 'JSON_HERE' | node scripts/process-match.js</code>
-              </p>
+              {usingSupabaseWrite ? (
+                <p>
+                  <strong>Option 1:</strong> Click "Save Match" to write directly to Supabase.
+                </p>
+              ) : (
+                <>
+                  <p>
+                    <strong>Option 1:</strong> Click "Save Match" to save directly (requires local server)
+                  </p>
+                  <p>
+                    <strong>Option 2:</strong> Copy the JSON and run:
+                    <code>echo 'JSON_HERE' | node scripts/process-match.js</code>
+                  </p>
+                </>
+              )}
             </div>
           </div>
         )}

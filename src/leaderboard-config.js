@@ -6,6 +6,17 @@
  */
 
 export const config = {
+  SUPABASE: {
+    enabled: true,
+    writeEnabled: true,
+    readModules: {
+      weeklyTracker: true,
+      attendanceLeaderboard: true,
+      statsLeaderboard: true,
+    },
+    requireAuthForMatchEntry: true,
+  },
+
   // Feature Toggles
   ENABLE_COMPARISON: true,      // Show checkboxes and allow player comparison
   ENABLE_SEARCH: true,           // Show search input for filtering players

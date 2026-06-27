@@ -1,8 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { getDisplayName } from "../../utils/playerDisplayName";
 import attendanceLeaderboardData2025 from "../../data/attendance-data/leaderboard/2025.json";
 import attendanceLeaderboardData2026 from "../../data/attendance-data/leaderboard/2026.json";
 import playerProfiles from "../../data/player-profiles.json";
+import { config } from "../../leaderboard-config";
+import { fetchAttendanceLeaderboard } from "../../services/supabase/data";
 
 const attendanceLeaderboardDataByYear = {
   2025: attendanceLeaderboardData2025,
@@ -40,11 +42,30 @@ const deriveCategoryFromProfile = (playerName) => {
 
 export const AttendanceLeaderboard = ({ year = "2025" }) => {
   const yearKey = String(year);
-  const data = attendanceLeaderboardDataByYear[yearKey];
+  const [remoteData, setRemoteData] = useState(null);
+  const [remoteError, setRemoteError] = useState("");
+  const data = remoteData || attendanceLeaderboardDataByYear[yearKey];
   
   // Sorting state
   const [sortKey, setSortKey] = useState("totalGames");
   const [sortDirection, setSortDirection] = useState("desc");
+
+  useEffect(() => {
+    if (!(config.SUPABASE?.enabled && config.SUPABASE?.readModules?.attendanceLeaderboard)) {
+      setRemoteData(null);
+      setRemoteError("");
+      return;
+    }
+    fetchAttendanceLeaderboard(yearKey)
+      .then((res) => {
+        setRemoteData(res);
+        setRemoteError("");
+      })
+      .catch((e) => {
+        setRemoteData(null);
+        setRemoteError(e?.message || "Failed to load attendance leaderboard.");
+      });
+  }, [yearKey]);
 
   // Calculate percentages dynamically - must be defined before useMemo
   const calculatePercentages = (player, summary) => {
@@ -246,6 +267,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   if (!data || !data.summary || !data.players || data.players.length === 0) {
     return (
       <div className="attendance-leaderboard">
+        {remoteError && <div className="error-message">{remoteError}</div>}
         <div className="attendance-no-data">
           <p>No data available for {year}</p>
         </div>
@@ -305,6 +327,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
 
   return (
     <div className="attendance-leaderboard">
+      {remoteError && <div className="error-message">{remoteError}</div>}
       {/* Summary Header */}
       <div className="attendance-leaderboard-header">
         <h2>Attendance Summary {summary.season}</h2>

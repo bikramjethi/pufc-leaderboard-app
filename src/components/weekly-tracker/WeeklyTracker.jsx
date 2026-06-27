@@ -1,7 +1,8 @@
-import { useState, useMemo, useRef, useLayoutEffect } from "react";
+import { useState, useMemo, useRef, useLayoutEffect, useEffect } from "react";
 import matchData2026 from "../../data/attendance-data/2026.json";
 import { config } from "../../leaderboard-config.js";
 import { FieldViewModal } from "../field-view-modal";
+import { fetchWeeklyTrackerSeason } from "../../services/supabase/data";
 
 const matchDataByYear = {
   2026: matchData2026,
@@ -190,11 +191,31 @@ export const WeeklyTracker = () => {
   // Field view modal state
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [showFieldViewModal, setShowFieldViewModal] = useState(false);
+  const [remoteMatchData, setRemoteMatchData] = useState(null);
+  const [remoteError, setRemoteError] = useState("");
   const tableScrollRef = useRef(null);
 
   // Load match data based on year
-  const matchData = matchDataByYear[trackerYear];
+  const staticMatchData = matchDataByYear[trackerYear];
+  const matchData = remoteMatchData || staticMatchData;
   const { matches, allPlayers } = matchData || { matches: [], allPlayers: [] };
+
+  useEffect(() => {
+    if (!(config.SUPABASE?.enabled && config.SUPABASE?.readModules?.weeklyTracker)) {
+      setRemoteMatchData(null);
+      setRemoteError("");
+      return;
+    }
+    fetchWeeklyTrackerSeason(trackerYear)
+      .then((data) => {
+        setRemoteMatchData(data);
+        setRemoteError("");
+      })
+      .catch((e) => {
+        setRemoteMatchData(null);
+        setRemoteError(e?.message || "Failed to load tracker data from Supabase.");
+      });
+  }, [trackerYear]);
 
   // Filter players by search
   const filteredPlayers = useMemo(() => {
@@ -421,6 +442,8 @@ export const WeeklyTracker = () => {
           </div>
         </div>
       </div>
+
+      {remoteError && <div className="error-message">{remoteError}</div>}
 
       {matchData ? (
         <>
