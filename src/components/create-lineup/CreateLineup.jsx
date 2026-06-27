@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
 import "./CreateLineup.css";
 import playerProfiles from "../../data/player-profiles.json";
 
@@ -43,23 +44,10 @@ const DEFAULT_MATCH_MODE = "8v8";
 const URL_STATE_KEY = "lineup";
 const COMPACT_SCHEMA_VERSION = 2;
 
-const toBase64Url = (base64) =>
-  String(base64 || "")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/g, "");
-
-const fromBase64Url = (base64Url) => {
-  const raw = String(base64Url || "").replace(/-/g, "+").replace(/_/g, "/");
-  const pad = raw.length % 4;
-  return raw + (pad ? "=".repeat(4 - pad) : "");
-};
-
 const safeEncode = (obj) => {
   try {
     const json = JSON.stringify(obj);
-    const base64 = btoa(unescape(encodeURIComponent(json)));
-    return toBase64Url(base64);
+    return compressToEncodedURIComponent(json);
   } catch {
     return "";
   }
@@ -67,7 +55,8 @@ const safeEncode = (obj) => {
 
 const safeDecode = (encoded) => {
   try {
-    const json = decodeURIComponent(escape(atob(fromBase64Url(encoded))));
+    const json = decompressFromEncodedURIComponent(String(encoded || ""));
+    if (!json) return null;
     return JSON.parse(json);
   } catch {
     return null;
@@ -112,26 +101,18 @@ const compactPayload = ({ matchMode, team1Color, team2Color, team1Players, team2
 ];
 
 const expandDecodedPayload = (decoded) => {
-  // v2 compact array format (legacy): [v, team1Color, team2Color, team1Names[], team2Names[]]
-  // v2 extended: [v, matchMode, team1Color, team2Color, team1Names[], team2Names[]]
   if (Array.isArray(decoded) && decoded[0] === COMPACT_SCHEMA_VERSION) {
-    const hasMode = decoded[1] === "8v8" || decoded[1] === "9v9";
-    const mode = hasMode ? decoded[1] : DEFAULT_MATCH_MODE;
-    const t1 = Array.isArray(decoded[hasMode ? 4 : 3]) ? decoded[hasMode ? 4 : 3] : [];
-    const t2 = Array.isArray(decoded[hasMode ? 5 : 4]) ? decoded[hasMode ? 5 : 4] : [];
+    const mode = decoded[1] === "9v9" ? "9v9" : "8v8";
+    const t1 = Array.isArray(decoded[4]) ? decoded[4] : [];
+    const t2 = Array.isArray(decoded[5]) ? decoded[5] : [];
     const template = buildTeamPlayersForMode(mode);
     return {
       matchMode: mode,
-      team1Color: decoded[hasMode ? 2 : 1],
-      team2Color: decoded[hasMode ? 3 : 2],
+      team1Color: decoded[2],
+      team2Color: decoded[3],
       team1Players: template.map((slot, i) => ({ ...slot, name: String(t1[i] || "") })),
       team2Players: template.map((slot, i) => ({ ...slot, name: String(t2[i] || "") })),
     };
-  }
-
-  // Backward compatibility for old object payload shared links
-  if (decoded && typeof decoded === "object" && !Array.isArray(decoded)) {
-    return decoded;
   }
 
   return null;

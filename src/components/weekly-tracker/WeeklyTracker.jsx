@@ -454,25 +454,21 @@ export const WeeklyTracker = () => {
                 // Sort players alphabetically
                 const sortedPlayersCSV = Array.from(allPlayersSet).sort();
                 
-                // Get all match dates (only for played matches, excluding tournaments)
-                const matchDates = matchData.matches
-                  .filter((match) => match.matchPlayed && !match.matchCancelled && !match.isTournament)
-                  .map((match) => match.date || match.id)
-                  .sort();
+                // Keep exact tracker match order from UI (only played matches, excluding tournaments)
+                const exportMatches = matchData.matches.filter(
+                  (match) => match.matchPlayed && !match.matchCancelled && !match.isTournament
+                );
                 
                 // Create CSV rows
                 const csvRows = [];
                 
                 // Header row: Player, then all match dates
-                csvRows.push(["Player", ...matchDates].join(","));
+                csvRows.push(["Player", ...exportMatches.map((match) => match.date || match.id)].join(","));
                 
                 // For each player, create a row with 1 if they attended, blank if not
                 sortedPlayersCSV.forEach((player) => {
                   const row = [player];
-                  matchDates.forEach((date) => {
-                    const match = matchData.matches.find(
-                      (m) => (m.date === date || m.id === date) && m.matchPlayed && !m.matchCancelled && !m.isTournament
-                    );
+                  exportMatches.forEach((match) => {
                     const attended = match && isPlayerInAttendance(match.attendance, player);
                     row.push(attended ? "1" : "");
                   });
