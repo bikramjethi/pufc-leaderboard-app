@@ -1,6 +1,8 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { config } from "../../leaderboard-config.js";
 import { getPlayerImage } from "../../utils/playerImages.js";
+import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import "./HeadToHead.css";
 
 // Dynamically import all available match data files
@@ -269,25 +271,61 @@ const PlayerCarousel = ({
 };
 
 export const HeadToHead = () => {
-  const selectableSeasons = getSelectableSeasons();
+  const selectableSeasons = useMemo(() => getSelectableSeasons(), []);
   const defaultSeason = config.H2H?.defaultSeason || "all";
   
   const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
+  const [remoteMatchesBySeason, setRemoteMatchesBySeason] = useState({});
 
   const requiresBackfill = config.H2H?.requiresBackfill ?? true;
 
+  useEffect(() => {
+    if (!config.SUPABASE?.enabled) return;
+    Promise.all(
+      selectableSeasons.map((year) =>
+        fetchSeasonMatches(year)
+          .then((matches) => [year, matches])
+          .catch(() => [year, null])
+      )
+    ).then((entries) => {
+      const next = {};
+      entries.forEach(([year, matches]) => {
+        if (Array.isArray(matches)) next[year] = matches;
+      });
+      setRemoteMatchesBySeason(next);
+    });
+  }, [selectableSeasons]);
+
   const h2hMatches = useMemo(() => {
+    const getMatches = (year) => {
+      const remote = remoteMatchesBySeason[year];
+      if (Array.isArray(remote)) {
+        return remote.filter(m => {
+          if (!m.matchPlayed || m.matchCancelled) return false;
+          if (m.isTournament) return false;
+          if ((year === "2024" || year === "2025") && requiresBackfill && !m.isBackfilled) return false;
+          return true;
+        });
+      }
+      return getValidMatches(year, requiresBackfill);
+    };
+
     if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year, requiresBackfill));
+      return selectableSeasons.flatMap(getMatches);
     }
-    return getValidMatches(selectedSeason, requiresBackfill);
-  }, [selectedSeason, selectableSeasons, requiresBackfill]);
+    return getMatches(selectedSeason);
+  }, [selectedSeason, selectableSeasons, requiresBackfill, remoteMatchesBySeason]);
 
   const allPlayerStats = useMemo(() => getPlayerStats(h2hMatches), [h2hMatches]);
 
   const matchCountLabel = `${h2hMatches.length} matches`;
+  const hasRemoteForSeason =
+    selectedSeason === "all"
+      ? selectableSeasons.some((y) => Array.isArray(remoteMatchesBySeason[y]))
+      : Array.isArray(remoteMatchesBySeason[selectedSeason]);
+  const h2hSource = hasRemoteForSeason ? "supabase" : "json-fallback";
 
   const h2hStats = useMemo(() => {
     if (!player1 || !player2 || player1 === player2) {
@@ -366,6 +404,7 @@ export const HeadToHead = () => {
 
   return (
     <div className="head-to-head">
+      <DataSourceBadge source={h2hSource} context="Head to Head" />
       {/* Season Selector Header */}
       <div className="h2h-header">
         <div className="h2h-title">

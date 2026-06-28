@@ -3,6 +3,7 @@ import matchData2026 from "../../data/attendance-data/2026.json";
 import { config } from "../../leaderboard-config.js";
 import { FieldViewModal } from "../field-view-modal";
 import { fetchWeeklyTrackerSeason } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 
 const matchDataByYear = {
   2026: matchData2026,
@@ -198,6 +199,12 @@ export const WeeklyTracker = () => {
   // Load match data based on year
   const staticMatchData = matchDataByYear[trackerYear];
   const matchData = remoteMatchData || staticMatchData;
+  const trackerSource =
+    config.SUPABASE?.enabled &&
+    config.SUPABASE?.readModules?.weeklyTracker &&
+    remoteMatchData
+      ? "supabase"
+      : "json-fallback";
   const { matches, allPlayers } = matchData || { matches: [], allPlayers: [] };
 
   useEffect(() => {
@@ -422,6 +429,7 @@ export const WeeklyTracker = () => {
 
   return (
     <div className="attendance">
+      <DataSourceBadge source={trackerSource} context="Weekly Tracker" />
       {/* Year Selector */}
       <div className="sub-tab-nav">
         <div className="attendance-year-selector">

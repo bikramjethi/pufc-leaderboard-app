@@ -11,6 +11,25 @@ const ensureClient = () => {
   }
 };
 
+const normalizeMatchRow = (row) => {
+  if (!row) return null;
+  return {
+    id: row.id,
+    date: row.date || "",
+    day: row.day || "Midweek",
+    matchPlayed: row.match_played ?? row.matchPlayed ?? false,
+    matchCancelled: row.match_cancelled ?? row.matchCancelled ?? false,
+    isTournament: row.is_tournament ?? row.isTournament ?? false,
+    isFullHouse: row.is_full_house ?? row.isFullHouse ?? false,
+    isBackfilled: row.is_backfilled ?? row.isBackfilled ?? false,
+    team1RotatingGoalie: row.team1_rotating_goalie ?? row.team1RotatingGoalie ?? false,
+    team2RotatingGoalie: row.team2_rotating_goalie ?? row.team2RotatingGoalie ?? false,
+    attendance: row.attendance || {},
+    scoreline: row.scoreline || {},
+    totalGoals: Number(row.total_goals ?? row.totalGoals ?? 0),
+  };
+};
+
 export const fetchWeeklyTrackerSeason = async (seasonYear) => {
   ensureClient();
   const { data, error } = await supabase
@@ -33,7 +52,7 @@ export const fetchWeeklyTrackerSeason = async (seasonYear) => {
     weekendGoals: Number(data.weekend_goals || 0),
     weekdayGoals: Number(data.weekday_goals || 0),
     allPlayers: Array.isArray(data.all_players) ? data.all_players : [],
-    matches: matchesRes.data || [],
+    matches: (matchesRes.data || []).map(normalizeMatchRow),
   };
 };
 
@@ -68,6 +87,77 @@ export const fetchStatsLeaderboardSeason = async (seasonYear) => {
     .order("id", { ascending: true });
   if (error) throw error;
   return (data || []).map(normalizeStatsPlayer);
+};
+
+export const fetchAvailableSeasonYears = async () => {
+  ensureClient();
+  const { data, error } = await supabase
+    .from("weekly_tracker_seasons")
+    .select("season_year")
+    .order("season_year", { ascending: false });
+  if (error) throw error;
+  return (data || []).map((row) => String(row.season_year));
+};
+
+export const fetchSeasonMatches = async (seasonYear) => {
+  ensureClient();
+  const { data, error } = await supabase
+    .from("weekly_tracker_matches")
+    .select("*")
+    .eq("season_year", Number(seasonYear))
+    .order("match_date", { ascending: true });
+  if (error) throw error;
+  return (data || []).map(normalizeMatchRow);
+};
+
+export const fetchNextUnfilledMatchId = async (seasonYear) => {
+  ensureClient();
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const { data, error } = await supabase
+    .from("weekly_tracker_matches")
+    .select("id")
+    .eq("season_year", Number(seasonYear))
+    .eq("match_played", false)
+    .eq("match_cancelled", false)
+    .lte("match_date", todayIso)
+    .order("match_date", { ascending: true })
+    .limit(1);
+  if (error) throw error;
+  return data?.[0]?.id || "";
+};
+
+export const fetchMatchEntryById = async ({ matchId, seasonYear }) => {
+  ensureClient();
+  if (!matchId?.trim()) return null;
+
+  let query = supabase
+    .from("weekly_tracker_matches")
+    .select("*")
+    .eq("id", matchId.trim());
+
+  if (seasonYear != null) {
+    query = query.eq("season_year", Number(seasonYear));
+  }
+
+  const { data, error } = await query.maybeSingle();
+  if (error) throw error;
+  if (!data) return null;
+
+  return {
+    id: data.id,
+    date: data.date || "",
+    day: data.day || "Midweek",
+    matchPlayed: !!data.match_played,
+    matchCancelled: !!data.match_cancelled,
+    isTournament: !!data.is_tournament,
+    isFullHouse: !!data.is_full_house,
+    isBackfilled: !!data.is_backfilled,
+    team1RotatingGoalie: !!data.team1_rotating_goalie,
+    team2RotatingGoalie: !!data.team2_rotating_goalie,
+    attendance: data.attendance || {},
+    scoreline: data.scoreline || {},
+    totalGoals: Number(data.total_goals || 0),
+  };
 };
 
 export const saveMatchEntry = async ({ year, matchData }) => {

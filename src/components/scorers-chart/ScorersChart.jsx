@@ -13,6 +13,8 @@ import {
   YAxis,
 } from "recharts";
 import { config } from "../../leaderboard-config.js";
+import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import {
   buildAllTimeTopScorersBarData,
   buildScorersChartData,
@@ -195,6 +197,7 @@ export function ScorersChart() {
   const skipFirstSeasonsEffect = useRef(true);
 
   const [scope, setScope] = useState(defaultScopeFromConfig);
+  const [remoteSeasonMatchData, setRemoteSeasonMatchData] = useState({});
 
   useEffect(() => {
     if (skipFirstSeasonsEffect.current) {
@@ -214,6 +217,23 @@ export function ScorersChart() {
       setScope(latest);
     }
   }, [scope, configuredSeasons]);
+
+  useEffect(() => {
+    if (!config.SUPABASE?.enabled) return;
+    Promise.all(
+      configuredSeasons.map((season) =>
+        fetchSeasonMatches(season)
+          .then((rows) => [season, { matches: rows }])
+          .catch(() => [season, null])
+      )
+    ).then((entries) => {
+      const next = {};
+      entries.forEach(([season, payload]) => {
+        if (payload) next[season] = payload;
+      });
+      setRemoteSeasonMatchData(next);
+    });
+  }, [configuredSeasons]);
 
   const isAllTime = scope === SCOPE_ALL_TIME;
   const usesLeaderboardBar =
@@ -245,8 +265,9 @@ export function ScorersChart() {
       dataSeason: dataSeasonForBuild,
       topN,
       trackActiveWeeks,
+      seasonMatchData: remoteSeasonMatchData,
     });
-  }, [isAllTime, usesLeaderboardBar, dataSeasonForBuild, topN, trackActiveWeeks]);
+  }, [isAllTime, usesLeaderboardBar, dataSeasonForBuild, topN, trackActiveWeeks, remoteSeasonMatchData]);
 
   const barBuilt = useMemo(() => {
     if (!isAllTime) return null;
@@ -266,6 +287,10 @@ export function ScorersChart() {
     : usesLeaderboardBar
       ? leaderboardBarBuilt?.topPlayers?.join("\0") ?? ""
       : built?.topPlayers?.join("\0") ?? "";
+  const hasRemoteForScope =
+    scope !== SCOPE_ALL_TIME &&
+    Array.isArray(remoteSeasonMatchData?.[String(scope)]?.matches);
+  const scorersChartSource = hasRemoteForScope ? "supabase" : "json-fallback";
 
   const [hiddenPlayers, setHiddenPlayers] = useState(() => new Set());
 
@@ -339,6 +364,7 @@ export function ScorersChart() {
 
     return (
       <div className="scorers-chart">
+        <DataSourceBadge source={scorersChartSource} context="Scorers Chart" />
         <header className="scorers-chart__header">
           <div className="scorers-chart__headline">
             <h2 className="scorers-chart__title scorers-chart__title--bar">
@@ -507,6 +533,7 @@ export function ScorersChart() {
 
   return (
     <div className="scorers-chart">
+      <DataSourceBadge source={scorersChartSource} context="Scorers Chart" />
       <header className="scorers-chart__header">
         <div className="scorers-chart__headline">
           <h2 className="scorers-chart__title">Race to the golden boot</h2>

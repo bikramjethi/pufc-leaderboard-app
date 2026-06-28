@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { config } from "../../leaderboard-config.js";
+import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import "./FunStats.css";
 
 // Dynamically import all available match data files
@@ -121,7 +123,8 @@ const DUOS_MIN_MATCHES_WIN_RATE = 10;
 const DUOS_MIN_MATCHES_OTHERS = 3;
 
 export const FunStats = () => {
-  const selectableSeasons = getSelectableSeasons();
+  const selectableSeasons = useMemo(() => getSelectableSeasons(), []);
+  const [remoteMatchesBySeason, setRemoteMatchesBySeason] = useState({});
   const outcomeTabCfg = useMemo(
     () => config.FUN_STATS?.outcomeGoalsTabs || {},
     []
@@ -202,6 +205,38 @@ export const FunStats = () => {
   const [activeSubTab, setActiveSubTab] = useState(getDefaultTab);
 
   useEffect(() => {
+    if (!config.SUPABASE?.enabled) return;
+    Promise.all(
+      selectableSeasons.map((year) =>
+        fetchSeasonMatches(year)
+          .then((matches) => [year, matches])
+          .catch(() => [year, null])
+      )
+    ).then((entries) => {
+      const next = {};
+      entries.forEach(([year, matches]) => {
+        if (Array.isArray(matches)) next[year] = matches;
+      });
+      setRemoteMatchesBySeason(next);
+    });
+  }, [selectableSeasons]);
+
+  const getSeasonMatches = useMemo(() => {
+    return (year, requiresBackfill = true) => {
+      const remote = remoteMatchesBySeason[year];
+      if (Array.isArray(remote)) {
+        return remote.filter((m) => {
+          if (!m.matchPlayed || m.matchCancelled) return false;
+          if (m.isTournament) return false;
+          if ((year === "2024" || year === "2025") && requiresBackfill && !m.isBackfilled) return false;
+          return true;
+        });
+      }
+      return getValidMatches(year, requiresBackfill);
+    };
+  }, [remoteMatchesBySeason]);
+
+  useEffect(() => {
     if (!config.FUN_STATS?.enabled) return;
     if (validFunStatTabIds.length > 0 && !validFunStatTabIds.includes(activeSubTab)) {
       setActiveSubTab(validFunStatTabIds[0]);
@@ -230,35 +265,35 @@ export const FunStats = () => {
   const colorStatsMatches = useMemo(() => {
     const req = backfillReqs.colorStats ?? false;
     if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+      return selectableSeasons.flatMap(year => getSeasonMatches(year, req));
     }
-    return getValidMatches(selectedSeason, req);
-  }, [selectedSeason, selectableSeasons, backfillReqs.colorStats]);
+    return getSeasonMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.colorStats, getSeasonMatches]);
 
   // Duos have different requirements per metric
   const duosWinRateMatches = useMemo(() => {
     const req = backfillReqs.duosWinRate ?? true;
     if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+      return selectableSeasons.flatMap(year => getSeasonMatches(year, req));
     }
-    return getValidMatches(selectedSeason, req);
-  }, [selectedSeason, selectableSeasons, backfillReqs.duosWinRate]);
+    return getSeasonMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.duosWinRate, getSeasonMatches]);
   
   const duosScoringMatches = useMemo(() => {
     const req = backfillReqs.duosTopScoring ?? false;
     if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+      return selectableSeasons.flatMap(year => getSeasonMatches(year, req));
     }
-    return getValidMatches(selectedSeason, req);
-  }, [selectedSeason, selectableSeasons, backfillReqs.duosTopScoring]);
+    return getSeasonMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.duosTopScoring, getSeasonMatches]);
   
   const duosGamesMatches = useMemo(() => {
     const req = backfillReqs.duosMostGames ?? true;
     if (selectedSeason === "all") {
-      return selectableSeasons.flatMap(year => getValidMatches(year, req));
+      return selectableSeasons.flatMap(year => getSeasonMatches(year, req));
     }
-    return getValidMatches(selectedSeason, req);
-  }, [selectedSeason, selectableSeasons, backfillReqs.duosMostGames]);
+    return getSeasonMatches(selectedSeason, req);
+  }, [selectedSeason, selectableSeasons, backfillReqs.duosMostGames, getSeasonMatches]);
 
   // Get match count label based on active tab
   const getMatchCountLabel = () => {
@@ -269,6 +304,11 @@ export const FunStats = () => {
     }
   };
   const matchCountLabel = getMatchCountLabel();
+  const hasRemoteForSelectedSeason =
+    selectedSeason === "all"
+      ? selectableSeasons.some((y) => Array.isArray(remoteMatchesBySeason[y]))
+      : Array.isArray(remoteMatchesBySeason[selectedSeason]);
+  const funStatsSource = hasRemoteForSelectedSeason ? "supabase" : "json-fallback";
 
   // Calculate color statistics based on selected season
   const colorStats = useMemo(() => {
@@ -430,7 +470,7 @@ export const FunStats = () => {
       /** @type {Record<string, {goals: number, name: string}>} */
       const goalsByPlayer = {};
       seasonsToUse.forEach((year) => {
-        const matches = getValidMatches(year, false);
+        const matches = getSeasonMatches(year, false);
         matches.forEach((match) => {
           if (!match?.scoreline || !match?.attendance) return;
           const winner = getWinningTeam(match.scoreline);
@@ -506,7 +546,7 @@ export const FunStats = () => {
     let clutchMatchCount = 0;
 
     years.forEach((year) => {
-      const matches = getValidMatches(year, false);
+      const matches = getSeasonMatches(year, false);
       matches.forEach((match) => {
         if (!isClutchScoreline(match.scoreline, clutchTab.maxGoalDiff)) return;
         clutchMatchCount += 1;
@@ -550,6 +590,7 @@ export const FunStats = () => {
 
   return (
     <div className="fun-stats">
+      <DataSourceBadge source={funStatsSource} context="Fun Stats" />
       {/* Sub-tab Navigation */}
       <div className="fun-stats-nav">
         <div className="fun-stats-tabs">

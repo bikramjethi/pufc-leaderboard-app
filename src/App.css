@@ -1842,6 +1842,34 @@ body::before {
   color: var(--text-muted);
 }
 
+.data-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+}
+
+.data-source-badge.is-supabase {
+  border-color: rgba(34, 197, 94, 0.4);
+  color: var(--accent-primary);
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.data-source-badge.is-fallback {
+  border-color: rgba(234, 179, 8, 0.45);
+  color: #eab308;
+  background: rgba(234, 179, 8, 0.1);
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .header {

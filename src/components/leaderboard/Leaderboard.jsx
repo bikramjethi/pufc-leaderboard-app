@@ -4,6 +4,7 @@ import { ComparePanel } from "./ComparePanel.jsx";
 import { PlayerModal } from "../player-modal";
 import { config } from "../../leaderboard-config.js";
 import { tickerMessages } from "../../ticker-messages.js";
+import { fetchSeasonMatches } from "../../services/supabase/data";
 import {
   getVisibleStatsLeaderboardTableColumns,
   isStatsLeaderboardShowAllQueryActive,
@@ -29,7 +30,7 @@ const getDayBucket = (match) => {
   return null;
 };
 
-const getSeasonAttendance = (season) => {
+const getSeasonAttendanceFromStatic = (season) => {
   for (const [path, mod] of Object.entries(attendanceDataModules)) {
     if (path.endsWith(`/${season}.json`)) return mod.default || mod;
   }
@@ -53,6 +54,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [modalPlayer, setModalPlayer] = useState(null);
   const [statsView, setStatsView] = useState("overall"); // "overall", "weekday", "weekend"
+  const [seasonMatches, setSeasonMatches] = useState(null);
 
   // Check if any player has weekend/weekday stats (for 2026+)
   const hasDetailedStats = useMemo(() => {
@@ -91,6 +93,33 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
   // Reset statsView when year changes
   useEffect(() => {
     setStatsView("overall");
+  }, [selectedYear]);
+
+  useEffect(() => {
+    if (!selectedYear || selectedYear === "all-time") {
+      setSeasonMatches(null);
+      return;
+    }
+    const seasonNum = Number(selectedYear);
+    if (!Number.isFinite(seasonNum) || seasonNum < 2026 || !config.SUPABASE?.enabled) {
+      setSeasonMatches(null);
+      return;
+    }
+
+    let cancelled = false;
+    fetchSeasonMatches(seasonNum)
+      .then((rows) => {
+        if (cancelled) return;
+        setSeasonMatches(rows || []);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setSeasonMatches([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [selectedYear]);
 
   useEffect(() => {
@@ -182,8 +211,12 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
     const enabledSeasons = Array.isArray(cfg.seasons) ? cfg.seasons.map(String) : [];
     if (!enabledSeasons.includes(String(selectedYear))) return new Map();
 
-    const seasonData = getSeasonAttendance(String(selectedYear));
-    const matches = seasonData?.matches;
+    const seasonNum = Number(selectedYear);
+    const useSupabaseMatches = Number.isFinite(seasonNum) && seasonNum >= 2026;
+    const staticMatches = getSeasonAttendanceFromStatic(String(selectedYear))?.matches;
+    const matches = useSupabaseMatches
+      ? (Array.isArray(seasonMatches) ? seasonMatches : [])
+      : (Array.isArray(staticMatches) ? staticMatches : []);
     if (!Array.isArray(matches) || matches.length === 0) return new Map();
 
     /** @type {Map<string, {name:string, buckets: Record<string, number>}>} */
@@ -258,7 +291,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
       });
     }
     return out;
-  }, [selectedYear, statsView]);
+  }, [selectedYear, statsView, seasonMatches]);
 
   const showPositionDotLegend = useMemo(() => {
     const cfg = config.STATS_LEADERBOARD?.positionVisual;

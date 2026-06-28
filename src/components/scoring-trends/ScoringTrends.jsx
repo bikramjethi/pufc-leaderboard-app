@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { config } from "../../leaderboard-config.js";
 import { DiffsTrendChart, GoalsTrendChart } from "./ScoringTrendsRecharts.jsx";
+import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import matchData2026 from "../../data/attendance-data/2026.json";
 import matchData2025 from "../../data/attendance-data/2025.json";
 import matchData2024 from "../../data/attendance-data/2024.json";
@@ -72,6 +74,26 @@ export const ScoringTrends = () => {
   };
   
   const [activeSubTab, setActiveSubTab] = useState(getDefaultSubTab());
+  const [remoteMatches, setRemoteMatches] = useState(null);
+
+  useEffect(() => {
+    if (!config.SUPABASE?.enabled) {
+      setRemoteMatches(null);
+      return;
+    }
+    fetchSeasonMatches(selectedSeason)
+      .then((rows) => setRemoteMatches(rows))
+      .catch(() => setRemoteMatches(null));
+  }, [selectedSeason]);
+
+  const seasonData = useMemo(() => {
+    const staticData = matchDataByYear[selectedSeason];
+    if (Array.isArray(remoteMatches)) {
+      return { ...(staticData || {}), matches: remoteMatches };
+    }
+    return staticData;
+  }, [selectedSeason, remoteMatches]);
+  const trendsSource = Array.isArray(remoteMatches) ? "supabase" : "json-fallback";
 
   // Ensure activeSubTab is always one of the enabled tabs
   useEffect(() => {
@@ -94,7 +116,7 @@ export const ScoringTrends = () => {
 
   // Process match data for the graph (including cancelled matches, excluding future)
   const graphData = useMemo(() => {
-    const data = matchDataByYear[selectedSeason];
+    const data = seasonData;
     if (!data || !data.matches) return { weekday: [], weekend: [], maxGoals: 0, playedWeekday: 0, playedWeekend: 0 };
 
     const today = new Date();
@@ -163,11 +185,11 @@ export const ScoringTrends = () => {
       playedWeekday,
       playedWeekend,
     };
-  }, [selectedSeason]);
+  }, [seasonData, selectedSeason]);
 
   // Calculate weekly top scorers
   const weeklyScorers = useMemo(() => {
-    const data = matchDataByYear[selectedSeason];
+    const data = seasonData;
     if (!data || !data.matches) return [];
 
     const playedMatches = data.matches
@@ -294,7 +316,7 @@ export const ScoringTrends = () => {
       if (a.year !== b.year) return a.year - b.year;
       return a.weekNum - b.weekNum;
     });
-  }, [selectedSeason]);
+  }, [seasonData, selectedSeason]);
 
   // Calculate stats (only count played matches for averages)
   const stats = useMemo(() => {
@@ -323,7 +345,7 @@ export const ScoringTrends = () => {
 
   // Calculate weekly goal differences (including cancelled matches, excluding future)
   const weeklyDiffs = useMemo(() => {
-    const data = matchDataByYear[selectedSeason];
+    const data = seasonData;
     if (!data || !data.matches) return { data: [], weekdayData: [], weekendData: [] };
 
     const today = new Date();
@@ -441,7 +463,7 @@ export const ScoringTrends = () => {
       }));
 
     return { data: sortedResults, weekdayData, weekendData };
-  }, [selectedSeason]);
+  }, [seasonData, selectedSeason]);
 
   const goalsChartRows = useMemo(() => {
     const maxLen = Math.max(
@@ -517,6 +539,7 @@ export const ScoringTrends = () => {
 
   return (
     <div className="scoring-trends">
+      <DataSourceBadge source={trendsSource} context="Scoring Trends" />
       {/* Header with Season Selector */}
       <div className="scoring-trends-header">
         <h2 className="scoring-trends-title">⚽ Trends</h2>

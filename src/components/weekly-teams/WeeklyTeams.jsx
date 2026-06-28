@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { config } from "../../leaderboard-config.js";
+import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import "./WeeklyTeams.css";
 
 // Import attendance data dynamically
@@ -81,6 +83,7 @@ export const WeeklyTeams = () => {
   
   const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0);
+  const [remoteMatches, setRemoteMatches] = useState(null);
   const carouselRef = useRef(null);
   const matchRefs = useRef({});
   
@@ -94,9 +97,20 @@ export const WeeklyTeams = () => {
     return null;
   }, [selectedSeason]);
 
+  useEffect(() => {
+    if (!config.SUPABASE?.enabled) {
+      setRemoteMatches(null);
+      return;
+    }
+    fetchSeasonMatches(selectedSeason)
+      .then((rows) => setRemoteMatches(rows))
+      .catch(() => setRemoteMatches(null));
+  }, [selectedSeason]);
+
   // Get played matches (including cancelled) sorted by date ascending (oldest first, newest last)
   const matches = useMemo(() => {
-    if (!seasonData?.matches) return [];
+    const sourceMatches = Array.isArray(remoteMatches) ? remoteMatches : seasonData?.matches;
+    if (!sourceMatches) return [];
     
     // Parse date string to Date object for sorting
     const parseDate = (dateStr) => {
@@ -105,10 +119,10 @@ export const WeeklyTeams = () => {
     };
     
     // Get all matches and sort by date ascending (oldest first, newest on right)
-    return [...seasonData.matches].sort((a, b) => {
+    return [...sourceMatches].sort((a, b) => {
       return parseDate(a.date) - parseDate(b.date);
     });
-  }, [seasonData]);
+  }, [seasonData, remoteMatches]);
 
   // Find the index of the latest played match (not cancelled) - will be towards the end
   const latestPlayedMatchIndex = useMemo(() => {
@@ -231,9 +245,11 @@ const STRIKER_DUPLICATE_OFFSET_Y = 10;
   const isPriorSeason = parseInt(selectedSeason) < 2026;
   const isBackfilled = currentMatch?.isBackfilled === true;
   const needsBackfill = isPriorSeason && isPlayed && !isCancelled && !isTournament && !isBackfilled;
+  const weeklyTeamsSource = Array.isArray(remoteMatches) ? "supabase" : "json-fallback";
 
   return (
     <div className="weekly-teams">
+      <DataSourceBadge source={weeklyTeamsSource} context="Weekly Teams" />
       {/* Header */}
       <div className="wt-header">
         <div className="wt-title">

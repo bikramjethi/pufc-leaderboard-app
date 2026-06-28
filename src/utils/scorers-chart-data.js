@@ -188,13 +188,14 @@ export function buildScorersChartData({
   dataSeason,
   topN = 10,
   trackActiveWeeks = false,
+  seasonMatchData = null,
 } = {}) {
   const seasonKeys = normalizeSeasonKeys(dataSeason);
   const allMatches = [];
   const loadedSeasons = [];
 
   for (const key of seasonKeys) {
-    const raw = MATCH_DATA_BY_SEASON[key];
+    const raw = seasonMatchData?.[key] || MATCH_DATA_BY_SEASON[key];
     if (raw?.matches?.length) {
       loadedSeasons.push(key);
       allMatches.push(...raw.matches);

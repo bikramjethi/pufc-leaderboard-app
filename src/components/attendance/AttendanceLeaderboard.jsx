@@ -5,6 +5,7 @@ import attendanceLeaderboardData2026 from "../../data/attendance-data/leaderboar
 import playerProfiles from "../../data/player-profiles.json";
 import { config } from "../../leaderboard-config";
 import { fetchAttendanceLeaderboard } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 
 const attendanceLeaderboardDataByYear = {
   2025: attendanceLeaderboardData2025,
@@ -45,6 +46,12 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   const [remoteData, setRemoteData] = useState(null);
   const [remoteError, setRemoteError] = useState("");
   const data = remoteData || attendanceLeaderboardDataByYear[yearKey];
+  const attendanceSource =
+    config.SUPABASE?.enabled &&
+    config.SUPABASE?.readModules?.attendanceLeaderboard &&
+    remoteData
+      ? "supabase"
+      : "json-fallback";
   
   // Sorting state
   const [sortKey, setSortKey] = useState("totalGames");
@@ -327,6 +334,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
 
   return (
     <div className="attendance-leaderboard">
+      <DataSourceBadge source={attendanceSource} context="Attendance" />
       {remoteError && <div className="error-message">{remoteError}</div>}
       {/* Summary Header */}
       <div className="attendance-leaderboard-header">

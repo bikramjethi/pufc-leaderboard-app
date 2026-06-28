@@ -1,6 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { config } from "../../leaderboard-config.js";
 import { getPlayerImage } from "../../utils/playerImages.js";
+import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import "./DefendersCorner.css";
 
 // Dynamically import all available match data files
@@ -79,11 +81,29 @@ const isTrackablePlayer = (name) => {
 };
 
 export const DefendersCorner = () => {
-  const trackerSeasons = getTrackerSeasons();
+  const trackerSeasons = useMemo(() => getTrackerSeasons(), []);
   const minMatches = config.DEFENDERS_CORNER?.minMatches || 5;
   
   const [selectedSeason, setSelectedSeason] = useState(config.DEFENDERS_CORNER?.defaultSeason || "all");
   const [activeTab, setActiveTab] = useState("least-conceded");
+  const [remoteMatchesBySeason, setRemoteMatchesBySeason] = useState({});
+
+  useEffect(() => {
+    if (!config.SUPABASE?.enabled) return;
+    Promise.all(
+      trackerSeasons.map((year) =>
+        fetchSeasonMatches(year)
+          .then((matches) => [year, matches])
+          .catch(() => [year, null])
+      )
+    ).then((entries) => {
+      const next = {};
+      entries.forEach(([year, matches]) => {
+        if (Array.isArray(matches)) next[year] = matches;
+      });
+      setRemoteMatchesBySeason(next);
+    });
+  }, [trackerSeasons]);
 
   // ==================== ALL STATS FROM TRACKER DATA ====================
   // Now using per-match positions from attendance data for all calculations
@@ -91,8 +111,19 @@ export const DefendersCorner = () => {
     const seasonsToUse = selectedSeason === "all" 
       ? trackerSeasons 
       : trackerSeasons.includes(selectedSeason) ? [selectedSeason] : [];
-    return seasonsToUse.flatMap(year => getValidMatches(year));
-  }, [selectedSeason, trackerSeasons]);
+    return seasonsToUse.flatMap((year) => {
+      const remote = remoteMatchesBySeason[year];
+      if (Array.isArray(remote)) {
+        return remote.filter((m) => {
+          if (!m.matchPlayed || m.matchCancelled) return false;
+          if (m.isTournament) return false;
+          if (parseInt(year) < 2026 && !m.isBackfilled) return false;
+          return true;
+        });
+      }
+      return getValidMatches(year);
+    });
+  }, [selectedSeason, trackerSeasons, remoteMatchesBySeason]);
 
   // Defender stats from tracker data - used for ALL tabs now
   // Only counts a player as defender when they played LB, RB, CB, or GK in that specific match
@@ -299,9 +330,15 @@ export const DefendersCorner = () => {
 
   // Data source label - all from tracker now
   const dataSourceLabel = `${trackerMatchCount} matches • ${defenderCount} defenders`;
+  const hasRemoteForDefenderSeason =
+    selectedSeason === "all"
+      ? trackerSeasons.some((y) => Array.isArray(remoteMatchesBySeason[y]))
+      : Array.isArray(remoteMatchesBySeason[selectedSeason]);
+  const defendersSource = hasRemoteForDefenderSeason ? "supabase" : "json-fallback";
 
   return (
     <div className="defenders-corner">
+      <DataSourceBadge source={defendersSource} context="Defenders Corner" />
       <div className="dc-header">
         <div className="dc-title">
           <h2>🛡️ Defenders Corner</h2>

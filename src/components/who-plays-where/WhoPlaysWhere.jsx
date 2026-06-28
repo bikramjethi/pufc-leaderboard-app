@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import playerProfiles from "../../data/player-profiles.json";
 import { config } from "../../leaderboard-config.js";
+import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import { getDisplayName } from "../../utils/playerDisplayName.js";
 import {
   aggregateLineupStatsForSeason,
@@ -60,8 +62,31 @@ export const WhoPlaysWhere = () => {
       ? cfg.defaultSeason
       : availableSeasons[0];
   const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
+  const [remoteBySeason, setRemoteBySeason] = useState({});
   const [search, setSearch] = useState("");
   const [tagFilter, setTagFilter] = useState("all");
+  const hasRemoteForSeason =
+    selectedSeason === "all"
+      ? availableSeasons.some((s) => Boolean(remoteBySeason[s]))
+      : Boolean(remoteBySeason[selectedSeason]);
+  const whoPlaysWhereSource = hasRemoteForSeason ? "supabase" : "json-fallback";
+
+  useEffect(() => {
+    if (!config.SUPABASE?.enabled) return;
+    Promise.all(
+      availableSeasons.map((season) =>
+        fetchSeasonMatches(season)
+          .then((rows) => [season, rows])
+          .catch(() => [season, null])
+      )
+    ).then((entries) => {
+      const next = {};
+      entries.forEach(([season, rows]) => {
+        if (Array.isArray(rows)) next[season] = { matches: rows };
+      });
+      setRemoteBySeason(next);
+    });
+  }, [availableSeasons]);
 
   const eligibleByLower = useMemo(
     () => buildEligibleProfileMap(playerProfiles),
@@ -69,18 +94,19 @@ export const WhoPlaysWhere = () => {
   );
 
   const lineupStats = useMemo(() => {
+    const loadSeason = (season) => remoteBySeason[season] || loadSeasonData(season);
     if (selectedSeason === "all") {
       const aggs = availableSeasons
-        .map((y) => loadSeasonData(y))
+        .map((y) => loadSeason(y))
         .filter(Boolean)
         .map((data) => aggregateLineupStatsForSeason(data, eligibleByLower));
       return mergeLineupStatsAggregates(aggs);
     }
-    const data = loadSeasonData(selectedSeason);
+    const data = loadSeason(selectedSeason);
     return data
       ? aggregateLineupStatsForSeason(data, eligibleByLower)
       : { positions: new Map(), rotatedGoalie: new Map() };
-  }, [selectedSeason, availableSeasons, eligibleByLower]);
+  }, [selectedSeason, availableSeasons, eligibleByLower, remoteBySeason]);
 
   const playerRowsAll = useMemo(() => {
     const { positions, rotatedGoalie } = lineupStats;
@@ -130,6 +156,7 @@ export const WhoPlaysWhere = () => {
 
   return (
     <div className="who-plays-where">
+      <DataSourceBadge source={whoPlaysWhereSource} context="Who Plays Where" />
       <header className="wpw-header">
         <div className="wpw-title-block">
           <h2 className="wpw-title">Who plays where ?</h2>

@@ -6,7 +6,13 @@ import {
   signInWithPassword,
   signOut,
 } from "../../services/supabase/auth";
-import { refreshSeasonStats, saveMatchEntry } from "../../services/supabase/data";
+import {
+  fetchAvailableSeasonYears,
+  fetchMatchEntryById,
+  fetchNextUnfilledMatchId,
+  refreshSeasonStats,
+  saveMatchEntry,
+} from "../../services/supabase/data";
 
 // Available team colors
 const TEAM_COLORS = ["RED", "BLUE", "BLACK", "WHITE", "YELLOW"];
@@ -37,7 +43,7 @@ Object.entries(attendanceDataModules).forEach(([path, module]) => {
 });
 
 // Available years for dropdown (sorted descending)
-const AVAILABLE_YEARS = Object.keys(attendanceDataByYear).sort((a, b) => b - a);
+const STATIC_AVAILABLE_YEARS = Object.keys(attendanceDataByYear).sort((a, b) => b - a);
 
 // Create a player template; position defaults to "ST" for manually added rows
 const createPlayer = (position = "ST") => ({
@@ -63,7 +69,7 @@ const createPlayerFromData = (playerData) => ({
 
 // Returns the first match in the current year that hasn't been played or cancelled yet,
 // up to and including today — this is almost always the match we need to enter next.
-const findNextUnfilledMatchId = () => {
+const findNextUnfilledMatchIdFromStatic = () => {
   const currentYear = new Date().getFullYear().toString();
   const yearData = attendanceDataByYear[currentYear];
   if (!yearData?.matches) return "";
@@ -79,8 +85,9 @@ const findNextUnfilledMatchId = () => {
 
 export const MatchEntry = () => {
   // Form state
-  const [year, setYear] = useState("2026");
-  const [matchId, setMatchId] = useState(() => findNextUnfilledMatchId());
+  const [availableYears, setAvailableYears] = useState(STATIC_AVAILABLE_YEARS);
+  const [year, setYear] = useState(() => STATIC_AVAILABLE_YEARS[0] || "2026");
+  const [matchId, setMatchId] = useState("");
   const [matchMode, setMatchMode] = useState(DEFAULT_MATCH_MODE);
   const [team1Color, setTeam1Color] = useState("RED");
   const [team2Color, setTeam2Color] = useState("BLUE");
@@ -120,6 +127,41 @@ export const MatchEntry = () => {
         setSession(null);
       });
   }, []);
+
+  useEffect(() => {
+    if (!config.SUPABASE?.enabled) return;
+    fetchAvailableSeasonYears()
+      .then((dbYears) => {
+        const merged = Array.from(new Set([...dbYears, ...STATIC_AVAILABLE_YEARS]))
+          .sort((a, b) => Number(b) - Number(a));
+        setAvailableYears(merged);
+        if (!merged.includes(year)) {
+          setYear(merged[0] || "2026");
+        }
+      })
+      .catch(() => {
+        setAvailableYears(STATIC_AVAILABLE_YEARS);
+      });
+  }, [year]);
+
+  useEffect(() => {
+    if (matchId) return;
+    const selectedYearNum = Number(year);
+    if (!Number.isFinite(selectedYearNum)) return;
+
+    if (!(config.SUPABASE?.enabled && selectedYearNum >= 2026)) {
+      setMatchId(findNextUnfilledMatchIdFromStatic());
+      return;
+    }
+
+    fetchNextUnfilledMatchId(selectedYearNum)
+      .then((id) => {
+        setMatchId(id || "");
+      })
+      .catch(() => {
+        setMatchId(findNextUnfilledMatchIdFromStatic());
+      });
+  }, [year, matchId]);
 
   // Get players already entered in both teams (for filtering autocomplete)
   const usedPlayerNames = useMemo(() => {
@@ -162,12 +204,12 @@ export const MatchEntry = () => {
     const parts = id.trim().split("-");
     if (parts.length === 3 && parts[2].length === 4) {
       const yearStr = parts[2];
-      if (AVAILABLE_YEARS.includes(yearStr)) {
+      if (availableYears.includes(yearStr)) {
         return yearStr;
       }
     }
     return null;
-  }, []);
+  }, [availableYears]);
 
   // Find match data by ID
   const findMatchById = useCallback((id, yearToSearch) => {
@@ -283,26 +325,54 @@ export const MatchEntry = () => {
 
   // Auto-detect year and load match data when match ID changes
   useEffect(() => {
-    if (!matchId) {
-      setLoadedFromData(false);
-      return;
-    }
+    let cancelled = false;
 
-    // Parse year from match ID
-    const detectedYear = parseYearFromMatchId(matchId);
-    if (detectedYear && detectedYear !== year) {
-      setYear(detectedYear);
-    }
+    const loadMatch = async () => {
+      if (!matchId) {
+        setLoadedFromData(false);
+        return;
+      }
 
-    // Try to find existing match data
-    const yearToSearch = detectedYear || year;
-    const existingMatch = findMatchById(matchId, yearToSearch);
-    
-    if (existingMatch && existingMatch.matchPlayed) {
-      populateFromMatchData(existingMatch);
-    } else {
-      setLoadedFromData(false);
-    }
+      // Parse year from match ID
+      const detectedYear = parseYearFromMatchId(matchId);
+      if (detectedYear && detectedYear !== year) {
+        setYear(detectedYear);
+      }
+
+      const yearToSearch = detectedYear || year;
+      let existingMatch = null;
+
+      // Prefer Supabase for prefill so edits round-trip correctly.
+      if (config.SUPABASE?.enabled) {
+        try {
+          existingMatch = await fetchMatchEntryById({
+            matchId,
+            seasonYear: Number(yearToSearch),
+          });
+        } catch {
+          existingMatch = null;
+        }
+      }
+
+      // Fallback to bundled JSON for local/offline compatibility.
+      if (!existingMatch) {
+        existingMatch = findMatchById(matchId, yearToSearch);
+      }
+
+      if (cancelled) return;
+
+      if (existingMatch && existingMatch.matchPlayed) {
+        populateFromMatchData(existingMatch);
+      } else {
+        setLoadedFromData(false);
+      }
+    };
+
+    loadMatch();
+
+    return () => {
+      cancelled = true;
+    };
   }, [matchId, year, parseYearFromMatchId, findMatchById, populateFromMatchData]);
 
   // Update clean sheets when scores change
@@ -601,8 +671,9 @@ export const MatchEntry = () => {
   // Clear form
   const handleClear = () => {
     setMatchMode(DEFAULT_MATCH_MODE);
-    setMatchId(findNextUnfilledMatchId());
-    setYear("2026");
+    const resetYear = availableYears[0] || "2026";
+    setYear(resetYear);
+    setMatchId("");
     setTeam1Color("RED");
     setTeam2Color("BLUE");
     setTeam1Score(0);
@@ -684,7 +755,7 @@ export const MatchEntry = () => {
           <div className="form-group">
             <label>Year</label>
             <select value={year} onChange={(e) => setYear(e.target.value)}>
-              {AVAILABLE_YEARS.map(yr => (
+              {availableYears.map(yr => (
                 <option key={yr} value={yr}>
                   {yr}{parseInt(yr) < 2026 ? " (Backfill)" : ""}
                 </option>
