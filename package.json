@@ -15,6 +15,7 @@
     "update-match": "node scripts/update-match.js",
     "process-match": "node scripts/process-match.js",
     "match-server": "node scripts/save-match-server.js",
+    "backfill-server": "node --env-file=.env scripts/save-match-server.js",
     "migrate:supabase:2026": "node supabase-migration/migrate-json-to-supabase.js 2026",
     "verify:supabase:2026": "node supabase-migration/verify-supabase-parity.js 2026"
   },

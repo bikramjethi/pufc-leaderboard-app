@@ -96,3 +96,9 @@ npm run sync-stats:supabase:2026
 select public.refresh_season_stats(2026);
 ```
 
+- Start local backfill endpoint (used by Admins Corner -> Backfill tab):
+
+```bash
+npm run backfill-server
+```
+

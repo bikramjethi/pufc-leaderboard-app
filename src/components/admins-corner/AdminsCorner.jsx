@@ -127,6 +127,9 @@ export const AdminsCorner = () => {
     positionsText: "MID",
     isTracked: true,
   });
+  const [backfillYear, setBackfillYear] = useState("2026");
+  const [backfillRunning, setBackfillRunning] = useState(false);
+  const [backfillMessage, setBackfillMessage] = useState("");
 
   useEffect(() => {
     getCurrentSession()
@@ -238,6 +241,32 @@ export const AdminsCorner = () => {
     }
   };
 
+  const runBackfill = async () => {
+    setBackfillRunning(true);
+    setBackfillMessage("");
+    try {
+      const response = await fetch("http://localhost:3001/api/backfill-from-supabase", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ season: Number(backfillYear) }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error || "Backfill failed.");
+      }
+      const files = Array.isArray(data.filesUpdated) ? data.filesUpdated.join(", ") : "";
+      setBackfillMessage(`Backfill completed for ${backfillYear}. Updated: ${files}`);
+      await refreshPlayers();
+    } catch (e) {
+      setBackfillMessage(
+        e?.message ||
+          "Backfill failed. Ensure local server is running with Supabase service credentials."
+      );
+    } finally {
+      setBackfillRunning(false);
+    }
+  };
+
   if (!session) {
     const canSubmit = !authLoading && authEmail.trim() && authPassword;
 
@@ -308,6 +337,12 @@ export const AdminsCorner = () => {
             onClick={() => setActiveTab("app-config")}
           >
             ⚙️ Config
+          </button>
+          <button
+            className={`stats-view-tab ${activeTab === "backfill" ? "active" : ""}`}
+            onClick={() => setActiveTab("backfill")}
+          >
+            🔁 Backfill
           </button>
         </div>
         <div className="attendance-year-selector">
@@ -394,8 +429,32 @@ export const AdminsCorner = () => {
           </div>
           {playersLoading ? <p className="player-admin-help">Refreshing players...</p> : null}
         </div>
-      ) : (
+      ) : activeTab === "app-config" ? (
         <ConfigAdminPanel />
+      ) : (
+        <div className="player-admin-panel">
+          <h3>Backfill JSON from Supabase</h3>
+          <p className="player-admin-help">
+            One-click backfill. 2024/2025 updates weekly attendance JSON only. 2026+ updates weekly,
+            attendance leaderboard, stats leaderboard, and player profiles JSON.
+          </p>
+          <div className="player-admin-add-row">
+            <select value={backfillYear} onChange={(e) => setBackfillYear(e.target.value)}>
+              {["2024", "2025", "2026", "2027", "2028", "2029", "2030"].map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <button className="btn btn-primary" onClick={runBackfill} disabled={backfillRunning}>
+              {backfillRunning ? "Running..." : "Backfill"}
+            </button>
+          </div>
+          {backfillMessage ? <div className="info-message">{backfillMessage}</div> : null}
+          <p className="player-admin-help">
+            Start local server with: <code>node --env-file=.env scripts/save-match-server.js</code>
+          </p>
+        </div>
       )}
     </div>
   );
