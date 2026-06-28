@@ -9,9 +9,9 @@ import { ScorersChart } from "./components/scorers-chart";
 import { FunStats } from "./components/fun-stats";
 import { HeadToHead } from "./components/head-to-head";
 import { MVPLeaderboard } from "./components/mvp-leaderboard";
-import { MatchEntry } from "./components/match-entry";
 import { DefendersCorner } from "./components/defenders-corner";
 import { CreateLineup } from "./components/create-lineup";
+import { AdminsCorner } from "./components/admins-corner";
 import { WeeklyTeams } from "./components/weekly-teams";
 import { WhoPlaysWhere } from "./components/who-plays-where/WhoPlaysWhere";
 import { HallOfFame } from "./components/hall-of-fame";
@@ -26,6 +26,7 @@ import { getLeaderboardSeason, leaderboardData } from "./utils/get-data.js";
 import { filterLeaderboardDataByTracked, filterPlayersForStatsLeaderboard } from "./utils/playerTracking.js";
 
 const staticStatsLeaderboardBySeason = filterLeaderboardDataByTracked(leaderboardData);
+const isAdminsCornerEnabled = Boolean(config.MATCH_ENTRY?.enabled);
 
 // Get available years from config, falling back to data keys
 const availableYears = config.STATS_LEADERBOARD?.seasons || Object.keys(leaderboardData).sort((a, b) => b - a);
@@ -89,7 +90,12 @@ const getNavItems = () => [
   {
     group: "Admin",
     items: [
-      { id: "match-entry", label: "Match Entry", icon: "📝", enabled: config.MATCH_ENTRY?.enabled },
+      { id: "admins-corner", label: "Admins Corner", icon: "🛠️", enabled: isAdminsCornerEnabled },
+    ],
+  },
+  {
+    group: "Tools",
+    items: [
       { id: "create-lineup", label: "Create Lineup", icon: "⚽", enabled: config.CREATE_LINEUP?.enabled },
     ],
   },
@@ -107,7 +113,11 @@ function App() {
         .filter((item) => item.enabled)
         .map((item) => item.id)
     );
-    return enabledTabs.has(requested) ? requested : "leaderboard";
+    const normalizedRequested =
+      requested === "match-entry"
+        ? "admins-corner"
+        : requested;
+    return enabledTabs.has(normalizedRequested) ? normalizedRequested : "leaderboard";
   });
   const defaultYear = config.STATS_LEADERBOARD?.defaultSeason || 
     (availableYears.includes("2026") ? "2026" : "all-time");
@@ -151,7 +161,7 @@ function App() {
       "weekend-roster": "Weekend Roster",
       "inactive-players": "Inactive Players",
       "onloan-roster": "On Loan Players",
-      "match-entry": "Match Data Entry Tool",
+      "admins-corner": "Admin tools",
       "create-lineup": "Create Lineup",
     };
     return subtitles[activeTab] || "Player Statistics";
@@ -433,8 +443,8 @@ function App() {
             <Roster type="inactive" />
           ) : activeTab === "onloan-roster" ? (
             <Roster type="onloan" />
-          ) : activeTab === "match-entry" ? (
-            <MatchEntry />
+          ) : activeTab === "admins-corner" ? (
+            <AdminsCorner />
           ) : activeTab === "create-lineup" ? (
             <CreateLineup />
           ) : null}
