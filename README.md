@@ -83,6 +83,11 @@ The main app will run on `http://localhost:5173`
 
 The app now supports a Supabase-backed data path (auth + DB) while keeping JSON fallback.
 
+### New team docs
+
+- Admin onboarding: `docs/admin-onboarding.md`
+- Operations runbook: `docs/ops-runbook.md`
+
 ### 1) Set environment variables
 
 Copy `.env.example` to `.env` and set:
