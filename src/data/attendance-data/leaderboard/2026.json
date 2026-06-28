@@ -441,6 +441,20 @@
       "notes": null
     },
     {
+      "category": "MIDWEEK",
+      "sno": 33,
+      "name": "Mathew",
+      "midweekGames": 8,
+      "weekendGames": 0,
+      "totalGames": 8,
+      "midweekPercentage": 33,
+      "weekendPercentage": 0,
+      "totalPercentage": 16,
+      "games2024": 0,
+      "difference": 8,
+      "notes": null
+    },
+    {
       "category": "Others",
       "sno": 33,
       "name": "Tushar",
@@ -522,20 +536,6 @@
       "totalPercentage": 8,
       "games2024": 0,
       "difference": 4,
-      "notes": null
-    },
-    {
-      "category": "MIDWEEK",
-      "sno": 33,
-      "name": "Mathew",
-      "midweekGames": 8,
-      "weekendGames": 0,
-      "totalGames": 8,
-      "midweekPercentage": 33,
-      "weekendPercentage": 0,
-      "totalPercentage": 16,
-      "games2024": 0,
-      "difference": 8,
       "notes": null
     },
     {

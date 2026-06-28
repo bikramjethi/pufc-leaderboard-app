@@ -8,11 +8,52 @@
     "isTracked": true
   },
   {
+    "name": "Ajay",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
     "name": "Akshat",
     "position": [
       "MID"
     ],
     "groupAvailibility": "MIDWEEK",
+    "isTracked": false
+  },
+  {
+    "name": "Akshendra",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Akshit",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Alan",
+    "position": [
+      "DEF",
+      "FWD"
+    ],
+    "groupAvailibility": "ONLOAN",
+    "isTracked": false
+  },
+  {
+    "name": "Altamash",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "ONLOAN",
     "isTracked": false
   },
   {
@@ -40,6 +81,22 @@
     "isTracked": false
   },
   {
+    "name": "Anis",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Ankur",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "ONLOAN",
+    "isTracked": false
+  },
+  {
     "name": "Ashish",
     "position": [
       "DEF"
@@ -64,11 +121,51 @@
     "isTracked": false
   },
   {
+    "name": "Gagan",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "ONLOAN",
+    "isTracked": false
+  },
+  {
+    "name": "Indranil",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Ishaan M",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "MIDWEEK",
+    "isTracked": true
+  },
+  {
+    "name": "Ishan(Mid)",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "ONLOAN",
+    "isTracked": false
+  },
+  {
     "name": "Jethi",
     "position": [
       "ALL"
     ],
     "groupAvailibility": "ALLGAMES",
+    "isTracked": true
+  },
+  {
+    "name": "Jisu",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "ONLOAN",
     "isTracked": true
   },
   {
@@ -88,12 +185,12 @@
     "isTracked": true
   },
   {
-    "name": "Uma Shankar",
+    "name": "Ketan",
     "position": [
-      "GK"
+      "DEF"
     ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
+    "groupAvailibility": "ALLGAMES",
+    "isTracked": true
   },
   {
     "name": "Lalit",
@@ -104,6 +201,22 @@
     ],
     "groupAvailibility": "MIDWEEK",
     "isTracked": true
+  },
+  {
+    "name": "Mani",
+    "position": [
+      "FWD"
+    ],
+    "groupAvailibility": "ONLOAN",
+    "isTracked": false
+  },
+  {
+    "name": "Manoj",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
   },
   {
     "name": "Mathew",
@@ -119,6 +232,22 @@
       "GK"
     ],
     "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Nilaj",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Others",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "ONLOAN",
     "isTracked": false
   },
   {
@@ -138,9 +267,49 @@
     "isTracked": true
   },
   {
+    "name": "Priyanshu",
+    "position": [
+      "FWD"
+    ],
+    "groupAvailibility": "ONLOAN",
+    "isTracked": false
+  },
+  {
     "name": "Raghav",
     "position": [
       "GK"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Rahul Dhek",
+    "position": [
+      "FWD"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": true
+  },
+  {
+    "name": "Rajat",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "ALLGAMES",
+    "isTracked": false
+  },
+  {
+    "name": "Rajesh",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Ram",
+    "position": [
+      "MID"
     ],
     "groupAvailibility": "INACTIVE",
     "isTracked": false
@@ -186,6 +355,38 @@
     "isTracked": false
   },
   {
+    "name": "Sayan",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Shaunav",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Somanna",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "WEEKEND",
+    "isTracked": true
+  },
+  {
+    "name": "Somu",
+    "position": [
+      "FWD"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
     "name": "Soumyadeep",
     "position": [
       "FWD"
@@ -200,6 +401,14 @@
     ],
     "groupAvailibility": "MIDWEEK",
     "isTracked": true
+  },
+  {
+    "name": "Srijan",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "ONLOAN",
+    "isTracked": false
   },
   {
     "name": "Subarna",
@@ -227,6 +436,22 @@
     "isTracked": true
   },
   {
+    "name": "Suyash",
+    "position": [
+      "FWD"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Tejas",
+    "position": [
+      "DEF"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
     "name": "Tushar",
     "position": [
       "FWD"
@@ -241,6 +466,22 @@
     ],
     "groupAvailibility": "INACTIVE",
     "isTracked": true
+  },
+  {
+    "name": "Uma Shankar",
+    "position": [
+      "GK"
+    ],
+    "groupAvailibility": "INACTIVE",
+    "isTracked": false
+  },
+  {
+    "name": "Vedant",
+    "position": [
+      "MID"
+    ],
+    "groupAvailibility": "WEEKEND",
+    "isTracked": false
   },
   {
     "name": "Vikalp",
@@ -291,215 +532,6 @@
     "isTracked": true
   },
   {
-    "name": "Rahul Dhek",
-    "position": [
-      "FWD"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": true
-  },
-  {
-    "name": "Tejas",
-    "position": [
-      "DEF"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Suyash",
-    "position": [
-      "FWD"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Sayan",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Ajay",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Akshendra",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Akshit",
-    "position": [
-      "DEF"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Alan",
-    "position": [
-      "DEF",
-      "FWD"
-    ],
-    "groupAvailibility": "ONLOAN",
-    "isTracked": false
-  },
-  {
-    "name": "Anis",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Mani",
-    "position": [
-      "FWD"
-    ],
-    "groupAvailibility": "ONLOAN",
-    "isTracked": false
-  },
-  {
-    "name": "Rajat",
-    "position": [
-      "DEF"
-    ],
-    "groupAvailibility": "ALLGAMES",
-    "isTracked": false
-  },
-  {
-    "name": "Rajesh",
-    "position": [
-      "DEF"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Ram",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Somu",
-    "position": [
-      "FWD"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Vedant",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "WEEKEND",
-    "isTracked": false
-  },
-  {
-    "name": "Altamash",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "ONLOAN",
-    "isTracked": false
-  },
-  {
-    "name": "Ankur",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "ONLOAN",
-    "isTracked": false
-  },
-  {
-    "name": "Gagan",
-    "position": [
-      "DEF"
-    ],
-    "groupAvailibility": "ONLOAN",
-    "isTracked": false
-  },
-  {
-    "name": "Indranil",
-    "position": [
-      "DEF"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Manoj",
-    "position": [
-      "DEF"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Nilaj",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Others",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "ONLOAN",
-    "isTracked": false
-  },
-  {
-    "name": "Priyanshu",
-    "position": [
-      "FWD"
-    ],
-    "groupAvailibility": "ONLOAN",
-    "isTracked": false
-  },
-  {
-    "name": "Shaunav",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "INACTIVE",
-    "isTracked": false
-  },
-  {
-    "name": "Somanna",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "WEEKEND",
-    "isTracked": true
-  },
-  {
-    "name": "Srijan",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "ONLOAN",
-    "isTracked": false
-  },
-  {
     "name": "Vysakh",
     "position": [
       "MID"
@@ -514,29 +546,5 @@
     ],
     "groupAvailibility": "ONLOAN",
     "isTracked": false
-  },
-  {
-    "name": "Ishaan M",
-    "position": [
-      "DEF"
-    ],
-    "groupAvailibility": "MIDWEEK",
-    "isTracked": true
-  },
-  {
-    "name": "Ishan(Mid)",
-    "position": [
-      "MID"
-    ],
-    "groupAvailibility": "ONLOAN",
-    "isTracked": false
-  },
-  {
-    "name": "Ketan",
-    "position": [
-      "DEF"
-    ],
-    "groupAvailibility": "ALLGAMES",
-    "isTracked": true
   }
 ]
