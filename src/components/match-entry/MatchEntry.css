@@ -252,15 +252,18 @@
 /* Teams Container */
 .teams-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
   gap: 1.5rem;
 }
 
 .team-section {
+  --player-grid-template: minmax(160px, 1fr) 52px 48px 42px 34px 76px 28px;
+  --player-grid-template-rot-gk: minmax(140px, 1fr) 52px 48px 42px 34px 40px 76px 28px;
   background: var(--bg-secondary);
   border-radius: 12px;
   padding: 1.25rem;
   border: 2px solid var(--border-color);
+  min-width: 0;
 }
 
 .team-section h3 {
@@ -316,8 +319,8 @@
 
 .players-header {
   display: grid;
-  grid-template-columns: 1fr 60px 55px 45px 35px 80px 32px;
-  gap: 0.5rem;
+  grid-template-columns: var(--player-grid-template);
+  gap: 0.4rem;
   padding: 0.5rem 0.25rem;
   font-size: 0.7rem;
   font-weight: 600;
@@ -345,13 +348,13 @@
 }
 
 .team-section.rotating-goalie .players-header {
-  grid-template-columns: 1fr 60px 55px 45px 35px 40px 80px 32px;
+  grid-template-columns: var(--player-grid-template-rot-gk);
 }
 
 .match-player-row {
   display: grid;
-  grid-template-columns: 1fr 60px 55px 45px 35px 80px 32px;
-  gap: 0.5rem;
+  grid-template-columns: var(--player-grid-template);
+  gap: 0.4rem;
   align-items: center;
 }
 
@@ -382,7 +385,7 @@
 }
 
 .team-section.rotating-goalie .match-player-row {
-  grid-template-columns: 1fr 60px 55px 45px 35px 40px 80px 32px;
+  grid-template-columns: var(--player-grid-template-rot-gk);
 }
 
 .match-player-row .col-rot-gk.checkbox-cell {
@@ -650,6 +653,12 @@
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+  .teams-container {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 900px) {
   .teams-container {
     grid-template-columns: 1fr;
