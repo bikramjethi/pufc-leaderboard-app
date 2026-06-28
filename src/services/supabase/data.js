@@ -179,3 +179,42 @@ export const refreshSeasonStats = async (seasonYear) => {
   return data;
 };
 
+const normalizePlayerProfileRow = (row) => ({
+  name: row?.player_name || "",
+  groupAvailibility: row?.group_availability || "ALLGAMES",
+  position: Array.isArray(row?.position) ? row.position : ["MID"],
+  isTracked: row?.is_tracked !== false,
+});
+
+export const fetchPlayerProfiles = async () => {
+  ensureClient();
+  const { data, error } = await supabase
+    .from("players")
+    .select("player_name,group_availability,position,is_tracked")
+    .order("player_name", { ascending: true });
+  if (error) throw error;
+  return (data || []).map(normalizePlayerProfileRow);
+};
+
+export const upsertPlayerProfile = async (profile) => {
+  ensureClient();
+  const payload = {
+    player_name: String(profile?.name || "").trim(),
+    group_availability: String(profile?.groupAvailibility || "ALLGAMES").trim().toUpperCase(),
+    position: Array.isArray(profile?.position) ? profile.position : ["MID"],
+    is_tracked: profile?.isTracked !== false,
+  };
+  if (!payload.player_name) throw new Error("Player name is required.");
+  const { error } = await supabase.from("players").upsert(payload, { onConflict: "player_name" });
+  if (error) throw error;
+};
+
+export const deletePlayerProfile = async (playerName) => {
+  ensureClient();
+  const { error } = await supabase
+    .from("players")
+    .delete()
+    .eq("player_name", String(playerName || "").trim());
+  if (error) throw error;
+};
+

@@ -41,6 +41,23 @@ node --env-file=.env supabase-migration/migrate-json-to-supabase.js 2026
 node --env-file=.env supabase-migration/verify-supabase-parity.js 2026
 ```
 
+### One-time player profile schema sync (`isTracked`)
+
+If your Supabase `public.players` table was created before `is_tracked` existed,
+run this once in Supabase SQL editor:
+
+```sql
+alter table public.players
+  add column if not exists is_tracked boolean not null default true;
+```
+
+Then re-run migration (any season) to push `src/data/player-profiles.json` values
+into Supabase `public.players`:
+
+```bash
+node --env-file=.env supabase-migration/migrate-json-to-supabase.js 2026
+```
+
 Or via npm scripts:
 
 ```bash

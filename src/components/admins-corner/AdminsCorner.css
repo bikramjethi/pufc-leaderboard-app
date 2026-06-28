@@ -90,3 +90,63 @@
     width: 100%;
   }
 }
+
+.player-admin-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.player-admin-help {
+  color: var(--text-muted);
+  margin: 0.5rem 0 1rem;
+}
+
+.player-admin-add-row {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1.2fr auto auto;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.player-admin-add-row input,
+.player-admin-add-row select,
+.player-admin-table input,
+.player-admin-table select {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-radius: 6px;
+}
+
+.player-admin-tracked {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+}
+
+.player-admin-table-wrap {
+  overflow-x: auto;
+}
+
+.player-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.player-admin-table th,
+.player-admin-table td {
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.45rem;
+  text-align: left;
+}
+
+.player-admin-actions {
+  display: flex;
+  gap: 0.5rem;
+}

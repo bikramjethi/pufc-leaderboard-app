@@ -10,6 +10,7 @@ create table if not exists public.players (
   id bigserial primary key,
   player_name text unique not null,
   group_availability text,
+  is_tracked boolean not null default true,
   position text[] not null default '{MID}',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

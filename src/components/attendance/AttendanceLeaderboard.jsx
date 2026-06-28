@@ -2,10 +2,10 @@ import React, { useMemo, useState, useEffect } from "react";
 import { getDisplayName } from "../../utils/playerDisplayName";
 import attendanceLeaderboardData2025 from "../../data/attendance-data/leaderboard/2025.json";
 import attendanceLeaderboardData2026 from "../../data/attendance-data/leaderboard/2026.json";
-import playerProfiles from "../../data/player-profiles.json";
 import { config } from "../../leaderboard-config";
 import { fetchAttendanceLeaderboard } from "../../services/supabase/data";
 import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
+import { usePlayerProfiles } from "../../hooks/usePlayerProfiles";
 
 const attendanceLeaderboardDataByYear = {
   2025: attendanceLeaderboardData2025,
@@ -25,13 +25,7 @@ const normalizeAvailability = (availability) =>
     .trim()
     .toUpperCase();
 
-const profileCategoryByName = new Map(
-  (playerProfiles || [])
-    .filter((p) => !NON_PLAYER_NAMES.has(normalizeName(p?.name)))
-    .map((p) => [normalizeName(p.name), normalizeAvailability(p.groupAvailibility)])
-);
-
-const deriveCategoryFromProfile = (playerName) => {
+const deriveCategoryFromProfile = (playerName, profileCategoryByName) => {
   if (NON_PLAYER_NAMES.has(normalizeName(playerName))) return "Others";
   const availability = profileCategoryByName.get(normalizeName(playerName));
   if (availability === "MIDWEEK") return "MIDWEEK";
@@ -42,6 +36,7 @@ const deriveCategoryFromProfile = (playerName) => {
 };
 
 export const AttendanceLeaderboard = ({ year = "2025" }) => {
+  const playerProfiles = usePlayerProfiles();
   const yearKey = String(year);
   const [remoteData, setRemoteData] = useState(null);
   const [remoteError, setRemoteError] = useState("");
@@ -56,6 +51,15 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   // Sorting state
   const [sortKey, setSortKey] = useState("totalGames");
   const [sortDirection, setSortDirection] = useState("desc");
+  const profileCategoryByName = useMemo(
+    () =>
+      new Map(
+        (playerProfiles || [])
+          .filter((p) => !NON_PLAYER_NAMES.has(normalizeName(p?.name)))
+          .map((p) => [normalizeName(p.name), normalizeAvailability(p.groupAvailibility)])
+      ),
+    [playerProfiles]
+  );
 
   useEffect(() => {
     if (!(config.SUPABASE?.enabled && config.SUPABASE?.readModules?.attendanceLeaderboard)) {
@@ -107,7 +111,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
       const percentages = calculatePercentages(player, summary);
       return {
         ...player,
-        category: deriveCategoryFromProfile(player.name),
+        category: deriveCategoryFromProfile(player.name, profileCategoryByName),
         calculatedMidweekPercentage: percentages.midweekPercentage,
         calculatedWeekendPercentage: percentages.weekendPercentage,
         calculatedTotalPercentage: percentages.totalPercentage,
@@ -187,7 +191,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
       // Handle numeric comparison
       return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
     });
-  }, [data, sortKey, sortDirection]);
+  }, [data, sortKey, sortDirection, profileCategoryByName]);
 
   // Group players by category for default categorical view
   // Sort players within each category by totalGames (desc), putting "Others" name at bottom
@@ -197,7 +201,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     }
     const groups = {};
     data.players.forEach((player) => {
-      const category = deriveCategoryFromProfile(player.name);
+      const category = deriveCategoryFromProfile(player.name, profileCategoryByName);
       if (!groups[category]) {
         groups[category] = [];
       }
@@ -218,7 +222,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     });
     
     return groups;
-  }, [data]);
+  }, [data, profileCategoryByName]);
 
   // Calculate top 3 values for totalGames column only
   // Exclude player named "Others" from top 3 calculations

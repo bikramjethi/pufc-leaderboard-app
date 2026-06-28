@@ -64,6 +64,13 @@ create policy "editors can mutate weekly matches"
   using (public.current_user_role() in ('admin', 'editor'))
   with check (public.current_user_role() in ('admin', 'editor'));
 
+drop policy if exists "editors can mutate players" on public.players;
+create policy "editors can mutate players"
+  on public.players for all
+  to authenticated
+  using (public.current_user_role() in ('admin', 'editor'))
+  with check (public.current_user_role() in ('admin', 'editor'));
+
 drop policy if exists "editors can mutate weekly seasons" on public.weekly_tracker_seasons;
 create policy "editors can mutate weekly seasons"
   on public.weekly_tracker_seasons for all

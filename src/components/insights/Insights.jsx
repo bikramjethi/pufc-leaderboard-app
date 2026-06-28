@@ -11,7 +11,7 @@ import attendanceLeaderboard2026 from "../../data/attendance-data/leaderboard/20
 import { trivia2024 } from "../../data/insights/2024.js";
 import { trivia2025 } from "../../data/insights/2025.js";
 import { trivia2026 } from "../../data/insights/2026.js";
-import playerProfiles from "../../data/player-profiles.json";
+import { usePlayerProfiles } from "../../hooks/usePlayerProfiles";
 
 const triviaByYear = {
   2024: trivia2024,
@@ -64,7 +64,7 @@ const getTeamResult = (match, team) => {
   return { goalsFor, goalsAgainst, points };
 };
 
-const buildProfilePositionMap = () => {
+const buildProfilePositionMap = (playerProfiles) => {
   const map = new Map();
   (playerProfiles || []).forEach((p) => {
     if (!isRealPlayer(p?.name)) return;
@@ -301,7 +301,7 @@ const getTopNWithTies = (players, getValue, n = 3) => {
 };
 
 // Calculate overall season insights
-const calculateOverallInsights = (leaderboardData, attendanceData, trackerData = null) => {
+const calculateOverallInsights = (leaderboardData, attendanceData, trackerData = null, playerProfiles = []) => {
   if (!leaderboardData || leaderboardData.length === 0) return null;
 
   leaderboardData = filterPlayersForStatsLeaderboard(leaderboardData);
@@ -430,7 +430,11 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
     insights.totalFullHouseWeekend = fullHouseMatches.filter((m) => m.day === "Weekend").length;
     insights.totalFullHouseWeekday = fullHouseMatches.filter((m) => m.day === "Midweek").length;
 
-    const advanced = calculateAdvancedInsights(trackerData.matches, leaderboardData, buildProfilePositionMap());
+    const advanced = calculateAdvancedInsights(
+      trackerData.matches,
+      leaderboardData,
+      buildProfilePositionMap(playerProfiles)
+    );
     insights.upsetDrivers = advanced.upsetDrivers;
   }
 
@@ -438,7 +442,7 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
 };
 
 // Calculate quarterly insights for 2026
-const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
+const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter, playerProfiles = []) => {
   if (!trackerData || !trackerData.matches) return null;
 
   leaderboardData = filterPlayersForStatsLeaderboard(leaderboardData || []);
@@ -533,7 +537,11 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     insights.fullHouseWeekdayMatches = fullHouseMatches.filter((m) => m.day === "Midweek").length;
   }
 
-  const advanced = calculateAdvancedInsights(quarterMatches, leaderboardData, buildProfilePositionMap());
+  const advanced = calculateAdvancedInsights(
+    quarterMatches,
+    leaderboardData,
+    buildProfilePositionMap(playerProfiles)
+  );
   insights.perfectAttendance = advanced.perfectAttendance;
   const quarterKey = `Q${quarter}`;
   const narrative = buildQuarterNarrative(quarterKey, insights);
@@ -545,6 +553,7 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
 };
 
 export const Insights = () => {
+  const playerProfiles = usePlayerProfiles();
   // Default to configured defaultSeason or most recent available season
   const defaultSeason = config.INSIGHTS?.defaultSeason || 
     (availableSeasons.length > 0 ? availableSeasons[availableSeasons.length - 1] : "2026");
@@ -570,21 +579,22 @@ export const Insights = () => {
     return calculateOverallInsights(
       leaderboardDataForSeason,
       attendanceDataForSeason,
-      trackerDataForSeason
+      trackerDataForSeason,
+      playerProfiles
     );
-  }, [leaderboardDataForSeason, attendanceDataForSeason, trackerDataForSeason]);
+  }, [leaderboardDataForSeason, attendanceDataForSeason, trackerDataForSeason, playerProfiles]);
 
   // Calculate quarterly insights (only for 2026)
   const quarterlyInsights = useMemo(() => {
     if (selectedSeason !== "2026" || !trackerDataForSeason) return null;
 
     return {
-      q1: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 1),
-      q2: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 2),
-      q3: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 3),
-      q4: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 4),
+      q1: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 1, playerProfiles),
+      q2: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 2, playerProfiles),
+      q3: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 3, playerProfiles),
+      q4: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 4, playerProfiles),
     };
-  }, [selectedSeason, trackerDataForSeason, leaderboardDataForSeason]);
+  }, [selectedSeason, trackerDataForSeason, leaderboardDataForSeason, playerProfiles]);
 
   // Load trivia data for the season
   const triviaData = useMemo(() => {

@@ -100,6 +100,7 @@ async function run() {
   const playersRows = profiles.map((p) => ({
     player_name: p.name,
     group_availability: p.groupAvailibility || null,
+    is_tracked: p.isTracked !== false,
     position: Array.isArray(p.position) ? p.position : ["MID"],
   }));
   await upsertInChunks("players", "players", playersRows, "player_name", 200);

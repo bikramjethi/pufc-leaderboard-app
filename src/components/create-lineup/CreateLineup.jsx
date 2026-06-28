@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
 import "./CreateLineup.css";
-import playerProfiles from "../../data/player-profiles.json";
+import { usePlayerProfiles } from "../../hooks/usePlayerProfiles";
 
 // Position coordinates on a football field (percentage-based)
 // Field is divided into two halves - team1 on left, team2 on right
@@ -132,6 +132,7 @@ const getTeamColorClass = (teamColor) => {
 };
 
 export const CreateLineup = () => {
+  const playerProfiles = usePlayerProfiles();
   const [matchMode, setMatchMode] = useState(DEFAULT_MATCH_MODE);
   const [team1Color, setTeam1Color] = useState("RED");
   const [team2Color, setTeam2Color] = useState("BLUE");

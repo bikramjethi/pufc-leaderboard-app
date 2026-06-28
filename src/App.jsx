@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Leaderboard } from "./components/leaderboard";
 import { Attendance } from "./components/attendance";
 import { WeeklyTracker } from "./components/weekly-tracker";
@@ -24,8 +24,7 @@ import { isSmallScreen } from "./utils/isSmallScreen.js";
 import { aggregateAllTimeStats } from "./utils/leaderboard-calculations.js";
 import { getLeaderboardSeasonWithSource, leaderboardData } from "./utils/get-data.js";
 import { filterLeaderboardDataByTracked, filterPlayersForStatsLeaderboard } from "./utils/playerTracking.js";
-
-const staticStatsLeaderboardBySeason = filterLeaderboardDataByTracked(leaderboardData);
+import { usePlayerProfiles } from "./hooks/usePlayerProfiles.js";
 const isAdminsCornerEnabled = Boolean(config.MATCH_ENTRY?.enabled);
 
 // Get available years from config, falling back to data keys
@@ -102,6 +101,11 @@ const getNavItems = () => [
 ];
 
 function App() {
+  const playerProfiles = usePlayerProfiles();
+  const staticStatsLeaderboardBySeason = useMemo(
+    () => filterLeaderboardDataByTracked(leaderboardData, playerProfiles),
+    [playerProfiles]
+  );
   const [activeTab, setActiveTab] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const requested = params.get("tab");
@@ -182,7 +186,7 @@ function App() {
         const sourceMap = {};
         seasons.forEach((season, idx) => {
           const seasonKey = String(season);
-          fromDb[seasonKey] = filterPlayersForStatsLeaderboard(rowsWithSource[idx]?.data || []);
+          fromDb[seasonKey] = filterPlayersForStatsLeaderboard(rowsWithSource[idx]?.data || [], playerProfiles);
           sourceMap[seasonKey] = rowsWithSource[idx]?.source || "json-fallback";
         });
         setSeasonDataMap(fromDb);
@@ -196,17 +200,17 @@ function App() {
         });
         setSeasonSourceMap(fallbackMap);
       });
-  }, []);
+  }, [playerProfiles]);
 
   useEffect(() => {
     if (selectedYear === "all-time") {
       setPlayers(aggregateAllTimeStats(seasonDataMap));
     } else {
       setPlayers(
-        filterPlayersForStatsLeaderboard(seasonDataMap[selectedYear] || [])
+        filterPlayersForStatsLeaderboard(seasonDataMap[selectedYear] || [], playerProfiles)
       );
     }
-  }, [selectedYear, seasonDataMap]);
+  }, [selectedYear, seasonDataMap, playerProfiles]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -242,7 +246,8 @@ function App() {
       const resetYear = config.STATS_LEADERBOARD?.defaultSeason || "2026";
       setSelectedYear(resetYear);
       const season = filterPlayersForStatsLeaderboard(
-        seasonDataMap[resetYear] || []
+        seasonDataMap[resetYear] || [],
+        playerProfiles
       );
       setPlayers(season.length ? season : aggregateAllTimeStats(seasonDataMap));
     }

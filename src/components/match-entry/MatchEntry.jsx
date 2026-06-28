@@ -13,6 +13,7 @@ import {
   refreshSeasonStats,
   saveMatchEntry,
 } from "../../services/supabase/data";
+import { usePlayerProfiles } from "../../hooks/usePlayerProfiles";
 
 // Available team colors
 const TEAM_COLORS = ["RED", "BLUE", "BLACK", "WHITE", "YELLOW"];
@@ -26,9 +27,6 @@ const MATCH_MODES = {
 };
 
 const DEFAULT_MATCH_MODE = "8v8";
-
-// Load player profiles dynamically
-import playerProfiles from "../../data/player-profiles.json";
 
 // Dynamically import all available attendance data files
 const attendanceDataModules = import.meta.glob('../../data/attendance-data/20*.json', { eager: true });
@@ -84,6 +82,7 @@ const findNextUnfilledMatchIdFromStatic = () => {
 };
 
 export const MatchEntry = () => {
+  const playerProfiles = usePlayerProfiles();
   // Form state
   const [availableYears, setAvailableYears] = useState(STATIC_AVAILABLE_YEARS);
   const [year, setYear] = useState(() => STATIC_AVAILABLE_YEARS[0] || "2026");

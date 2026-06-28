@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import playerProfiles from "../../data/player-profiles.json";
+import { usePlayerProfiles } from "../../hooks/usePlayerProfiles";
 
 const positionOrder = { GK: 0, DEF: 1, MID: 2, FWD: 3, ALL: 4 };
 const NON_PLAYER_NAMES = new Set(["others"]);
@@ -26,28 +26,31 @@ const isRealPlayer = (player) => {
 };
 
 const getFilteredPlayers = (filterType) => {
-    const profiles = playerProfiles.filter(isRealPlayer);
+    return (profiles) => {
+    const source = profiles.filter(isRealPlayer);
     switch (filterType) {
         case "midweek":
-            return profiles.filter(
+            return source.filter(
                 (p) => getAvailabilityGroup(p) === "MIDWEEK" || getAvailabilityGroup(p) === "ALLGAMES"
             );
         case "weekend":
-            return profiles.filter(
+            return source.filter(
                 (p) => getAvailabilityGroup(p) === "WEEKEND" || getAvailabilityGroup(p) === "ALLGAMES"
             );
         case "inactive":
-            return profiles.filter((p) => getAvailabilityGroup(p) === "INACTIVE");
+            return source.filter((p) => getAvailabilityGroup(p) === "INACTIVE");
         case "onloan":
-            return profiles.filter((p) => getAvailabilityGroup(p) === "ONLOAN");
+            return source.filter((p) => getAvailabilityGroup(p) === "ONLOAN");
         default:
             return [];
     }
+    };
 };
 
 export const Roster = ({ type }) => {
+    const playerProfiles = usePlayerProfiles();
     const filteredPlayers = useMemo(() => {
-        const players = getFilteredPlayers(type);
+        const players = getFilteredPlayers(type)(playerProfiles);
         return players.sort((a, b) => {
             // Sort by first position first, then by name
             const aPos = Array.isArray(a.position) && a.position.length > 0 
@@ -60,7 +63,7 @@ export const Roster = ({ type }) => {
             if (posDiff !== 0) return posDiff;
             return a.name.localeCompare(b.name);
         });
-    }, [type]);
+    }, [type, playerProfiles]);
 
     const getTitle = () => {
         switch (type) {

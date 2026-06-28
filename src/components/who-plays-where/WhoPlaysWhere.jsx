@@ -1,8 +1,8 @@
 import { useMemo, useState, useEffect } from "react";
-import playerProfiles from "../../data/player-profiles.json";
 import { config } from "../../leaderboard-config.js";
 import { fetchSeasonMatches } from "../../services/supabase/data";
 import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
+import { usePlayerProfiles } from "../../hooks/usePlayerProfiles";
 import { getDisplayName } from "../../utils/playerDisplayName.js";
 import {
   aggregateLineupStatsForSeason,
@@ -52,11 +52,12 @@ function buildConicGradient(posCounts) {
 }
 
 export const WhoPlaysWhere = () => {
+  const playerProfiles = usePlayerProfiles();
   const cfg = config.WHO_PLAYS_WHERE;
   const availableSeasons = useMemo(() => {
     const s = config.WHO_PLAYS_WHERE?.seasons;
     return s?.length ? [...s] : ["2026"];
-  }, []);
+  }, [playerProfiles]);
   const defaultSeason =
     cfg?.defaultSeason && availableSeasons.includes(cfg.defaultSeason)
       ? cfg.defaultSeason
