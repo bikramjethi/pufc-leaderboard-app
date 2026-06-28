@@ -23,3 +23,28 @@ export const getLeaderboardSeason = async (season) => {
     return leaderboardStaticData[season] || [];
   }
 };
+
+export const getLeaderboardSeasonWithSource = async (season) => {
+  const seasonNum = Number(season);
+  if (Number.isFinite(seasonNum) && seasonNum < 2026) {
+    return {
+      data: leaderboardStaticData[season] || [],
+      source: "json-fallback",
+    };
+  }
+  if (!(config.SUPABASE?.enabled && config.SUPABASE?.readModules?.statsLeaderboard)) {
+    return {
+      data: leaderboardStaticData[season] || [],
+      source: "json-fallback",
+    };
+  }
+  try {
+    const data = await fetchStatsLeaderboardSeason(season);
+    return { data, source: "supabase" };
+  } catch {
+    return {
+      data: leaderboardStaticData[season] || [],
+      source: "json-fallback",
+    };
+  }
+};

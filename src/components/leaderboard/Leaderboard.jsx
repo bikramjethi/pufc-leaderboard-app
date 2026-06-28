@@ -5,6 +5,7 @@ import { PlayerModal } from "../player-modal";
 import { config } from "../../leaderboard-config.js";
 import { tickerMessages } from "../../ticker-messages.js";
 import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import {
   getVisibleStatsLeaderboardTableColumns,
   isStatsLeaderboardShowAllQueryActive,
@@ -47,7 +48,13 @@ const calcPercentages = (player) => {
   };
 };
 
-export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selectedYear = null }) => {
+export const Leaderboard = ({
+  players,
+  allSeasonData,
+  isAllTime = false,
+  selectedYear = null,
+  seasonSourceMap = {},
+}) => {
   const [sortKey, setSortKey] = useState(config.DEFAULT_SORT_KEY);
   const [sortDirection, setSortDirection] = useState(config.DEFAULT_SORT_DIR);
   const [searchTerm, setSearchTerm] = useState("");
@@ -55,6 +62,14 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
   const [modalPlayer, setModalPlayer] = useState(null);
   const [statsView, setStatsView] = useState("overall"); // "overall", "weekday", "weekend"
   const [seasonMatches, setSeasonMatches] = useState(null);
+  const leaderboardSource = useMemo(() => {
+    if (!selectedYear || selectedYear === "all-time") {
+      const sources = new Set(Object.values(seasonSourceMap));
+      if (sources.size > 1) return "mixed";
+      return sources.has("supabase") ? "supabase" : "json-fallback";
+    }
+    return seasonSourceMap[String(selectedYear)] || "json-fallback";
+  }, [selectedYear, seasonSourceMap]);
 
   // Check if any player has weekend/weekday stats (for 2026+)
   const hasDetailedStats = useMemo(() => {
@@ -458,6 +473,7 @@ export const Leaderboard = ({ players, allSeasonData, isAllTime = false, selecte
 
   return (
     <div className="leaderboard">
+      <DataSourceBadge source={leaderboardSource} context="Leaderboard" />
       {/* News Ticker */}
       {config.ENABLE_TICKER && shuffledMessages.length > 0 && (
         <div className="news-ticker">

@@ -22,7 +22,7 @@ import "./components/fun-stats/FunStats.css";
 import { config } from "./leaderboard-config.js";
 import { isSmallScreen } from "./utils/isSmallScreen.js";
 import { aggregateAllTimeStats } from "./utils/leaderboard-calculations.js";
-import { getLeaderboardSeason, leaderboardData } from "./utils/get-data.js";
+import { getLeaderboardSeasonWithSource, leaderboardData } from "./utils/get-data.js";
 import { filterLeaderboardDataByTracked, filterPlayersForStatsLeaderboard } from "./utils/playerTracking.js";
 
 const staticStatsLeaderboardBySeason = filterLeaderboardDataByTracked(leaderboardData);
@@ -123,6 +123,7 @@ function App() {
     (availableYears.includes("2026") ? "2026" : "all-time");
   const [selectedYear, setSelectedYear] = useState(defaultYear);
   const [seasonDataMap, setSeasonDataMap] = useState(staticStatsLeaderboardBySeason);
+  const [seasonSourceMap, setSeasonSourceMap] = useState({});
   const [players, setPlayers] = useState(() => {
     const season = staticStatsLeaderboardBySeason[defaultYear];
     return season?.length ? season : aggregateAllTimeStats();
@@ -175,16 +176,25 @@ function App() {
   useEffect(() => {
     if (!(config.SUPABASE?.enabled && config.SUPABASE?.readModules?.statsLeaderboard)) return;
     const seasons = config.STATS_LEADERBOARD?.seasons || Object.keys(leaderboardData);
-    Promise.all(seasons.map((season) => getLeaderboardSeason(String(season))))
-      .then((rows) => {
+    Promise.all(seasons.map((season) => getLeaderboardSeasonWithSource(String(season))))
+      .then((rowsWithSource) => {
         const fromDb = {};
+        const sourceMap = {};
         seasons.forEach((season, idx) => {
-          fromDb[String(season)] = filterPlayersForStatsLeaderboard(rows[idx] || []);
+          const seasonKey = String(season);
+          fromDb[seasonKey] = filterPlayersForStatsLeaderboard(rowsWithSource[idx]?.data || []);
+          sourceMap[seasonKey] = rowsWithSource[idx]?.source || "json-fallback";
         });
         setSeasonDataMap(fromDb);
+        setSeasonSourceMap(sourceMap);
       })
       .catch(() => {
         setSeasonDataMap(staticStatsLeaderboardBySeason);
+        const fallbackMap = {};
+        seasons.forEach((season) => {
+          fallbackMap[String(season)] = "json-fallback";
+        });
+        setSeasonSourceMap(fallbackMap);
       });
   }, []);
 
@@ -406,6 +416,7 @@ function App() {
               allSeasonData={seasonDataMap}
               isAllTime={selectedYear === "all-time"}
               selectedYear={selectedYear}
+              seasonSourceMap={seasonSourceMap}
             />
           ) : activeTab === "attendance" ? (
             <Attendance />

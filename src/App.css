@@ -1870,6 +1870,12 @@ body::before {
   background: rgba(234, 179, 8, 0.1);
 }
 
+.data-source-badge.is-mixed {
+  border-color: rgba(59, 130, 246, 0.45);
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.1);
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .header {

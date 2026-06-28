@@ -222,8 +222,9 @@ export function ScorersChart() {
     if (!config.SUPABASE?.enabled) return;
     Promise.all(
       configuredSeasons.map((season) =>
-        fetchSeasonMatches(season)
-          .then((rows) => [season, { matches: rows }])
+        (Number(season) >= 2026
+          ? fetchSeasonMatches(season).then((rows) => [season, { matches: rows }])
+          : Promise.resolve([season, null]))
           .catch(() => [season, null])
       )
     ).then((entries) => {

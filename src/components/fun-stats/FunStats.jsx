@@ -208,8 +208,9 @@ export const FunStats = () => {
     if (!config.SUPABASE?.enabled) return;
     Promise.all(
       selectableSeasons.map((year) =>
-        fetchSeasonMatches(year)
-          .then((matches) => [year, matches])
+        (Number(year) >= 2026
+          ? fetchSeasonMatches(year).then((matches) => [year, matches])
+          : Promise.resolve([year, null]))
           .catch(() => [year, null])
       )
     ).then((entries) => {

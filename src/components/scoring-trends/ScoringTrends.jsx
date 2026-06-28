@@ -77,7 +77,8 @@ export const ScoringTrends = () => {
   const [remoteMatches, setRemoteMatches] = useState(null);
 
   useEffect(() => {
-    if (!config.SUPABASE?.enabled) {
+    const seasonNum = Number(selectedSeason);
+    if (!config.SUPABASE?.enabled || !Number.isFinite(seasonNum) || seasonNum < 2026) {
       setRemoteMatches(null);
       return;
     }
