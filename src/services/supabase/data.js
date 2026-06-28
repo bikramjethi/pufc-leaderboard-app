@@ -218,3 +218,27 @@ export const deletePlayerProfile = async (playerName) => {
   if (error) throw error;
 };
 
+export const fetchAppConfig = async (key) => {
+  ensureClient();
+  const { data, error } = await supabase
+    .from("app_config")
+    .select("value")
+    .eq("key", String(key))
+    .maybeSingle();
+  if (error) throw error;
+  return data?.value ?? null;
+};
+
+export const upsertAppConfig = async ({ key, value }) => {
+  ensureClient();
+  const { error } = await supabase.from("app_config").upsert(
+    {
+      key: String(key),
+      value,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "key" }
+  );
+  if (error) throw error;
+};
+

@@ -3,9 +3,12 @@ import { MatchEntry } from "../match-entry";
 import { getCurrentSession, signInWithPassword, signOut } from "../../services/supabase/auth";
 import {
   deletePlayerProfile,
+  fetchAppConfig,
   fetchPlayerProfiles,
+  upsertAppConfig,
   upsertPlayerProfile,
 } from "../../services/supabase/data";
+import { config } from "../../leaderboard-config";
 import { setPlayerProfiles } from "../../services/playerProfilesStore";
 import { usePlayerProfiles } from "../../hooks/usePlayerProfiles";
 import "./AdminsCorner.css";
@@ -17,6 +20,96 @@ const normalizePositions = (value) =>
     .split(",")
     .map((pos) => pos.trim().toUpperCase())
     .filter(Boolean);
+
+const isPlainObject = (value) => value && typeof value === "object" && !Array.isArray(value);
+const cloneJson = (value) => JSON.parse(JSON.stringify(value));
+
+const mergeDeep = (target, source) => {
+  if (!isPlainObject(source)) return target;
+  Object.entries(source).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      target[key] = [...value];
+      return;
+    }
+    if (isPlainObject(value)) {
+      if (!isPlainObject(target[key])) target[key] = {};
+      mergeDeep(target[key], value);
+      return;
+    }
+    target[key] = value;
+  });
+  return target;
+};
+
+const FIELD_META = {
+  "SUPABASE.enabled": { label: "Use Supabase", description: "Master switch for Supabase integration." },
+  "SUPABASE.writeEnabled": { label: "Allow writes", description: "Allow save/update flows to write to Supabase." },
+  "SUPABASE.requireAuthForMatchEntry": {
+    label: "Require auth for match entry",
+    description: "Only signed-in editors/admins can submit match data.",
+  },
+  "SUPABASE.readModules.weeklyTracker": { label: "Weekly Tracker reads" },
+  "SUPABASE.readModules.attendanceLeaderboard": { label: "Attendance reads" },
+  "SUPABASE.readModules.statsLeaderboard": { label: "Stats leaderboard reads" },
+  ENABLE_COMPARISON: { label: "Enable comparison cards" },
+  ENABLE_SEARCH: { label: "Enable search boxes" },
+  ENABLE_MAX_HIGHLIGHT: { label: "Enable top-stat highlights" },
+  ENABLE_PLAYER_MODAL: { label: "Enable player modal" },
+  ENABLE_TICKER: { label: "Enable news ticker" },
+  "STATS_LEADERBOARD.defaultSeason": { label: "Default stats season" },
+  "ATTENDANCE.LEADERBOARD.defaultSeason": { label: "Default attendance season" },
+  "ATTENDANCE.TRACKER.defaultSeason": { label: "Default tracker season" },
+};
+
+const SECTION_META = {
+  SUPABASE: {
+    label: "Supabase Settings",
+    description: "Connection behavior, auth requirements and read/write capabilities.",
+  },
+  "SUPABASE.readModules": {
+    label: "Supabase Read Modules",
+    description: "Choose which modules fetch their read data from Supabase.",
+  },
+  STATS_LEADERBOARD: {
+    label: "Stats Leaderboard",
+    description: "Main stats table behavior, season defaults and column visibility.",
+  },
+  ATTENDANCE: {
+    label: "Attendance",
+    description: "Attendance leaderboard and weekly tracker controls.",
+  },
+  INSIGHTS: { label: "Insights" },
+  SCORING_TRENDS: { label: "Scoring Trends" },
+  SCORERS_CHART: { label: "Scorers Chart" },
+  FUN_STATS: { label: "Fun Stats" },
+  MATCH_ENTRY: { label: "Match Entry" },
+  CREATE_LINEUP: { label: "Create Lineup" },
+};
+
+const ENUM_OPTIONS = {
+  "DEFAULT_SORT_KEY": ["matches", "wins", "draws", "losses", "goals", "cleanSheets", "hatTricks", "name"],
+  "DEFAULT_SORT_DIR": ["asc", "desc"],
+  "STATS_LEADERBOARD.defaultSeason": ["2024", "2025", "2026", "all-time"],
+  "ATTENDANCE.LEADERBOARD.defaultSeason": ["2025", "2026"],
+  "ATTENDANCE.TRACKER.defaultSeason": ["2026"],
+  "INSIGHTS.defaultSeason": ["2024", "2025", "2026"],
+  "SCORING_TRENDS.defaultSeason": ["2024", "2025", "2026"],
+  "FUN_STATS.defaultSeason": ["all", "2024", "2025", "2026"],
+  "MVP_LEADERBOARD.defaultSeason": ["all", "2024", "2025", "2026"],
+  "WEEKLY_TEAMS.defaultSeason": ["2024", "2025", "2026"],
+  "WHO_PLAYS_WHERE.defaultSeason": ["2026"],
+};
+
+const formatKeyLabel = (key) =>
+  String(key)
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/[_-]/g, " ")
+    .replace(/\b\w/g, (ch) => ch.toUpperCase());
+
+const getFieldMeta = (path, key) => {
+  const fullPath = [...path, key].join(".");
+  return FIELD_META[fullPath] || { label: formatKeyLabel(key), description: "" };
+};
 
 export const AdminsCorner = () => {
   const profiles = usePlayerProfiles();
@@ -210,6 +303,12 @@ export const AdminsCorner = () => {
           >
             ➕ Add Player
           </button>
+          <button
+            className={`stats-view-tab ${activeTab === "app-config" ? "active" : ""}`}
+            onClick={() => setActiveTab("app-config")}
+          >
+            ⚙️ Config
+          </button>
         </div>
         <div className="attendance-year-selector">
           <label>{session.user?.email}</label>
@@ -222,7 +321,7 @@ export const AdminsCorner = () => {
       {authError ? <div className="error-message">{authError}</div> : null}
       {activeTab === "match-entry" ? (
         <MatchEntry />
-      ) : (
+      ) : activeTab === "add-player" ? (
         <div className="player-admin-panel">
           <h3>Player Profiles</h3>
           <p className="player-admin-help">
@@ -295,6 +394,8 @@ export const AdminsCorner = () => {
           </div>
           {playersLoading ? <p className="player-admin-help">Refreshing players...</p> : null}
         </div>
+      ) : (
+        <ConfigAdminPanel />
       )}
     </div>
   );
@@ -351,6 +452,197 @@ const PlayerAdminRow = ({ row, onSave, onDelete }) => {
         </button>
       </td>
     </tr>
+  );
+};
+
+const ConfigAdminPanel = () => {
+  const [draftConfig, setDraftConfig] = useState(() => cloneJson(config));
+  const [configLoading, setConfigLoading] = useState(false);
+  const [configMessage, setConfigMessage] = useState("");
+
+  useEffect(() => {
+    setConfigLoading(true);
+    setConfigMessage("");
+    fetchAppConfig("leaderboard")
+      .then((value) => {
+        const base = cloneJson(config);
+        setDraftConfig(mergeDeep(base, value || {}));
+      })
+      .catch((e) => setConfigMessage(e?.message || "Failed to load remote config."))
+      .finally(() => setConfigLoading(false));
+  }, []);
+
+  const handleSave = async () => {
+    setConfigMessage("");
+    setConfigLoading(true);
+    try {
+      await upsertAppConfig({ key: "leaderboard", value: draftConfig });
+      setConfigMessage("Saved. Reload app to apply changes.");
+    } catch (e) {
+      setConfigMessage(e?.message || "Failed to save config.");
+    } finally {
+      setConfigLoading(false);
+    }
+  };
+
+  return (
+    <div className="player-admin-panel">
+      <h3>Leaderboard Config (Remote Override)</h3>
+      <p className="player-admin-help">
+        Toggle settings by section. This saves a full remote config document.
+      </p>
+      {configMessage ? <div className="info-message">{configMessage}</div> : null}
+      <div className="config-sections">
+        <ConfigFieldsEditor value={draftConfig} onChange={setDraftConfig} path={[]} />
+      </div>
+      <div className="player-admin-actions">
+        <button className="btn btn-primary" onClick={handleSave} disabled={configLoading}>
+          {configLoading ? "Saving..." : "Save Config"}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const setValueAtPath = (obj, path, nextValue) => {
+  const out = cloneJson(obj);
+  let ref = out;
+  for (let i = 0; i < path.length - 1; i += 1) {
+    ref = ref[path[i]];
+  }
+  ref[path[path.length - 1]] = nextValue;
+  return out;
+};
+
+const ConfigFieldsEditor = ({ value, onChange, path }) => {
+  if (!isPlainObject(value)) return null;
+  return (
+    <>
+      {Object.entries(value).map(([key, current]) => {
+        const currentPath = [...path, key];
+        const id = currentPath.join(".");
+        const sectionMeta = SECTION_META[id];
+        const fieldMeta = getFieldMeta(path, key);
+        if (isPlainObject(current)) {
+          return (
+            <div key={id} className="config-section-card">
+              <h4>{sectionMeta?.label || formatKeyLabel(key)}</h4>
+              <p className="config-key-hint">Key: <code>{id}</code></p>
+              {sectionMeta?.description ? (
+                <p className="config-desc">{sectionMeta.description}</p>
+              ) : null}
+              <ConfigFieldsEditor
+                value={current}
+                onChange={onChange}
+                path={currentPath}
+              />
+            </div>
+          );
+        }
+        if (typeof current === "boolean") {
+          return (
+            <label key={id} className="config-field-row">
+              <span>
+                <strong>{fieldMeta.label}</strong>
+                <small className="config-key-hint-inline">{id}</small>
+                {fieldMeta.description ? <small className="config-desc-inline">{fieldMeta.description}</small> : null}
+              </span>
+              <span className="switch">
+                <input
+                  type="checkbox"
+                  checked={current}
+                  onChange={(e) =>
+                    onChange((prev) => setValueAtPath(prev, currentPath, e.target.checked))
+                  }
+                />
+                <span className="slider" />
+              </span>
+            </label>
+          );
+        }
+        if (typeof current === "number") {
+          return (
+            <label key={id} className="config-field-row">
+              <span>
+                <strong>{fieldMeta.label}</strong>
+                <small className="config-key-hint-inline">{id}</small>
+              </span>
+              <input
+                type="number"
+                value={current}
+                onChange={(e) =>
+                  onChange((prev) => setValueAtPath(prev, currentPath, Number(e.target.value)))
+                }
+              />
+            </label>
+          );
+        }
+        const enumOptions = ENUM_OPTIONS[id];
+        if (Array.isArray(enumOptions)) {
+          return (
+            <label key={id} className="config-field-row">
+              <span>
+                <strong>{fieldMeta.label}</strong>
+                <small className="config-key-hint-inline">{id}</small>
+              </span>
+              <select
+                value={String(current ?? "")}
+                onChange={(e) =>
+                  onChange((prev) => setValueAtPath(prev, currentPath, e.target.value))
+                }
+              >
+                {enumOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </label>
+          );
+        }
+        if (Array.isArray(current)) {
+          return (
+            <label key={id} className="config-field-row">
+              <span>
+                <strong>{fieldMeta.label}</strong>
+                <small className="config-key-hint-inline">{id}</small>
+              </span>
+              <input
+                type="text"
+                value={current.join(", ")}
+                onChange={(e) =>
+                  onChange((prev) =>
+                    setValueAtPath(
+                      prev,
+                      currentPath,
+                      e.target.value
+                        .split(",")
+                        .map((v) => v.trim())
+                        .filter(Boolean)
+                    )
+                  )
+                }
+              />
+            </label>
+          );
+        }
+        return (
+          <label key={id} className="config-field-row">
+            <span>
+              <strong>{fieldMeta.label}</strong>
+              <small className="config-key-hint-inline">{id}</small>
+            </span>
+            <input
+              type="text"
+              value={String(current ?? "")}
+              onChange={(e) =>
+                onChange((prev) => setValueAtPath(prev, currentPath, e.target.value))
+              }
+            />
+          </label>
+        );
+      })}
+    </>
   );
 };
 

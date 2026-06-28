@@ -278,3 +278,27 @@ export const config = {
   },
 };
 
+const isPlainObject = (v) => v && typeof v === "object" && !Array.isArray(v);
+
+const deepMerge = (target, source) => {
+  if (!isPlainObject(source)) return target;
+  Object.entries(source).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      target[key] = [...value];
+      return;
+    }
+    if (isPlainObject(value)) {
+      if (!isPlainObject(target[key])) target[key] = {};
+      deepMerge(target[key], value);
+      return;
+    }
+    target[key] = value;
+  });
+  return target;
+};
+
+export const applyRemoteConfigOverride = (override) => {
+  if (!isPlainObject(override)) return;
+  deepMerge(config, override);
+};
+

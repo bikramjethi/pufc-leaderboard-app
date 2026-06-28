@@ -1,5 +1,6 @@
 alter table public.user_roles enable row level security;
 alter table public.players enable row level security;
+alter table public.app_config enable row level security;
 alter table public.weekly_tracker_seasons enable row level security;
 alter table public.weekly_tracker_matches enable row level security;
 alter table public.attendance_leaderboard_summary enable row level security;
@@ -17,6 +18,12 @@ $$;
 drop policy if exists "public read players" on public.players;
 create policy "public read players"
   on public.players for select
+  to authenticated, anon
+  using (true);
+
+drop policy if exists "public read app config" on public.app_config;
+create policy "public read app config"
+  on public.app_config for select
   to authenticated, anon
   using (true);
 
@@ -67,6 +74,13 @@ create policy "editors can mutate weekly matches"
 drop policy if exists "editors can mutate players" on public.players;
 create policy "editors can mutate players"
   on public.players for all
+  to authenticated
+  using (public.current_user_role() in ('admin', 'editor'))
+  with check (public.current_user_role() in ('admin', 'editor'));
+
+drop policy if exists "editors can mutate app config" on public.app_config;
+create policy "editors can mutate app config"
+  on public.app_config for all
   to authenticated
   using (public.current_user_role() in ('admin', 'editor'))
   with check (public.current_user_role() in ('admin', 'editor'));

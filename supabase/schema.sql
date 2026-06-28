@@ -16,6 +16,13 @@ create table if not exists public.players (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.app_config (
+  key text primary key,
+  value jsonb not null default '{}'::jsonb,
+  updated_by uuid references auth.users(id) on delete set null,
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.weekly_tracker_seasons (
   season_year int primary key,
   total_goals int not null default 0,
