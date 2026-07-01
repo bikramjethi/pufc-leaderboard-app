@@ -52,8 +52,10 @@ function matchSortTime(matchId) {
  * OGs are explicit per-player `ownGoals` on each row; excluding non-flagged
  * matches (most of 2024–2025) drops valid OGs (e.g. Prateek 19-07-2025).
  */
-function getOgEligibleMatchesForYear(year) {
-  const data = matchDataByYearForOg[year];
+function getOgEligibleMatchesForYear(year, seasonDataByYear = null) {
+  const data = seasonDataByYear?.[year]?.matches
+    ? seasonDataByYear[year]
+    : matchDataByYearForOg[year];
   if (!data?.matches) return [];
   return data.matches.filter((m) => {
     if (!m.matchPlayed || m.matchCancelled) return false;
@@ -66,13 +68,13 @@ function getOgEligibleMatchesForYear(year) {
  * @param {object} options
  * @param {number} [options.topN=15]
  */
-export function buildCumulativeOgLeadersData({ topN = 15 } = {}) {
+export function buildCumulativeOgLeadersData({ topN = 15, seasonDataByYear } = {}) {
   const seasons = getOgLeaderSeasonKeys();
   /** @type {Map<string, { totalOgs: number, games: object[] }>} */
   const byPlayer = new Map();
 
   for (const year of seasons) {
-    const matches = getOgEligibleMatchesForYear(year);
+    const matches = getOgEligibleMatchesForYear(year, seasonDataByYear);
     for (const m of matches) {
       const att = m.attendance;
       if (!att || typeof att !== "object") continue;
@@ -132,6 +134,9 @@ export function buildCumulativeOgLeadersData({ topN = 15 } = {}) {
     maxOgs,
     byPlayer,
     seasonKeys: seasons,
-    matchCount: seasons.reduce((n, y) => n + getOgEligibleMatchesForYear(y).length, 0),
+    matchCount: seasons.reduce(
+      (n, y) => n + getOgEligibleMatchesForYear(y, seasonDataByYear).length,
+      0
+    ),
   };
 }

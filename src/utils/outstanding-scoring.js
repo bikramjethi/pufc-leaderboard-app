@@ -6,7 +6,10 @@ const attendanceModules = import.meta.glob("../data/attendance-data/*.json", {
   eager: true,
 });
 
-function loadSeasonData(season) {
+function loadSeasonData(season, seasonDataByYear = null) {
+  if (seasonDataByYear && seasonDataByYear[season]?.matches) {
+    return seasonDataByYear[season];
+  }
   for (const [key, mod] of Object.entries(attendanceModules)) {
     if (key.includes(`/${season}.json`)) return mod.default || mod;
   }
@@ -52,12 +55,13 @@ export function collectOutstandingScoringPerformances({
   rangeMin,
   rangeMax,
   onlyBackfilledBeforeYear,
+  seasonDataByYear,
 }) {
   /** @type {Array<{ playerName: string, goals: number, season: string, matchId: string, date: string, day: string, teamColor: string, scoreline: Record<string, number>, ownGoals: number }>} */
   const flat = [];
 
   for (const season of seasons) {
-    const data = loadSeasonData(season);
+    const data = loadSeasonData(season, seasonDataByYear);
     if (!data?.matches) continue;
     const seasonYear = parseInt(season, 10);
 

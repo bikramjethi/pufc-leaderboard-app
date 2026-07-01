@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { config } from "../../leaderboard-config.js";
+import { fetchStatsLeaderboardSeason } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import { 
   calculateMultiSeasonMVP, 
   MVP_WEIGHTS,
@@ -29,11 +31,47 @@ const getMVPSeasons = () => {
 
 export const MVPLeaderboard = () => {
   const mvpSeasons = getMVPSeasons();
+  const [remoteLeaderboardBySeason, setRemoteLeaderboardBySeason] = useState({});
   
   // Season selector for MVP (uses config default)
   const [mvpSelectedSeason, setMvpSelectedSeason] = useState(
     config.MVP_LEADERBOARD?.defaultSeason || "all"
   );
+
+  useEffect(() => {
+    const supabaseEnabled =
+      config.SUPABASE?.enabled && config.SUPABASE?.readModules?.statsLeaderboard;
+    if (!supabaseEnabled) {
+      setRemoteLeaderboardBySeason({});
+      return;
+    }
+
+    const supabaseSeasons = mvpSeasons.filter((s) => Number(s) >= 2026);
+    if (!supabaseSeasons.length) {
+      setRemoteLeaderboardBySeason({});
+      return;
+    }
+
+    let isActive = true;
+    Promise.all(
+      supabaseSeasons.map((season) =>
+        fetchStatsLeaderboardSeason(season)
+          .then((rows) => [season, rows])
+          .catch(() => [season, null])
+      )
+    ).then((entries) => {
+      if (!isActive) return;
+      const next = {};
+      entries.forEach(([season, rows]) => {
+        if (Array.isArray(rows)) next[season] = rows;
+      });
+      setRemoteLeaderboardBySeason(next);
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, [mvpSeasons]);
 
   // ================== MVP INDEX (using leaderboard data with intelligent position weighting) ==================
   const mvpIndex = useMemo(() => {
@@ -46,7 +84,7 @@ export const MVPLeaderboard = () => {
     const playerSeasonStats = {}; // { playerName: { season: seasonStats } }
     
     seasonsToUse.forEach(year => {
-      const yearData = leaderboardDataByYear[year];
+      const yearData = remoteLeaderboardBySeason[year] || leaderboardDataByYear[year];
       if (!yearData) return;
       
       yearData.forEach(player => {
@@ -163,7 +201,7 @@ export const MVPLeaderboard = () => {
       seasonLabel: mvpSelectedSeason === "all" ? "All Time" : mvpSelectedSeason,
       weights: MVP_WEIGHTS, // Pass weights for display
     };
-  }, [mvpSelectedSeason, mvpSeasons]);
+  }, [mvpSelectedSeason, mvpSeasons, remoteLeaderboardBySeason]);
 
   if (!config.MVP_LEADERBOARD?.enabled) {
     return null;
@@ -181,6 +219,14 @@ export const MVPLeaderboard = () => {
 
   return (
     <div className="fun-stats">
+      <DataSourceBadge
+        source={
+          mvpSelectedSeason === "all"
+            ? (Object.keys(remoteLeaderboardBySeason).length > 0 ? "supabase" : "json-fallback")
+            : (Array.isArray(remoteLeaderboardBySeason[mvpSelectedSeason]) ? "supabase" : "json-fallback")
+        }
+        context="MVP Leaderboard"
+      />
       <div className="mvp-index-section">
         <div className="section-header">
           <div className="mvp-header-row">

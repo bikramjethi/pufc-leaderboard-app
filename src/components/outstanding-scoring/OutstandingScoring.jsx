@@ -1,5 +1,7 @@
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { config } from "../../leaderboard-config.js";
+import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import { getDisplayName } from "../../utils/playerDisplayName.js";
 import {
   collectOutstandingScoringPerformances,
@@ -17,6 +19,42 @@ export const OutstandingScoring = () => {
   const gMin = typeof cfg?.rangeGoalMin === "number" ? cfg.rangeGoalMin : 3;
   const gMax = typeof cfg?.rangeGoalMax === "number" ? cfg.rangeGoalMax : 9;
   const backfillYear = cfg?.onlyBackfilledBeforeYear;
+  const [remoteMatchesBySeason, setRemoteMatchesBySeason] = useState({});
+
+  useEffect(() => {
+    const supabaseEnabled =
+      config.SUPABASE?.enabled && config.SUPABASE?.readModules?.weeklyTracker;
+    if (!supabaseEnabled) {
+      setRemoteMatchesBySeason({});
+      return;
+    }
+
+    const supabaseSeasons = seasons.filter((season) => Number(season) >= 2026);
+    if (!supabaseSeasons.length) {
+      setRemoteMatchesBySeason({});
+      return;
+    }
+
+    let isActive = true;
+    Promise.all(
+      supabaseSeasons.map((season) =>
+        fetchSeasonMatches(season)
+          .then((matches) => [season, matches])
+          .catch(() => [season, null])
+      )
+    ).then((entries) => {
+      if (!isActive) return;
+      const next = {};
+      entries.forEach(([season, matches]) => {
+        if (Array.isArray(matches)) next[season] = { season, matches };
+      });
+      setRemoteMatchesBySeason(next);
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, [seasons]);
 
   const [rangeMin, setRangeMin] = useState(
     () =>
@@ -50,8 +88,9 @@ export const OutstandingScoring = () => {
         rangeMin,
         rangeMax,
         onlyBackfilledBeforeYear: backfillYear ?? undefined,
+        seasonDataByYear: remoteMatchesBySeason,
       }),
-    [seasons, collectFloor, rangeMin, backfillYear]
+    [seasons, collectFloor, rangeMin, backfillYear, remoteMatchesBySeason]
   );
 
   const [modalPlayer, setModalPlayer] = useState(null);
@@ -71,9 +110,12 @@ export const OutstandingScoring = () => {
   const rangeDescription = formatGoalRangeLabel(rangeMin, rangeMax);
   const featLabel = cfg?.featLabel || "Big hauls";
   const openTopLabel = `${gMax}+`;
+  const hasSupabaseData = Object.keys(remoteMatchesBySeason).length > 0;
+  const source = hasSupabaseData ? "supabase" : "json-fallback";
 
   return (
     <div className="outstanding-scoring">
+      <DataSourceBadge source={source} context="Outstanding Scoring" />
       <header className="osp-header">
         <div className="osp-hero">
           <div className="osp-hero-glow" aria-hidden />

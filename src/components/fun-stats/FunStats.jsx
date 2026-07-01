@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { config } from "../../leaderboard-config.js";
 import { fetchSeasonMatches } from "../../services/supabase/data";
+import { fetchStatsLeaderboardSeason } from "../../services/supabase/data";
 import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import "./FunStats.css";
 
@@ -125,6 +126,7 @@ const DUOS_MIN_MATCHES_OTHERS = 3;
 export const FunStats = () => {
   const selectableSeasons = useMemo(() => getSelectableSeasons(), []);
   const [remoteMatchesBySeason, setRemoteMatchesBySeason] = useState({});
+  const [remoteLeaderboardBySeason, setRemoteLeaderboardBySeason] = useState({});
   const outcomeTabCfg = useMemo(
     () => config.FUN_STATS?.outcomeGoalsTabs || {},
     []
@@ -219,6 +221,24 @@ export const FunStats = () => {
         if (Array.isArray(matches)) next[year] = matches;
       });
       setRemoteMatchesBySeason(next);
+    });
+  }, [selectableSeasons]);
+
+  useEffect(() => {
+    if (!(config.SUPABASE?.enabled && config.SUPABASE?.readModules?.statsLeaderboard)) return;
+    Promise.all(
+      selectableSeasons.map((year) =>
+        (Number(year) >= 2026
+          ? fetchStatsLeaderboardSeason(year).then((rows) => [year, rows])
+          : Promise.resolve([year, null]))
+          .catch(() => [year, null])
+      )
+    ).then((entries) => {
+      const next = {};
+      entries.forEach(([year, rows]) => {
+        if (Array.isArray(rows)) next[year] = rows;
+      });
+      setRemoteLeaderboardBySeason(next);
     });
   }, [selectableSeasons]);
 
@@ -497,7 +517,7 @@ export const FunStats = () => {
       /** @type {Record<string, {wins:number, losses:number, draws:number}>} */
       const wldByPlayer = {};
       seasonsToUse.forEach((year) => {
-        const players = leaderboardDataByYear[year];
+        const players = remoteLeaderboardBySeason[year] || leaderboardDataByYear[year];
         if (!Array.isArray(players)) return;
         players.forEach((p) => {
           if (!isTrackablePlayer(p?.name)) return;
@@ -533,7 +553,7 @@ export const FunStats = () => {
     };
 
     return Object.fromEntries(outcomeTabs.map((tab) => [tab.key, buildForTab(tab)]));
-  }, [outcomeTabs, outcomeSeasons]);
+  }, [outcomeTabs, outcomeSeasons, remoteLeaderboardBySeason]);
 
   const clutchGoalsData = useMemo(() => {
     if (config.FUN_STATS?.enableClutchGoals === false || !clutchTab.enabled) return { rows: [], matchCount: 0 };

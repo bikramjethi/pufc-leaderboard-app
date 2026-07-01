@@ -11,8 +11,13 @@ import {
   YAxis,
 } from "recharts";
 import { config } from "../../leaderboard-config.js";
+import { fetchSeasonMatches } from "../../services/supabase/data";
+import { DataSourceBadge } from "../data-source-badge/DataSourceBadge";
 import { getDisplayName } from "../../utils/playerDisplayName.js";
-import { buildCumulativeOgLeadersData } from "../../utils/og-leaders-data.js";
+import {
+  buildCumulativeOgLeadersData,
+  getOgLeaderSeasonKeys,
+} from "../../utils/og-leaders-data.js";
 import "../scorers-chart/ScorersChart.css";
 import "./OGLeaders.css";
 
@@ -52,8 +57,47 @@ function OgBarTooltip({ active, payload }) {
 export function OGLeaders() {
   const chartCfg = config.OG_LEADERS || {};
   const topN = typeof chartCfg.topN === "number" ? chartCfg.topN : 15;
+  const [remoteSeasonData, setRemoteSeasonData] = useState({});
 
-  const built = useMemo(() => buildCumulativeOgLeadersData({ topN }), [topN]);
+  useEffect(() => {
+    const supabaseEnabled =
+      config.SUPABASE?.enabled && config.SUPABASE?.readModules?.weeklyTracker;
+    if (!supabaseEnabled) {
+      setRemoteSeasonData({});
+      return;
+    }
+
+    const seasons = getOgLeaderSeasonKeys().filter((year) => Number(year) >= 2026);
+    if (!seasons.length) {
+      setRemoteSeasonData({});
+      return;
+    }
+
+    let isActive = true;
+    Promise.all(
+      seasons.map((year) =>
+        fetchSeasonMatches(year)
+          .then((matches) => [year, matches])
+          .catch(() => [year, null])
+      )
+    ).then((entries) => {
+      if (!isActive) return;
+      const next = {};
+      entries.forEach(([year, matches]) => {
+        if (Array.isArray(matches)) next[year] = { season: year, matches };
+      });
+      setRemoteSeasonData(next);
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  const built = useMemo(
+    () => buildCumulativeOgLeadersData({ topN, seasonDataByYear: remoteSeasonData }),
+    [topN, remoteSeasonData]
+  );
 
   const [selectedPlayer, setSelectedPlayer] = useState(null);
 
@@ -92,6 +136,10 @@ export function OGLeaders() {
 
   return (
     <div className="scorers-chart og-leaders">
+      <DataSourceBadge
+        source={Object.keys(remoteSeasonData).length > 0 ? "supabase" : "json-fallback"}
+        context="OG Leaders"
+      />
       <header className="scorers-chart__header">
         <div className="scorers-chart__headline">
           <h2 className="scorers-chart__title scorers-chart__title--bar ogl-title">
