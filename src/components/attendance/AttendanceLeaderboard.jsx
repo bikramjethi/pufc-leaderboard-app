@@ -35,6 +35,8 @@ const deriveCategoryFromProfile = (playerName, profileCategoryByName) => {
   return "Others";
 };
 
+const isOthersPlayer = (name) => NON_PLAYER_NAMES.has(normalizeName(name));
+
 export const AttendanceLeaderboard = ({ year = "2025" }) => {
   const playerProfiles = usePlayerProfiles();
   const yearKey = String(year);
@@ -121,9 +123,11 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     // Sort all players together
     return [...playersWithCalculations].sort((a, b) => {
       // Always put player with name "Others" at the bottom
-      if (a.name === "Others" && b.name !== "Others") return 1;
-      if (b.name === "Others" && a.name !== "Others") return -1;
-      if (a.name === "Others" && b.name === "Others") return 0;
+      const aIsOthers = isOthersPlayer(a.name);
+      const bIsOthers = isOthersPlayer(b.name);
+      if (aIsOthers && !bIsOthers) return 1;
+      if (bIsOthers && !aIsOthers) return -1;
+      if (aIsOthers && bIsOthers) return 0;
 
       let aVal, bVal;
 
@@ -212,9 +216,11 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     Object.keys(groups).forEach((category) => {
       groups[category].sort((a, b) => {
         // Always put player with name "Others" at the bottom
-        if (a.name === "Others" && b.name !== "Others") return 1;
-        if (b.name === "Others" && a.name !== "Others") return -1;
-        if (a.name === "Others" && b.name === "Others") return 0;
+        const aIsOthers = isOthersPlayer(a.name);
+        const bIsOthers = isOthersPlayer(b.name);
+        if (aIsOthers && !bIsOthers) return 1;
+        if (bIsOthers && !aIsOthers) return -1;
+        if (aIsOthers && bIsOthers) return 0;
         
         // Sort by totalGames descending
         return (b.totalGames || 0) - (a.totalGames || 0);
@@ -232,7 +238,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
     }
 
     // Filter out player named "Others" from calculations
-    const playersForTopValues = sortedPlayers.filter((p) => p.name !== "Others");
+    const playersForTopValues = sortedPlayers.filter((p) => !isOthersPlayer(p.name));
 
     // Only calculate top 3 for totalGames
     const values = playersForTopValues.map((player) => player.totalGames ?? 0);
@@ -260,7 +266,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
   // Get trophy emoji for totalGames value only
   // Exclude player named "Others" from medals
   const getTrophyEmoji = (value, playerName) => {
-    if (!topValues.totalGames || playerName === "Others") return null;
+    if (!topValues.totalGames || isOthersPlayer(playerName)) return null;
     
     const { first, second, third } = topValues.totalGames;
     
@@ -474,7 +480,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                         const isEven = (globalRowIndex - 1) % 2 === 0;
                         return (
                           <tr
-                            key={player.sno}
+                            key={`${category}-${player.name}`}
                             className={`player-row ${isEven ? "even" : "odd"}`}
                           >
                             {idx === 0 && (
@@ -560,7 +566,7 @@ export const AttendanceLeaderboard = ({ year = "2025" }) => {
                 const isEven = index % 2 === 0;
                 return (
                   <tr
-                    key={player.sno}
+                    key={`${player.category}-${player.name}`}
                     className={`player-row ${isEven ? "even" : "odd"}`}
                   >
                     <td className="category-col">{player.category}</td>
