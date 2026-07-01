@@ -2643,6 +2643,123 @@ td.match-cell.fullhouse-match.onloan {
   margin-right: 0.25rem;
 }
 
+.player-snapshot-trigger {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.player-snapshot-trigger:hover {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
+.player-snapshot-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.player-snapshot-modal {
+  width: min(680px, 96vw);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  padding: 1rem;
+}
+
+.player-snapshot-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.player-snapshot-head h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.player-snapshot-close {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.player-snapshot-summary {
+  margin: 0.5rem 0 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.player-snapshot-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.player-snapshot-tab {
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.player-snapshot-tab.active {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+}
+
+.player-snapshot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+  gap: 0.4rem;
+}
+
+.player-snapshot-dot {
+  height: 28px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.player-snapshot-dot.present {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.player-snapshot-dot.absent {
+  background: rgba(239, 68, 68, 0.16);
+  color: #ef4444;
+}
+
+.player-snapshot-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 0.75rem 0;
+}
+
 /* Hamburger Menu Button - Hidden on desktop */
 .hamburger-btn {
   display: none;

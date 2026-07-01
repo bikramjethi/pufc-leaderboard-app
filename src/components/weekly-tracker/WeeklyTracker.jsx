@@ -194,6 +194,8 @@ export const WeeklyTracker = () => {
   const [showFieldViewModal, setShowFieldViewModal] = useState(false);
   const [remoteMatchData, setRemoteMatchData] = useState(null);
   const [remoteError, setRemoteError] = useState("");
+  const [snapshotPlayer, setSnapshotPlayer] = useState(null);
+  const [snapshotTab, setSnapshotTab] = useState("overall");
   const tableScrollRef = useRef(null);
 
   // Load match data based on year
@@ -247,6 +249,33 @@ export const WeeklyTracker = () => {
   const playedMatches = useMemo(() => {
     return matches.filter((m) => m.matchPlayed && !m.matchCancelled && !m.isTournament);
   }, [matches]);
+
+  const snapshotMatches = useMemo(() => {
+    return [...playedMatches].sort((a, b) => getMatchTime(a) - getMatchTime(b));
+  }, [playedMatches]);
+
+  const snapshotMatchesByTab = useMemo(() => {
+    return {
+      overall: snapshotMatches,
+      midweek: snapshotMatches.filter((m) => String(m.day).toLowerCase() === "midweek"),
+      weekend: snapshotMatches.filter((m) => String(m.day).toLowerCase() === "weekend"),
+    };
+  }, [snapshotMatches]);
+
+  useEffect(() => {
+    if (!snapshotPlayer) return undefined;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setSnapshotPlayer(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [snapshotPlayer]);
+
+  useEffect(() => {
+    if (snapshotPlayer) {
+      setSnapshotTab("overall");
+    }
+  }, [snapshotPlayer]);
 
   // Calculate attendance stats for each player (only for played matches)
   const playerStats = useMemo(() => {
@@ -613,7 +642,13 @@ export const WeeklyTracker = () => {
                         className="player-name sticky-col"
                         title={lastAttendedLabelByPlayer.get(player)}
                       >
-                        {player}
+                        <button
+                          type="button"
+                          className="player-snapshot-trigger"
+                          onClick={() => setSnapshotPlayer(player)}
+                        >
+                          {player}
+                        </button>
                       </td>
                       <td
                         className={`stat attendance-stat ${getAttendanceClass(
@@ -690,6 +725,83 @@ export const WeeklyTracker = () => {
             setSelectedMatch(null);
           }}
         />
+      )}
+
+      {snapshotPlayer && (
+        <div
+          className="player-snapshot-overlay"
+          role="presentation"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSnapshotPlayer(null);
+          }}
+        >
+          <div
+            className="player-snapshot-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="player-snapshot-title"
+          >
+            <div className="player-snapshot-head">
+              <h3 id="player-snapshot-title">{snapshotPlayer} attendance snapshot</h3>
+              <button
+                type="button"
+                className="player-snapshot-close"
+                onClick={() => setSnapshotPlayer(null)}
+                aria-label="Close snapshot"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="player-snapshot-summary">
+              {(snapshotMatchesByTab[snapshotTab] || []).filter((m) =>
+                isPlayerInAttendance(m.attendance, snapshotPlayer)
+              ).length}
+              {" / "}
+              {(snapshotMatchesByTab[snapshotTab] || []).length} attended
+            </p>
+            <div className="player-snapshot-tabs">
+              <button
+                type="button"
+                className={`player-snapshot-tab ${snapshotTab === "overall" ? "active" : ""}`}
+                onClick={() => setSnapshotTab("overall")}
+              >
+                Overall
+              </button>
+              <button
+                type="button"
+                className={`player-snapshot-tab ${snapshotTab === "midweek" ? "active" : ""}`}
+                onClick={() => setSnapshotTab("midweek")}
+              >
+                Midweek
+              </button>
+              <button
+                type="button"
+                className={`player-snapshot-tab ${snapshotTab === "weekend" ? "active" : ""}`}
+                onClick={() => setSnapshotTab("weekend")}
+              >
+                Weekend
+              </button>
+            </div>
+            <div className="player-snapshot-grid" aria-label="Attendance timeline">
+              {(snapshotMatchesByTab[snapshotTab] || []).map((match) => {
+                const present = isPlayerInAttendance(match.attendance, snapshotPlayer);
+                return (
+                  <span
+                    key={match.id}
+                    className={`player-snapshot-dot ${present ? "present" : "absent"}`}
+                    title={present ? "Present" : "Absent"}
+                    aria-label={present ? "Present" : "Absent"}
+                  >
+                    {present ? "✓" : "✗"}
+                  </span>
+                );
+              })}
+              {(snapshotMatchesByTab[snapshotTab] || []).length === 0 && (
+                <span className="player-snapshot-empty">No played matches</span>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
