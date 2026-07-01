@@ -416,42 +416,118 @@ begin
       sum(case when a.day_bucket = 'midweek' then a.own_goals else 0 end)::int as weekday_own_goals
     from tmp_appearances a
     group by a.player_name
+  ),
+  stats_enriched as (
+    select
+      s.player_name,
+      os.id as old_id,
+      coalesce(p.position, array['MID']::text[]) as position,
+      s.matches,
+      s.wins,
+      s.losses,
+      s.draws,
+      s.clean_sheets,
+      s.goals,
+      s.hat_tricks,
+      s.own_goals,
+      s.weekend_matches,
+      s.weekend_wins,
+      s.weekend_losses,
+      s.weekend_draws,
+      s.weekend_clean_sheets,
+      s.weekend_goals,
+      s.weekend_hat_tricks,
+      s.weekend_own_goals,
+      s.weekday_matches,
+      s.weekday_wins,
+      s.weekday_losses,
+      s.weekday_draws,
+      s.weekday_clean_sheets,
+      s.weekday_goals,
+      s.weekday_hat_tricks,
+      s.weekday_own_goals
+    from stats_agg s
+    left join public.players p
+      on lower(p.player_name) = lower(s.player_name)
+    left join tmp_old_stats_players os
+      on lower(os.player_name) = lower(s.player_name)
+  ),
+  new_id_seed as (
+    select coalesce(max(old_id), 0) as base_id
+    from stats_enriched
+  ),
+  numbered as (
+    select
+      se.*,
+      row_number() over (order by se.player_name)::int as rn_for_new
+    from stats_enriched se
+    where se.old_id is null
+  ),
+  final_stats as (
+    select
+      se.player_name,
+      coalesce(se.old_id, ns.base_id + n.rn_for_new)::int as assigned_id,
+      se.position,
+      se.matches,
+      se.wins,
+      se.losses,
+      se.draws,
+      se.clean_sheets,
+      se.goals,
+      se.hat_tricks,
+      se.own_goals,
+      se.weekend_matches,
+      se.weekend_wins,
+      se.weekend_losses,
+      se.weekend_draws,
+      se.weekend_clean_sheets,
+      se.weekend_goals,
+      se.weekend_hat_tricks,
+      se.weekend_own_goals,
+      se.weekday_matches,
+      se.weekday_wins,
+      se.weekday_losses,
+      se.weekday_draws,
+      se.weekday_clean_sheets,
+      se.weekday_goals,
+      se.weekday_hat_tricks,
+      se.weekday_own_goals
+    from stats_enriched se
+    cross join new_id_seed ns
+    left join numbered n
+      on lower(n.player_name) = lower(se.player_name)
   )
   select
     in_season_year,
-    coalesce(os.id, row_number() over (order by s.player_name))::int as id,
-    s.player_name,
-    coalesce(p.position, array['MID']::text[]) as position,
-    s.matches,
-    s.wins,
-    s.losses,
-    s.draws,
-    s.clean_sheets,
-    s.goals,
-    s.hat_tricks,
-    s.own_goals,
-    s.weekend_matches,
-    s.weekend_wins,
-    s.weekend_losses,
-    s.weekend_draws,
-    s.weekend_clean_sheets,
-    s.weekend_goals,
-    s.weekend_hat_tricks,
-    s.weekend_own_goals,
-    s.weekday_matches,
-    s.weekday_wins,
-    s.weekday_losses,
-    s.weekday_draws,
-    s.weekday_clean_sheets,
-    s.weekday_goals,
-    s.weekday_hat_tricks,
-    s.weekday_own_goals,
+    f.assigned_id as id,
+    f.player_name,
+    f.position,
+    f.matches,
+    f.wins,
+    f.losses,
+    f.draws,
+    f.clean_sheets,
+    f.goals,
+    f.hat_tricks,
+    f.own_goals,
+    f.weekend_matches,
+    f.weekend_wins,
+    f.weekend_losses,
+    f.weekend_draws,
+    f.weekend_clean_sheets,
+    f.weekend_goals,
+    f.weekend_hat_tricks,
+    f.weekend_own_goals,
+    f.weekday_matches,
+    f.weekday_wins,
+    f.weekday_losses,
+    f.weekday_draws,
+    f.weekday_clean_sheets,
+    f.weekday_goals,
+    f.weekday_hat_tricks,
+    f.weekday_own_goals,
     now()
-  from stats_agg s
-  left join public.players p
-    on lower(p.player_name) = lower(s.player_name)
-  left join tmp_old_stats_players os
-    on lower(os.player_name) = lower(s.player_name);
+  from final_stats f;
 
   return jsonb_build_object(
     'ok', true,
