@@ -11,7 +11,6 @@ import attendanceLeaderboard2026 from "../../data/attendance-data/leaderboard/20
 import { trivia2024 } from "../../data/insights/2024.js";
 import { trivia2025 } from "../../data/insights/2025.js";
 import { trivia2026 } from "../../data/insights/2026.js";
-import { usePlayerProfiles } from "../../hooks/usePlayerProfiles";
 import {
   fetchAttendanceLeaderboard,
   fetchStatsLeaderboardSeason,
@@ -48,16 +47,6 @@ const isRealPlayer = (name) => {
   return Boolean(normalized) && !IGNORED_PLAYERS.has(normalized);
 };
 
-const normalizePositionGroup = (position) => {
-  const p = String(position || "").toUpperCase();
-  if (p === "GK") return "GK";
-  if (["CB", "LB", "RB", "DEF"].includes(p)) return "DEF";
-  if (["CM", "LM", "RM", "MID"].includes(p)) return "MID";
-  if (["ST", "FWD", "CF"].includes(p)) return "FWD";
-  if (p === "ALL") return "ALL";
-  return "OTHER";
-};
-
 const getTeamResult = (match, team) => {
   const scoreline = match?.scoreline || {};
   if (!(team in scoreline)) return null;
@@ -69,20 +58,7 @@ const getTeamResult = (match, team) => {
   return { goalsFor, goalsAgainst, points };
 };
 
-const buildProfilePositionMap = (playerProfiles) => {
-  const map = new Map();
-  (playerProfiles || []).forEach((p) => {
-    if (!isRealPlayer(p?.name)) return;
-    if (p.isTracked === false) return;
-    const groups = Array.isArray(p?.position)
-      ? p.position.map(normalizePositionGroup).filter((g) => g !== "OTHER")
-      : [];
-    map.set(p.name, new Set(groups.length ? groups : ["ALL"]));
-  });
-  return map;
-};
-
-const calculateAdvancedInsights = (matches, leaderboardData, profilePositionMap) => {
+const calculateAdvancedInsights = (matches, leaderboardData) => {
   const validMatches = (matches || [])
     .filter((m) => m?.matchPlayed && !m?.matchCancelled && !m?.isTournament)
     .sort((a, b) => parseMatchDate(a.id) - parseMatchDate(b.id));
@@ -282,7 +258,7 @@ const getCleanSheetsFromAttendance = (attendance) => {
   return cleanSheets;
 };
 
-// Helper function to get top N players, but include all tied first place players if more than N
+// Helper function to get top N players and include ties at cutoff (e.g. shared 3rd).
 const getTopNWithTies = (players, getValue, n = 3) => {
   if (!players || players.length === 0) return [];
   
@@ -290,23 +266,52 @@ const getTopNWithTies = (players, getValue, n = 3) => {
   const sorted = [...players].sort((a, b) => getValue(b) - getValue(a));
   
   if (sorted.length === 0) return [];
-  
-  const firstValue = getValue(sorted[0]);
-  
-  // Find all players tied for first place
-  const firstPlacePlayers = sorted.filter(p => getValue(p) === firstValue);
-  
-  // If first place has more than N players, return all of them
-  if (firstPlacePlayers.length > n) {
-    return firstPlacePlayers;
-  }
-  
-  // Otherwise, return top N
-  return sorted.slice(0, n);
+
+  if (sorted.length <= n) return sorted;
+  const cutoffValue = getValue(sorted[n - 1]);
+  return sorted.filter((p) => getValue(p) >= cutoffValue);
+};
+
+const getTopScorersByScope = (matches, dayScope = "overall") => {
+  const scorerMap = new Map();
+  (matches || []).forEach((match) => {
+    if (dayScope === "midweek" && match.day !== "Midweek") return;
+    if (dayScope === "weekend" && match.day !== "Weekend") return;
+    const scorers = getScorersFromAttendance(match.attendance);
+    scorers.forEach((scorer) => {
+      if (!isStatsTrackedPlayerName(scorer.name)) return;
+      const current = scorerMap.get(scorer.name) || 0;
+      scorerMap.set(scorer.name, current + (scorer.goals || 0));
+    });
+  });
+
+  const sorted = Array.from(scorerMap.entries())
+    .map(([name, goals]) => ({ name, goals }))
+    .sort((a, b) => b.goals - a.goals || a.name.localeCompare(b.name));
+  return getTopNWithTies(sorted, (p) => p.goals, 3);
+};
+
+const getTopAttendanceByScope = (matches, dayScope = "overall") => {
+  const attendanceMap = new Map();
+  (matches || []).forEach((match) => {
+    if (dayScope === "midweek" && match.day !== "Midweek") return;
+    if (dayScope === "weekend" && match.day !== "Weekend") return;
+    const players = getAllPlayersFromAttendance(match.attendance);
+    players.forEach((player) => {
+      if (!isStatsTrackedPlayerName(player?.name)) return;
+      const current = attendanceMap.get(player.name) || 0;
+      attendanceMap.set(player.name, current + 1);
+    });
+  });
+
+  const sorted = Array.from(attendanceMap.entries())
+    .map(([name, games]) => ({ name, games }))
+    .sort((a, b) => b.games - a.games || a.name.localeCompare(b.name));
+  return getTopNWithTies(sorted, (p) => p.games, 3);
 };
 
 // Calculate overall season insights
-const calculateOverallInsights = (leaderboardData, attendanceData, trackerData = null, playerProfiles = []) => {
+const calculateOverallInsights = (leaderboardData, attendanceData, trackerData = null) => {
   if (!leaderboardData || leaderboardData.length === 0) return null;
 
   leaderboardData = filterPlayersForStatsLeaderboard(leaderboardData);
@@ -435,11 +440,7 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
     insights.totalFullHouseWeekend = fullHouseMatches.filter((m) => m.day === "Weekend").length;
     insights.totalFullHouseWeekday = fullHouseMatches.filter((m) => m.day === "Midweek").length;
 
-    const advanced = calculateAdvancedInsights(
-      trackerData.matches,
-      leaderboardData,
-      buildProfilePositionMap(playerProfiles)
-    );
+    const advanced = calculateAdvancedInsights(trackerData.matches, leaderboardData);
     insights.upsetDrivers = advanced.upsetDrivers;
   }
 
@@ -447,7 +448,7 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
 };
 
 // Calculate quarterly insights for 2026
-const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter, playerProfiles = []) => {
+const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
   if (!trackerData || !trackerData.matches) return null;
 
   leaderboardData = filterPlayersForStatsLeaderboard(leaderboardData || []);
@@ -482,6 +483,10 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter, playe
     storyBullets: [],
     narrativeTitle: "",
     narrativeSubtitle: "",
+    seasonToDateTopScorers: { overall: [], midweek: [], weekend: [] },
+    quarterTopScorers: { overall: [], midweek: [], weekend: [] },
+    seasonToDateAttendanceLeaders: { overall: [], midweek: [], weekend: [] },
+    quarterAttendanceLeaders: { overall: [], midweek: [], weekend: [] },
   };
 
   // Calculate top scorers for the quarter - get scorers from attendance object
@@ -500,6 +505,31 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter, playe
     .sort((a, b) => b.goals - a.goals)
     .slice(0, 3);
   insights.topScorers = topScorers;
+  insights.quarterTopScorers = {
+    overall: getTopScorersByScope(quarterMatches, "overall"),
+    midweek: getTopScorersByScope(quarterMatches, "midweek"),
+    weekend: getTopScorersByScope(quarterMatches, "weekend"),
+  };
+  insights.quarterAttendanceLeaders = {
+    overall: getTopAttendanceByScope(quarterMatches, "overall"),
+    midweek: getTopAttendanceByScope(quarterMatches, "midweek"),
+    weekend: getTopAttendanceByScope(quarterMatches, "weekend"),
+  };
+
+  const seasonToDateMatches = trackerData.matches.filter((match) => {
+    if (!match.matchPlayed || match.matchCancelled || match.isTournament) return false;
+    return getQuarter(match.date) <= quarter;
+  });
+  insights.seasonToDateTopScorers = {
+    overall: getTopScorersByScope(seasonToDateMatches, "overall"),
+    midweek: getTopScorersByScope(seasonToDateMatches, "midweek"),
+    weekend: getTopScorersByScope(seasonToDateMatches, "weekend"),
+  };
+  insights.seasonToDateAttendanceLeaders = {
+    overall: getTopAttendanceByScope(seasonToDateMatches, "overall"),
+    midweek: getTopAttendanceByScope(seasonToDateMatches, "midweek"),
+    weekend: getTopAttendanceByScope(seasonToDateMatches, "weekend"),
+  };
 
   // Calculate most attended - get player names from attendance object
   const attendanceMap = new Map();
@@ -542,11 +572,7 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter, playe
     insights.fullHouseWeekdayMatches = fullHouseMatches.filter((m) => m.day === "Midweek").length;
   }
 
-  const advanced = calculateAdvancedInsights(
-    quarterMatches,
-    leaderboardData,
-    buildProfilePositionMap(playerProfiles)
-  );
+  const advanced = calculateAdvancedInsights(quarterMatches, leaderboardData);
   insights.perfectAttendance = advanced.perfectAttendance;
   const quarterKey = `Q${quarter}`;
   const narrative = buildQuarterNarrative(quarterKey, insights);
@@ -558,7 +584,6 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter, playe
 };
 
 export const Insights = () => {
-  const playerProfiles = usePlayerProfiles();
   // Default to configured defaultSeason or most recent available season
   const defaultSeason = config.INSIGHTS?.defaultSeason || 
     (availableSeasons.length > 0 ? availableSeasons[availableSeasons.length - 1] : "2026");
@@ -648,22 +673,88 @@ export const Insights = () => {
     return calculateOverallInsights(
       leaderboardDataForSeason,
       attendanceDataForSeason,
-      trackerDataForSeason,
-      playerProfiles
+      trackerDataForSeason
     );
-  }, [leaderboardDataForSeason, attendanceDataForSeason, trackerDataForSeason, playerProfiles]);
+  }, [leaderboardDataForSeason, attendanceDataForSeason, trackerDataForSeason]);
 
   // Calculate quarterly insights (only for 2026)
   const quarterlyInsights = useMemo(() => {
     if (selectedSeason !== "2026" || !trackerDataForSeason) return null;
 
     return {
-      q1: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 1, playerProfiles),
-      q2: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 2, playerProfiles),
-      q3: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 3, playerProfiles),
-      q4: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 4, playerProfiles),
+      q1: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 1),
+      q2: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 2),
+      q3: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 3),
+      q4: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 4),
     };
-  }, [selectedSeason, trackerDataForSeason, leaderboardDataForSeason, playerProfiles]);
+  }, [selectedSeason, trackerDataForSeason, leaderboardDataForSeason]);
+
+  const formatTopScorerLine = (players) => {
+    if (!players || players.length === 0) return "—";
+    return players.map((p) => `${p.name} (${p.goals})`).join(", ");
+  };
+  const formatTopAttendanceLine = (players) => {
+    if (!players || players.length === 0) return "—";
+    return players.map((p) => `${p.name} (${p.games})`).join(", ");
+  };
+  const renderQuarterLeaders = (q) => (
+    <>
+      {/* <div className="quarter-insight-group">
+        <h4 className="quarter-insight-title">Overall</h4>
+        <div className="highlight-item">
+          <span className="highlight-label">🏁 Top scorers - Overall</span>
+          <span className="highlight-value">{formatTopScorerLine(q.seasonToDateTopScorers.overall)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">🏁 Top scorers - Midweek</span>
+          <span className="highlight-value">{formatTopScorerLine(q.seasonToDateTopScorers.midweek)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">🏁 Top scorers - Weekend</span>
+          <span className="highlight-value">{formatTopScorerLine(q.seasonToDateTopScorers.weekend)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">🏁 Attendance toppers - Overall</span>
+          <span className="highlight-value">{formatTopAttendanceLine(q.seasonToDateAttendanceLeaders.overall)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">🏁 Attendance toppers - Midweek</span>
+          <span className="highlight-value">{formatTopAttendanceLine(q.seasonToDateAttendanceLeaders.midweek)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">🏁 Attendance toppers - Weekend</span>
+          <span className="highlight-value">{formatTopAttendanceLine(q.seasonToDateAttendanceLeaders.weekend)}</span>
+        </div>
+      </div> */}
+      <div className="quarter-insight-group">
+        <h4 className="quarter-insight-title">Quarterly stats</h4>
+        <div className="highlight-item">
+          <span className="highlight-label">📍 Top scorers - Overall</span>
+          <span className="highlight-value">{formatTopScorerLine(q.quarterTopScorers.overall)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">📍 Top scorers - Midweek</span>
+          <span className="highlight-value">{formatTopScorerLine(q.quarterTopScorers.midweek)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">📍 Top scorers - Weekend</span>
+          <span className="highlight-value">{formatTopScorerLine(q.quarterTopScorers.weekend)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">📍 Attendance toppers - Overall</span>
+          <span className="highlight-value">{formatTopAttendanceLine(q.quarterAttendanceLeaders.overall)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">📍 Attendance toppers - Midweek</span>
+          <span className="highlight-value">{formatTopAttendanceLine(q.quarterAttendanceLeaders.midweek)}</span>
+        </div>
+        <div className="highlight-item">
+          <span className="highlight-label">📍 Attendance toppers - Weekend</span>
+          <span className="highlight-value">{formatTopAttendanceLine(q.quarterAttendanceLeaders.weekend)}</span>
+        </div>
+      </div>
+    </>
+  );
 
   // Load trivia data for the season
   const triviaData = useMemo(() => {
@@ -937,6 +1028,7 @@ export const Insights = () => {
                       <span className="highlight-value">{quarterlyInsights.q1.storyBullets.join(" ")}</span>
                     </div>
                   )}
+                  {renderQuarterLeaders(quarterlyInsights.q1)}
                   {quarterlyInsights.q1.perfectAttendance?.combined?.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">⭐ Perfect Attendance:</span>
@@ -951,22 +1043,22 @@ export const Insights = () => {
                       </span>
                     </div>
                   )}
-                  {quarterlyInsights.q1.topScorers.length > 0 && (
+                  {overallInsights.topScorers && overallInsights.topScorers.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">⚽ Top Scorers:</span>
                       <span className="highlight-value">
-                        {quarterlyInsights.q1.topScorers.map((s) => `${s.name} (${s.goals})`).join(", ")}
+                        {overallInsights.topScorers.map((s) => `${s.name} (${s.goals})`).join(", ")}
                       </span>
                     </div>
                   )}
-                  {quarterlyInsights.q1.mostAttended &&
-                    Array.isArray(quarterlyInsights.q1.mostAttended) &&
-                    quarterlyInsights.q1.mostAttended.length > 0 && (
+                  {overallInsights.mostAttended &&
+                    Array.isArray(overallInsights.mostAttended) &&
+                    overallInsights.mostAttended.length > 0 && (
                       <div className="highlight-item">
                         <span className="highlight-label">📅 Most Attended:</span>
                         <span className="highlight-value">
-                          {quarterlyInsights.q1.mostAttended
-                            .map((p) => `${p.name} (${p.games} games)`)
+                          {overallInsights.mostAttended
+                            .map((p) => `${p.name} (${p.totalGames} games)`)
                             .join(", ")}
                         </span>
                       </div>
@@ -1039,6 +1131,7 @@ export const Insights = () => {
                       <span className="highlight-value">{quarterlyInsights.q2.storyBullets.join(" ")}</span>
                     </div>
                   )}
+                  {renderQuarterLeaders(quarterlyInsights.q2)}
                   {quarterlyInsights.q2.perfectAttendance?.combined?.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">⭐ Perfect Attendance:</span>
@@ -1053,22 +1146,22 @@ export const Insights = () => {
                       </span>
                     </div>
                   )}
-                  {quarterlyInsights.q2.topScorers.length > 0 && (
+                  {overallInsights.topScorers && overallInsights.topScorers.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">⚽ Top Scorers:</span>
                       <span className="highlight-value">
-                        {quarterlyInsights.q2.topScorers.map((s) => `${s.name} (${s.goals})`).join(", ")}
+                        {overallInsights.topScorers.map((s) => `${s.name} (${s.goals})`).join(", ")}
                       </span>
                     </div>
                   )}
-                  {quarterlyInsights.q2.mostAttended &&
-                    Array.isArray(quarterlyInsights.q2.mostAttended) &&
-                    quarterlyInsights.q2.mostAttended.length > 0 && (
+                  {overallInsights.mostAttended &&
+                    Array.isArray(overallInsights.mostAttended) &&
+                    overallInsights.mostAttended.length > 0 && (
                       <div className="highlight-item">
                         <span className="highlight-label">📅 Most Attended:</span>
                         <span className="highlight-value">
-                          {quarterlyInsights.q2.mostAttended
-                            .map((p) => `${p.name} (${p.games} games)`)
+                          {overallInsights.mostAttended
+                            .map((p) => `${p.name} (${p.totalGames} games)`)
                             .join(", ")}
                         </span>
                       </div>
@@ -1154,6 +1247,7 @@ export const Insights = () => {
                       <span className="highlight-value">{quarterlyInsights.q3.storyBullets.join(" ")}</span>
                     </div>
                   )}
+                  {renderQuarterLeaders(quarterlyInsights.q3)}
                   {quarterlyInsights.q3.perfectAttendance?.combined?.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">⭐ Perfect Attendance:</span>
@@ -1168,22 +1262,22 @@ export const Insights = () => {
                       </span>
                     </div>
                   )}
-                  {quarterlyInsights.q3.topScorers.length > 0 && (
+                  {overallInsights.topScorers && overallInsights.topScorers.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">⚽ Top Scorers:</span>
                       <span className="highlight-value">
-                        {quarterlyInsights.q3.topScorers.map((s) => `${s.name} (${s.goals})`).join(", ")}
+                        {overallInsights.topScorers.map((s) => `${s.name} (${s.goals})`).join(", ")}
                       </span>
                     </div>
                   )}
-                  {quarterlyInsights.q3.mostAttended &&
-                    Array.isArray(quarterlyInsights.q3.mostAttended) &&
-                    quarterlyInsights.q3.mostAttended.length > 0 && (
+                  {overallInsights.mostAttended &&
+                    Array.isArray(overallInsights.mostAttended) &&
+                    overallInsights.mostAttended.length > 0 && (
                       <div className="highlight-item">
                         <span className="highlight-label">📅 Most Attended:</span>
                         <span className="highlight-value">
-                          {quarterlyInsights.q3.mostAttended
-                            .map((p) => `${p.name} (${p.games} games)`)
+                          {overallInsights.mostAttended
+                            .map((p) => `${p.name} (${p.totalGames} games)`)
                             .join(", ")}
                         </span>
                       </div>
@@ -1269,6 +1363,7 @@ export const Insights = () => {
                       <span className="highlight-value">{quarterlyInsights.q4.storyBullets.join(" ")}</span>
                     </div>
                   )}
+                  {renderQuarterLeaders(quarterlyInsights.q4)}
                   {quarterlyInsights.q4.perfectAttendance?.combined?.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">⭐ Perfect Attendance:</span>
@@ -1283,22 +1378,22 @@ export const Insights = () => {
                       </span>
                     </div>
                   )}
-                  {quarterlyInsights.q4.topScorers.length > 0 && (
+                  {overallInsights.topScorers && overallInsights.topScorers.length > 0 && (
                     <div className="highlight-item">
                       <span className="highlight-label">⚽ Top Scorers:</span>
                       <span className="highlight-value">
-                        {quarterlyInsights.q4.topScorers.map((s) => `${s.name} (${s.goals})`).join(", ")}
+                        {overallInsights.topScorers.map((s) => `${s.name} (${s.goals})`).join(", ")}
                       </span>
                     </div>
                   )}
-                  {quarterlyInsights.q4.mostAttended &&
-                    Array.isArray(quarterlyInsights.q4.mostAttended) &&
-                    quarterlyInsights.q4.mostAttended.length > 0 && (
+                  {overallInsights.mostAttended &&
+                    Array.isArray(overallInsights.mostAttended) &&
+                    overallInsights.mostAttended.length > 0 && (
                       <div className="highlight-item">
                         <span className="highlight-label">📅 Most Attended:</span>
                         <span className="highlight-value">
-                          {quarterlyInsights.q4.mostAttended
-                            .map((p) => `${p.name} (${p.games} games)`)
+                          {overallInsights.mostAttended
+                            .map((p) => `${p.name} (${p.totalGames} games)`)
                             .join(", ")}
                         </span>
                       </div>

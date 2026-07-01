@@ -3828,6 +3828,20 @@ td.match-cell.fullhouse-match.onloan {
   font-size: 0.95rem;
 }
 
+.quarter-insight-group {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.75rem;
+  background: var(--bg-primary);
+}
+
+.quarter-insight-title {
+  margin: 0 0 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 .insights-clean-sheets {
   margin-top: 2rem;
   background: var(--card-bg);
