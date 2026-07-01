@@ -62,6 +62,18 @@ const isInsightsIncludedPlayerName = (name) => {
   return profileEntryIsTracked(existing);
 };
 
+const isFreshLegsEligiblePlayerName = (name) => {
+  const key = String(name || "").trim().toLowerCase();
+  if (!key || IGNORED_PLAYERS.has(key)) return false;
+  const profiles = getPlayerProfiles() || [];
+  const existing = profiles.find(
+    (p) => String(p?.name || "").trim().toLowerCase() === key
+  );
+  if (!existing) return false;
+  if (!profileEntryIsTracked(existing)) return false;
+  return existing.excludeFromFreshLegs !== true;
+};
+
 const filterInsightsPlayers = (players) =>
   Array.isArray(players)
     ? players.filter((p) => isInsightsIncludedPlayerName(p?.name))
@@ -344,7 +356,7 @@ const getAllTimeDebutPlayersInQuarter = (allHistoricalMatches, quarter, selected
     const players = getAllPlayersFromAttendance(match.attendance);
     players.forEach((player) => {
       const name = player?.name;
-      if (!isInsightsIncludedPlayerName(name)) return;
+      if (!isFreshLegsEligiblePlayerName(name)) return;
       if (!firstQuarterSeenByPlayer.has(name)) {
         firstQuarterSeenByPlayer.set(name, q);
         firstSeasonSeenByPlayer.set(name, seasonYear);
@@ -355,7 +367,10 @@ const getAllTimeDebutPlayersInQuarter = (allHistoricalMatches, quarter, selected
   return Array.from(firstQuarterSeenByPlayer.entries())
     .filter(([name, firstQuarter]) => {
       const firstSeason = firstSeasonSeenByPlayer.get(name);
-      return firstSeason === Number(selectedSeason) && firstQuarter === quarter;
+      return (
+        firstSeason === Number(selectedSeason) &&
+        firstQuarter === quarter
+      );
     })
     .map(([name]) => name)
     .sort((a, b) => a.localeCompare(b));

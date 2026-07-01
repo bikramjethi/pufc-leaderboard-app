@@ -315,7 +315,7 @@ app.post('/api/backfill-from-supabase', async (req, res) => {
 
       const playersRes = await supabaseAdmin
         .from("players")
-        .select("player_name,group_availability,position,is_tracked")
+        .select("player_name,group_availability,position,is_tracked,exclude_from_fresh_legs")
         .order("player_name", { ascending: true });
       if (playersRes.error) throw playersRes.error;
 
@@ -337,6 +337,7 @@ app.post('/api/backfill-from-supabase', async (req, res) => {
           position: Array.isArray(row.position) ? row.position : ["MID"],
           groupAvailibility: row.group_availability || "ALLGAMES",
           isTracked: row.is_tracked !== false,
+          excludeFromFreshLegs: row.exclude_from_fresh_legs === true,
         };
       });
       writeJson(profilesPath, mergedProfiles);

@@ -11,10 +11,14 @@ create table if not exists public.players (
   player_name text unique not null,
   group_availability text,
   is_tracked boolean not null default true,
+  exclude_from_fresh_legs boolean not null default false,
   position text[] not null default '{MID}',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.players
+  add column if not exists exclude_from_fresh_legs boolean not null default false;
 
 create table if not exists public.app_config (
   key text primary key,

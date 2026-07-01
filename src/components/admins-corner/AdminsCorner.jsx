@@ -126,6 +126,7 @@ export const AdminsCorner = () => {
     groupAvailibility: "ALLGAMES",
     positionsText: "MID",
     isTracked: true,
+    excludeFromFreshLegs: false,
   });
   const [backfillYear, setBackfillYear] = useState("2026");
   const [backfillRunning, setBackfillRunning] = useState(false);
@@ -168,6 +169,7 @@ export const AdminsCorner = () => {
         groupAvailibility: p.groupAvailibility || "ALLGAMES",
         positionsText: Array.isArray(p.position) ? p.position.join(", ") : "MID",
         isTracked: p.isTracked !== false,
+        excludeFromFreshLegs: p.excludeFromFreshLegs === true,
       })),
     [profiles]
   );
@@ -190,15 +192,24 @@ export const AdminsCorner = () => {
     refreshPlayers();
   }, [session, activeTab]);
 
-  const saveExistingPlayer = async (row) => {
+  const saveExistingPlayer = async (row, originalName) => {
     setPlayersError("");
     try {
+      const nextName = String(row.name || "").trim();
+      const prevName = String(originalName || "").trim();
+      if (!nextName) {
+        throw new Error("Player name is required.");
+      }
       await upsertPlayerProfile({
-        name: row.name,
+        name: nextName,
         groupAvailibility: row.groupAvailibility,
         position: normalizePositions(row.positionsText),
         isTracked: row.isTracked,
+        excludeFromFreshLegs: row.excludeFromFreshLegs,
       });
+      if (prevName && prevName.toLowerCase() !== nextName.toLowerCase()) {
+        await deletePlayerProfile(prevName);
+      }
       await refreshPlayers();
     } catch (e) {
       setPlayersError(e?.message || "Failed to save player.");
@@ -228,12 +239,14 @@ export const AdminsCorner = () => {
         groupAvailibility: newPlayer.groupAvailibility,
         position: normalizePositions(newPlayer.positionsText),
         isTracked: newPlayer.isTracked,
+        excludeFromFreshLegs: newPlayer.excludeFromFreshLegs,
       });
       setNewPlayer({
         name: "",
         groupAvailibility: "ALLGAMES",
         positionsText: "MID",
         isTracked: true,
+        excludeFromFreshLegs: false,
       });
       await refreshPlayers();
     } catch (e) {
@@ -360,7 +373,8 @@ export const AdminsCorner = () => {
         <div className="player-admin-panel">
           <h3>Player Profiles</h3>
           <p className="player-admin-help">
-            Manage names, positions, availability and tracked flag. Changes are saved to Supabase.
+            Manage names, positions, availability, tracked flag, and Fresh Legs exclusion.
+            Changes are saved to Supabase.
           </p>
           {playersError ? <div className="error-message">{playersError}</div> : null}
 
@@ -399,6 +413,16 @@ export const AdminsCorner = () => {
               />
               Tracked
             </label>
+            <label className="player-admin-tracked">
+              <input
+                type="checkbox"
+                checked={newPlayer.excludeFromFreshLegs}
+                onChange={(e) =>
+                  setNewPlayer((prev) => ({ ...prev, excludeFromFreshLegs: e.target.checked }))
+                }
+              />
+              Exclude Fresh Legs
+            </label>
             <button className="btn btn-primary" onClick={addPlayer}>
               Add
             </button>
@@ -412,6 +436,7 @@ export const AdminsCorner = () => {
                   <th>Availability</th>
                   <th>Positions</th>
                   <th>Tracked</th>
+                  <th>Exclude Fresh Legs</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -462,9 +487,11 @@ export const AdminsCorner = () => {
 
 const PlayerAdminRow = ({ row, onSave, onDelete }) => {
   const [draft, setDraft] = useState(row);
+  const [originalName, setOriginalName] = useState(row.name);
 
   useEffect(() => {
     setDraft(row);
+    setOriginalName(row.name);
   }, [row]);
 
   return (
@@ -502,9 +529,18 @@ const PlayerAdminRow = ({ row, onSave, onDelete }) => {
           onChange={(e) => setDraft((prev) => ({ ...prev, isTracked: e.target.checked }))}
         />
       </td>
+      <td>
+        <input
+          type="checkbox"
+          checked={draft.excludeFromFreshLegs === true}
+          onChange={(e) =>
+            setDraft((prev) => ({ ...prev, excludeFromFreshLegs: e.target.checked }))
+          }
+        />
+      </td>
       <td className="player-admin-actions">
-        <button className="btn btn-primary" onClick={() => onSave(draft)}>
-          Save
+        <button className="btn btn-primary" onClick={() => onSave(draft, originalName)}>
+          Update
         </button>
         <button className="btn btn-secondary" onClick={() => onDelete(row.name)}>
           Delete

@@ -184,13 +184,14 @@ const normalizePlayerProfileRow = (row) => ({
   groupAvailibility: row?.group_availability || "ALLGAMES",
   position: Array.isArray(row?.position) ? row.position : ["MID"],
   isTracked: row?.is_tracked !== false,
+  excludeFromFreshLegs: row?.exclude_from_fresh_legs === true,
 });
 
 export const fetchPlayerProfiles = async () => {
   ensureClient();
   const { data, error } = await supabase
     .from("players")
-    .select("player_name,group_availability,position,is_tracked")
+    .select("player_name,group_availability,position,is_tracked,exclude_from_fresh_legs")
     .order("player_name", { ascending: true });
   if (error) throw error;
   return (data || []).map(normalizePlayerProfileRow);
@@ -203,6 +204,7 @@ export const upsertPlayerProfile = async (profile) => {
     group_availability: String(profile?.groupAvailibility || "ALLGAMES").trim().toUpperCase(),
     position: Array.isArray(profile?.position) ? profile.position : ["MID"],
     is_tracked: profile?.isTracked !== false,
+    exclude_from_fresh_legs: profile?.excludeFromFreshLegs === true,
   };
   if (!payload.player_name) throw new Error("Player name is required.");
   const { error } = await supabase.from("players").upsert(payload, { onConflict: "player_name" });
