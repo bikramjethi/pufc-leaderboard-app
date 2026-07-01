@@ -205,7 +205,19 @@ export const WeeklyTracker = () => {
     remoteMatchData
       ? "supabase"
       : "json-fallback";
-  const { matches, allPlayers } = matchData || { matches: [], allPlayers: [] };
+  const matches = Array.isArray(matchData?.matches) ? matchData.matches : [];
+  const allPlayers = useMemo(() => {
+    if (Array.isArray(matchData?.allPlayers)) {
+      return matchData.allPlayers;
+    }
+
+    // Fallback for older/partial payloads that don't include allPlayers.
+    const allPlayersSet = new Set();
+    matches.forEach((match) => {
+      getAllPlayerNames(match?.attendance).forEach((name) => allPlayersSet.add(name));
+    });
+    return Array.from(allPlayersSet).sort((a, b) => a.localeCompare(b));
+  }, [matchData, matches]);
 
   useEffect(() => {
     if (!(config.SUPABASE?.enabled && config.SUPABASE?.readModules?.weeklyTracker)) {

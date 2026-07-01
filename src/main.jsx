@@ -10,6 +10,7 @@ const bootstrap = async () => {
       applyRemoteConfigOverride(remoteConfig);
     }
   } catch {
+    console.log("Failed to fetch remote leaderboard config; using local fallback.");
     // Keep local config fallback on any read error.
   }
 
