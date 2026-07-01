@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { leaderboardData } from "../../utils/get-data.js";
 import {
   filterPlayersForStatsLeaderboard,
@@ -12,6 +12,11 @@ import { trivia2024 } from "../../data/insights/2024.js";
 import { trivia2025 } from "../../data/insights/2025.js";
 import { trivia2026 } from "../../data/insights/2026.js";
 import { usePlayerProfiles } from "../../hooks/usePlayerProfiles";
+import {
+  fetchAttendanceLeaderboard,
+  fetchStatsLeaderboardSeason,
+  fetchWeeklyTrackerSeason,
+} from "../../services/supabase/data";
 
 const triviaByYear = {
   2024: trivia2024,
@@ -558,21 +563,85 @@ export const Insights = () => {
   const defaultSeason = config.INSIGHTS?.defaultSeason || 
     (availableSeasons.length > 0 ? availableSeasons[availableSeasons.length - 1] : "2026");
   const [selectedSeason, setSelectedSeason] = useState(defaultSeason);
+  const [remoteSeasonData, setRemoteSeasonData] = useState({
+    leaderboard: null,
+    attendance: null,
+    tracker: null,
+  });
+
+  useEffect(() => {
+    let isActive = true;
+    const seasonNum = Number(selectedSeason);
+    const isSupabaseSeason = Number.isFinite(seasonNum) && seasonNum >= 2026;
+
+    if (!isSupabaseSeason || !config.SUPABASE?.enabled) {
+      setRemoteSeasonData({ leaderboard: null, attendance: null, tracker: null });
+      return () => {
+        isActive = false;
+      };
+    }
+
+    const load = async () => {
+      const [
+        leaderboardFromDb,
+        attendanceFromDb,
+        trackerFromDb,
+      ] = await Promise.all([
+        config.SUPABASE?.readModules?.statsLeaderboard
+          ? fetchStatsLeaderboardSeason(seasonNum).catch(() => null)
+          : Promise.resolve(null),
+        config.SUPABASE?.readModules?.attendanceLeaderboard
+          ? fetchAttendanceLeaderboard(seasonNum).catch(() => null)
+          : Promise.resolve(null),
+        config.SUPABASE?.readModules?.weeklyTracker
+          ? fetchWeeklyTrackerSeason(seasonNum).catch(() => null)
+          : Promise.resolve(null),
+      ]);
+
+      if (!isActive) return;
+
+      setRemoteSeasonData({
+        leaderboard: Array.isArray(leaderboardFromDb) ? leaderboardFromDb : null,
+        attendance: attendanceFromDb,
+        tracker: trackerFromDb,
+      });
+    };
+
+    load();
+    return () => {
+      isActive = false;
+    };
+  }, [selectedSeason]);
 
   // Load data based on season
   const leaderboardDataForSeason = useMemo(() => {
+    const seasonNum = Number(selectedSeason);
+    const isSupabaseSeason = Number.isFinite(seasonNum) && seasonNum >= 2026;
+    if (isSupabaseSeason && Array.isArray(remoteSeasonData.leaderboard)) {
+      return filterPlayersForStatsLeaderboard(remoteSeasonData.leaderboard);
+    }
     return filterPlayersForStatsLeaderboard(leaderboardData[selectedSeason] || []);
-  }, [selectedSeason]);
+  }, [selectedSeason, remoteSeasonData.leaderboard]);
   
   // Load attendance leaderboard data
   // Note: 2025 attendance data is incomplete, so we'll only use it for basic stats
   const attendanceDataForSeason = useMemo(() => {
+    const seasonNum = Number(selectedSeason);
+    const isSupabaseSeason = Number.isFinite(seasonNum) && seasonNum >= 2026;
+    if (isSupabaseSeason && remoteSeasonData.attendance) {
+      return remoteSeasonData.attendance;
+    }
     return attendanceLeaderboardByYear[selectedSeason] || null;
-  }, [selectedSeason]);
+  }, [selectedSeason, remoteSeasonData.attendance]);
   
   const trackerDataForSeason = useMemo(() => {
-    return selectedSeason === "2026" ? matchDataByYear[2026] : null;
-  }, [selectedSeason]);
+    const seasonNum = Number(selectedSeason);
+    const isSupabaseSeason = Number.isFinite(seasonNum) && seasonNum >= 2026;
+    if (isSupabaseSeason && remoteSeasonData.tracker) {
+      return remoteSeasonData.tracker;
+    }
+    return matchDataByYear[selectedSeason] || null;
+  }, [selectedSeason, remoteSeasonData.tracker]);
 
   // Calculate overall insights
   const overallInsights = useMemo(() => {
