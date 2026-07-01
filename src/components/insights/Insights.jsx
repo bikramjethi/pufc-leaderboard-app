@@ -5,6 +5,8 @@ import {
   isStatsTrackedPlayerName,
 } from "../../utils/playerTracking.js";
 import { config } from "../../leaderboard-config.js";
+import matchData2024 from "../../data/attendance-data/2024.json";
+import matchData2025 from "../../data/attendance-data/2025.json";
 import matchData2026 from "../../data/attendance-data/2026.json";
 import attendanceLeaderboard2025 from "../../data/attendance-data/leaderboard/2025.json";
 import attendanceLeaderboard2026 from "../../data/attendance-data/leaderboard/2026.json";
@@ -24,6 +26,8 @@ const triviaByYear = {
 };
 
 const matchDataByYear = {
+  2024: matchData2024,
+  2025: matchData2025,
   2026: matchData2026,
 };
 
@@ -310,6 +314,37 @@ const getTopAttendanceByScope = (matches, dayScope = "overall") => {
   return getTopNWithTies(sorted, (p) => p.games, 3);
 };
 
+const getAllTimeDebutPlayersInQuarter = (allHistoricalMatches, quarter, selectedSeason) => {
+  const validMatches = (allHistoricalMatches || [])
+    .filter((m) => m?.matchPlayed && !m?.matchCancelled && !m?.isTournament)
+    .sort((a, b) => parseMatchDate(a.id) - parseMatchDate(b.id));
+
+  const firstQuarterSeenByPlayer = new Map();
+  const firstSeasonSeenByPlayer = new Map();
+  validMatches.forEach((match) => {
+    const q = getQuarter(match.date);
+    const [, , y] = String(match.id || "").split("-");
+    const seasonYear = Number(y);
+    const players = getAllPlayersFromAttendance(match.attendance);
+    players.forEach((player) => {
+      const name = player?.name;
+      if (!isStatsTrackedPlayerName(name)) return;
+      if (!firstQuarterSeenByPlayer.has(name)) {
+        firstQuarterSeenByPlayer.set(name, q);
+        firstSeasonSeenByPlayer.set(name, seasonYear);
+      }
+    });
+  });
+
+  return Array.from(firstQuarterSeenByPlayer.entries())
+    .filter(([name, firstQuarter]) => {
+      const firstSeason = firstSeasonSeenByPlayer.get(name);
+      return firstSeason === Number(selectedSeason) && firstQuarter === quarter;
+    })
+    .map(([name]) => name)
+    .sort((a, b) => a.localeCompare(b));
+};
+
 // Calculate overall season insights
 const calculateOverallInsights = (leaderboardData, attendanceData, trackerData = null) => {
   if (!leaderboardData || leaderboardData.length === 0) return null;
@@ -448,7 +483,13 @@ const calculateOverallInsights = (leaderboardData, attendanceData, trackerData =
 };
 
 // Calculate quarterly insights for 2026
-const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
+const calculateQuarterlyInsights = (
+  trackerData,
+  leaderboardData,
+  quarter,
+  historicalMatchesForDebut,
+  selectedSeason
+) => {
   if (!trackerData || !trackerData.matches) return null;
 
   leaderboardData = filterPlayersForStatsLeaderboard(leaderboardData || []);
@@ -487,6 +528,7 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     quarterTopScorers: { overall: [], midweek: [], weekend: [] },
     seasonToDateAttendanceLeaders: { overall: [], midweek: [], weekend: [] },
     quarterAttendanceLeaders: { overall: [], midweek: [], weekend: [] },
+    newPlayersInQuarter: [],
   };
 
   // Calculate top scorers for the quarter - get scorers from attendance object
@@ -530,6 +572,11 @@ const calculateQuarterlyInsights = (trackerData, leaderboardData, quarter) => {
     midweek: getTopAttendanceByScope(seasonToDateMatches, "midweek"),
     weekend: getTopAttendanceByScope(seasonToDateMatches, "weekend"),
   };
+  insights.newPlayersInQuarter = getAllTimeDebutPlayersInQuarter(
+    historicalMatchesForDebut,
+    quarter,
+    selectedSeason
+  );
 
   // Calculate most attended - get player names from attendance object
   const attendanceMap = new Map();
@@ -677,17 +724,72 @@ export const Insights = () => {
     );
   }, [leaderboardDataForSeason, attendanceDataForSeason, trackerDataForSeason]);
 
+  const historicalMatchesForDebut = useMemo(() => {
+    const selectedYearNum = Number(selectedSeason);
+    const historical = [];
+
+    Object.entries(matchDataByYear).forEach(([season, seasonData]) => {
+      if (Number(season) > selectedYearNum) return;
+      if (Array.isArray(seasonData?.matches)) {
+        historical.push(...seasonData.matches);
+      }
+    });
+
+    if (
+      Number.isFinite(selectedYearNum) &&
+      selectedYearNum >= 2026 &&
+      Array.isArray(trackerDataForSeason?.matches)
+    ) {
+      const nonCurrent = historical.filter((m) => {
+        const [, , y] = String(m.id || "").split("-");
+        return Number(y) !== selectedYearNum;
+      });
+      return [...nonCurrent, ...trackerDataForSeason.matches];
+    }
+
+    return historical;
+  }, [selectedSeason, trackerDataForSeason]);
+
   // Calculate quarterly insights (only for 2026)
   const quarterlyInsights = useMemo(() => {
     if (selectedSeason !== "2026" || !trackerDataForSeason) return null;
 
     return {
-      q1: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 1),
-      q2: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 2),
-      q3: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 3),
-      q4: calculateQuarterlyInsights(trackerDataForSeason, leaderboardDataForSeason, 4),
+      q1: calculateQuarterlyInsights(
+        trackerDataForSeason,
+        leaderboardDataForSeason,
+        1,
+        historicalMatchesForDebut,
+        selectedSeason
+      ),
+      q2: calculateQuarterlyInsights(
+        trackerDataForSeason,
+        leaderboardDataForSeason,
+        2,
+        historicalMatchesForDebut,
+        selectedSeason
+      ),
+      q3: calculateQuarterlyInsights(
+        trackerDataForSeason,
+        leaderboardDataForSeason,
+        3,
+        historicalMatchesForDebut,
+        selectedSeason
+      ),
+      q4: calculateQuarterlyInsights(
+        trackerDataForSeason,
+        leaderboardDataForSeason,
+        4,
+        historicalMatchesForDebut,
+        selectedSeason
+      ),
     };
-  }, [selectedSeason, trackerDataForSeason, leaderboardDataForSeason]);
+  }, [
+    selectedSeason,
+    trackerDataForSeason,
+    leaderboardDataForSeason,
+    historicalMatchesForDebut,
+  ]);
 
   const formatTopScorerLine = (players) => {
     if (!players || players.length === 0) return "—";
@@ -751,6 +853,15 @@ export const Insights = () => {
         <div className="highlight-item">
           <span className="highlight-label">📍 Attendance toppers - Weekend</span>
           <span className="highlight-value">{formatTopAttendanceLine(q.quarterAttendanceLeaders.weekend)}</span>
+        </div>
+      </div>
+      <div className="quarter-insight-group">
+        <h4 className="quarter-insight-title">Fresh Legs</h4>
+        <div className="highlight-item">
+          <span className="highlight-label">🆕 First-ever debuts this quarter</span>
+          <span className="highlight-value">
+            {q.newPlayersInQuarter?.length ? q.newPlayersInQuarter.join(", ") : "—"}
+          </span>
         </div>
       </div>
     </>
