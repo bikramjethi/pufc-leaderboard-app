@@ -1,8 +1,8 @@
 {
   "season": 2026,
-  "totalGoals": 464,
+  "totalGoals": 483,
   "weekendGoals": 176,
-  "weekdayGoals": 288,
+  "weekdayGoals": 307,
   "matches": [
     {
       "id": "03-01-2026",
@@ -4191,7 +4191,7 @@
             "rotatedGoalie": true
           },
           {
-            "name": "Vinit Patel",
+            "name": "Vinit P",
             "goals": 0,
             "ownGoals": 0,
             "position": "RB",
@@ -4352,7 +4352,7 @@
             "groupStatus": "REGULAR"
           },
           {
-            "name": "Vinit Patel",
+            "name": "Vinit P",
             "goals": 0,
             "ownGoals": 0,
             "position": "RB",
@@ -7577,16 +7577,162 @@
       "id": "30-06-2026",
       "date": "30/06/2026",
       "day": "Midweek",
-      "matchPlayed": false,
+      "matchPlayed": true,
       "matchCancelled": false,
       "isTournament": false,
       "isFullHouse": false,
       "isBackfilled": false,
-      "team1RotatingGoalie": false,
-      "team2RotatingGoalie": false,
-      "attendance": {},
-      "scoreline": {},
-      "totalGoals": 0
+      "team1RotatingGoalie": true,
+      "team2RotatingGoalie": true,
+      "attendance": {
+        "RED": [
+          {
+            "name": "Rohit Hyd",
+            "goals": 1,
+            "ownGoals": 0,
+            "position": "CM",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Animesh",
+            "goals": 0,
+            "ownGoals": 0,
+            "position": "LB",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Ashish",
+            "goals": 2,
+            "ownGoals": 0,
+            "position": "CB",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Sourabh",
+            "goals": 0,
+            "ownGoals": 1,
+            "position": "RB",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Vinay",
+            "goals": 1,
+            "ownGoals": 0,
+            "position": "LM",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Akshat",
+            "goals": 2,
+            "ownGoals": 0,
+            "position": "CM",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Vinoth",
+            "goals": 2,
+            "ownGoals": 0,
+            "position": "RM",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Jethi",
+            "goals": 3,
+            "ownGoals": 0,
+            "position": "ST",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          }
+        ],
+        "BLUE": [
+          {
+            "name": "Ketan",
+            "goals": 1,
+            "ownGoals": 0,
+            "position": "LM",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Lalit",
+            "goals": 0,
+            "ownGoals": 0,
+            "position": "LB",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Martin",
+            "goals": 0,
+            "ownGoals": 0,
+            "position": "CB",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Aaryen",
+            "goals": 0,
+            "ownGoals": 0,
+            "position": "RB",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Ishaan M",
+            "goals": 0,
+            "ownGoals": 0,
+            "position": "LM",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          },
+          {
+            "name": "Omkar",
+            "goals": 3,
+            "ownGoals": 0,
+            "position": "CM",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Anuj",
+            "goals": 3,
+            "ownGoals": 0,
+            "position": "RM",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR"
+          },
+          {
+            "name": "Rishav",
+            "goals": 0,
+            "ownGoals": 0,
+            "position": "ST",
+            "cleanSheet": false,
+            "groupStatus": "REGULAR",
+            "rotatedGoalie": true
+          }
+        ]
+      },
+      "scoreline": {
+        "RED": 11,
+        "BLUE": 8
+      },
+      "totalGoals": 19
     },
     {
       "id": "04-07-2026",
